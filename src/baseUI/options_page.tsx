@@ -124,13 +124,13 @@ const RenderOptionsPage = (props: iOptionsPage): JSX.Element => {
     return (
       <>       
         <div className="flex h-full w-full relative bg-gray-50">
-          <div id="sidebar" className={`drop-shadow-md h-[calc(100vh)] sticky top-0 self-start ${sidebarExpanded === true ? `${styles.sidebar_animation_expanded}` : `${styles.sidebar_animation_contracted}`} items-end flex flex-col justify-between border-tbfColor-middlegrey bg-white`}>
-            <div className="w-full px-2 ">
-              {sidebarExpanded === true ? renderExpandedSidebarNav() : renderCollapsedSidebarNav()}
-            </div>
-            <button className={`flex justify-center bottom-0 right-0 float-right h-6 ${sidebarExpanded === true ? "w-full" : "w-full"} bg-tbfColor-middlegrey2 hover:opacity-70 transition-all ease-in`} onClick={handleSidebarExpandButton}>
-              {sidebarExpanded === true ? <LeftIcon size={20} fill="#828282" /> : <RightIcon size={20} fill="#828282" />}
-            </button>  
+          <div id="sidebar" className={`drop-shadow-md h-[calc(100vh)] transition-all sticky top-0 self-start ${sidebarExpanded === true ? `w-[220px]` : `w-[70px]`} items-end flex flex-col justify-between border-tbfColor-middlegrey bg-white`}>
+              <div className="w-full px-2 overflow-hidden">
+                {sidebarExpanded === true ? renderExpandedSidebarNav() : renderCollapsedSidebarNav()}
+              </div>
+              <button className={`flex justify-center bottom-0 right-0 float-right h-6 ${sidebarExpanded === true ? "w-full" : "w-full"} bg-tbfColor-middlegrey2 hover:opacity-70 transition-all ease-in`} onClick={handleSidebarExpandButton}>
+                {sidebarExpanded === true ? <LeftIcon size={20} fill="#828282" /> : <RightIcon size={20} fill="#828282" />}
+              </button>  
           </div>
       
           

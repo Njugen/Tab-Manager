@@ -12,7 +12,7 @@ function folderCollectionReducer(state = folderCollectionState, action: any) {
         return [data]
     } else if(type === CREATE_FOLDER){
         const updatedFolders = [ ...state, data ];
-        console.log("create Folder", updatedFolders);
+
         saveToStorage("local", "folders", updatedFolders);
         return updatedFolders;
     } else if(type === READ_ALL_FOLDERS){
@@ -30,8 +30,7 @@ function folderCollectionReducer(state = folderCollectionState, action: any) {
     } else if(type === UPDATE_FOLDER){
         const updatedFolders = state.map((item) => {
             if(item.id === data.id){
-                console.log("update Folder", item);
-           //     saveTo
+
                 return data;
             } else {
                 return item;

@@ -74,15 +74,6 @@ const WorkspacesSection = (props: any): JSX.Element => {
         })
     }, []);
 
-    // Save/update the folder collection to browser memory once the redux collection has changes
-    useEffect(() => {        
-        if(folderCollectionState.length > 0){
-            console.log("AAAA");
-             //saveToStorage("local", "folders", folderCollectionState);
-           // saveToStorage("local", "folders", folderCollectionState);
-        } 
-    }, [folderCollectionState]);
-
     // Prepare to launch a folder: Once folderLaunchType changes, then open all windows and tabs in the specific folder
     // Warn the user if the number of tabs exceeeds the amount set in Settings page.
     useEffect(() => {

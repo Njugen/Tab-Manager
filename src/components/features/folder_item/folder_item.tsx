@@ -84,7 +84,7 @@ const FolderItem = (props: iFolderItem): JSX.Element => {
                 if(folder.id === id) folder.type = newType;
                 return folder;
             })
-            console.log("EEEEEEEEEEEEE");
+       
             saveToStorage("local", "folders", tempCollection);
         })
     }

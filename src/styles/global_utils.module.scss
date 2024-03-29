@@ -49,6 +49,7 @@
     box-shadow: 0px 0px 4px rgba(0,0,0,0.1);
 }
 
+/*
 @keyframes sidebar_expanded {
     from {
         transform: translateX(0px);
@@ -59,14 +60,14 @@
 }
 
 @keyframes sidebar_contracted {
-    /*from {
+    from {
         transform: translateX(0px);
     }
     to {
         transform: translateX(-70px);
-    }*/
+    }
 }
-
+*/
 @keyframes folder_item_contracted {
     from {
         max-height: 2000px;
