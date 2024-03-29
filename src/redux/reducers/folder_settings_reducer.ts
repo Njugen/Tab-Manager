@@ -1,4 +1,4 @@
-import iWorkspaceState from "../../interfaces/states/workspace_state";
+import iFolderState from "../../interfaces/states/folder_state";
 import { 
     SET_MARKED_WORKSPACES_ID, 
     SET_MULTIPLE_MARKED_WORKSPACES_ID, 
@@ -6,15 +6,15 @@ import {
     SET_WORKSPACES_SORT_ORDER,
     
     CHANGE_WORKSPACES_VIEWMODE
-} from "../types/work_space_settings_types";
+} from "../types/folder_space_settings_types";
 
-const workspaceSettingsState: iWorkspaceState = {
+const folderSettingsState: iFolderState = {
     markedFoldersId: [],
     folderSortOptionId: 0,
     viewMode: "grid"
 }
 
-function workspaceSettingsReducer(state = workspaceSettingsState, action: any) {
+function folderSettingsReducer(state = folderSettingsState, action: any) {
     const { type, data } = action;
 
     if(type === SET_MARKED_WORKSPACES_ID){
@@ -56,4 +56,4 @@ function workspaceSettingsReducer(state = workspaceSettingsState, action: any) {
     }
 }
 
-export { workspaceSettingsReducer }
+export { folderSettingsReducer }

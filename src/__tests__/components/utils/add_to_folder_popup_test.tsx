@@ -5,8 +5,8 @@ import AddToFolderPopup from "../../../components/features/add_to_folder_popup";
 import { iFieldOption } from "../../../interfaces/dropdown";
 import randomNumber from "../../../tools/random_number";
 
-const mockOnNewWorkspace = jest.fn();
-const mockOnExistingWorkspace = jest.fn((data: any) => data);
+const mockOnNewFolder = jest.fn();
+const mockOnExistingFolder = jest.fn((data: any) => data);
 const mockOnCancel = jest.fn();
 
 const mockOptions: Array<iFieldOption> = [
@@ -34,8 +34,8 @@ describe("extensive test of <AddToFolderPopup /> behaviour", () => {
                 title={mockTitle}
                 type="slide-in" 
                 dropdownOptions={mockNoOptions}
-                onNewWorkspace={mockOnNewWorkspace}
-                onExistingWorkspace={mockOnExistingWorkspace}
+                onNewFolder={mockOnNewFolder}
+                onExistingFolder={mockOnExistingFolder}
                 onCancel={mockOnCancel}
             />
         );
@@ -50,7 +50,7 @@ describe("extensive test of <AddToFolderPopup /> behaviour", () => {
         expect(newWorkSpaceButton).toBeInTheDocument();
 
         fireEvent.click(newWorkSpaceButton);
-        expect(mockOnNewWorkspace).toHaveBeenCalled();
+        expect(mockOnNewFolder).toHaveBeenCalled();
 
         // Click cancel
         const closeButton = screen.getByTestId("generic-icon-button-close");
@@ -69,8 +69,8 @@ describe("extensive test of <AddToFolderPopup /> behaviour", () => {
                 title={mockTitle} 
                 type="slide-in" 
                 dropdownOptions={mockOptions}
-                onNewWorkspace={mockOnNewWorkspace}
-                onExistingWorkspace={mockOnExistingWorkspace}
+                onNewFolder={mockOnNewFolder}
+                onExistingFolder={mockOnExistingFolder}
                 onCancel={mockOnCancel}
             />
         );
@@ -87,7 +87,7 @@ describe("extensive test of <AddToFolderPopup /> behaviour", () => {
         expect(newWorkSpaceButton).toBeInTheDocument();
 
         fireEvent.click(newWorkSpaceButton);
-        expect(mockOnNewWorkspace).toHaveBeenCalled();
+        expect(mockOnNewFolder).toHaveBeenCalled();
 
         // dropdown options not visible per default
         let optionList = screen.queryByRole("list");
@@ -135,8 +135,8 @@ describe("extensive test of <AddToFolderPopup /> behaviour", () => {
         optionList = screen.queryByRole("list");
         expect(optionList).not.toBeInTheDocument();
 
-        // mockOnExistingWorkspace is called
-        expect(mockOnExistingWorkspace).toHaveBeenCalledWith({ selected: arg.id });
+        // mockOnExistingFolder is called
+        expect(mockOnExistingFolder).toHaveBeenCalledWith({ selected: arg.id });
 
         // The dropdown now shows arg.label as its selected text
         dropdown = screen.getByTestId("select-folder-dropdown-selector");
@@ -157,15 +157,15 @@ describe("extensive test of <AddToFolderPopup /> behaviour", () => {
         optionList = screen.queryByRole("list");
         expect(optionList).not.toBeInTheDocument();
 
-        // mockOnExistingWorkspace is called
-        expect(mockOnExistingWorkspace).toHaveBeenCalledWith({ selected: arg.id });
+        // mockOnExistingFolder is called
+        expect(mockOnExistingFolder).toHaveBeenCalledWith({ selected: arg.id });
         
         // Test add new folder button again
         newWorkSpaceButton = screen.getByText("To a new folder", { selector: "button" });
         expect(newWorkSpaceButton).toBeInTheDocument();
 
         fireEvent.click(newWorkSpaceButton);
-        expect(mockOnNewWorkspace).toHaveBeenCalled();
+        expect(mockOnNewFolder).toHaveBeenCalled();
 
         // Click Close Button
         const closeButton = screen.getByTestId("generic-icon-button-close");

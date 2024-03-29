@@ -1,5 +1,5 @@
 import FolderItem from '../../../components/features/folder_item/folder_item'
-import "./../../../styles/global_utils.module.scss";
+import "../../../styles/global_utils.module.scss";
 import PrimaryButton from '../../../components/utils/primary_button/primary_button';
 import FolderManager from '../../../components/features/folder_manager/folder_manager';
 import { useEffect, useState } from "react";
@@ -15,7 +15,7 @@ import PopupMessage from '../../../components/utils/popup_message';
 import TextIconButton from '../../../components/utils/text_icon_button';
 import randomNumber from '../../../tools/random_number';
 import { iWindowItem } from '../../../interfaces/window_item';
-import * as workspaceSettingsActions from '../../../redux/actions/workspace_settings_actions';
+import * as folderSettingsActions from '../../../redux/actions/folder_settings_actions';
 import Dropdown from '../../../components/utils/dropdown/dropdown';
 import SectionContainer from '../../../components/utils/section_container';
 import DeselectedCheckboxIcon from '../../../components/icons/deselected_checkbox_icon';
@@ -27,18 +27,18 @@ import GridIcon from '../../../components/icons/grid_icon';
 import ListIcon from '../../../components/icons/list_icon';
 
 const { 
-    changeWorkspacesViewMode, 
+    changeFoldersViewMode, 
     clearMarkedFoldersAction, 
     setFoldersSortOrder, 
     setMarkedFoldersAction, 
     setMarkMultipleFoldersAction 
-} = workspaceSettingsActions;
+} = folderSettingsActions;
 
 /*
-    Workspace management section listing all available folders/workspaces.
+    Folder management section listing all available folders/folders.
 */
 
-const WorkspacesSection = (props: any): JSX.Element => {
+const FoldersSection = (props: any): JSX.Element => {
     const [editFolderId, setEditFolderId] = useState<number | null>(null);
     const [createFolder, setCreateFolder] = useState<boolean>(false);
     const [removalTarget, setRemovalTarget] = useState<iFolderItem | null>(null);
@@ -54,7 +54,7 @@ const WorkspacesSection = (props: any): JSX.Element => {
     const dispatch = useDispatch();
 
     const folderCollectionState = useSelector((state: any) => state.folderCollectionReducer);
-    const workspaceSettingsState = useSelector((state: any) => state.workspaceSettingsReducer);
+    const folderSettingsState = useSelector((state: any) => state.folderSettingsReducer);
 
     const colsCount: number = window.innerWidth > 1920 ? 3 : 2;
 
@@ -65,12 +65,12 @@ const WorkspacesSection = (props: any): JSX.Element => {
             setLoaded(true);
         })
 
-        getFromStorage("local", "workspace_sort", (data) => {  
-            dispatch(setFoldersSortOrder(data.workspace_sort));
+        getFromStorage("local", "folder_sort", (data) => {  
+            dispatch(setFoldersSortOrder(data.folder_sort));
         })
 
-        getFromStorage("local", "workspace_viewmode", (data) => {  
-            dispatch(changeWorkspacesViewMode(data.workspace_viewmode));
+        getFromStorage("local", "folder_viewmode", (data) => {  
+            dispatch(changeFoldersViewMode(data.folder_viewmode));
         })
     }, []);
 
@@ -102,7 +102,7 @@ const WorkspacesSection = (props: any): JSX.Element => {
 
     // Delete one or more marked folders
     const handleDeleteFolders = (): void => {
-        const { markedFoldersId } = workspaceSettingsState;
+        const { markedFoldersId } = folderSettingsState;
         if(folderCollectionState && markedFoldersId){
             markedFoldersId.forEach((targetId: number) => {
                 const markedFolderIndex = folderCollectionState.findIndex((folder: iFolderItem) => targetId === folder.id);
@@ -119,7 +119,7 @@ const WorkspacesSection = (props: any): JSX.Element => {
 
     // Duplicate one of more marked folders
     const handleDuplicateFolders = (): void => {
-        const { markedFoldersId } = workspaceSettingsState;
+        const { markedFoldersId } = folderSettingsState;
 
         if(folderCollectionState && markedFoldersId){
             markedFoldersId.forEach((targetId: number) => {
@@ -175,7 +175,7 @@ const WorkspacesSection = (props: any): JSX.Element => {
     // Merge selected folders
     const handleMergeFolders = (): void => {
         const newId = randomNumber();
-        const { markedFoldersId } = workspaceSettingsState;
+        const { markedFoldersId } = folderSettingsState;
 
         const folderSpecs: iFolderItem = {
             id: newId,
@@ -230,23 +230,23 @@ const WorkspacesSection = (props: any): JSX.Element => {
 
     // Toggle between grid and list view
     const handleChangeViewMode = (): void => {
-        const { viewMode } = workspaceSettingsState;
+        const { viewMode } = folderSettingsState;
         
         const newStatus = viewMode === "list" ? "grid" : "list"
-        saveToStorage("local", "workspace_viewmode", newStatus)
-        dispatch(changeWorkspacesViewMode(newStatus));
+        saveToStorage("local", "folder_viewmode", newStatus)
+        dispatch(changeFoldersViewMode(newStatus));
     }
 
     // Sort all folders
     const handleSortFolders = (e: any): void => {
         const newStatus = e.selected;
 
-        saveToStorage("local", "workspace_sort", newStatus);
+        saveToStorage("local", "folder_sort", newStatus);
         dispatch(setFoldersSortOrder(newStatus));
     }
 
     const folderSortCondition = (a: iFolderItem, b: iFolderItem): boolean => {
-        const { folderSortOptionId } = workspaceSettingsState
+        const { folderSortOptionId } = folderSettingsState
         
         const aNameLowerCase = a.name.toLowerCase();
         const bNameToLowerCase = b.name.toLowerCase();
@@ -282,7 +282,7 @@ const WorkspacesSection = (props: any): JSX.Element => {
             const folder = sortedFolders[i];
             let result: JSX.Element = <></>;
             
-            const collection: Array<number> = workspaceSettingsState.markedFoldersId;
+            const collection: Array<number> = folderSettingsState.markedFoldersId;
             result = (
                 <FolderItem 
                     onDelete={(e) => handleFolderDelete(folder)} 
@@ -293,7 +293,7 @@ const WorkspacesSection = (props: any): JSX.Element => {
                     key={folder.id} 
                     type={folder.type} 
                     id={folder.id} 
-                    viewMode={workspaceSettingsState.viewMode} 
+                    viewMode={folderSettingsState.viewMode} 
                     name={folder.name} 
                     desc={folder.desc} 
                     windows={folder.windows} 
@@ -321,14 +321,14 @@ const WorkspacesSection = (props: any): JSX.Element => {
             {id: 1, label: "Descending"},
         ];
 
-        const presetOption = optionsList.filter((option: iFieldOption) => option.id === workspaceSettingsState.folderSortOptionId);
+        const presetOption = optionsList.filter((option: iFieldOption) => option.id === folderSettingsState.folderSortOptionId);
 
         return <Dropdown tag="sort-folders" preset={presetOption[0] || optionsList[0]} options={optionsList} onCallback={handleSortFolders} />
     }
 
     // Render the action buttons for folder area
     const renderOptionsMenu = (): JSX.Element => {
-        const { markedFoldersId } = workspaceSettingsState;
+        const { markedFoldersId } = folderSettingsState;
         let markSpecs: any;
 
         if(markedFoldersId.length > 0){
@@ -396,13 +396,13 @@ const WorkspacesSection = (props: any): JSX.Element => {
                         <div className="flex items-center justify-end">     
                             <TextIconButton 
                                 disabled={false} 
-                                id={workspaceSettingsState.viewMode === "list" ? "grid" : "list"} 
+                                id={folderSettingsState.viewMode === "list" ? "grid" : "list"} 
                                 textSize="text-sm"
-                                text={workspaceSettingsState.viewMode === "list" ? "Grid" : "List"} 
+                                text={folderSettingsState.viewMode === "list" ? "Grid" : "List"} 
                                 onClick={handleChangeViewMode} 
                             >
                                 { 
-                                    workspaceSettingsState.viewMode === "list" ? 
+                                    folderSettingsState.viewMode === "list" ? 
                                     <GridIcon size={20} fill={"#6D00C2"} /> : 
                                     <ListIcon size={20} fill={"#6D00C2"} />
                                 }
@@ -443,7 +443,7 @@ const WorkspacesSection = (props: any): JSX.Element => {
     
     // Prepare to remove multiple folders. Warn the user if set in Settings page
     const handlePrepareMultipleRemovals = (): void => {
-        const { markedFoldersId } = workspaceSettingsState;
+        const { markedFoldersId } = folderSettingsState;
         
         if(markedFoldersId.length > 0) {
             chrome.storage.local.get("removal_warning_setting", (data) => {
@@ -458,14 +458,14 @@ const WorkspacesSection = (props: any): JSX.Element => {
 
     // Prepare to duplicate multiple folders. Warn the user if set in Settings page
     const handlePrepareDuplication = (): void => {
-        const { markedFoldersId } = workspaceSettingsState;
+        const { markedFoldersId } = folderSettingsState;
         
         // Run if there are more than 0 marked folders
         if(markedFoldersId.length > 0) {
             chrome.storage.local.get("duplication_warning_value", (data) => {
-
+                console.log("www", folderSettingsState.markedFoldersId.length);
                 // If the duplication warning is set in settings, and the number of marked tabs exceeds the threshold, then warn the user
-                if(data.duplication_warning_value !== -1 && data.duplication_warning_value <= workspaceSettingsState.markedFoldersId.length) {
+                if(data.duplication_warning_value !== -1 && data.duplication_warning_value <= folderSettingsState.markedFoldersId.length) {
                     setShowDuplicationWarning(true);
                 } else {
                     handleDuplicateFolders();
@@ -524,7 +524,7 @@ const WorkspacesSection = (props: any): JSX.Element => {
     
 
     return (
-        <>{folderCollectionState && workspaceSettingsState && (
+        <>{folderCollectionState && folderSettingsState && (
             <>
             {showPerformanceWarning &&
                 <PopupMessage
@@ -539,7 +539,7 @@ const WorkspacesSection = (props: any): JSX.Element => {
             {showDuplicationWarning &&
                 <PopupMessage
                     title="Warning" 
-                    text={`You are about to duplicate ${workspaceSettingsState.markedFoldersId.length} or more folders at once. Unnecessary duplications may clutter your dashboard, do you want to proceed?`}
+                    text={`You are about to duplicate ${folderSettingsState.markedFoldersId.length} or more folders at once. Unnecessary duplications may clutter your dashboard, do you want to proceed?`}
                     primaryButton={{ text: "Yes, proceed", callback: () => { handleDuplicateFolders(); setShowDuplicationWarning(false)}}}
                     secondaryButton={{ text: "No, do not duplicate", callback: () => setShowDuplicationWarning(false)}}    
                 />
@@ -555,17 +555,17 @@ const WorkspacesSection = (props: any): JSX.Element => {
             {showDeleteWarning === true && 
                 <PopupMessage
                     title="Warning" 
-                    text={`You are about to remove one or more workspaces and all their contents. This is irreversible, do you want to proceed?`}
+                    text={`You are about to remove one or more folders and all their contents. This is irreversible, do you want to proceed?`}
                     primaryButton={{ text: "Yes, remove these folders", callback: () => handleDeleteFolders()}}
                     secondaryButton={{ text: "No, don't remove", callback: () => setShowDeleteWarning(false)}}    
                 />
             }
             {renderFolderManagerPopup()}
         
-            <SectionContainer id="folder-section" title="Workspaces" options={renderOptionsMenu}>
+            <SectionContainer id="folder-section" title="Folders" options={renderOptionsMenu}>
                 <>
                     {loaded === true && !hasFolders() && renderMessageBox()}
-                    {<div className={`${workspaceSettingsState.viewMode === "list" ? "mx-auto mt-12" : `grid xl:grid-cols-2 2xl:grid-cols-2 3xl:grid-cols-3 grid-flow-dense gap-x-4 gap-y-0 mt-8`}`}>
+                    {<div className={`${folderSettingsState.viewMode === "list" ? "mx-auto mt-12" : `grid xl:grid-cols-2 2xl:grid-cols-2 3xl:grid-cols-3 grid-flow-dense gap-x-4 gap-y-0 mt-8`}`}>
                         {renderFolders()}
                     </div>}
                 </>
@@ -576,4 +576,4 @@ const WorkspacesSection = (props: any): JSX.Element => {
 
 }
 
-export default WorkspacesSection
+export default FoldersSection

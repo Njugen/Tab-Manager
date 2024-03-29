@@ -18,7 +18,6 @@ function SearchResultsContainer(props:any): JSX.Element {
     const [folderLaunchType, setFolderLaunchType] = useState<string | null>(null); 
     const [totalTabsCount, setTotalTabsCount] = useState<number>(0);
     const [showPerformanceWarning, setShowPerformanceWarning] = useState<boolean>(false);
-    const [showFolderManager, setShowFolderManager] = useState<boolean>(false);
 
     const handleClose = (): void => {
         onClose();

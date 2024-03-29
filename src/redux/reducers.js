@@ -4,7 +4,7 @@ import thunk from "redux-thunk";
 import { folderCollectionReducer } from "./reducers/folder_collection_reducer";
 import { folderManagerReducer } from "./reducers/in_edit_folder_reducer";
 import { WarningActionsReducer } from "./reducers/warning_actions_reducer";
-import { workspaceSettingsReducer } from "./reducers/workspace_settings_reducer";
+import { folderSettingsReducer } from "./reducers/folder_settings_reducer";
 import { historySectionReducer } from "./reducers/history_settings_reducer";
 import { sessionSectionReducer } from "./reducers/current_session_reducer";
 import { miscReducer } from "./reducers/misc_reducer";
@@ -13,7 +13,7 @@ const combinedReducers = combineReducers({
     folderCollectionReducer: folderCollectionReducer,
     folderManagerReducer: folderManagerReducer,
     WarningActionsReducer: WarningActionsReducer,
-    workspaceSettingsReducer: workspaceSettingsReducer,
+    folderSettingsReducer: folderSettingsReducer,
     historySectionReducer: historySectionReducer,
     sessionSectionReducer: sessionSectionReducer,
     miscReducer: miscReducer

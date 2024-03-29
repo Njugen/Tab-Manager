@@ -4,7 +4,7 @@ interface iDropdownMenu {
     tag: string,
     options: Array<iFieldOption>,
     selected: number | null,
-    onSelect: (id: number) => void,
+    onSelect: (value: number) => void,
 }
 
 export default iDropdownMenu;

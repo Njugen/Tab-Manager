@@ -5,7 +5,6 @@ interface iFieldOption {
 
 interface iSettingFieldOption {
     id: number,
-    value: string | number
     label: string,
 }
 

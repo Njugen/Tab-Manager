@@ -2,13 +2,11 @@ import { useState, useEffect } from "react";
 import { iWindowItem } from '../../interfaces/window_item';
 import { useSelector, useDispatch } from "react-redux";
 import { iFolderItem } from '../../interfaces/folder_item';
-import { saveToStorage } from '../../services/webex_api/storage';
 import FolderManager from "../../components/features/folder_manager/folder_manager";
 import { clearInEditFolder } from "../../redux/actions/in_edit_folder_actions";
 import { clearMarkedTabsAction } from '../../redux/actions/history_settings_actions';
 import { setUpWindowsAction } from '../../redux/actions/current_session_actions';
-import PrimaryButton from "../../components/utils/primary_button/primary_button";
-import { clearMarkedFoldersAction } from '../../redux/actions/workspace_settings_actions';
+import { clearMarkedFoldersAction } from '../../redux/actions/folder_settings_actions';
 import randomNumber from '../../tools/random_number';
 import AddToFolderPopup from "../../components/features/add_to_folder_popup";
 import { iTabItem } from '../../interfaces/tab_item';
@@ -18,7 +16,7 @@ import CircleButton from './../../components/utils/circle_button';
 import WindowItem from "../../components/features/window_item";
 
 const CurrentSessionView = (props:any): JSX.Element => {
-    const [addToWorkSpaceMessage, setAddToWorkspaceMessage] = useState<boolean>(false);
+    const [addToWorkSpaceMessage, setAddToFolderMessage] = useState<boolean>(false);
     const [createFolder, setCreateFolder] = useState<boolean>(false);
     const [mergeProcess, setMergeProcess] = useState<iFolderItem | null>(null);
     const [editFolderId, setEditFolderId] = useState<number | null>(null);
@@ -97,12 +95,12 @@ const CurrentSessionView = (props:any): JSX.Element => {
         );
     }
 
-    const handleAddToNewWorkspace = (): void => {
-        setAddToWorkspaceMessage(false);
+    const handleAddToNewFolder = (): void => {
+        setAddToFolderMessage(false);
         setCreateFolder(true);
     }
 
-    const handleAddToExistingWorkspace = (e: any): void => {
+    const handleAddToExistingFolder = (e: any): void => {
         if(e.selected === -1) return;
 
         const targetFolderId = e.selected;
@@ -135,7 +133,7 @@ const CurrentSessionView = (props:any): JSX.Element => {
             updatedFolder.windows = [...updatedFolder.windows,  ...newWindowItems];
 
             if(targetFolder){
-                setAddToWorkspaceMessage(false);
+                setAddToFolderMessage(false);
                 setMergeProcess(updatedFolder);
             }
         } 
@@ -161,9 +159,9 @@ const CurrentSessionView = (props:any): JSX.Element => {
                 title="Add to folder"
                 type="popup"
                 dropdownOptions={dropdownOptions}
-                onNewWorkspace={handleAddToNewWorkspace}
-                onExistingWorkspace={handleAddToExistingWorkspace}
-                onCancel={() => setAddToWorkspaceMessage(false)}
+                onNewFolder={handleAddToNewFolder}
+                onExistingFolder={handleAddToExistingFolder}
+                onCancel={() => setAddToFolderMessage(false)}
             />
         );
     }
@@ -243,7 +241,7 @@ const CurrentSessionView = (props:any): JSX.Element => {
                 <CircleButton 
                     disabled={false} 
                     bgCSSClass="bg-tbfColor-lightpurple" 
-                    onClick={() => setAddToWorkspaceMessage(true)}
+                    onClick={() => setAddToFolderMessage(true)}
                 >
                     <SaveIcon size={20} fill={"#fff"} />
                 </CircleButton>

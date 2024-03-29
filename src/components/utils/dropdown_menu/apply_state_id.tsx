@@ -1,9 +1,9 @@
-const applyStateId = (tag: string, id: number, selected : number | null): string => {
-    if(selected === id){
-        return `${tag}-option-${id}-active`;
+const applyStateValue = (tag: string, value: number, selected : number | null): string => {
+    if(selected === value){
+        return `${tag}-option-${value}-active`;
     }
     
-    return `${tag}-option-${id}`;
+    return `${tag}-option-${value}`;
 }
 
-export default applyStateId;
+export default applyStateValue;

@@ -1,6 +1,6 @@
 import PrimaryButton from '../utils/primary_button/primary_button';
 import Dropdown from "../utils/dropdown/dropdown";
-import iAddToFolderPopup from '../../interfaces/add_to_workspace_popup';
+import iAddToFolderPopup from '../../interfaces/add_to_folder_popup';
 import GenericPopup from '../utils/generic_popup';
 import { iDropdownSelected } from '../../interfaces/dropdown';
 import { useEffect, useState } from 'react';
@@ -20,21 +20,21 @@ const AddToFolderPopup = (props: iAddToFolderPopup): JSX.Element => {
 
     const { 
         dropdownOptions, 
-        onNewWorkspace, 
-        onExistingWorkspace, 
+        onNewFolder, 
+        onExistingFolder, 
         onCancel,
     } = props;
 
 
-    const handleToNewWorkspace = (): void => {
+    const handleToNewFolder = (): void => {
         onCancel();
-        onNewWorkspace();
+        onNewFolder();
     }
 
-    const handleAddToExistingWorkspace = (folder: iDropdownSelected): void => {
+    const handleAddToExistingFolder = (folder: iDropdownSelected): void => {
         onCancel();
         setShow(false);
-        onExistingWorkspace(folder);
+        onExistingFolder(folder);
     }
 
     const closeButtonSpecs: any = {
@@ -55,7 +55,7 @@ const AddToFolderPopup = (props: iAddToFolderPopup): JSX.Element => {
                                 tag="select-folder-dropdown" 
                                 preset={dropdownOptions[0]} 
                                 options={dropdownOptions} 
-                                onCallback={handleAddToExistingWorkspace} 
+                                onCallback={handleAddToExistingFolder} 
                             />
                         </div>
                     )
@@ -68,7 +68,7 @@ const AddToFolderPopup = (props: iAddToFolderPopup): JSX.Element => {
                         </p>
                     }
                     <div className="mb-6 mt-6">
-                        <PrimaryButton disabled={false} text="To a new folder" onClick={handleToNewWorkspace} />
+                        <PrimaryButton disabled={false} text="To a new folder" onClick={handleToNewFolder} />
                     </div>
                 </div>
             </div>

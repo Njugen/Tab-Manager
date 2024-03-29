@@ -3,10 +3,9 @@ import { SET_MARKED_WORKSPACES_ID,
     SET_MULTIPLE_MARKED_WORKSPACES_ID, 
     CLEAR_ALL_MARKED_WORKSPACES_ID,
     SET_WORKSPACES_SORT_ORDER,
+    CHANGE_WORKSPACES_VIEWMODE,
 
-    CHANGE_WORKSPACES_VIEWMODE
-} from "../types/work_space_settings_types";
-
+} from "../types/folder_space_settings_types";
 
 function setMarkedFoldersAction(input: number){
     return {
@@ -36,7 +35,7 @@ function setFoldersSortOrder(input: string){
     }
 }
 
-function changeWorkspacesViewMode(input: "list" | "grid"){
+function changeFoldersViewMode(input: "list" | "grid"){
     return {
         type: CHANGE_WORKSPACES_VIEWMODE,
         data: input
@@ -49,5 +48,5 @@ export {
     clearMarkedFoldersAction,
     setFoldersSortOrder,
 
-    changeWorkspacesViewMode
+    changeFoldersViewMode
 }

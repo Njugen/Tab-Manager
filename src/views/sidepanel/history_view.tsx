@@ -5,25 +5,21 @@ import { iFolderItem } from '../../interfaces/folder_item';
 import FolderManager from "../../components/features/folder_manager/folder_manager";
 import { clearInEditFolder } from "../../redux/actions/in_edit_folder_actions";
 import { clearMarkedTabsAction, setMarkMultipleTabsAction, setMarkedTabsAction, setTabsSortOrder, setUpTabsAction } from '../../redux/actions/history_settings_actions';
-import PrimaryButton from "../../components/utils/primary_button/primary_button";
-import { clearMarkedFoldersAction } from '../../redux/actions/workspace_settings_actions';
+import { clearMarkedFoldersAction } from '../../redux/actions/folder_settings_actions';
 import randomNumber from '../../tools/random_number';
 import AddToFolderPopup from "../../components/features/add_to_folder_popup";
 import { iTabItem } from '../../interfaces/tab_item';
 import { iFieldOption } from '../../interfaces/dropdown';
-import TextIconButton from '../../components/utils/text_icon_button';
-import SortIcon from "../../components/icons/sort_icon";
 import Dropdown from "../../components/utils/dropdown/dropdown";
 import TabItem from "../../components/features/tab_item";
 import CircleButton from './../../components/utils/circle_button';
 import SaveIcon from '../../components/icons/save_icon';
 import TrashIcon from '../../components/icons/trash_icon';
 import OpenBrowserIcon from "../../components/icons/open_browser_icon";
-import { saveToStorage } from "../../services/webex_api/storage";
 
 const HistoryView = (props:any): JSX.Element => {
     const [viewMode, setViewMode] = useState<string>("list");
-    const [addToWorkSpaceMessage, setAddToWorkspaceMessage] = useState<boolean>(false);
+    const [addToWorkSpaceMessage, setAddToFolderMessage] = useState<boolean>(false);
     const [mergeProcess, setMergeProcess] = useState<iFolderItem | null>(null);
     const [editFolderId, setEditFolderId] = useState<number | null>(null);
     const [createFolder, setCreateFolder] = useState<boolean>(false);
@@ -199,12 +195,12 @@ const HistoryView = (props:any): JSX.Element => {
         }
     };
 
-    const handleAddToNewWorkspace = (): void => {
-        setAddToWorkspaceMessage(false);
+    const handleAddToNewFolder = (): void => {
+        setAddToFolderMessage(false);
         setCreateFolder(true);
     }
 
-    const handleAddToExistingWorkspace = (e: any): void => {
+    const handleAddToExistingFolder = (e: any): void => {
         if(e.selected === -1) return;
 
         const targetFolderId = e.selected;
@@ -231,7 +227,7 @@ const HistoryView = (props:any): JSX.Element => {
         updatedFolder.windows = [...updatedFolder.windows, presetWindow];
 
         if(targetFolder){
-            setAddToWorkspaceMessage(false);
+            setAddToFolderMessage(false);
             setMergeProcess(updatedFolder);
         }
     }
@@ -256,9 +252,9 @@ const HistoryView = (props:any): JSX.Element => {
                 title="Add to folder"
                 type="popup"
                 dropdownOptions={dropdownOptions}
-                onNewWorkspace={handleAddToNewWorkspace}
-                onExistingWorkspace={handleAddToExistingWorkspace}
-                onCancel={() => setAddToWorkspaceMessage(false)}
+                onNewFolder={handleAddToNewFolder}
+                onExistingFolder={handleAddToExistingFolder}
+                onCancel={() => setAddToFolderMessage(false)}
             />
 
         );
@@ -353,7 +349,7 @@ const HistoryView = (props:any): JSX.Element => {
                 <CircleButton 
                     disabled={historySectionState.markedTabs.length > 0 ? false : true} 
                     bgCSSClass="bg-tbfColor-lightpurple" 
-                    onClick={() => setAddToWorkspaceMessage(true)}
+                    onClick={() => setAddToFolderMessage(true)}
                 >
                     <SaveIcon size={20} fill={"#fff"} />
                 </CircleButton>

@@ -5,10 +5,10 @@ import OpenedFolderIcon from "../../icons/opened_folder_icon";
 import "../../../styles/global_utils.module.scss";
 import { iFolderItem } from "../../../interfaces/folder_item";
 import {  useSelector } from "react-redux";
-import iWorkspaceState from "../../../interfaces/states/workspace_state";
 import { FolderActionBar, IFolderActionBarHandlers, IFolderActionBarStates } from "./child_components/folder_action_bar";
 import FolderWindowList from "./child_components/folder_window_list";
 import { getFromStorage, saveToStorage } from "../../../services/webex_api/storage";
+import iFolderState from '../../../interfaces/states/folder_state';
 
 /*
     Folder section containing description, windows and tabs, as well as various folder options
@@ -22,7 +22,7 @@ const FolderItem = (props: iFolderItem): JSX.Element => {
     const [showLaunchOptions, setShowLaunchOptions] = useState<boolean>(false);
     const [slideDown, setSlideDown] = useState<boolean>(false);
 
-    const workspaceSettingsState: iWorkspaceState = useSelector((state: any) => state.workspaceSettingsReducer);
+    const folderSettingsState: iFolderState = useSelector((state: any) => state.folderSettingsReducer);
 
     const { 
         id,
@@ -186,7 +186,7 @@ const FolderItem = (props: iFolderItem): JSX.Element => {
                     </div>}
                     
                     <div className="px-5 mb-8 mt-8">
-                        <FolderWindowList windows={windows} viewMode={workspaceSettingsState.viewMode} />
+                        <FolderWindowList windows={windows} viewMode={folderSettingsState.viewMode} />
                     </div></>
                     )}
                 </div>

@@ -8,7 +8,7 @@ import { clearInEditFolder  } from '../../../redux/actions/in_edit_folder_action
 import TextIconButton from '../../../components/utils/text_icon_button';
 import randomNumber from '../../../tools/random_number';
 import { iWindowItem } from '../../../interfaces/window_item';
-import { clearMarkedFoldersAction } from '../../../redux/actions/workspace_settings_actions';
+import { clearMarkedFoldersAction } from '../../../redux/actions/folder_settings_actions';
 import Dropdown from '../../../components/utils/dropdown/dropdown';
 import TabItem from '../../../components/features/tab_item';
 import { changeTabsViewMode, clearMarkedTabsAction, setMarkMultipleTabsAction, setMarkedTabsAction, setTabsSortOrder, setUpTabsAction } from '../../../redux/actions/history_settings_actions';
@@ -16,7 +16,6 @@ import { iTabItem } from '../../../interfaces/tab_item';
 import { iDropdownSelected, iFieldOption } from '../../../interfaces/dropdown';
 import AddToFolderPopup from '../../../components/features/add_to_folder_popup';
 import SectionContainer from "../../../components/utils/section_container";
-import iHistoryState from "../../../interfaces/states/history_state";
 import { getFromStorage, saveToStorage } from "../../../services/webex_api/storage";
 import SelectedCheckboxIcon from "../../../components/icons/selected_checkbox_icon";
 import TrashIcon from "../../../components/icons/trash_icon";
@@ -25,7 +24,7 @@ import ListIcon from "../../../components/icons/list_icon";
 import DeselectedCheckboxIcon from "../../../components/icons/deselected_checkbox_icon";
 
 const HistorySection = (props: any): JSX.Element => {
-    const [addToWorkSpaceMessage, setAddToWorkspaceMessage] = useState<boolean>(false);
+    const [addToWorkSpaceMessage, setAddToFolderMessage] = useState<boolean>(false);
     const [mergeProcessFolder, setMergeProcessFolder] = useState<iFolderItem | null>(null);
     const [createFolder, setCreateFolder] = useState<boolean>(false);
 
@@ -202,7 +201,7 @@ const HistorySection = (props: any): JSX.Element => {
                             {renderSortOptionsDropdown()}
                         </div>
                         <PrimaryButton disabled={markedTabs.length > 0 ? false : true} text="Open selected" onClick={handleOpenSelected} />
-                        <PrimaryButton disabled={markedTabs.length > 0 ? false : true} text="Add to folder" onClick={() => setAddToWorkspaceMessage(true)} />
+                        <PrimaryButton disabled={markedTabs.length > 0 ? false : true} text="Add to folder" onClick={() => setAddToFolderMessage(true)} />
                     </div>
                 </div>
             </>
@@ -253,12 +252,12 @@ const HistorySection = (props: any): JSX.Element => {
         return result; 
     };
 
-    const handleAddToNewWorkspace = (): void => {
-        setAddToWorkspaceMessage(false);
+    const handleAddToNewFolder = (): void => {
+        setAddToFolderMessage(false);
         setCreateFolder(true);
     }
 
-    const handleAddToExistingWorkspace = (e: any): void => {
+    const handleAddToExistingFolder = (e: any): void => {
         if(e.selected === -1) return;
 
         const targetFolderId = e.selected;
@@ -285,7 +284,7 @@ const HistorySection = (props: any): JSX.Element => {
         updatedFolder.windows = [...updatedFolder.windows, presetWindow];
 
         if(targetFolder){
-            setAddToWorkspaceMessage(false);
+            setAddToFolderMessage(false);
             setMergeProcessFolder(updatedFolder);
         }
     }
@@ -310,9 +309,9 @@ const HistorySection = (props: any): JSX.Element => {
                 title="Add to folder"
                 type="slide-in"
                 dropdownOptions={dropdownOptions}
-                onNewWorkspace={handleAddToNewWorkspace}
-                onExistingWorkspace={handleAddToExistingWorkspace}
-                onCancel={() => setAddToWorkspaceMessage(false)}
+                onNewFolder={handleAddToNewFolder}
+                onExistingFolder={handleAddToExistingFolder}
+                onCancel={() => setAddToFolderMessage(false)}
             />
 
         );

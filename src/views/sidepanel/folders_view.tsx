@@ -7,7 +7,7 @@ import { getFromStorage, saveToStorage } from '../../services/webex_api/storage'
 import { deleteFolderAction, readAllFoldersFromBrowserAction } from '../../redux/actions/folder_collection_actions';
 import FolderManager from "../../components/features/folder_manager/folder_manager";
 import { clearInEditFolder } from "../../redux/actions/in_edit_folder_actions";
-import { clearMarkedFoldersAction } from "../../redux/actions/workspace_settings_actions";
+import { clearMarkedFoldersAction } from "../../redux/actions/folder_settings_actions";
 import PopupMessage from "../../components/utils/popup_message";
 import PrimaryButton from "../../components/utils/primary_button/primary_button";
 import iFoldersView from "../../interfaces/folders_view";

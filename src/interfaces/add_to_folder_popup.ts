@@ -4,8 +4,8 @@ interface iAddToFolderPopup {
     title: string,
     type: "slide-in" | "popup"
     dropdownOptions: Array<iFieldOption>,
-    onNewWorkspace: () => void,
-    onExistingWorkspace: (e: any) => void
+    onNewFolder: () => void,
+    onExistingFolder: (e: any) => void
     onCancel: () => void,
 }
 

@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { clearInEditFolder  } from '../../../redux/actions/in_edit_folder_actions';
 import randomNumber from '../../../tools/random_number';
 import { iWindowItem } from '../../../interfaces/window_item';
-import { clearMarkedFoldersAction } from '../../../redux/actions/workspace_settings_actions';
+import { clearMarkedFoldersAction } from '../../../redux/actions/folder_settings_actions';
 import { clearMarkedTabsAction} from '../../../redux/actions/history_settings_actions';
 import { iTabItem } from '../../../interfaces/tab_item';
 import { iFieldOption } from '../../../interfaces/dropdown';
@@ -17,7 +17,7 @@ import SectionContainer from "../../../components/utils/section_container";
 import WindowItem from "../../../components/features/window_item";
 
 const CurrentSessionSection = (props: any): JSX.Element => {
-    const [addToWorkSpaceMessage, setAddToWorkspaceMessage] = useState<boolean>(false);
+    const [addToWorkSpaceMessage, setAddToFolderMessage] = useState<boolean>(false);
     const [mergeProcess, setMergeProcess] = useState<iFolderItem | null>(null);
     const [createFolder, setCreateFolder] = useState<boolean>(false);
 
@@ -93,7 +93,7 @@ const CurrentSessionSection = (props: any): JSX.Element => {
                         <PrimaryButton 
                             disabled={false} 
                             text="Add to folder" 
-                            onClick={() => setAddToWorkspaceMessage(true)} 
+                            onClick={() => setAddToFolderMessage(true)} 
                         />
                     </div>
                 </div>
@@ -125,12 +125,12 @@ const CurrentSessionSection = (props: any): JSX.Element => {
         }
     }
 
-    const handleAddToNewWorkspace = (): void => {
-        setAddToWorkspaceMessage(false);
+    const handleAddToNewFolder = (): void => {
+        setAddToFolderMessage(false);
         setCreateFolder(true);
     }
 
-    const handleAddToExistingWorkspace = (e: any): void => {
+    const handleAddToExistingFolder = (e: any): void => {
         if(e.selected === -1) return;
 
         const targetFolderId = e.selected;
@@ -163,7 +163,7 @@ const CurrentSessionSection = (props: any): JSX.Element => {
             updatedFolder.windows = [...updatedFolder.windows,  ...newWindowItems];
 
             if(targetFolder){
-                setAddToWorkspaceMessage(false);
+                setAddToFolderMessage(false);
                 setMergeProcess(updatedFolder);
             }
         }
@@ -190,9 +190,9 @@ const CurrentSessionSection = (props: any): JSX.Element => {
                 title="Add to folder"
                 type="slide-in"
                 dropdownOptions={dropdownOptions}
-                onNewWorkspace={handleAddToNewWorkspace}
-                onExistingWorkspace={handleAddToExistingWorkspace}
-                onCancel={() => setAddToWorkspaceMessage(false)}
+                onNewFolder={handleAddToNewFolder}
+                onExistingFolder={handleAddToExistingFolder}
+                onCancel={() => setAddToFolderMessage(false)}
             />
         );
     }

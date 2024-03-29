@@ -1,6 +1,6 @@
 const { local, sync } = chrome.storage;
 
-const saveToStorage = (type: "local" | "local", key: string, value: any) => {
+const saveToStorage = (type: "local" | "sync", key: string, value: any) => {
     const payload = {
         [key]: value
     }
@@ -8,17 +8,17 @@ const saveToStorage = (type: "local" | "local", key: string, value: any) => {
     if(type === "local"){
         local.set(payload);
 
-    } else if(type === "local"){
+    } else if(type === "sync"){
         sync.set(payload);
     }
 }
 
-const getFromStorage = (type: "local" | "local", key: string, callback: (items: any) => void) => {
+const getFromStorage = (type: "local" | "sync", key: string, callback: (items: any) => void) => {
     let result;
     
     if(type === "local"){
         result = local.get(key, callback);
-    } else if(type === "local"){
+    } else if(type === "sync"){
         result = sync.get(key, callback);
     }
  

@@ -1,7 +1,7 @@
-interface iWorkspaceState {
+interface iFolderState {
     markedFoldersId: Array<number>
     folderSortOptionId: number,
     viewMode: "list" | "grid",
 }
 
-export default iWorkspaceState;
+export default iFolderState;
