@@ -1,16 +1,16 @@
 import PrimaryButton from '../utils/primary_button/primary_button';
 import Dropdown from "../utils/dropdown/dropdown";
-import iAddToWorkspacePopup from '../../interfaces/add_to_workspace_popup';
+import iAddToFolderPopup from '../../interfaces/add_to_workspace_popup';
 import GenericPopup from '../utils/generic_popup';
 import { iDropdownSelected } from '../../interfaces/dropdown';
 import { useEffect, useState } from 'react';
 
 /*
     Popup where the user may choose where to add
-    selected tabs (either to a new or existing workspace)
+    selected tabs (either to a new or existing folder)
 */
 
-const AddToWorkspacePopup = (props: iAddToWorkspacePopup): JSX.Element => {
+const AddToFolderPopup = (props: iAddToFolderPopup): JSX.Element => {
     const [show, setShow] = useState<boolean>(false);
     const { type, title } = props;
 
@@ -49,10 +49,10 @@ const AddToWorkspacePopup = (props: iAddToWorkspacePopup): JSX.Element => {
                     dropdownOptions.length > 1 && (
                         <div className="mt-10 text-center w-[350px] px-8">
                             <p className="text-lg text-black inline-block mb-4 font-semibold">
-                                To an existing workspace
+                                To an existing folder
                             </p>
                             <Dropdown 
-                                tag="select-workspace-dropdown" 
+                                tag="select-folder-dropdown" 
                                 preset={dropdownOptions[0]} 
                                 options={dropdownOptions} 
                                 onCallback={handleAddToExistingWorkspace} 
@@ -68,7 +68,7 @@ const AddToWorkspacePopup = (props: iAddToWorkspacePopup): JSX.Element => {
                         </p>
                     }
                     <div className="mb-6 mt-6">
-                        <PrimaryButton disabled={false} text="To a new workspace" onClick={handleToNewWorkspace} />
+                        <PrimaryButton disabled={false} text="To a new folder" onClick={handleToNewWorkspace} />
                     </div>
                 </div>
             </div>
@@ -76,4 +76,4 @@ const AddToWorkspacePopup = (props: iAddToWorkspacePopup): JSX.Element => {
     );
 }
 
-export default AddToWorkspacePopup;
+export default AddToFolderPopup;

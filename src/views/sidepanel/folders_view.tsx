@@ -121,7 +121,7 @@ const FoldersView = (props: iFoldersView): JSX.Element => {
         let render;
 
         if(createFolder === true){
-            render = <FolderManager type="popup" title="Create workspace" onClose={handleCloseFolderManager} />;
+            render = <FolderManager type="popup" title="Create folder" onClose={handleCloseFolderManager} />;
         } else {
             const targetFolder: Array<iFolderItem> = folderCollectionState.filter((item: iFolderItem) => editFolderId === item.id);
             const input: iFolderItem = {...targetFolder[0]};
@@ -192,7 +192,7 @@ const FoldersView = (props: iFoldersView): JSX.Element => {
             {removalTarget &&
                 <PopupMessage
                     title="Warning" 
-                    text={`You are about to remove the "${removalTarget.name}" workspace and all its contents. This is irreversible, do you want to proceed?`}
+                    text={`You are about to remove the "${removalTarget.name}" folder and all its contents. This is irreversible, do you want to proceed?`}
                     primaryButton={{ text: "Yes, remove this folder", callback: () => { dispatch(deleteFolderAction(removalTarget.id)); setRemovalTarget(null)}}}
                     secondaryButton={{ text: "No, don't remove", callback: () => setRemovalTarget(null)}}    
                 />

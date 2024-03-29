@@ -202,7 +202,7 @@ const FolderManager = (props: iPopup): JSX.Element => {
             }
         
             <GenericPopup title={title} type={type} show={show} cancel={cancelButtonSpecs} save={saveButtonSpecs}>
-                <FormField label="Name *" error={inValidFields.name} description="Give a name to this workspace. A sensible name may help your workflow when relevant tabs are needed.">
+                <FormField label="Name *" error={inValidFields.name} description="Give a name to this folder. A sensible name may help your workflow when relevant tabs are needed.">
                     <input 
                         data-testid="name-field" 
                         id="name-field" 
@@ -212,7 +212,7 @@ const FolderManager = (props: iPopup): JSX.Element => {
                         onBlur={(e: any) => handleChangeField("name", e.target.value)} 
                     />
                 </FormField>
-                <FormField label="Description" description="Describe the purpose of this workspace.">
+                <FormField label="Description" description="Describe the purpose of this folder.">
                     <textarea 
                         data-testid="desc-field" 
                         id="desc-field" 
@@ -225,7 +225,7 @@ const FolderManager = (props: iPopup): JSX.Element => {
                     <div className="w-full">
                         <h4 className={`font-semibold text-lg mb-1 ${inValidFields.windows === true && "text-red-500"}`}>Windows and tabs *</h4>
                         <p className={`text-sm leading-6 text-tbfColor-darkergrey text-start ${inValidFields.windows === true && "text-red-500"}`}>
-                            You may add as windows and tabs to this workspace as you like to this workspace, although a maximum of 25-30 tabs is recommended. 
+                            You may add as windows and tabs to this folder as you like to this folder, although a maximum of 25-30 tabs is recommended. 
                         </p>
                         <WindowManager />
                     </div>

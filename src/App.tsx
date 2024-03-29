@@ -1,16 +1,8 @@
 import './App.css';
 import "./styles/global_utils.module.scss";
-import styles from "./styles/global_utils.module.scss";
-import Navlink from './components/utils/navlink';
-import { useRef, useState, useEffect } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import SettingsView from './views/settings/settings_view';
-import LeftIcon from './components/icons/left_icon';
-import RightIcon from './components/icons/right_icon';
-import AdvancedSearchBar from './components/features/advanced_search_bar/advanced_search_bar';
 import RenderOptionsPage from './baseUI/options_page';
 import RenderSidePanel from './baseUI/sidepanel';
-import DashboardView from './views/dashboard/dashboard_view';
 
 /*
   This file acts as the very foundation of this plugin's UI. This file

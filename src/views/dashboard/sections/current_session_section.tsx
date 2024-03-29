@@ -12,7 +12,7 @@ import { clearMarkedTabsAction} from '../../../redux/actions/history_settings_ac
 import { iTabItem } from '../../../interfaces/tab_item';
 import { iFieldOption } from '../../../interfaces/dropdown';
 import { setUpWindowsAction } from '../../../redux/actions/current_session_actions';
-import AddToWorkspacePopup from '../../../components/features/add_to_workspace_popup';
+import AddToFolderPopup from '../../../components/features/add_to_folder_popup';
 import SectionContainer from "../../../components/utils/section_container";
 import WindowItem from "../../../components/features/window_item";
 
@@ -92,7 +92,7 @@ const CurrentSessionSection = (props: any): JSX.Element => {
                     <div className="flex items-center justify-end">
                         <PrimaryButton 
                             disabled={false} 
-                            text="Add to workspace" 
+                            text="Add to folder" 
                             onClick={() => setAddToWorkspaceMessage(true)} 
                         />
                     </div>
@@ -180,14 +180,14 @@ const CurrentSessionSection = (props: any): JSX.Element => {
         const dropdownOptions: Array<iFieldOption> = [
             {
                 id: -1,
-                label: "Select a workspace"
+                label: "Select a folder"
             },
             ...options
         ];
 
         return (
-            <AddToWorkspacePopup
-                title="Add to workspace"
+            <AddToFolderPopup
+                title="Add to folder"
                 type="slide-in"
                 dropdownOptions={dropdownOptions}
                 onNewWorkspace={handleAddToNewWorkspace}
@@ -230,7 +230,7 @@ const CurrentSessionSection = (props: any): JSX.Element => {
                 marked: false,
                 windows: [...presetWindows],
             }
-            render = <FolderManager type="slide-in" title="Create workspace" folder={folderSpecs} onClose={handleCloseFolderManager} />;
+            render = <FolderManager type="slide-in" title="Create folder" folder={folderSpecs} onClose={handleCloseFolderManager} />;
         } else if(mergeProcess !== null) {
             render = <FolderManager type="slide-in" title={`Merge tabs to ${mergeProcess.name}`} folder={mergeProcess} onClose={handleCloseFolderManager} />;
         }

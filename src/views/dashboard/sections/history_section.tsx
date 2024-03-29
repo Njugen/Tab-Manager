@@ -14,7 +14,7 @@ import TabItem from '../../../components/features/tab_item';
 import { changeTabsViewMode, clearMarkedTabsAction, setMarkMultipleTabsAction, setMarkedTabsAction, setTabsSortOrder, setUpTabsAction } from '../../../redux/actions/history_settings_actions';
 import { iTabItem } from '../../../interfaces/tab_item';
 import { iDropdownSelected, iFieldOption } from '../../../interfaces/dropdown';
-import AddToWorkspacePopup from '../../../components/features/add_to_workspace_popup';
+import AddToFolderPopup from '../../../components/features/add_to_folder_popup';
 import SectionContainer from "../../../components/utils/section_container";
 import iHistoryState from "../../../interfaces/states/history_state";
 import { getFromStorage, saveToStorage } from "../../../services/webex_api/storage";
@@ -202,7 +202,7 @@ const HistorySection = (props: any): JSX.Element => {
                             {renderSortOptionsDropdown()}
                         </div>
                         <PrimaryButton disabled={markedTabs.length > 0 ? false : true} text="Open selected" onClick={handleOpenSelected} />
-                        <PrimaryButton disabled={markedTabs.length > 0 ? false : true} text="Add to workspace" onClick={() => setAddToWorkspaceMessage(true)} />
+                        <PrimaryButton disabled={markedTabs.length > 0 ? false : true} text="Add to folder" onClick={() => setAddToWorkspaceMessage(true)} />
                     </div>
                 </div>
             </>
@@ -300,14 +300,14 @@ const HistorySection = (props: any): JSX.Element => {
         const dropdownOptions: Array<iFieldOption> = [
             {
                 id: -1,
-                label: "Select a workspace"
+                label: "Select a folder"
             },
             ...options
         ];
 
         return (
-            <AddToWorkspacePopup 
-                title="Add to workspace"
+            <AddToFolderPopup 
+                title="Add to folder"
                 type="slide-in"
                 dropdownOptions={dropdownOptions}
                 onNewWorkspace={handleAddToNewWorkspace}
@@ -355,7 +355,7 @@ const HistorySection = (props: any): JSX.Element => {
                 marked: false,
                 windows: [presetWindow],
             }
-            render = <FolderManager type="slide-in" title="Create workspace" folder={folderSpecs} onClose={handlePopupClose} />;
+            render = <FolderManager type="slide-in" title="Create folder" folder={folderSpecs} onClose={handlePopupClose} />;
         } else if(mergeProcessFolder !== null) {
             render = <FolderManager type="slide-in" title={`Merge tabs to ${mergeProcessFolder.name}`} folder={mergeProcessFolder} onClose={handlePopupClose} />;
         } else {

@@ -1,6 +1,6 @@
 import { iFieldOption } from "./dropdown";
 
-interface iAddToWorkspacePopup {
+interface iAddToFolderPopup {
     title: string,
     type: "slide-in" | "popup"
     dropdownOptions: Array<iFieldOption>,
@@ -9,4 +9,4 @@ interface iAddToWorkspacePopup {
     onCancel: () => void,
 }
 
-export default iAddToWorkspacePopup;
+export default iAddToFolderPopup;

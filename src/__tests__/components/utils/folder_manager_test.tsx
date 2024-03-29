@@ -95,7 +95,7 @@ afterEach(() => {
    store.dispatch(setCurrentlyEditingTab(false));
 });
 
-describe("Create new workspace", () => {
+describe("Create new folder", () => {
     test(`popup title reads "${mockNewFolderTitle}"`, () => {
         render(
             <Provider store={store}>
@@ -186,7 +186,7 @@ describe("Create new workspace", () => {
     });
 });
 
-describe("Edit workspace", () => {
+describe("Edit folder", () => {
     test(`popup title reads "${mockEditFolderTitle}"`, () => {
         render(
             <Provider store={store}>

@@ -8,7 +8,7 @@ import { clearMarkedTabsAction, setMarkMultipleTabsAction, setMarkedTabsAction, 
 import PrimaryButton from "../../components/utils/primary_button/primary_button";
 import { clearMarkedFoldersAction } from '../../redux/actions/workspace_settings_actions';
 import randomNumber from '../../tools/random_number';
-import AddToWorkspacePopup from "../../components/features/add_to_workspace_popup";
+import AddToFolderPopup from "../../components/features/add_to_folder_popup";
 import { iTabItem } from '../../interfaces/tab_item';
 import { iFieldOption } from '../../interfaces/dropdown';
 import TextIconButton from '../../components/utils/text_icon_button';
@@ -246,14 +246,14 @@ const HistoryView = (props:any): JSX.Element => {
         const dropdownOptions: Array<iFieldOption> = [
             {
                 id: -1,
-                label: "Select a workspace"
+                label: "Select a folder"
             },
             ...options
         ];
 
         return (
-            <AddToWorkspacePopup 
-                title="Add to workspace"
+            <AddToFolderPopup 
+                title="Add to folder"
                 type="popup"
                 dropdownOptions={dropdownOptions}
                 onNewWorkspace={handleAddToNewWorkspace}
@@ -303,7 +303,7 @@ const HistoryView = (props:any): JSX.Element => {
                 marked: false,
                 windows: [presetWindow],
             }
-            render = <FolderManager type="popup" title="Create workspace" folder={folderSpecs} onClose={handlePopupClose} />;
+            render = <FolderManager type="popup" title="Create folder" folder={folderSpecs} onClose={handlePopupClose} />;
         } else if(mergeProcess !== null) {
 
             render = <FolderManager type="popup" title={`Merge tabs to ${mergeProcess.name}`} folder={mergeProcess} onClose={handlePopupClose} />;

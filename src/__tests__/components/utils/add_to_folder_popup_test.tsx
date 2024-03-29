@@ -1,7 +1,7 @@
 import { render, screen, within, fireEvent } from "@testing-library/react";
 import '@testing-library/jest-dom'
 
-import AddToWorkspacePopup from "../../../components/features/add_to_workspace_popup";
+import AddToFolderPopup from "../../../components/features/add_to_folder_popup";
 import { iFieldOption } from "../../../interfaces/dropdown";
 import randomNumber from "../../../tools/random_number";
 
@@ -25,12 +25,12 @@ const mockOptions: Array<iFieldOption> = [
 ];
 const mockNoOptions: Array<iFieldOption> = [];
 
-describe("extensive test of <AddToWorkspacePopup /> behaviour", () => {
+describe("extensive test of <AddToFolderPopup /> behaviour", () => {
     test("All props in place. Dropdown not visible if there are no options", () => {
         const mockTitle: string = randomNumber().toString();
 
         render(
-            <AddToWorkspacePopup 
+            <AddToFolderPopup 
                 title={mockTitle}
                 type="slide-in" 
                 dropdownOptions={mockNoOptions}
@@ -45,8 +45,8 @@ describe("extensive test of <AddToWorkspacePopup /> behaviour", () => {
         let titleText = screen.getByText(mockTitle);
         expect(titleText).toBeInTheDocument();
 
-        // Test add new workspace button again
-        let newWorkSpaceButton = screen.getByText("To a new workspace", { selector: "button" });
+        // Test add new folder button again
+        let newWorkSpaceButton = screen.getByText("To a new folder", { selector: "button" });
         expect(newWorkSpaceButton).toBeInTheDocument();
 
         fireEvent.click(newWorkSpaceButton);
@@ -65,7 +65,7 @@ describe("extensive test of <AddToWorkspacePopup /> behaviour", () => {
         const mockTitle = randomNumber().toString();
 
         render(
-            <AddToWorkspacePopup 
+            <AddToFolderPopup 
                 title={mockTitle} 
                 type="slide-in" 
                 dropdownOptions={mockOptions}
@@ -82,8 +82,8 @@ describe("extensive test of <AddToWorkspacePopup /> behaviour", () => {
         let titleText = screen.getByText(mockTitle);
         expect(titleText).toBeInTheDocument();
 
-        // Add new workspace button
-        let newWorkSpaceButton = screen.getByText("To a new workspace", { selector: "button" });
+        // Add new folder button
+        let newWorkSpaceButton = screen.getByText("To a new folder", { selector: "button" });
         expect(newWorkSpaceButton).toBeInTheDocument();
 
         fireEvent.click(newWorkSpaceButton);
@@ -100,7 +100,7 @@ describe("extensive test of <AddToWorkspacePopup /> behaviour", () => {
         optionList = screen.queryByRole("list");
         expect(optionList).not.toBeInTheDocument();
 
-        let dropdown = screen.getByTestId("select-workspace-dropdown-selector");
+        let dropdown = screen.getByTestId("select-folder-dropdown-selector");
         
         // The preset text matches mockOptions[0].label
         let presetText = within(dropdown).getByText(mockOptions[0].label);
@@ -139,7 +139,7 @@ describe("extensive test of <AddToWorkspacePopup /> behaviour", () => {
         expect(mockOnExistingWorkspace).toHaveBeenCalledWith({ selected: arg.id });
 
         // The dropdown now shows arg.label as its selected text
-        dropdown = screen.getByTestId("select-workspace-dropdown-selector");
+        dropdown = screen.getByTestId("select-folder-dropdown-selector");
         expect(dropdown).toHaveTextContent(arg.label);
 
         // Click the dropdown again
@@ -160,8 +160,8 @@ describe("extensive test of <AddToWorkspacePopup /> behaviour", () => {
         // mockOnExistingWorkspace is called
         expect(mockOnExistingWorkspace).toHaveBeenCalledWith({ selected: arg.id });
         
-        // Test add new workspace button again
-        newWorkSpaceButton = screen.getByText("To a new workspace", { selector: "button" });
+        // Test add new folder button again
+        newWorkSpaceButton = screen.getByText("To a new folder", { selector: "button" });
         expect(newWorkSpaceButton).toBeInTheDocument();
 
         fireEvent.click(newWorkSpaceButton);

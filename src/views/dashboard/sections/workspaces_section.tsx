@@ -148,7 +148,7 @@ const WorkspacesSection = (props: any): JSX.Element => {
         let render;
 
         if(createFolder === true){
-            render = <FolderManager type="slide-in" title="Create workspace" onClose={handleCloseFolderManager} />;
+            render = <FolderManager type="slide-in" title="Create folder" onClose={handleCloseFolderManager} />;
         } else {
             if(mergeProcess !== null){
                 return <FolderManager type="slide-in" title={`Create folder by merge`} folder={mergeProcess} onClose={handleCloseFolderManager} />
@@ -326,7 +326,7 @@ const WorkspacesSection = (props: any): JSX.Element => {
         return <Dropdown tag="sort-folders" preset={presetOption[0] || optionsList[0]} options={optionsList} onCallback={handleSortFolders} />
     }
 
-    // Render the action buttons for workspace area
+    // Render the action buttons for folder area
     const renderOptionsMenu = (): JSX.Element => {
         const { markedFoldersId } = workspaceSettingsState;
         let markSpecs: any;
@@ -410,7 +410,7 @@ const WorkspacesSection = (props: any): JSX.Element => {
                             <div className="relative w-[175px] mr-4 flex items-center">
                                 {renderSortOptionsDropdown()}
                             </div>
-                            <PrimaryButton disabled={false} text="Create workspace" onClick={() => setCreateFolder(true)} />
+                            <PrimaryButton disabled={false} text="Create folder" onClick={() => setCreateFolder(true)} />
                         </div>
                     </div>
                 </>
@@ -426,7 +426,7 @@ const WorkspacesSection = (props: any): JSX.Element => {
             <div className="flex flex-col items-center justify-center h-[50%]">
                 <Paragraph text="You currently have no folders available. Please, create a new folder" />
                 <div className="mt-8">
-                    <PrimaryButton disabled={false} text="Create workspace" onClick={() => setCreateFolder(true)} />
+                    <PrimaryButton disabled={false} text="Create folder" onClick={() => setCreateFolder(true)} />
                 </div>
             </div>
         </>
@@ -547,7 +547,7 @@ const WorkspacesSection = (props: any): JSX.Element => {
             {removalTarget &&
                 <PopupMessage
                     title="Warning" 
-                    text={`You are about to remove the "${removalTarget.name}" workspace and all its contents. This is irreversible, do you want to proceed?`}
+                    text={`You are about to remove the "${removalTarget.name}" folder and all its contents. This is irreversible, do you want to proceed?`}
                     primaryButton={{ text: "Yes, remove this folder", callback: () => { dispatch(deleteFolderAction(removalTarget.id)); setRemovalTarget(null)}}}
                     secondaryButton={{ text: "No, don't remove", callback: () => setRemovalTarget(null)}}    
                 />
@@ -562,7 +562,7 @@ const WorkspacesSection = (props: any): JSX.Element => {
             }
             {renderFolderManagerPopup()}
         
-            <SectionContainer id="workspace-section" title="Workspaces" options={renderOptionsMenu}>
+            <SectionContainer id="folder-section" title="Workspaces" options={renderOptionsMenu}>
                 <>
                     {loaded === true && !hasFolders() && renderMessageBox()}
                     {<div className={`${workspaceSettingsState.viewMode === "list" ? "mx-auto mt-12" : `grid xl:grid-cols-2 2xl:grid-cols-2 3xl:grid-cols-3 grid-flow-dense gap-x-4 gap-y-0 mt-8`}`}>
