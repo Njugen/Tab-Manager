@@ -38,6 +38,15 @@ const {
     Folder management section listing all available folders/folders.
 */
 
+const colsCount = (): number => {
+    if(window.innerWidth > 1920){
+        return 4;
+    } else if(window.innerWidth > 1280) {
+        return 3;
+    }
+    return 2;
+};
+
 const FoldersSection = (props: any): JSX.Element => {
     const [editFolderId, setEditFolderId] = useState<number | null>(null);
     const [createFolder, setCreateFolder] = useState<boolean>(false);
@@ -55,8 +64,6 @@ const FoldersSection = (props: any): JSX.Element => {
 
     const folderCollectionState = useSelector((state: any) => state.folderCollectionReducer);
     const folderSettingsState = useSelector((state: any) => state.folderSettingsReducer);
-
-    const colsCount: number = window.innerWidth > 1920 ? 3 : 2;
 
     // Get from browser storage and store into redux 
     useEffect(() => {
@@ -274,7 +281,7 @@ const FoldersSection = (props: any): JSX.Element => {
         // Determine the number of columns to be rendered, based on colsCount
         let colsList: Array<Array<JSX.Element>> = [];
         
-        for(let i = 0; i < colsCount; i++){
+        for(let i = 0; i < colsCount(); i++){
             colsList.push([]);
         }
 
@@ -301,13 +308,9 @@ const FoldersSection = (props: any): JSX.Element => {
                 />
             )
             
-            if(i % colsCount === 0){   
-                colsList[0].push(result);
-            } else if(i % colsCount === 1) {
-                colsList[1].push(result);
-            } else if(i % colsCount === 2){
-                colsList[2].push(result);
-            }
+     
+            colsList[i % colsCount()].push(result);
+           
         }
 
         const columnsRender: Array<JSX.Element> = colsList.map((col) => <div>{col}</div>);
@@ -564,7 +567,7 @@ const FoldersSection = (props: any): JSX.Element => {
             <SectionContainer id="folder-section" title="Folders" options={renderOptionsMenu}>
                 <>
                     {loaded === true && !hasFolders() && renderMessageBox()}
-                    {<div className={`${folderSettingsState.viewMode === "list" ? "mx-auto mt-12" : `grid xl:grid-cols-2 2xl:grid-cols-2 3xl:grid-cols-3 grid-flow-dense gap-x-4 gap-y-0 mt-8`}`}>
+                    {<div className={`${folderSettingsState.viewMode === "list" ? "mx-auto mt-12" : `grid xl:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-4 grid-flow-dense gap-x-4 gap-y-0 mt-8`}`}>
                         {renderFolders()}
                     </div>}
                 </>
