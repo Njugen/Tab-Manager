@@ -7,13 +7,13 @@ import randomNumber from "../../../tools/random_number";
 import { initInEditFolder, updateInEditFolder} from "../../../redux/actions/in_edit_folder_actions";
 import { iFolderItem } from "../../../interfaces/folder_item";
 import PopupMessage from '../../utils/popup_message';
-import { useDispatch, useSelector } from "../../../redux/mocked_hooks";
 import { setShowFolderChangeWarning } from "../../../redux/actions/warning_actions";
 import { createFolderAction, updateFolderAction } from "../../../redux/actions/folder_collection_actions";
 import { setCurrentlyEditingTab } from "../../../redux/actions/misc_actions";
 import windowListChanged from "./window_list_changed";
 import WindowManager from "../window_manager/window_manager";
 import GenericPopup from "../../utils/generic_popup";
+import { useDispatch, useSelector } from "react-redux";
 
 /*
     A popup providing oversight of a folder's settings and available windows/tabs.
@@ -38,10 +38,9 @@ const FolderManager = (props: iPopup): JSX.Element => {
 
     // Read necessary data from redux. These data are are used in this component
     // for various tasks. Values may be dispatched back to these redux states for use in other multilevel components
-    const folder_settings_state = useSelector((state: any) => state.folderSettingsReducer);
     const misc_state = useSelector((state: any) => state.miscReducer);
     const folder_collection_state = useSelector((state: any) => state.folderCollectionReducer);
-    const warning_actions_state = useSelector((state: any) => state.warningActionsReducer);
+    const warning_actions_state = useSelector((state: any) => state.WarningActionsReducer);
     const in_edit_folder_state = useSelector((state: any) => state.folderManagerReducer);
 
     useEffect(() => {
@@ -130,7 +129,9 @@ const FolderManager = (props: iPopup): JSX.Element => {
     // Perform tasks and close this form popup
     const handleClose = (skipWarning?: boolean): void => {
         chrome.storage.local.get("cancellation_warning_setting", (data) => {
+            
             if((modified === true && skipWarning !== true) && data.cancellation_warning_setting === true){
+                console.log("WWW", data);
                 // Show a warning when a form has been modified AND when settings explicitly permits it.
                 dispatch(setShowFolderChangeWarning(true));
             } else {
@@ -152,6 +153,8 @@ const FolderManager = (props: iPopup): JSX.Element => {
 
     // Validate and save the data to redux, then close the popup form.
     const handleSave = (): void => {
+        document.body.style.overflowY = "hidden";
+        document.body.style.overflowX = "hidden";
         validateForm(() => {
             if(props.folder){
                 // Find out if process is merge or edit
@@ -166,7 +169,8 @@ const FolderManager = (props: iPopup): JSX.Element => {
             } else {
                 dispatch(createFolderAction(in_edit_folder_state));
             }   
-      
+            document.body.style.overflowY = "auto";
+            document.body.style.overflowX = "auto";
             handleClose(true);
         });
        
@@ -211,7 +215,7 @@ const FolderManager = (props: iPopup): JSX.Element => {
                         data-testid="name-field" 
                         id="name-field" 
                         type="text" 
-                        defaultValue={in_edit_folder_state?.name} 
+                        defaultValue={folder?.name} 
                         className={predef.textfield_full} 
                         onBlur={(e: any) => handleChangeField("name", e.target.value)} 
                     />
@@ -220,7 +224,7 @@ const FolderManager = (props: iPopup): JSX.Element => {
                     <textarea 
                         data-testid="desc-field" 
                         id="desc-field" 
-                        defaultValue={in_edit_folder_state?.desc} 
+                        defaultValue={folder?.desc} 
                         className={predef.textarea_full} 
                         onBlur={(e: any) => handleChangeField("desc", e.target.value)}
                     ></textarea>

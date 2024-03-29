@@ -463,7 +463,6 @@ const FoldersSection = (props: any): JSX.Element => {
         // Run if there are more than 0 marked folders
         if(markedFoldersId.length > 0) {
             chrome.storage.local.get("duplication_warning_value", (data) => {
-                console.log("www", folderSettingsState.markedFoldersId.length);
                 // If the duplication warning is set in settings, and the number of marked tabs exceeds the threshold, then warn the user
                 if(data.duplication_warning_value !== -1 && data.duplication_warning_value <= folderSettingsState.markedFoldersId.length) {
                     setShowDuplicationWarning(true);

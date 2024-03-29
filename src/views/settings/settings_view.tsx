@@ -64,6 +64,7 @@ const SettingsView = (props: iView): JSX.Element => {
 
     // Save switcher data
     const saveSwitchSetting = (key: string, value: boolean | null): void => {
+        console.log(key, value);
         if(value === null) return;
 
         saveToStorage("local", key, value);

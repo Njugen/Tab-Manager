@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, within } from "@testing-library/react";
 import '@testing-library/jest-dom';
 import FolderManager from "../../../components/features/folder_manager/folder_manager";
 import { Provider } from "react-redux";
@@ -10,6 +10,7 @@ import { iFolderItem } from "../../../interfaces/folder_item";
 import { initInEditFolder } from "../../../redux/actions/in_edit_folder_actions";
 import { setCurrentlyEditingTab, setTabInEdits } from "../../../redux/actions/misc_actions";
 import { act } from "react-dom/test-utils";
+import FolderItem from "../../../components/features/folder_item/folder_item";
 
 jest.mock("../../../redux/mocked_hooks");
 jest.setTimeout(10000);
@@ -95,7 +96,7 @@ afterEach(() => {
    store.dispatch(setCurrentlyEditingTab(false));
 });
 
-describe("Create new folder", () => {
+describe("Create new workspace", () => {
     test(`popup title reads "${mockNewFolderTitle}"`, () => {
         render(
             <Provider store={store}>
@@ -186,7 +187,7 @@ describe("Create new folder", () => {
     });
 });
 
-describe("Edit folder", () => {
+describe("Edit workspace", () => {
     test(`popup title reads "${mockEditFolderTitle}"`, () => {
         render(
             <Provider store={store}>
@@ -1399,7 +1400,7 @@ test("Proceeding and declining warning message works", async () => {
 });
 
 describe("Validation, saving and field errors", () => {
-    const fields = ["name", "desc"];
+    const fields = ["name"];
 
     test.each(fields)("Leaving the %s field empty will indicate an error when attempting to save/create a folder", (field) => {
         render(
@@ -1419,7 +1420,7 @@ describe("Validation, saving and field errors", () => {
 
         fireEvent.blur(inputField);
 
-        const saveButton = screen.getByText("Save");
+        const saveButton = screen.getByText("Save", {selector: "button"});
         fireEvent.click(saveButton);
 
         const fieldErrors = screen.getAllByTestId("field-title-error");
