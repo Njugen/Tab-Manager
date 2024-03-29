@@ -38,7 +38,11 @@ const FolderManager = (props: iPopup): JSX.Element => {
 
     // Read necessary data from redux. These data are are used in this component
     // for various tasks. Values may be dispatched back to these redux states for use in other multilevel components
-    const state = useSelector((state: any) => state)
+    const folder_settings_state = useSelector((state: any) => state.folderSettingsReducer);
+    const misc_state = useSelector((state: any) => state.miscReducer);
+    const folder_collection_state = useSelector((state: any) => state.folderCollectionReducer);
+    const warning_actions_state = useSelector((state: any) => state.warningActionsReducer);
+    const in_edit_folder_state = useSelector((state: any) => state.folderManagerReducer);
 
     useEffect(() => {
         // Hide the sidebar of the body. A sidebar of this component is used instead.
@@ -74,21 +78,21 @@ const FolderManager = (props: iPopup): JSX.Element => {
     }, []);
 
     useEffect(() => {
-        const inEditWindows: string = state.folderManagerReducer?.windows;
+        const inEditWindows: string = in_edit_folder_state?.windows;
         const listChanged: boolean = windowListChanged(originWindows, inEditWindows);
 
         if(listChanged === true){
             setModified(true);
         }
-    }, [state.folderManagerReducer]);
+    }, [in_edit_folder_state]);
     
     // Handle changes to a field
     // - key: a string to identify the changed field
     // - value: the new value of this field
     const handleChangeField = (key: string, value: string): void => {
-        if(!state.folderManagerReducer) return;
+        if(!in_edit_folder_state) return;
         
-        if(modified === false && JSON.stringify(state.folderManagerReducer[key]) !== JSON.stringify(value)) setModified(true);
+        if(modified === false && JSON.stringify(in_edit_folder_state[key]) !== JSON.stringify(value)) setModified(true);
 
         // Inform redux about the field change
         dispatch(updateInEditFolder(key, value));
@@ -100,7 +104,7 @@ const FolderManager = (props: iPopup): JSX.Element => {
     // whether or not they are valid. If not, mark the affected fields
     // as invalid. Otherwise, send a callback to proceed.
     const validateForm = (callback: () => void): void => {
-        const data = state.folderManagerReducer;
+        const data = in_edit_folder_state;
 
         const updatedFieldState = {
             name: false,
@@ -111,7 +115,7 @@ const FolderManager = (props: iPopup): JSX.Element => {
             updatedFieldState.name = true;
         } 
 
-        if((data.windows && data.windows.length === 0) || state.miscReducer.isEditingTabs > 0) {
+        if((data.windows && data.windows.length === 0) || misc_state.isEditingTabs > 0) {
             updatedFieldState.windows = true;
         } 
         
@@ -151,16 +155,16 @@ const FolderManager = (props: iPopup): JSX.Element => {
         validateForm(() => {
             if(props.folder){
                 // Find out if process is merge or edit
-                const targetIndex = state.folderCollectionReducer.findIndex((target: any) => target.id === props.folder?.id);
+                const targetIndex = folder_collection_state.findIndex((target: any) => target.id === props.folder?.id);
 
                 if(targetIndex === -1){
-                    dispatch(createFolderAction(state.folderManagerReducer));
+                    dispatch(createFolderAction(in_edit_folder_state));
                 } else {
-                    dispatch(updateFolderAction(state.folderManagerReducer));
+                    dispatch(updateFolderAction(in_edit_folder_state));
                 }
                 
             } else {
-                dispatch(createFolderAction(state.folderManagerReducer));
+                dispatch(createFolderAction(in_edit_folder_state));
             }   
       
             handleClose(true);
@@ -186,7 +190,7 @@ const FolderManager = (props: iPopup): JSX.Element => {
 
     return (
         <>
-            {state.WarningActionsReducer?.showFolderChangeWarning === true && 
+            {warning_actions_state?.showFolderChangeWarning === true && 
                 <PopupMessage
                     title="Warning" 
                     text="You have made changes to this form. Closing it will result in all changes being lost. Do you want to proceed?"
@@ -207,7 +211,7 @@ const FolderManager = (props: iPopup): JSX.Element => {
                         data-testid="name-field" 
                         id="name-field" 
                         type="text" 
-                        defaultValue={state.folderManagerReducer?.name} 
+                        defaultValue={in_edit_folder_state?.name} 
                         className={predef.textfield_full} 
                         onBlur={(e: any) => handleChangeField("name", e.target.value)} 
                     />
@@ -216,7 +220,7 @@ const FolderManager = (props: iPopup): JSX.Element => {
                     <textarea 
                         data-testid="desc-field" 
                         id="desc-field" 
-                        defaultValue={state.folderManagerReducer?.desc} 
+                        defaultValue={in_edit_folder_state?.desc} 
                         className={predef.textarea_full} 
                         onBlur={(e: any) => handleChangeField("desc", e.target.value)}
                     ></textarea>
