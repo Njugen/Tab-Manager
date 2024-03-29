@@ -5,7 +5,7 @@ import GenericIconButton from "./generic_icon_button"
 import PrimaryButton from "./primary_button/primary_button"
 import PurpleBorderButton from "./purple_border_button"
 import iGenericPopup from '../../interfaces/generic_popup';
-
+import styles from "../../styles/global_utils.module.scss";
 
 // Popup component with providing basic popup features.
 // Can encapsulate any components and trigger callback props for when
@@ -34,10 +34,10 @@ const GenericPopup = (props: iGenericPopup): JSX.Element => {
     }
 
     return (
-        <div data-testid="generic-popup" className={outerStyleDirection(type, show)}>
+        <div data-testid="generic-popup" className={`${styles.scroll_style} overflow-y-scroll ${outerStyleDirection(type, show)}`}>
             <div className="relative top-0 md:bottom-12 h-screen w-[992px]">
                 <div className={innerStyleDirection(type, show)}>
-                    <div id="generic-popup-header" className="pl-8 pr-5 pb-5 pt-6 border-b border-tbfColor-lgrey w-full flex justify-between">
+                    <div id="generic-popup-header" className={`pl-8 pr-5 pb-5 pt-6 border-b border-tbfColor-lgrey w-full flex justify-between`}>
                         <h1 data-testid="generic-popup-title" className="text-3xl text-tbfColor-darkpurple font-light inline-block">
                             {title}
                         </h1>
