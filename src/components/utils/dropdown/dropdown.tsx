@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from "react";
-import CollapseIcon from "../../../images/icons/collapse_icon";
+import CollapseIcon from "../../icons/collapse_icon";
 import { iDropdown } from "../../../interfaces/dropdown";
 import RotationEffect from "../../effects/rotation_effect";
 import { IGetSelectedOptionProps, getSelectedOption } from "./get_selected_option";

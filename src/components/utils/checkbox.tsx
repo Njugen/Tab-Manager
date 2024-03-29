@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import CheckedIcon from "../../images/icons/checked_icon";
+import CheckedIcon from "../icons/checked_icon";
 import { iCheckbox } from "../../interfaces/checkbox";
 
 /*

@@ -1,7 +1,7 @@
 import { render, screen, within, fireEvent } from "@testing-library/react";
 import '@testing-library/jest-dom'
 import randomNumber from "../../../tools/random_number";
-import FolderControlButton from "../../../components/utils/folder_control_button/folder_control_button";
+import FolderControlButton from "../../../components/utils/icon_button/icon_button";
 
 const mockFunction = jest.fn();
 describe("test <FolderControlButton />", () => {

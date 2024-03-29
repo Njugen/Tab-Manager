@@ -9,6 +9,7 @@ interface ILaunchFolderProps {
     setShowPerformanceWarning: React.Dispatch<React.SetStateAction<boolean>>
 }
 
+// Event handler showing all the launching options of a folder
 const handleLaunchFolder = (props: ILaunchFolderProps): void => {
     const { 
         folderLaunchType, 
@@ -45,7 +46,7 @@ const handleLaunchFolder = (props: ILaunchFolderProps): void => {
 
     // Close current session after launching the folder. Only applies when
     // set in the Settings page
-    chrome.storage.sync.get("close_current_setting", (data) => {
+    chrome.storage.local.get("close_current_setting", (data) => {
         if(data.close_current_setting === true){
             snapshot.forEach((window) => {
                 if(window.id) chrome.windows.remove(window.id);

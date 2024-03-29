@@ -6,8 +6,6 @@ import styles from "./../../styles/global_utils.module.scss";
 
     To make use of a new icon, insert a new if-statement returning the requested icon and
     check for the icon's prop name.
-
-    ...
 */
 
 

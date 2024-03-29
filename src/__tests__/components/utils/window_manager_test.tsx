@@ -7,11 +7,11 @@ import FolderItem from "../../../components/features/folder_item/folder_item";
 import { createStore, applyMiddleware } from "redux";
 import WindowManager from "../../../components/features/window_manager/window_manager";
 import thunk from "redux-thunk";
-import { combinedReducers, mockStore } from "../../../redux/reducer";
-import { createFolderAction } from "../../../redux/actions/folderCollectionActions";
-import { store } from "../../../redux/reducer";
+import { combinedReducers, mockStore } from "../../../redux/reducers";
+import { createFolderAction } from "../../../redux/actions/folder_collection_actions";
+import { store } from "../../../redux/reducers";
 import { useDispatch, useSelector } from "../../../redux/mocked_hooks"; 
-import { initInEditFolder } from "../../../redux/actions/inEditFolderActions";
+import { initInEditFolder } from "../../../redux/actions/in_edit_folder_actions";
 
 jest.mock("../../../redux/mocked_hooks");
 jest.setTimeout(10000);

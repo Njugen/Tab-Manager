@@ -1,11 +1,15 @@
-import { useEffect, useState } from "react"
-import CloseIcon from "../../images/icons/close_icon"
+import { useEffect } from "react"
+import CloseIcon from "../icons/close_icon"
 import { innerStyleDirection, outerStyleDirection } from "../features/folder_manager/style_directions"
 import GenericIconButton from "./generic_icon_button"
 import PrimaryButton from "./primary_button/primary_button"
 import PurpleBorderButton from "./purple_border_button"
 import iGenericPopup from '../../interfaces/generic_popup';
 
+
+// Popup component with providing basic popup features.
+// Can encapsulate any components and trigger callback props for when
+// clicking primary/secondary buttons (e.g. save and close)
 
 const GenericPopup = (props: iGenericPopup): JSX.Element => {
     const { title, type, children, show, save, cancel } = props;

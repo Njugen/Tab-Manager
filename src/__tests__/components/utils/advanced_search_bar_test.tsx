@@ -1,11 +1,11 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import '@testing-library/jest-dom'
-import { store } from "../../../redux/reducer";
+import { store } from "../../../redux/reducers";
 import AdvancedSearchBar from "../../../components/features/advanced_search_bar/advanced_search_bar";
 import { Provider } from "react-redux";
-import iCurrentSessionState from "../../../interfaces/states/currentSessionState";
-import { setUpWindowsAction } from "../../../redux/actions/currentSessionActions";
-import { setUpTabsAction } from "../../../redux/actions/historySettingsActions";
+import iCurrentSessionState from "../../../interfaces/states/current_session_state";
+import { setUpWindowsAction } from "../../../redux/actions/current_session_actions";
+import { setUpTabsAction } from "../../../redux/actions/history_settings_actions";
 import { iTabItem } from "../../../interfaces/tab_item";
 
 

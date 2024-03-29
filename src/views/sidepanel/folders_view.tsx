@@ -4,14 +4,14 @@ import { useSelector, useDispatch } from "react-redux";
 import { iFolderItem } from '../../interfaces/folder_item';
 import FolderItem from "../../components/features/folder_item/folder_item";
 import { getFromStorage, saveToStorage } from '../../services/webex_api/storage';
-import { deleteFolderAction, readAllFoldersFromBrowserAction } from '../../redux/actions/folderCollectionActions';
+import { deleteFolderAction, readAllFoldersFromBrowserAction } from '../../redux/actions/folder_collection_actions';
 import FolderManager from "../../components/features/folder_manager/folder_manager";
-import { clearInEditFolder } from "../../redux/actions/inEditFolderActions";
-import { clearMarkedFoldersAction } from "../../redux/actions/workspaceSettingsActions";
+import { clearInEditFolder } from "../../redux/actions/in_edit_folder_actions";
+import { clearMarkedFoldersAction } from "../../redux/actions/folder_settings_actions";
 import PopupMessage from "../../components/utils/popup_message";
 import PrimaryButton from "../../components/utils/primary_button/primary_button";
 import iFoldersView from "../../interfaces/folders_view";
-import NewFolderIcon from "../../images/icons/new_folder_icon";
+import NewFolderIcon from "../../components/icons/new_folder_icon";
 import CircleButton from "../../components/utils/circle_button";
 
 const FoldersView = (props: iFoldersView): JSX.Element => {
@@ -24,10 +24,10 @@ const FoldersView = (props: iFoldersView): JSX.Element => {
     const [createFolder, setCreateFolder] = useState<boolean>(false);
 
     const dispatch = useDispatch();
-    const folderCollection = useSelector((state: any) => state.FolderCollectionReducer);
+    const folderCollectionState = useSelector((state: any) => state.folderCollectionReducer);
 
     const storageListener = (changes: any, areaName: string): void => {
-        if(areaName === "sync"){
+        if(areaName === "local"){
             if(changes.folders){
               dispatch(readAllFoldersFromBrowserAction(changes.folders.newValue));
             }
@@ -35,7 +35,7 @@ const FoldersView = (props: iFoldersView): JSX.Element => {
     };
 
     useEffect(() => {
-        getFromStorage("sync", "folders", (data) => {  
+        getFromStorage("local", "folders", (data) => {  
             dispatch(readAllFoldersFromBrowserAction(data.folders));
         })
 
@@ -47,10 +47,10 @@ const FoldersView = (props: iFoldersView): JSX.Element => {
     }, []);
 
     useEffect(() => {        
-        if(folderCollection.length > 0){
-            //saveToStorage("sync", "folders", folderCollection);
+        if(folderCollectionState.length > 0){
+            //saveToStorage("local", "folders", folderCollectionState);
         } 
-    }, [folderCollection]);
+    }, [folderCollectionState]);
 
     useEffect(() => {
         
@@ -60,7 +60,7 @@ const FoldersView = (props: iFoldersView): JSX.Element => {
             tabsCount += window.tabs.length;
         });
    
-        chrome.storage.sync.get("performance_notification_value", (data) => {
+        chrome.storage.local.get("performance_notification_value", (data) => {
             setTotalTabsCount(data.performance_notification_value);
             if(data.performance_notification_value !== -1 && data.performance_notification_value <= tabsCount) {
                 setShowPerformanceWarning(true);
@@ -102,7 +102,7 @@ const FoldersView = (props: iFoldersView): JSX.Element => {
 
         // Close current session after launching the folder. Only applies when
         // set in the Pettings page
-        chrome.storage.sync.get("close_current_setting", (data) => {
+        chrome.storage.local.get("close_current_setting", (data) => {
             if(data.close_current_setting === true){
                 snapshot.forEach((window) => {
                     if(window.id) chrome.windows.remove(window.id);
@@ -121,9 +121,9 @@ const FoldersView = (props: iFoldersView): JSX.Element => {
         let render;
 
         if(createFolder === true){
-            render = <FolderManager type="popup" title="Create workspace" onClose={handleCloseFolderManager} />;
+            render = <FolderManager type="popup" title="Create folder" onClose={handleCloseFolderManager} />;
         } else {
-            const targetFolder: Array<iFolderItem> = folderCollection.filter((item: iFolderItem) => editFolderId === item.id);
+            const targetFolder: Array<iFolderItem> = folderCollectionState.filter((item: iFolderItem) => editFolderId === item.id);
             const input: iFolderItem = {...targetFolder[0]};
 
             if(targetFolder.length > 0){
@@ -138,7 +138,7 @@ const FoldersView = (props: iFoldersView): JSX.Element => {
 
     const renderFolders = (): Array<JSX.Element> => {
         const handleFolderDelete = (target: iFolderItem): void => {
-            chrome.storage.sync.get("removal_warning_setting", (data) => {
+            chrome.storage.local.get("removal_warning_setting", (data) => {
                 if(data.removal_warning_setting === true) {
                     setRemovalTarget(target);
                 } else {
@@ -148,14 +148,14 @@ const FoldersView = (props: iFoldersView): JSX.Element => {
             });
         }
 
-        const result = folderCollection.map((folder: iFolderItem, i: number) => {
+        const result = folderCollectionState.map((folder: iFolderItem, i: number) => {
             return (
                 <FolderItem 
                     onDelete={(e) => handleFolderDelete(folder)} 
                     marked={false} 
                     //onMark={handleMarkFolder} 
                     onEdit={() => setEditFolderId(folder.id)} 
-                    index={folderCollection.length-i}
+                    index={folderCollectionState.length-i}
                     key={folder.id} 
                     type={folder.type} 
                     id={folder.id} 
@@ -192,7 +192,7 @@ const FoldersView = (props: iFoldersView): JSX.Element => {
             {removalTarget &&
                 <PopupMessage
                     title="Warning" 
-                    text={`You are about to remove the "${removalTarget.name}" workspace and all its contents. This is irreversible, do you want to proceed?`}
+                    text={`You are about to remove the "${removalTarget.name}" folder and all its contents. This is irreversible, do you want to proceed?`}
                     primaryButton={{ text: "Yes, remove this folder", callback: () => { dispatch(deleteFolderAction(removalTarget.id)); setRemovalTarget(null)}}}
                     secondaryButton={{ text: "No, don't remove", callback: () => setRemovalTarget(null)}}    
                 />

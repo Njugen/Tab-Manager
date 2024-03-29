@@ -1,19 +1,17 @@
 import { useRef, useState, useEffect, useCallback } from "react";
-import ClosedFolderIcon from "../../../images/icons/closed_folder_icon";
+import ClosedFolderIcon from "../../icons/closed_folder_icon";
 import Paragraph from "../../utils/paragraph";
-import OpenedFolderIcon from "../../../images/icons/opened_folder_icon";
+import OpenedFolderIcon from "../../icons/opened_folder_icon";
 import "../../../styles/global_utils.module.scss";
 import { iFolderItem } from "../../../interfaces/folder_item";
-import { useDispatch, useSelector } from "react-redux";
-import iWorkspaceState from "../../../interfaces/states/workspaceState";
-import { FolderActionBar, IFolderActionBarHandlers, IFolderActionBarStates } from "./sections/folder_action_bar";
-import FolderWindowList from "./folder_window_list";
+import {  useSelector } from "react-redux";
+import { FolderActionBar, IFolderActionBarHandlers, IFolderActionBarStates } from "./child_components/folder_action_bar";
+import FolderWindowList from "./child_components/folder_window_list";
 import { getFromStorage, saveToStorage } from "../../../services/webex_api/storage";
-import { InEditFolderReducer } from "../../../redux/reducers/inEditFolderReducer";
-import { updateFolderAction } from "../../../redux/actions/folderCollectionActions";
+import iFolderState from '../../../interfaces/states/folder_state';
 
 /*
-    Folder containing description, windows and tabs, as well as various folder options
+    Folder section containing description, windows and tabs, as well as various folder options
 */
 
 const FolderItem = (props: iFolderItem): JSX.Element => {
@@ -24,10 +22,7 @@ const FolderItem = (props: iFolderItem): JSX.Element => {
     const [showLaunchOptions, setShowLaunchOptions] = useState<boolean>(false);
     const [slideDown, setSlideDown] = useState<boolean>(false);
 
-    const folderCollection = useSelector((state: any) => state.FolderCollectionReducer);
-    const workspaceSettings: iWorkspaceState = useSelector((state: any) => state.WorkspaceSettingsReducer);
-    
-    const dispatch = useDispatch();
+    const folderSettingsState: iFolderState = useSelector((state: any) => state.folderSettingsReducer);
 
     const { 
         id,
@@ -84,12 +79,13 @@ const FolderItem = (props: iFolderItem): JSX.Element => {
     const colContentsCSS: string = `overflow-hidden rounded-b-md`;
 
     const updateFolder = (newType: "expanded" | "collapsed") => {
-        getFromStorage("sync", "folders", (data: any) => {
+        getFromStorage("local", "folders", (data: any) => {
             const tempCollection: Array<iFolderItem> = data.folders.map((folder: iFolderItem) => {
                 if(folder.id === id) folder.type = newType;
                 return folder;
             })
-            saveToStorage("sync", "folders", tempCollection);
+       
+            saveToStorage("local", "folders", tempCollection);
         })
     }
 
@@ -190,7 +186,7 @@ const FolderItem = (props: iFolderItem): JSX.Element => {
                     </div>}
                     
                     <div className="px-5 mb-8 mt-8">
-                        <FolderWindowList windows={windows} viewMode={workspaceSettings.viewMode} />
+                        <FolderWindowList windows={windows} viewMode={folderSettingsState.viewMode} />
                     </div></>
                     )}
                 </div>

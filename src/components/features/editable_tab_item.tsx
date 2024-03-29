@@ -6,8 +6,8 @@ import { useEffect, useRef, useState } from "react";
 import randomNumber from "../../tools/random_number";
 import { iTabItem } from "../../interfaces/tab_item";
 import { useDispatch } from "react-redux";
-import { updateWindowManager } from "../../redux/actions/inEditFolderActions";
-import verifyValue from "../../common/verify_value";
+import { updateWindowManager } from "../../redux/actions/in_edit_folder_actions";
+import verifyValue from "../../tools/verify_value";
 
 
 /*

@@ -2,7 +2,7 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import '@testing-library/jest-dom'
 import GenericIconButton from "../../../components/utils/generic_icon_button";
 import randomNumber from "../../../tools/random_number";
-import PenIcon from "../../../images/icons/pen_icon";
+import PenIcon from "../../../components/icons/pen_icon";
 
 const mockFunction = jest.fn();
 const mockColors = [

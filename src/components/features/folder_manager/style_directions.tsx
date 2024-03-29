@@ -2,7 +2,7 @@ import styles from "../../../styles/global_utils.module.scss";
 
 const { popup_container_transparent_bg, popup_container_default } = styles;
 
-// Style the outer layer of this component
+// Style the outer layer of this component (this layer handles e.g. the slide in behaviour)
 const outerStyleDirection = (type: string, show: boolean): string => {
     let cssClasses = "";
 
@@ -15,7 +15,7 @@ const outerStyleDirection = (type: string, show: boolean): string => {
     return cssClasses;
 }
 
-// Style the inner layer of this component (the popup itself)
+// Style the inner layer of this component (the popup itself, where the contents resides)
 const innerStyleDirection = (type: string, show: boolean): string => {
     let cssClasses = "";
 

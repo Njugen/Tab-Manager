@@ -2,37 +2,35 @@ import { useState, useEffect } from "react";
 import { iWindowItem } from '../../interfaces/window_item';
 import { useSelector, useDispatch } from "react-redux";
 import { iFolderItem } from '../../interfaces/folder_item';
-import { saveToStorage } from '../../services/webex_api/storage';
 import FolderManager from "../../components/features/folder_manager/folder_manager";
-import { clearInEditFolder } from "../../redux/actions/inEditFolderActions";
-import { clearMarkedTabsAction } from '../../redux/actions/historySettingsActions';
-import { setUpWindowsAction } from '../../redux/actions/currentSessionActions';
-import PrimaryButton from "../../components/utils/primary_button/primary_button";
-import { clearMarkedFoldersAction } from '../../redux/actions/workspaceSettingsActions';
+import { clearInEditFolder } from "../../redux/actions/in_edit_folder_actions";
+import { clearMarkedTabsAction } from '../../redux/actions/history_settings_actions';
+import { setUpWindowsAction } from '../../redux/actions/current_session_actions';
+import { clearMarkedFoldersAction } from '../../redux/actions/folder_settings_actions';
 import randomNumber from '../../tools/random_number';
-import AddToWorkspacePopup from "../../components/features/add_to_workspace_popup";
+import AddToFolderPopup from "../../components/features/add_to_folder_popup";
 import { iTabItem } from '../../interfaces/tab_item';
 import { iFieldOption } from '../../interfaces/dropdown';
-import SaveIcon from './../../images/icons/save_icon';
+import SaveIcon from '../../components/icons/save_icon';
 import CircleButton from './../../components/utils/circle_button';
 import WindowItem from "../../components/features/window_item";
 
 const CurrentSessionView = (props:any): JSX.Element => {
-    const [addToWorkSpaceMessage, setAddToWorkspaceMessage] = useState<boolean>(false);
+    const [addToWorkSpaceMessage, setAddToFolderMessage] = useState<boolean>(false);
     const [createFolder, setCreateFolder] = useState<boolean>(false);
     const [mergeProcess, setMergeProcess] = useState<iFolderItem | null>(null);
     const [editFolderId, setEditFolderId] = useState<number | null>(null);
 
-    const folderCollection: Array<iFolderItem> = useSelector((state: any) => state.FolderCollectionReducer);
+    const folderCollectionState: Array<iFolderItem> = useSelector((state: any) => state.folderCollectionReducer);
 
     const dispatch = useDispatch();
-    const currentSessionData = useSelector((state: any) => state.CurrentSessionSettingsReducer);
+    const sessionSectionState = useSelector((state: any) => state.sessionSectionReducer);
 
     useEffect(() => {        
-        if(folderCollection.length > 0){
-         //   saveToStorage("sync", "folders", folderCollection);
+        if(folderCollectionState.length > 0){
+         //   saveToStorage("local", "folders", folderCollectionState);
         } 
-    }, [folderCollection]);
+    }, [folderCollectionState]);
 
     useEffect(() => {
         getAllWindows();
@@ -97,21 +95,21 @@ const CurrentSessionView = (props:any): JSX.Element => {
         );
     }
 
-    const handleAddToNewWorkspace = (): void => {
-        setAddToWorkspaceMessage(false);
+    const handleAddToNewFolder = (): void => {
+        setAddToFolderMessage(false);
         setCreateFolder(true);
     }
 
-    const handleAddToExistingWorkspace = (e: any): void => {
+    const handleAddToExistingFolder = (e: any): void => {
         if(e.selected === -1) return;
 
         const targetFolderId = e.selected;
-        const targetFolder: iFolderItem | undefined = folderCollection.find((folder: iFolderItem) => folder.id === targetFolderId);
+        const targetFolder: iFolderItem | undefined = folderCollectionState.find((folder: iFolderItem) => folder.id === targetFolderId);
      
         if(!targetFolder) return;
 
-        if(currentSessionData.windows){
-            const newWindowItems: Array<iWindowItem> = currentSessionData.windows.map((window: chrome.windows.Window) => {
+        if(sessionSectionState.windows){
+            const newWindowItems: Array<iWindowItem> = sessionSectionState.windows.map((window: chrome.windows.Window) => {
                 if(window.tabs){
                     const tabs: Array<iTabItem> = window.tabs.map((tab: chrome.tabs.Tab) => {
                         return {
@@ -135,14 +133,14 @@ const CurrentSessionView = (props:any): JSX.Element => {
             updatedFolder.windows = [...updatedFolder.windows,  ...newWindowItems];
 
             if(targetFolder){
-                setAddToWorkspaceMessage(false);
+                setAddToFolderMessage(false);
                 setMergeProcess(updatedFolder);
             }
         } 
     }
 
     const renderAddTabsMessage = (): JSX.Element => {
-        const currentFolders: Array<iFolderItem> = folderCollection;
+        const currentFolders: Array<iFolderItem> = folderCollectionState;
 
         const options: Array<iFieldOption> = currentFolders.map((folder) => {
             return { id: folder.id, label: folder.name }
@@ -151,19 +149,19 @@ const CurrentSessionView = (props:any): JSX.Element => {
         const dropdownOptions: Array<iFieldOption> = [
             {
                 id: -1,
-                label: "Select a workspace"
+                label: "Select a folder"
             },
             ...options
         ];
 
         return (
-            <AddToWorkspacePopup 
-                title="Add to workspace"
+            <AddToFolderPopup 
+                title="Add to folder"
                 type="popup"
                 dropdownOptions={dropdownOptions}
-                onNewWorkspace={handleAddToNewWorkspace}
-                onExistingWorkspace={handleAddToExistingWorkspace}
-                onCancel={() => setAddToWorkspaceMessage(false)}
+                onNewFolder={handleAddToNewFolder}
+                onExistingFolder={handleAddToExistingFolder}
+                onCancel={() => setAddToFolderMessage(false)}
             />
         );
     }
@@ -171,7 +169,7 @@ const CurrentSessionView = (props:any): JSX.Element => {
     const renderFolderManager = (): JSX.Element => {
         let render;
         if(createFolder === true){
-            const presetWindows: Array<iWindowItem> = currentSessionData.windows.map((window: chrome.windows.Window) => {
+            const presetWindows: Array<iWindowItem> = sessionSectionState.windows.map((window: chrome.windows.Window) => {
                 if(window.tabs){
                     const tabs: Array<iTabItem> = window.tabs.map((tab: chrome.tabs.Tab) => {
                         return {
@@ -200,7 +198,7 @@ const CurrentSessionView = (props:any): JSX.Element => {
                 marked: false,
                 windows: [...presetWindows],
             }
-            render = <FolderManager type="popup" title="Create workspace" folder={folderSpecs} onClose={handlePopupClose} />;
+            render = <FolderManager type="popup" title="Create folder" folder={folderSpecs} onClose={handlePopupClose} />;
         } else if(mergeProcess !== null) {
 
             render = <FolderManager type="popup" title={`Merge tabs to ${mergeProcess.name}`} folder={mergeProcess} onClose={handlePopupClose} />;
@@ -212,13 +210,13 @@ const CurrentSessionView = (props:any): JSX.Element => {
     }
 
     const renderWindows = (): Array<JSX.Element> => {
-        const existingWindows = currentSessionData?.windows;
+        const existingWindows = sessionSectionState?.windows;
         const existingWindowsElements: Array<JSX.Element> = existingWindows?.map((item: iWindowItem, i: number) => {
             return (
                 <WindowItem
                     key={`window-item-${i}`} 
                     tabsCol={1}
-                    disableEdit={currentSessionData.windows.length < 2 ? true : false} 
+                    disableEdit={sessionSectionState.windows.length < 2 ? true : false} 
                     disableTabMark={true} 
                     disableTabEdit={true} 
                     id={item.id} 
@@ -243,7 +241,7 @@ const CurrentSessionView = (props:any): JSX.Element => {
                 <CircleButton 
                     disabled={false} 
                     bgCSSClass="bg-tbfColor-lightpurple" 
-                    onClick={() => setAddToWorkspaceMessage(true)}
+                    onClick={() => setAddToFolderMessage(true)}
                 >
                     <SaveIcon size={20} fill={"#fff"} />
                 </CircleButton>

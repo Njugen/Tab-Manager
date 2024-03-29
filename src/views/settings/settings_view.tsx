@@ -20,22 +20,22 @@ import iView from "../../interfaces/view";
 
 // Options for performance warnings
 const performanceNotificationOptions: Array<iSettingFieldOption> = [
-    { id: 0, value: 5, label: "5" }, 
-    { id: 1, value: 10, label: "10" }, 
-    { id: 2, value: 15, label: "15" }, 
-    { id: 3, value: 20, label: "20" }, 
-    { id: 4, value: 30, label: "30" },
-    { id: 5, value: 40, label: "40" }, 
-    { id: 6, value: -1, label: "Don't warn me" } 
+    { id: 5, label: "5" }, 
+    { id: 10, label: "10" }, 
+    { id: 15, label: "15" }, 
+    { id: 20, label: "20" }, 
+    { id: 30, label: "30" },
+    { id: 40, label: "40" }, 
+    { id: -1, label: "Don't warn me" } 
 ];
 
 // Options for duplication warnings
 const duplicationWarningOptions: Array<iSettingFieldOption> = [
-    { id: 0, value: 2, label: "2 folders" }, 
-    { id: 1, value: 3, label: "3 folders" }, 
-    { id: 2, value: 4, label: "4 folders" }, 
-    { id: 3, value: 5, label: "5 folders" }, 
-    { id: 4, value: -1, label: "Never" }
+    { id: 2, label: "2 folders" }, 
+    { id: 3, label: "3 folders" }, 
+    { id: 4, label: "4 folders" }, 
+    { id: 5, label: "5 folders" }, 
+    { id: -1, label: "Never" }
 ];
 
 const SettingsView = (props: iView): JSX.Element => {
@@ -54,7 +54,7 @@ const SettingsView = (props: iView): JSX.Element => {
     // Save data selected in dropdown menu
     const saveSelectedOption = (key: string, value: number | null): void => {
         if(value !== null){
-            saveToStorage("sync", key, value);
+            saveToStorage("local", key, value);
             setSettings({
                 ...settings,
                 [key]: value
@@ -64,9 +64,10 @@ const SettingsView = (props: iView): JSX.Element => {
 
     // Save switcher data
     const saveSwitchSetting = (key: string, value: boolean | null): void => {
+        console.log(key, value);
         if(value === null) return;
 
-        saveToStorage("sync", key, value);
+        saveToStorage("local", key, value);
         setSettings({
             ...settings,
             [key]: value
@@ -75,7 +76,7 @@ const SettingsView = (props: iView): JSX.Element => {
 
     // Set default values of all fields
     useEffect(() => {
-        chrome.storage.sync.get((items: object) => {
+        chrome.storage.local.get((items: object) => {
             let initialSettings = {settings};
             for(const [key, value] of Object.entries(items)){
                 initialSettings = {

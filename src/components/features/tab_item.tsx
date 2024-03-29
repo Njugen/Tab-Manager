@@ -3,8 +3,8 @@ import "./../../styles/global_utils.module.scss";
 import Checkbox from "../utils/checkbox";
 import { iTabItem } from "../../interfaces/tab_item";
 import GenericIconButton from "../utils/generic_icon_button";
-import PenIcon from "../../images/icons/pen_icon";
-import CloseLightIcon from "../../images/icons/close_light_icon";
+import PenIcon from "../icons/pen_icon";
+import CloseLightIcon from "../icons/close_light_icon";
 
 /* 
     Tab component with clickable url and options (close tab, edit tab, mark tab)

@@ -72,7 +72,7 @@ describe("test of <Dropdown /> behaviour", () => {
         optionList = screen.queryByRole("list");
         expect(optionList).not.toBeInTheDocument();
 
-        // mockOnExistingWorkspace is called
+        // mockOnExistingFolder is called
         expect(mockFunction).toHaveBeenCalledWith({ selected: arg.id });
 
         // The dropdown now shows arg.label as its selected text

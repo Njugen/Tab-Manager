@@ -1,26 +1,22 @@
 import { useState, useEffect, useRef } from "react";
-import SearchIcon from "../../../images/icons/search_icon";
+import SearchIcon from "../../icons/search_icon";
 import { useSelector } from 'react-redux';
 import styles from "../../../styles/global_utils.module.scss";
 import { iFolderItem } from '../../../interfaces/folder_item';
 import { iWindowItem } from '../../../interfaces/window_item';
-import iCurrentSessionState from "../../../interfaces/states/currentSessionState";
-import iHistoryState from "../../../interfaces/states/historyState";
+import iCurrentSessionState from "../../../interfaces/states/current_session_state";
+import iHistoryState from "../../../interfaces/states/history_state";
 import iAdvancedSearchBar from "../../../interfaces/advanced_search_bar";
 import { handleShowResultsContainer, IHandleShowResultsContainerProps } from "./handle_show_results_container";
 import { handleWindowClick } from "./window_click_listener";
 import { ILaunchFolderProps, handleLaunchFolder } from "./handle_launch_folder";
-import { SearchResults } from "./sections/search_bar_results";
+import { SearchResults } from "./child_components/search_bar_results";
 import PopupMessage from "../../utils/popup_message";
 
 /*
     Search bar placed at the top of the viewport
 
     Filters current and history tabs by input string
-    
-    Upcoming features:
-    - Filter by tags
-    - Sort search results (e.g. asc, desc, etc)
 */
 
 const AdvancedSearchBar = (props: iAdvancedSearchBar): JSX.Element => {
@@ -35,9 +31,9 @@ const AdvancedSearchBar = (props: iAdvancedSearchBar): JSX.Element => {
     const searchResultsContainerRef = useRef<HTMLDivElement>(null);
     const searchFieldRef = useRef<HTMLInputElement>(null);
 
-    const folderCollection: Array<iFolderItem> = useSelector((state: any) => state.FolderCollectionReducer);
-    const currentSessionSettings: iCurrentSessionState = useSelector((state: any) => state.CurrentSessionSettingsReducer);
-    const historySettings: iHistoryState = useSelector((state: any) => state.HistorySettingsReducer);
+    const folderCollectionState: Array<iFolderItem> = useSelector((state: any) => state.folderCollectionReducer);
+    const sessionSectionState: iCurrentSessionState = useSelector((state: any) => state.sessionSectionReducer);
+    const historySectionState: iHistoryState = useSelector((state: any) => state.historySectionReducer);
 
     const { popup_container_transparent_bg } = styles;
     const handleShowResultsProps: IHandleShowResultsContainerProps = { searchResultsContainerRef , showResultsContainer, slideDown, setSlideDown, setShowResultsContainer }
@@ -91,7 +87,7 @@ const AdvancedSearchBar = (props: iAdvancedSearchBar): JSX.Element => {
             tabsCount += window.tabs.length;
         });
    
-        chrome.storage.sync.get("performance_notification_value", (data) => {
+        chrome.storage.local.get("performance_notification_value", (data) => {
             const { performance_notification_value } = data;
 
             setTotalTabsCount(performance_notification_value);
@@ -160,7 +156,7 @@ const AdvancedSearchBar = (props: iAdvancedSearchBar): JSX.Element => {
                     (
                         <div data-testid="search-results-area" id="search-results-area" className={`${popup_container_transparent_bg} w-screen h-full top-0 bg-[rgba-] absolute z-500 left-0 flex justify-center`}>
                             <div ref={searchResultsContainerRef} className={`bg-white absolute p-6 ml-16 mt-10 transition-all ease-in duration-75 overflow-hidden w-7/12 z-10 rounded-lg drop-shadow-[0_3px_2px_rgba(0,0,0,0.15)]`}>
-                                <SearchResults keyword={keyword} folders={folderCollection} session={currentSessionSettings} history={historySettings} launchFolder={handlePrepareLaunchFolder} />   
+                                <SearchResults keyword={keyword} folders={folderCollectionState} session={sessionSectionState} history={historySectionState} launchFolder={handlePrepareLaunchFolder} />   
                             </div>
                         </div>
                     ) 

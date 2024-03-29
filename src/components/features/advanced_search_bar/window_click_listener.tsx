@@ -5,9 +5,8 @@ interface IHandleWindowClickProps {
     handleShowResultsProps: IHandleShowResultsContainerProps
 }
 
- // Identify clicked viewport area and hide/show search results accordingly
+ // Identify clicked viewport area and hide/show search results accordingly.
 const handleWindowClick = (props: IHandleWindowClickProps): void => {
-    console.log("WINDOW CLICK");
     const { e, handleShowResultsProps } = props;
     const { showResultsContainer } = handleShowResultsProps;
 

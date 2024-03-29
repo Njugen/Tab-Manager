@@ -1,4 +1,4 @@
-import SearchIcon from "../../images/icons/search_icon";
+import SearchIcon from "../icons/search_icon";
 import iSimpleSearchBar from "../../interfaces/simple_search_bar";
 
 const SimpleSearchBar = (props: iSimpleSearchBar): JSX.Element => {

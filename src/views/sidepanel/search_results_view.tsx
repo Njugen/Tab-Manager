@@ -9,8 +9,8 @@ import {
     filterSessionTabsByString, 
     filterHistoryTabsByString, 
     filterFoldersByString 
-} from "../../components/features/advanced_search_bar/filters";
-import CloseIcon from "../../images/icons/close_icon";
+} from "../../tools/tab_filters";
+import CloseIcon from "../../components/icons/close_icon";
 
 function SearchResultsContainer(props:any): JSX.Element {
     const { keyword, onClose } = props;
@@ -18,7 +18,6 @@ function SearchResultsContainer(props:any): JSX.Element {
     const [folderLaunchType, setFolderLaunchType] = useState<string | null>(null); 
     const [totalTabsCount, setTotalTabsCount] = useState<number>(0);
     const [showPerformanceWarning, setShowPerformanceWarning] = useState<boolean>(false);
-    const [showFolderManager, setShowFolderManager] = useState<boolean>(false);
 
     const handleClose = (): void => {
         onClose();
@@ -55,7 +54,7 @@ function SearchResultsContainer(props:any): JSX.Element {
 
         // Close current session after launching the folder. Only applies when
         // set in the Pettings page
-        chrome.storage.sync.get("close_current_setting", (data) => {
+        chrome.storage.local.get("close_current_setting", (data) => {
             if(data.close_current_setting === true){
                 snapshot.forEach((window) => {
                     if(window.id) chrome.windows.remove(window.id);
@@ -72,7 +71,7 @@ function SearchResultsContainer(props:any): JSX.Element {
             tabsCount += window.tabs.length;
         });
    
-        chrome.storage.sync.get("performance_notification_value", (data) => {
+        chrome.storage.local.get("performance_notification_value", (data) => {
             setTotalTabsCount(data.performance_notification_value);
             if(data.performance_notification_value !== -1 && data.performance_notification_value <= tabsCount) {
                 setShowPerformanceWarning(true);
@@ -83,27 +82,27 @@ function SearchResultsContainer(props:any): JSX.Element {
         });
     }, [folderLaunchType]);
 
-    const folderCollection = useSelector((state: any) => state.FolderCollectionReducer);
-    const currentSessionSettings = useSelector((state: any) => state.CurrentSessionSettingsReducer);
-    const historySettings = useSelector((state: any) => state.HistorySettingsReducer);
+    const folderCollectionState = useSelector((state: any) => state.folderCollectionReducer);
+    const sessionSectionState = useSelector((state: any) => state.sessionSectionReducer);
+    const historySectionState = useSelector((state: any) => state.historySectionReducer);
 
     // Render all filtered folders
     const renderFolders = (): Array<JSX.Element> => {
-        const folders = filterFoldersByString(folderCollection, keyword);
+        const folders = filterFoldersByString(folderCollectionState, keyword);
 
         return folders.map((folder: iFolderItem) => <FolderItem marked={false} id={folder.id!} name={folder.name} viewMode={"list"} type={"collapsed"} desc={folder.desc} windows={folder.windows} onOpen={handlePrepareLaunchFolder} />);
     }
 
     // Render all filtered session tabs
     const renderSessionTabs = (): Array<JSX.Element> => {
-        const tabs = filterSessionTabsByString(currentSessionSettings, keyword);
+        const tabs = filterSessionTabsByString(sessionSectionState, keyword);
 
         return tabs.map((tab) => <TabItem key={tab.id} marked={false} id={tab.id!} label={tab.title!} url={tab.url!} disableEdit={true} disableMark={true} disableCloseButton={false} onClose={() => handleCloseTab(tab.id!)} />)
     }
 
     // Render all filtered history tabs
     const renderHistoryTabs = (): Array<JSX.Element> => {
-        const tabs = filterHistoryTabsByString(historySettings, keyword);
+        const tabs = filterHistoryTabsByString(historySectionState, keyword);
 
         return tabs.map((tab) => <TabItem key={tab.id} marked={false} id={parseInt(tab.id)} label={tab.title!} url={tab.url!} disableEdit={true} disableMark={true} disableCloseButton={true} onClose={() => {}} />);
     }

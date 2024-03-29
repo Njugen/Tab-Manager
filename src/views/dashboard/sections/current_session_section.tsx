@@ -4,25 +4,25 @@ import FolderManager from '../../../components/features/folder_manager/folder_ma
 import { useEffect, useState } from "react";
 import { iFolderItem } from '../../../interfaces/folder_item';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearInEditFolder  } from '../../../redux/actions/inEditFolderActions';
+import { clearInEditFolder  } from '../../../redux/actions/in_edit_folder_actions';
 import randomNumber from '../../../tools/random_number';
 import { iWindowItem } from '../../../interfaces/window_item';
-import { clearMarkedFoldersAction } from '../../../redux/actions/workspaceSettingsActions';
-import { clearMarkedTabsAction} from '../../../redux/actions/historySettingsActions';
+import { clearMarkedFoldersAction } from '../../../redux/actions/folder_settings_actions';
+import { clearMarkedTabsAction} from '../../../redux/actions/history_settings_actions';
 import { iTabItem } from '../../../interfaces/tab_item';
 import { iFieldOption } from '../../../interfaces/dropdown';
-import { setUpWindowsAction } from '../../../redux/actions/currentSessionActions';
-import AddToWorkspacePopup from '../../../components/features/add_to_workspace_popup';
+import { setUpWindowsAction } from '../../../redux/actions/current_session_actions';
+import AddToFolderPopup from '../../../components/features/add_to_folder_popup';
 import SectionContainer from "../../../components/utils/section_container";
 import WindowItem from "../../../components/features/window_item";
 
 const CurrentSessionSection = (props: any): JSX.Element => {
-    const [addToWorkSpaceMessage, setAddToWorkspaceMessage] = useState<boolean>(false);
+    const [addToWorkSpaceMessage, setAddToFolderMessage] = useState<boolean>(false);
     const [mergeProcess, setMergeProcess] = useState<iFolderItem | null>(null);
     const [createFolder, setCreateFolder] = useState<boolean>(false);
 
-    const folderCollection: Array<iFolderItem> = useSelector((state: any) => state.FolderCollectionReducer);
-    const currentSessionData = useSelector((state: any) => state.CurrentSessionSettingsReducer);
+    const folderCollectionState: Array<iFolderItem> = useSelector((state: any) => state.folderCollectionReducer);
+    const sessionSectionState = useSelector((state: any) => state.sessionSectionReducer);
 
     const dispatch = useDispatch();
 
@@ -92,8 +92,8 @@ const CurrentSessionSection = (props: any): JSX.Element => {
                     <div className="flex items-center justify-end">
                         <PrimaryButton 
                             disabled={false} 
-                            text="Save this session to workspace" 
-                            onClick={() => setAddToWorkspaceMessage(true)} 
+                            text="Add to folder" 
+                            onClick={() => setAddToFolderMessage(true)} 
                         />
                     </div>
                 </div>
@@ -102,7 +102,7 @@ const CurrentSessionSection = (props: any): JSX.Element => {
     }
 
     const renderContents = (): JSX.Element => {
-        const existingWindows = currentSessionData?.windows;
+        const existingWindows = sessionSectionState?.windows;
         const existingWindowsElements: Array<JSX.Element> = existingWindows?.map((item: iWindowItem, i: number) => {
             return (
                 <WindowItem 
@@ -125,21 +125,21 @@ const CurrentSessionSection = (props: any): JSX.Element => {
         }
     }
 
-    const handleAddToNewWorkspace = (): void => {
-        setAddToWorkspaceMessage(false);
+    const handleAddToNewFolder = (): void => {
+        setAddToFolderMessage(false);
         setCreateFolder(true);
     }
 
-    const handleAddToExistingWorkspace = (e: any): void => {
+    const handleAddToExistingFolder = (e: any): void => {
         if(e.selected === -1) return;
 
         const targetFolderId = e.selected;
-        const targetFolder: iFolderItem | undefined = folderCollection.find((folder: iFolderItem) => folder.id === targetFolderId);
+        const targetFolder: iFolderItem | undefined = folderCollectionState.find((folder: iFolderItem) => folder.id === targetFolderId);
      
         if(!targetFolder) return;
         
-        if(currentSessionData.windows){
-            const newWindowItems: Array<iWindowItem> = currentSessionData.windows.map((window: chrome.windows.Window) => {
+        if(sessionSectionState.windows){
+            const newWindowItems: Array<iWindowItem> = sessionSectionState.windows.map((window: chrome.windows.Window) => {
                 if(window.tabs){
                     const tabs: Array<iTabItem> = window.tabs.map((tab: chrome.tabs.Tab) => {
                         return {
@@ -163,7 +163,7 @@ const CurrentSessionSection = (props: any): JSX.Element => {
             updatedFolder.windows = [...updatedFolder.windows,  ...newWindowItems];
 
             if(targetFolder){
-                setAddToWorkspaceMessage(false);
+                setAddToFolderMessage(false);
                 setMergeProcess(updatedFolder);
             }
         }
@@ -171,7 +171,7 @@ const CurrentSessionSection = (props: any): JSX.Element => {
     }
 
     const renderAddTabsMessage = (): JSX.Element => {
-        const currentFolders: Array<iFolderItem> = folderCollection;
+        const currentFolders: Array<iFolderItem> = folderCollectionState;
 
         const options: Array<iFieldOption> = currentFolders.map((folder) => {
             return { id: folder.id, label: folder.name }
@@ -180,19 +180,19 @@ const CurrentSessionSection = (props: any): JSX.Element => {
         const dropdownOptions: Array<iFieldOption> = [
             {
                 id: -1,
-                label: "Select a workspace"
+                label: "Select a folder"
             },
             ...options
         ];
 
         return (
-            <AddToWorkspacePopup
-                title="Add to workspace"
+            <AddToFolderPopup
+                title="Add to folder"
                 type="slide-in"
                 dropdownOptions={dropdownOptions}
-                onNewWorkspace={handleAddToNewWorkspace}
-                onExistingWorkspace={handleAddToExistingWorkspace}
-                onCancel={() => setAddToWorkspaceMessage(false)}
+                onNewFolder={handleAddToNewFolder}
+                onExistingFolder={handleAddToExistingFolder}
+                onCancel={() => setAddToFolderMessage(false)}
             />
         );
     }
@@ -201,7 +201,7 @@ const CurrentSessionSection = (props: any): JSX.Element => {
         let render = <></>;
 
         if(createFolder === true){
-            const presetWindows: Array<iWindowItem> = currentSessionData.windows.map((window: chrome.windows.Window) => {
+            const presetWindows: Array<iWindowItem> = sessionSectionState.windows.map((window: chrome.windows.Window) => {
                 if(window.tabs){
                     const tabs: Array<iTabItem> = window.tabs.map((tab: chrome.tabs.Tab) => {
                         return {
@@ -230,7 +230,7 @@ const CurrentSessionSection = (props: any): JSX.Element => {
                 marked: false,
                 windows: [...presetWindows],
             }
-            render = <FolderManager type="slide-in" title="Create workspace" folder={folderSpecs} onClose={handleCloseFolderManager} />;
+            render = <FolderManager type="slide-in" title="Create folder" folder={folderSpecs} onClose={handleCloseFolderManager} />;
         } else if(mergeProcess !== null) {
             render = <FolderManager type="slide-in" title={`Merge tabs to ${mergeProcess.name}`} folder={mergeProcess} onClose={handleCloseFolderManager} />;
         }

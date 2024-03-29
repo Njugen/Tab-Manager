@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import iPopupMessage from '../../interfaces/popup_message';
 import styles from "../../styles/global_utils.module.scss";
 
@@ -12,6 +13,11 @@ const PopupMessage = (props: iPopupMessage): JSX.Element => {
     const { title, text, primaryButton, secondaryButton } = props;
     const { popup_container_transparent_bg } = styles;
   
+
+    useEffect(() => {
+        console.log("SHOW");
+    }, [])
+    
     // Hide body's scrollbar
     document.body.style.overflowY = "hidden";
 
