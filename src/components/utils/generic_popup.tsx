@@ -14,22 +14,12 @@ import styles from "../../styles/global_utils.module.scss";
 const GenericPopup = (props: iGenericPopup): JSX.Element => {
     const { title, type, children, show, save, cancel } = props;
 
-    useEffect(() => {
-        document.body.style.overflowY = "hidden";
-        document.body.style.overflowX = "hidden";
-    }, []);
-
-
     const handleClose = (): void => {
-        document.body.style.overflowY = "auto";
-        document.body.style.overflowX = "auto";
         cancel.handler();
     }
 
     const handleSave = (): void => {
         if(!save) return;
-        document.body.style.overflowY = "auto";
-        document.body.style.overflowX = "auto";
         save?.handler();
     }
 

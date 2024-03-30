@@ -2,7 +2,7 @@ import FolderItem from '../../../components/features/folder_item/folder_item'
 import "../../../styles/global_utils.module.scss";
 import PrimaryButton from '../../../components/utils/primary_button/primary_button';
 import FolderManager from '../../../components/features/folder_manager/folder_manager';
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { iFolderItem } from '../../../interfaces/folder_item';
 import { iFieldOption } from '../../../interfaces/dropdown';
 import { useDispatch, useSelector } from 'react-redux';
@@ -64,6 +64,7 @@ const FoldersSection = (props: any): JSX.Element => {
 
     const folderCollectionState = useSelector((state: any) => state.folderCollectionReducer);
     const folderSettingsState = useSelector((state: any) => state.folderSettingsReducer);
+    const folderCollectionStateCache = useMemo<Array<iFolderItem>>(() => folderCollectionState, [folderCollectionState]);
 
     // Get from browser storage and store into redux 
     useEffect(() => {
@@ -273,10 +274,8 @@ const FoldersSection = (props: any): JSX.Element => {
     }
     
     // Render the folder list
-    const renderFolders = (): Array<JSX.Element> => {        
+    const renderFolders = () => {        
         const sortedFolders = [...folderCollectionState].sort((a: any, b: any) => folderSortCondition(a, b) ? 1 : -1);
-
-       
 
         // Determine the number of columns to be rendered, based on colsCount
         let colsList: Array<Array<JSX.Element>> = [];
@@ -307,7 +306,6 @@ const FoldersSection = (props: any): JSX.Element => {
                     onOpen={handlePrepareLaunchFolder}
                 />
             )
-            
      
             colsList[i % colsCount()].push(result);
            
@@ -315,7 +313,7 @@ const FoldersSection = (props: any): JSX.Element => {
 
         const columnsRender: Array<JSX.Element> = colsList.map((col) => <div>{col}</div>);
 
-        return columnsRender;
+        return <>{columnsRender}</>;
     }
 
     const renderSortOptionsDropdown = (): JSX.Element => {
@@ -566,7 +564,7 @@ const FoldersSection = (props: any): JSX.Element => {
         
             <SectionContainer id="folder-section" title="Folders" options={renderOptionsMenu}>
                 <>
-                    {loaded === true && !hasFolders() && renderMessageBox()}
+                    {folderCollectionStateCache.length === 0 && renderMessageBox()}
                     {<div className={`${folderSettingsState.viewMode === "list" ? "mx-auto mt-12" : `grid xl:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-4 grid-flow-dense gap-x-4 gap-y-0 mt-8`}`}>
                         {renderFolders()}
                     </div>}
