@@ -15,6 +15,8 @@ import { readAllFoldersFromBrowserAction, setUpFoldersAction } from '../redux/ac
 import { setUpTabsAction } from '../redux/actions/history_settings_actions';
 import MultipleFoldersIcon from '../components/icons/multiple_folders_icon';
 import ConfigIcon from '../components/icons/config_icon';
+import CircleButton from '../components/utils/circle_button';
+import CollapseIcon from '../components/icons/collapse_icon';
 
 const RenderOptionsPage = (props: iOptionsPage): JSX.Element => {
   
@@ -36,10 +38,26 @@ const RenderOptionsPage = (props: iOptionsPage): JSX.Element => {
 
   const [activeNavLink, setActiveNavLink] = useState<string>(presetActiveNavLink()); 
   const [sidebarExpanded, setSidebarExpanded] = useState<boolean>(localStorage["expanded_sidebar"] === "true" ? true : false);
+  const [showScrollUpButton, setShowScrollUpButton] = useState<boolean>(false);
 
   const rootRef = useRef<HTMLDivElement>(null);
 
   const dispatch = useDispatch();
+
+  const handleSetShowScrollUpButton = (e: any): void => {
+    console.log("ABC", window.scrollY);
+    if(window.scrollY === 0){
+      setShowScrollUpButton(false);
+    } else {
+      if(showScrollUpButton === false) setShowScrollUpButton(true);
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleSetShowScrollUpButton);
+
+    return () => window.removeEventListener("scroll", handleSetShowScrollUpButton);
+  }, [])
 
   const searchHistory = () => {
     const query = {
@@ -123,6 +141,9 @@ const RenderOptionsPage = (props: iOptionsPage): JSX.Element => {
   const renderUI = (view: JSX.Element): JSX.Element => {
     return (
       <>       
+        <CircleButton disabled={false} bgCSSClass={`${showScrollUpButton === true ? "block" : "hidden"} transition-all bg-tbfColor-lightpurple shadow-lg fixed bottom-8 right-8 z-[10000]`} onClick={() => window.scrollTo({ top: 0, left: 0, behavior: "smooth" })}>
+            <CollapseIcon size={32} fill="#fff" />  
+        </CircleButton>
         <div className="flex h-full w-full relative bg-gray-50">
           <div id="sidebar" className={`drop-shadow-md h-[calc(100vh)] transition-all sticky top-0 self-start ${sidebarExpanded === true ? `w-[220px]` : `w-[70px]`} items-end flex flex-col justify-between border-tbfColor-middlegrey bg-white`}>
               <div className="w-full px-2 overflow-hidden">
