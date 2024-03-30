@@ -1,7 +1,7 @@
 import styles from "../../../styles/global_utils.module.scss";
 import PrimaryButton from '../../../components/utils/primary_button/primary_button';
 import FolderManager from '../../../components/features/folder_manager/folder_manager';
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import { iFolderItem } from '../../../interfaces/folder_item';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearInEditFolder  } from '../../../redux/actions/in_edit_folder_actions';
@@ -22,11 +22,14 @@ import TrashIcon from "../../../components/icons/trash_icon";
 import GridIcon from "../../../components/icons/grid_icon";
 import ListIcon from "../../../components/icons/list_icon";
 import DeselectedCheckboxIcon from "../../../components/icons/deselected_checkbox_icon";
+import iHistoryState from './../../../interfaces/states/history_state';
+import iHistoryTabGroup from './../../../interfaces/history_tab_group';
 
 const HistorySection = (props: any): JSX.Element => {
     const [addToWorkSpaceMessage, setAddToFolderMessage] = useState<boolean>(false);
     const [mergeProcessFolder, setMergeProcessFolder] = useState<iFolderItem | null>(null);
     const [createFolder, setCreateFolder] = useState<boolean>(false);
+    const [timeNow, setTimeNow] = useState<number>(Date.now());
 
     const historySectionState = useSelector((state: any) => state.historySectionReducer);
     const folderCollectionState: Array<iFolderItem> = useSelector((state: any) => state.folderCollectionReducer);
@@ -38,7 +41,7 @@ const HistorySection = (props: any): JSX.Element => {
     useEffect(() => {
         const query = {
             text: "",
-            maxResults: 25
+            maxResults: 20
         }
 
         chrome.history.search(query, (items: Array<chrome.history.HistoryItem>) => {
@@ -208,7 +211,47 @@ const HistorySection = (props: any): JSX.Element => {
         )
     }
 
-    const renderTabs = (): Array<JSX.Element> => {
+    const groupByTime = () => {
+        const { tabs } = historySectionState as iHistoryState;
+        const groups: Map<number, Array<chrome.history.HistoryItem>> = new Map();
+        
+        let prevMin: number = 0;
+
+        tabs.forEach((tab) => {
+            const { lastVisitTime } = tab;
+            
+
+            if(lastVisitTime){
+                const visitedTimeAsDate = lastVisitTime;
+                const diff: number = (Date.now() - lastVisitTime)/1000/60; // in min
+                const minutes = Math.floor(diff)
+
+                if(!groups.get(minutes)){
+                    groups.set(minutes, []);
+                }
+                const batch: Array<chrome.history.HistoryItem> | undefined = groups.get(minutes);
+                
+                if(batch){
+                    batch.push(tab);
+                    const sorted = batch.sort((a, b) => b.lastVisitTime! - a.lastVisitTime!);
+                    groups.set(minutes, [...sorted]);
+                }
+                
+
+            }
+        })
+
+        return groups;
+    }
+
+    const renderGroups = (): JSX.Element => {
+        const groups: Map<number, Array<chrome.history.HistoryItem>> = groupByTime();
+       // console.log(Array.from(groups));
+        return <></>;
+    }
+
+   const renderTabs = (): Array<JSX.Element> => {
+        renderGroups();
         const { tabSortOptionId, tabs } = historySectionState;
         let sortedTabs: Array<chrome.history.HistoryItem> = tabs;
         

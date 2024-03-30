@@ -4,9 +4,12 @@ import Dropdown from '../../components/utils/dropdown/dropdown';
 import Switcher from '../../components/utils/switcher/switcher';
 import { iFieldOption, iSettingFieldOption } from "../../interfaces/dropdown";
 import { useEffect, useMemo, useState } from 'react';
-import { saveToStorage } from "../../services/webex_api/storage";
+import { getFromStorage, saveToStorage } from "../../services/webex_api/storage";
 import SectionContainer from "../../components/utils/section_container";
 import iView from "../../interfaces/view";
+import { useDispatch, useSelector } from "react-redux";
+import { changeCancellationWarnings, changeCloseAtLaunch, changeDuplicationWarnings, changeLogErrors, changePerformanceNotification, changeRemovalWarning, readAllPluginSettings } from "../../redux/actions/settings_actions";
+import { iPluginSettings } from "../../redux/reducers/settings_reducer";
 
 /*
     Settings view
@@ -40,7 +43,22 @@ const duplicationWarningOptions: Array<iSettingFieldOption> = [
 
 const SettingsView = (props: iView): JSX.Element => {
     const [settings, setSettings] = useState<any>({});
-    const settingsCache = useMemo<any>(() => settings, [settings])
+
+    const settingsState = useSelector((state: any) => state.pluginSettingsReducer);
+    const dispatch = useDispatch()
+    const settingsCache = useMemo<iPluginSettings>(() => settingsState, [settingsState])
+   
+    // Set default values of all fields
+    useEffect(() => {
+        getFromStorage("local", null, (data) => {
+            const { performance_notification_value, duplication_warning_value, close_current_setting, cancellation_warning_setting, removal_warning_setting, error_log_setting } = data;
+
+            const payload = {
+                performance_notification_value, duplication_warning_value, close_current_setting, cancellation_warning_setting, removal_warning_setting, error_log_setting
+            }
+            dispatch(readAllPluginSettings(payload));
+        })
+    }, []);
 
     const getPresetPerformanceNotification = (): any => {
         const result = performanceNotificationOptions.filter((target) => target.id === settingsCache.performance_notification_value);
@@ -56,38 +74,37 @@ const SettingsView = (props: iView): JSX.Element => {
     const saveSelectedOption = (key: string, value: number | null): void => {
         if(value !== null){
             saveToStorage("local", key, value);
-            setSettings({
+           /* setSettings({
                 ...settings,
                 [key]: value
-            });
+            });*/
+            if(key === "performance_notification_value"){
+                dispatch(changePerformanceNotification(value))
+            } else if(key === "duplication_warning_value"){
+                dispatch(changeDuplicationWarnings(value))
+            }
+       
         }
     }
 
     // Save switcher data
     const saveSwitchSetting = (key: string, value: boolean | null): void => {
-        console.log(key, value);
         if(value === null) return;
 
         saveToStorage("local", key, value);
-        setSettings({
-            ...settings,
-            [key]: value
-        });
+
+        if(key === "close_current_setting"){
+            dispatch(changeCloseAtLaunch(value));
+        } else if(key === "cancellation_warning_setting"){
+            dispatch(changeCancellationWarnings(value));
+        } else if(key === "removal_warning_setting"){
+            dispatch(changeRemovalWarning(value))
+        } else if(key === "error_log_setting"){
+            dispatch(changeLogErrors(value))
+        }
     }
 
-    // Set default values of all fields
-    useEffect(() => {
-        chrome.storage.local.get((items: object) => {
-            let initialSettings = {settings};
-            for(const [key, value] of Object.entries(items)){
-                initialSettings = {
-                    ...initialSettings,
-                    [key]: value
-                }
-            }
-            setSettings(initialSettings);
-        })
-    }, []);
+
 
     return (
         <SectionContainer id="settings-view" title="Settings">

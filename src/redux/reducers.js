@@ -8,6 +8,7 @@ import { folderSettingsReducer } from "./reducers/folder_settings_reducer";
 import { historySectionReducer } from "./reducers/history_settings_reducer";
 import { sessionSectionReducer } from "./reducers/current_session_reducer";
 import { miscReducer } from "./reducers/misc_reducer";
+import { pluginSettingsReducer } from "./reducers/settings_reducer";
 
 const combinedReducers = combineReducers({
     folderCollectionReducer: folderCollectionReducer,
@@ -16,6 +17,7 @@ const combinedReducers = combineReducers({
     folderSettingsReducer: folderSettingsReducer,
     historySectionReducer: historySectionReducer,
     sessionSectionReducer: sessionSectionReducer,
+    pluginSettingsReducer: pluginSettingsReducer,
     miscReducer: miscReducer
 });
 
