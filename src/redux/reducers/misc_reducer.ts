@@ -1,7 +1,7 @@
 import { IS_EDITING_TAB } from "../types/in_edit_folders_types";
 import { CURRENTLY_EDITING_TAB } from "../types/misc_types";
 
-const miscStates = {
+const miscStates: any = {
     isEditingTabs: 0,
     currentlyEditingTab: false
 }

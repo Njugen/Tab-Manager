@@ -141,7 +141,7 @@ const RenderOptionsPage = (props: iOptionsPage): JSX.Element => {
   const renderUI = (view: JSX.Element): JSX.Element => {
     return (
       <>       
-        <CircleButton disabled={false} bgCSSClass={`${showScrollUpButton === true ? "block" : "hidden"} transition-all bg-tbfColor-lightpurple shadow-lg fixed bottom-8 right-8 z-[10000]`} onClick={() => window.scrollTo({ top: 0, left: 0, behavior: "smooth" })}>
+        <CircleButton disabled={false} bgCSSClass={`${showScrollUpButton === true ? "block" : "hidden"} transition-all bg-tbfColor-lightpurple shadow-xl fixed bottom-8 right-8 z-[10000]`} onClick={() => window.scrollTo({ top: 0, left: 0, behavior: "smooth" })}>
             <CollapseIcon size={32} fill="#fff" />  
         </CircleButton>
         <div className="flex h-full w-full relative bg-gray-50">

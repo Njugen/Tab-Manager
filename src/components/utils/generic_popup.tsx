@@ -4,7 +4,7 @@ import { innerStyleDirection, outerStyleDirection } from "../features/folder_man
 import GenericIconButton from "./generic_icon_button"
 import PrimaryButton from "./primary_button/primary_button"
 import PurpleBorderButton from "./purple_border_button"
-import iGenericPopup from '../../interfaces/generic_popup';
+import { iGenericPopup } from '../../interfaces/generic_popup';
 import styles from "../../styles/global_utils.module.scss";
 
 // Popup component with providing basic popup features.

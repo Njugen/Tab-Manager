@@ -5,18 +5,14 @@ import AddToFolderPopup from "../../../components/features/add_to_folder_popup";
 import { iFieldOption } from "../../../interfaces/dropdown";
 import randomNumber from "../../../tools/random_number";
 import GenericPopup from "../../../components/utils/generic_popup";
+import { iGPButtonProps } from "../../../interfaces/generic_popup";
 
-interface IGPButtonProps { 
-    label: string, 
-    handler: (e: any) => void 
-}
-
-const mockSaveSpecs: IGPButtonProps = {
+const mockSaveSpecs: iGPButtonProps = {
     label: randomNumber().toString(),
     handler: jest.fn()
 }
 
-const mockCancelSpecs: IGPButtonProps = {
+const mockCancelSpecs: iGPButtonProps = {
     label: randomNumber().toString(),
     handler: jest.fn()
 }

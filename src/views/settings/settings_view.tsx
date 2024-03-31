@@ -46,7 +46,7 @@ const SettingsView = (props: iView): JSX.Element => {
 
     const settingsState = useSelector((state: any) => state.pluginSettingsReducer);
     const dispatch = useDispatch()
-    const settingsCache = useMemo<iPluginSettings>(() => settingsState, [settingsState])
+   // const settingsCache = useMemo<iPluginSettings>(() => settingsState, [settingsState])
    
     // Set default values of all fields
     useEffect(() => {
@@ -61,12 +61,12 @@ const SettingsView = (props: iView): JSX.Element => {
     }, []);
 
     const getPresetPerformanceNotification = (): any => {
-        const result = performanceNotificationOptions.filter((target) => target.id === settingsCache.performance_notification_value);
+        const result = performanceNotificationOptions.filter((target) => target.id === settingsState.performance_notification_value);
         return result[0] || performanceNotificationOptions[0];
     }
 
     const getPresetDuplicationWarning = (): any => {
-        const result = duplicationWarningOptions.filter((target) => target.id === settingsCache.duplication_warning_value);
+        const result = duplicationWarningOptions.filter((target) => target.id === settingsState.duplication_warning_value);
         return result[0] || duplicationWarningOptions[0];
     }
 
@@ -109,7 +109,7 @@ const SettingsView = (props: iView): JSX.Element => {
     return (
         <SectionContainer id="settings-view" title="Settings">
             <div className="flex 2xl:flex-row justify-center 2xl:justify-normal">
-                {Object.entries(settingsCache).length > 0 && <div className="w-10/12 2xl:w-7/12">
+                {Object.entries(settingsState).length > 0 && <div className="w-10/12 2xl:w-7/12">
                     <FormField label="Performance notification" description="Warn me if the total amount of tabs exceeds a certain threshold when launching multiple tabs">
                         <Dropdown 
                             onCallback={(e) => saveSelectedOption("performance_notification_value", e.selected)} 
@@ -129,28 +129,28 @@ const SettingsView = (props: iView): JSX.Element => {
                     <FormField label="Close at folder launch" description="Close current browser session when launching a folder">
                         <Switcher 
                             id="close_current_setting" 
-                            value={settingsCache.close_current_setting} 
+                            value={settingsState.close_current_setting} 
                             onCallback={(e) => saveSwitchSetting("close_current_setting", e)} 
                         />
                     </FormField>
                     <FormField label="Cancellation warnings" description="Show a warning message before discarding changes made to folders">
                         <Switcher 
                             id="cancellation_warning_setting" 
-                            value={settingsCache.cancellation_warning_setting} 
+                            value={settingsState.cancellation_warning_setting} 
                             onCallback={(e) => saveSwitchSetting("cancellation_warning_setting", e)} 
                         />
                     </FormField>
                     <FormField label="Removal warnings" description="Show a warning message before deleting folders">
                         <Switcher 
                             id="removal_warning_setting" 
-                            value={settingsCache.removal_warning_setting} 
+                            value={settingsState.removal_warning_setting} 
                             onCallback={(e) => saveSwitchSetting("removal_warning_setting", e)} 
                         />
                     </FormField>
                     <FormField label="Log errors" description="Automatically send error reports to the developer">
                         <Switcher 
                             id="error_log_setting" 
-                            value={settingsCache.error_log_setting} 
+                            value={settingsState.error_log_setting} 
                             onCallback={(e) => saveSwitchSetting("error_log_setting", e)} 
                         />
                     </FormField>

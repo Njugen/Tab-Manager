@@ -64,7 +64,6 @@ const FoldersSection = (props: any): JSX.Element => {
 
     const folderCollectionState = useSelector((state: any) => state.folderCollectionReducer);
     const folderSettingsState = useSelector((state: any) => state.folderSettingsReducer);
-    const folderCollectionStateCache = useMemo<Array<iFolderItem>>(() => folderCollectionState, [folderCollectionState]);
 
     // Get from browser storage and store into redux 
     useEffect(() => {
@@ -564,7 +563,7 @@ const FoldersSection = (props: any): JSX.Element => {
         
             <SectionContainer id="folder-section" title="Folders" options={renderOptionsMenu}>
                 <>
-                    {folderCollectionStateCache.length === 0 && renderMessageBox()}
+                    {folderCollectionState.length === 0 && renderMessageBox()}
                     {<div className={`${folderSettingsState.viewMode === "list" ? "mx-auto mt-12" : `grid xl:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-4 grid-flow-dense gap-x-4 gap-y-0 mt-8`}`}>
                         {renderFolders()}
                     </div>}
