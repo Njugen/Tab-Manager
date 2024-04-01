@@ -14,7 +14,7 @@ import CollapseIcon from './../icons/collapse_icon';
 
 const SectionContainer = (props: iSectionContainer): JSX.Element => {
     const [fullscreen, setFullscreen] = useState<boolean>(false);
-    const { id, title, options, children } = props;
+    const { id, title, options, onExpand, children } = props;
     const sectionRef = useRef<HTMLDivElement>(null);
 
     return (
@@ -27,7 +27,10 @@ const SectionContainer = (props: iSectionContainer): JSX.Element => {
                             <h1 className="text-4xl text-tbfColor-darkpurple font-light inline-block">
                                 {title}
                             </h1>
-                            <GenericIconButton icon="close" onClick={() => setFullscreen(false)}>
+                            <GenericIconButton icon="close" onClick={() => {
+                                setFullscreen(false);
+                                if(onExpand) onExpand(false);
+                            }}>
                                 <CloseIcon size={38} fill="rgba(0,0,0,0.2)" />
                             </GenericIconButton>
                         </div>
@@ -50,6 +53,7 @@ const SectionContainer = (props: iSectionContainer): JSX.Element => {
                         <GenericIconButton icon="close" onClick={() => {
                             window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
                             setFullscreen(true);
+                            if(onExpand) onExpand(true);
                         }}>
                             <FullscreenIcon size={16} fill="rgba(0,0,0,0.4)" />
                         </GenericIconButton>

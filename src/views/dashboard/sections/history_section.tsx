@@ -34,7 +34,7 @@ const HistorySection = (props: any): JSX.Element => {
     const [createFolder, setCreateFolder] = useState<boolean>(false);
     const [timeNow, setTimeNow] = useState<number>(Date.now());
     const [snapshot, setSnapshot] = useState<string>("");
-
+    const [expanded, setExpanded] = useState<boolean>(false);
     
     const historySectionState = useSelector((state: any) => state.historySectionReducer);
     const folderCollectionState: Array<iFolderItem> = useSelector((state: any) => state.folderCollectionReducer);
@@ -77,7 +77,7 @@ const HistorySection = (props: any): JSX.Element => {
                     text: "",
                     endTime: undefined,
                     startTime: undefined,
-        
+                    maxResults: expanded === false ? 15 : undefined
                 }
 
              /*   if(lastItemVisited){
@@ -104,6 +104,10 @@ const HistorySection = (props: any): JSX.Element => {
 
         handleLoadHistory()
     }, []);
+
+    useEffect(() => {
+        handleLoadHistory()
+    }, [expanded])
 
 
   /*  useEffect(() => {
@@ -542,7 +546,7 @@ const HistorySection = (props: any): JSX.Element => {
         <>
             {addToWorkSpaceMessage && renderAddTabsMessage()}
             {renderFolderManager()}
-            <SectionContainer id="history-view" title="History" options={renderOptionsMenu}>
+            <SectionContainer id="history-view" title="History" options={renderOptionsMenu} onExpand={(value: boolean) => setExpanded(value)}>
                 <div ref={mountedRef} className="mt-8">                     
                     {historySectionState.tabs.length > 0 ? renderContentSection() : renderEmptyMessage()}
                 </div>  
