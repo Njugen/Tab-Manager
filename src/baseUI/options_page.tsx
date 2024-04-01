@@ -45,7 +45,7 @@ const RenderOptionsPage = (props: iOptionsPage): JSX.Element => {
   const dispatch = useDispatch();
 
   const handleSetShowScrollUpButton = (e: any): void => {
-    console.log("ABC", window.scrollY);
+
     if(window.scrollY === 0){
       setShowScrollUpButton(false);
     } else {

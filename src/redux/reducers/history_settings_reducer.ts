@@ -1,3 +1,4 @@
+import { Tabs } from "jest-chrome/types/jest-chrome";
 import iHistoryState from "../../interfaces/states/history_state";
 import { 
     SET_MARKED_TABS, 
@@ -13,16 +14,18 @@ const historySectionState: iHistoryState = {
     tabs: [],
     markedTabs: [],
     tabSortOptionId: 0,
-    viewMode: "grid"
+    viewMode: "grid",
+    expanded: false
 }
 
 function historySectionReducer(state = historySectionState, action: any) {
     const { type, data } = action;
 
     if(type === SET_UP_TABS){
+
         return {
             ...state,
-            tabs: data
+            tabs: [...data]
         }
     } else if(type === SET_MARKED_TABS){
         let currentTabs = state.markedTabs;

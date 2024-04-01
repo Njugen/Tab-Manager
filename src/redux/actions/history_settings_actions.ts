@@ -6,7 +6,7 @@ import {
     CLEAR_ALL_MARKED_TABS,
     SET_TABS_SORT_ORDER,
     SET_UP_TABS,
-
+    TOGGLE_EXPANSION,
     CHANGE_TABS_VIEWMODE
 } from "../types/history_settings_types";
 
@@ -52,12 +52,19 @@ function changeTabsViewMode(input: "list" | "grid"){
     }
 }
 
+function toggleExpansion(input: boolean){
+    return {
+        type: TOGGLE_EXPANSION,
+        data: input
+    }
+}
+
 export {
     setUpTabsAction,
     setMarkedTabsAction,
     setMarkMultipleTabsAction,
     clearMarkedTabsAction,
     setTabsSortOrder,
-
+    toggleExpansion,
     changeTabsViewMode
 }

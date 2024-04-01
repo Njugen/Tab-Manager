@@ -24,30 +24,76 @@ import ListIcon from "../../../components/icons/list_icon";
 import DeselectedCheckboxIcon from "../../../components/icons/deselected_checkbox_icon";
 import iHistoryState from './../../../interfaces/states/history_state';
 import iHistoryTabGroup from './../../../interfaces/history_tab_group';
+import Checkbox from "../../../components/utils/checkbox";
+
+// MOHAHAHA. THIS FILE IS A MESS AS OF NOW
 
 const HistorySection = (props: any): JSX.Element => {
     const [addToWorkSpaceMessage, setAddToFolderMessage] = useState<boolean>(false);
     const [mergeProcessFolder, setMergeProcessFolder] = useState<iFolderItem | null>(null);
     const [createFolder, setCreateFolder] = useState<boolean>(false);
     const [timeNow, setTimeNow] = useState<number>(Date.now());
+    const [snapshot, setSnapshot] = useState<string>("");
 
+    
     const historySectionState = useSelector((state: any) => state.historySectionReducer);
     const folderCollectionState: Array<iFolderItem> = useSelector((state: any) => state.folderCollectionReducer);
 
     const historyListRef = useRef<HTMLDivElement>(null);
+    const mountedRef = useRef<HTMLDivElement>(null);
 
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        const query = {
-            text: "",
-            maxResults: 20
-        }
-
+    const loadHistory = (query: chrome.history.HistoryQuery = { text: "", maxResults: 20 }): void => {
         chrome.history.search(query, (items: Array<chrome.history.HistoryItem>) => {
-            dispatch(setUpTabsAction(items));
+            console.log("CALLED", items);
+            if(items.length === 0) return;
+            const sorted = items.sort((a,b)=> (a.lastVisitTime && b.lastVisitTime && (b.lastVisitTime - a.lastVisitTime)) || 0);
+            const newSnapshot = JSON.stringify(sorted[sorted.length-1].lastVisitTime);
+            console.log("SORTED", sorted);
+            
+            if(items.length > 0 && snapshot !== newSnapshot) {
+                
+                dispatch(setUpTabsAction(sorted));
+                setSnapshot(newSnapshot);
+            }
         });
+    }
 
+    const handleLoadHistory = (e?: any): void => {
+            
+          
+            const { innerHeight, scrollY } = window;
+            const verticalPos = scrollY;
+
+                const { tabs } = historySectionState;
+                console.log("FETCHED", tabs);
+                const count: number = tabs.length;
+                const lastItemVisited = tabs[count-1];
+                console.log("LAST ITEM", lastItemVisited);
+                //loadHistory({ text: "", maxResults: (historySectionState.tabs.length === 0 ? 20 :5), endTime: lastItemVisited?.lastVisitTime || undefined });
+
+                let query: any = {
+                    text: "",
+                    endTime: undefined,
+                    startTime: undefined,
+        
+                }
+
+             /*   if(lastItemVisited){
+                  //  query.endTime = lastItemVisited.lastVisitTime;
+                   // query.startTime = lastItemVisited.lastVisitTime - 60000;
+                   query.endTime = lastItemVisited.lastVisitTime;
+                   query.startTime = lastItemVisited.lastVisitTime - (1000*60*30);
+                   query.maxResults = undefined;
+                }*/
+                loadHistory(query)
+        
+    }
+
+    
+    useEffect(() => {
+        
         getFromStorage("local", "history_sort", (data) => {  
             dispatch(setTabsSortOrder(data.history_sort));
         })
@@ -55,7 +101,18 @@ const HistorySection = (props: any): JSX.Element => {
         getFromStorage("local", "history_viewmode", (data) => {  
             dispatch(changeTabsViewMode(data.history_viewmode));
         })
+
+        handleLoadHistory()
     }, []);
+
+
+  /*  useEffect(() => {
+       
+        console.log("CAUSE");
+        window.addEventListener("click", handleLoadHistory);
+
+        return () => window.removeEventListener("click", handleLoadHistory);
+    }, [snapshot])*/
 
     // Change tab listing from grid to list, and vice versa
     const handleChangeViewMode = (): void => {
@@ -200,9 +257,9 @@ const HistorySection = (props: any): JSX.Element => {
                                 <ListIcon size={20} fill={"#6D00C2"} />
                             }
                         </TextIconButton>
-                        <div className="relative w-[175px] mr-4 flex items-center">
+                        {/*<div className="relative w-[175px] mr-4 flex items-center">
                             {renderSortOptionsDropdown()}
-                        </div>
+                        </div>*/}
                         <PrimaryButton disabled={markedTabs.length > 0 ? false : true} text="Open selected" onClick={handleOpenSelected} />
                         <PrimaryButton disabled={markedTabs.length > 0 ? false : true} text="Add to folder" onClick={() => setAddToFolderMessage(true)} />
                     </div>
@@ -223,7 +280,7 @@ const HistorySection = (props: any): JSX.Element => {
 
             if(lastVisitTime){
                 const visitedTimeAsDate = lastVisitTime;
-                const diff: number = (Date.now() - lastVisitTime)/1000/60; // in min
+                const diff: number = (Date.now() - (lastVisitTime))/1000/60; // in min
                 const minutes = Math.floor(diff)
 
                 if(!groups.get(minutes)){
@@ -244,13 +301,13 @@ const HistorySection = (props: any): JSX.Element => {
         return groups;
     }
 
-    const renderGroups = (): JSX.Element => {
+    const organizeGroups = (): Array<Array<any>> => {
         const groups: Map<number, Array<chrome.history.HistoryItem>> = groupByTime();
-       // console.log(Array.from(groups));
-        return <></>;
+
+        return Array.from(groups);
     }
 
-   const renderTabs = (): Array<JSX.Element> => {
+ /*  const renderTabs = (): Array<JSX.Element> => {
         renderGroups();
         const { tabSortOptionId, tabs } = historySectionState;
         let sortedTabs: Array<chrome.history.HistoryItem> = tabs;
@@ -293,7 +350,7 @@ const HistorySection = (props: any): JSX.Element => {
         });
 
         return result; 
-    };
+    };*/
 
     const handleAddToNewFolder = (): void => {
         setAddToFolderMessage(false);
@@ -411,7 +468,7 @@ const HistorySection = (props: any): JSX.Element => {
         if(historySectionState.viewMode === "list"){
             return "mx-auto mt-10";
         } else {
-            return "grid xl:grid-cols-3 2xl:grid-cols-4 grid-flow-dense gap-x-3 gap-y-0 mt-6 pr-2";
+            return "grid xl:grid-cols-3 2xl:grid-cols-3 grid-flow-dense gap-x-3 gap-y-0 mt-6 pr-2";
         }
     }
 
@@ -420,8 +477,52 @@ const HistorySection = (props: any): JSX.Element => {
             <div className="flex justify-center min-h-[350px]">
                 <div className="w-full">
                     <div className="pb-6">
-                        <div ref={historyListRef} className={`${styles.scroll_style} overflow-y-auto ${tabViewModeCSS()} max-h-[350px]`}>
-                            {renderTabs()}
+                        <div ref={historyListRef} className={`${styles.scroll_style} ${tabViewModeCSS()}`}>
+                            {/*renderTabs()*/}
+                            {
+                                <>
+                                    { 
+                                        organizeGroups().map((group): JSX.Element => {
+                                               const minutes = group[0];
+
+                                                return (
+                                                    <div className="py-3">
+                                                        <p className="text-xs text-right font-semibold">{group[0]} minutes ago</p>
+                
+                                                            { 
+                                                                group[1].map((tab: any) => {
+                                                                    const tabUrl = new URL(tab.url);
+                                                                    const collection = historySectionState.markedTabs;
+                                                                    const isMarked = collection.find((target: chrome.history.HistoryItem) => parseInt(target.id) === parseInt(tab.id));
+                                                                    const { id, title, url } = tab;
+                                                                    return (
+                                                                        /*<li className="py-4 px-4 text-xs flex justify-between items-center overflow-hidden">
+                                                                            <div className="flex items-center overflow-hidden mr-2">
+                                                                                {tabUrl && <img src={`http://www.google.com/s2/favicons?domain=${tabUrl.origin}`} className="w-[18px] h-[18px] inline-block" alt={""} />}
+                                                                                <div className="mx-3 w-full overflow-hidden">
+                                                                                    <a href={tabUrl.href} target="_blank" className="no-underline truncate text-ellipsis font-semibold block max-w-[500px]">{tab.title}</a>
+                                                                                    <a href={tabUrl.href} target="_blank" className="no-underline truncate text-ellipsis inline-block max-w-[500px]">{tabUrl.href}</a>
+                                                                                </div>
+                                                                                
+                                                                            </div>
+                                                                            <div className="">
+                                                                                <Checkbox checked={false} onCallback={(e) => {}} />
+                                                                            </div>
+                                                                        </li>*/
+                                                                        <div className="my-3">
+                                                                            <TabItem key={`tab-${id}`} id={parseInt(id)} label={title} url={url} onMark={handleMarkTab} marked={isMarked ? true : false} disableEdit={true} disableMark={false} />
+                                                                        </div>
+                                                                    );
+                                                                }
+                                                            )}
+                                                        
+                                                    </div>
+                                                );
+                                            }
+                                        )
+                                    }
+                                </>
+                            }   
                         </div>
                     </div> 
                 </div>            
@@ -442,7 +543,7 @@ const HistorySection = (props: any): JSX.Element => {
             {addToWorkSpaceMessage && renderAddTabsMessage()}
             {renderFolderManager()}
             <SectionContainer id="history-view" title="History" options={renderOptionsMenu}>
-                <div className="mt-8">                     
+                <div ref={mountedRef} className="mt-8">                     
                     {historySectionState.tabs.length > 0 ? renderContentSection() : renderEmptyMessage()}
                 </div>  
             </SectionContainer>
