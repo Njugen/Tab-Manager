@@ -25,6 +25,7 @@ import DeselectedCheckboxIcon from "../../../components/icons/deselected_checkbo
 import iHistoryState from './../../../interfaces/states/history_state';
 import iHistoryTabGroup from './../../../interfaces/history_tab_group';
 import Checkbox from "../../../components/utils/checkbox";
+import TabGroup from "../../../components/utils/tab_group";
 
 // MOHAHAHA. THIS FILE IS A MESS AS OF NOW
 
@@ -46,14 +47,11 @@ const HistorySection = (props: any): JSX.Element => {
 
     const loadHistory = (query: chrome.history.HistoryQuery = { text: "", maxResults: 20 }): void => {
         chrome.history.search(query, (items: Array<chrome.history.HistoryItem>) => {
-            console.log("CALLED", items);
             if(items.length === 0) return;
             const sorted = items.sort((a,b)=> (a.lastVisitTime && b.lastVisitTime && (b.lastVisitTime - a.lastVisitTime)) || 0);
             const newSnapshot = JSON.stringify(sorted[sorted.length-1].lastVisitTime);
-            console.log("SORTED", sorted);
             
-            if(items.length > 0 && snapshot !== newSnapshot) {
-                
+            if(items.length > 0 && snapshot !== newSnapshot) { 
                 dispatch(setUpTabsAction(sorted));
                 setSnapshot(newSnapshot);
             }
@@ -62,16 +60,13 @@ const HistorySection = (props: any): JSX.Element => {
 
     const handleLoadHistory = (e?: any): void => {
             
-          
-            const { innerHeight, scrollY } = window;
-            const verticalPos = scrollY;
+
 
                 const { tabs } = historySectionState;
                 console.log("FETCHED", tabs);
                 const count: number = tabs.length;
                 const lastItemVisited = tabs[count-1];
                 console.log("LAST ITEM", lastItemVisited);
-                //loadHistory({ text: "", maxResults: (historySectionState.tabs.length === 0 ? 20 :5), endTime: lastItemVisited?.lastVisitTime || undefined });
 
                 let query: any = {
                     text: "",
@@ -80,13 +75,6 @@ const HistorySection = (props: any): JSX.Element => {
                     maxResults: expanded === false ? 15 : undefined
                 }
 
-             /*   if(lastItemVisited){
-                  //  query.endTime = lastItemVisited.lastVisitTime;
-                   // query.startTime = lastItemVisited.lastVisitTime - 60000;
-                   query.endTime = lastItemVisited.lastVisitTime;
-                   query.startTime = lastItemVisited.lastVisitTime - (1000*60*30);
-                   query.maxResults = undefined;
-                }*/
                 loadHistory(query)
         
     }
@@ -109,14 +97,6 @@ const HistorySection = (props: any): JSX.Element => {
         handleLoadHistory()
     }, [expanded])
 
-
-  /*  useEffect(() => {
-       
-        console.log("CAUSE");
-        window.addEventListener("click", handleLoadHistory);
-
-        return () => window.removeEventListener("click", handleLoadHistory);
-    }, [snapshot])*/
 
     // Change tab listing from grid to list, and vice versa
     const handleChangeViewMode = (): void => {
@@ -311,51 +291,6 @@ const HistorySection = (props: any): JSX.Element => {
         return Array.from(groups);
     }
 
- /*  const renderTabs = (): Array<JSX.Element> => {
-        renderGroups();
-        const { tabSortOptionId, tabs } = historySectionState;
-        let sortedTabs: Array<chrome.history.HistoryItem> = tabs;
-        
-        const titleCondition = (a: chrome.history.HistoryItem, b: chrome.history.HistoryItem): boolean => {
-            a.title = a.title ? a.title : "";
-            b.title = b.title ? b.title : "";
-
-            const aTitleLowerCase = a.title.toLowerCase();
-            const bTitleToLowerCase = b.title.toLowerCase();
-
-            return tabSortOptionId === 0 ? (aTitleLowerCase > bTitleToLowerCase) : (bTitleToLowerCase > aTitleLowerCase);
-        }
-
-        if(tabSortOptionId === 0 || tabSortOptionId === 1){
-            sortedTabs = [...tabs].sort((a: any, b: any) => titleCondition(a, b) ? 1 : -1);
-        } else if(tabSortOptionId === 2){
-            sortedTabs = [...tabs].sort((a: any, b: any) => a.lastVisitTime - b.lastVisitTime);
-        } else if(tabSortOptionId === 3){
-            sortedTabs = [...tabs].sort((a: any, b: any) => a.visitCount - b.visitCount);
-        }
-
-        const result = sortedTabs.map((item: chrome.history.HistoryItem) => {
-            const collection = historySectionState.markedTabs;
-            const isMarked = collection.find((target: chrome.history.HistoryItem) => parseInt(target.id) === parseInt(item.id));
-            const { id, title, url } = item;
-    
-            return (
-                <TabItem 
-                    onMark={handleMarkTab} 
-                    key={`sorted-tab-${id}`} 
-                    id={parseInt(id)} 
-                    label={title || ""} 
-                    url={url || "https://"} 
-                    disableEdit={true} 
-                    disableMark={false} 
-                    marked={isMarked ? true : false} 
-                />
-            )
-        });
-
-        return result; 
-    };*/
-
     const handleAddToNewFolder = (): void => {
         setAddToFolderMessage(false);
         setCreateFolder(true);
@@ -482,45 +417,29 @@ const HistorySection = (props: any): JSX.Element => {
                 <div className="w-full">
                     <div className="pb-6">
                         <div ref={historyListRef} className={`${styles.scroll_style} ${tabViewModeCSS()}`}>
-                            {/*renderTabs()*/}
                             {
                                 <>
                                     { 
                                         organizeGroups().map((group): JSX.Element => {
-                                               const minutes = group[0];
 
                                                 return (
-                                                    <div className="py-3">
-                                                        <p className="text-xs text-right font-semibold">{group[0]} minutes ago</p>
-                
-                                                            { 
-                                                                group[1].map((tab: any) => {
-                                                                    const tabUrl = new URL(tab.url);
-                                                                    const collection = historySectionState.markedTabs;
-                                                                    const isMarked = collection.find((target: chrome.history.HistoryItem) => parseInt(target.id) === parseInt(tab.id));
-                                                                    const { id, title, url } = tab;
-                                                                    return (
-                                                                        /*<li className="py-4 px-4 text-xs flex justify-between items-center overflow-hidden">
-                                                                            <div className="flex items-center overflow-hidden mr-2">
-                                                                                {tabUrl && <img src={`http://www.google.com/s2/favicons?domain=${tabUrl.origin}`} className="w-[18px] h-[18px] inline-block" alt={""} />}
-                                                                                <div className="mx-3 w-full overflow-hidden">
-                                                                                    <a href={tabUrl.href} target="_blank" className="no-underline truncate text-ellipsis font-semibold block max-w-[500px]">{tab.title}</a>
-                                                                                    <a href={tabUrl.href} target="_blank" className="no-underline truncate text-ellipsis inline-block max-w-[500px]">{tabUrl.href}</a>
-                                                                                </div>
-                                                                                
-                                                                            </div>
-                                                                            <div className="">
-                                                                                <Checkbox checked={false} onCallback={(e) => {}} />
-                                                                            </div>
-                                                                        </li>*/
-                                                                        <div className="my-3">
-                                                                            <TabItem key={`tab-${id}`} id={parseInt(id)} label={title} url={url} onMark={handleMarkTab} marked={isMarked ? true : false} disableEdit={true} disableMark={false} />
-                                                                        </div>
-                                                                    );
-                                                                }
-                                                            )}
-                                                        
-                                                    </div>
+                                                    <TabGroup desc={`${group[0]} minutes ago`}>
+                                                         {
+                                                            group[1].map((tab: any) => {
+                                                                const tabUrl = new URL(tab.url);
+                                                                const collection = historySectionState.markedTabs;
+                                                                const isMarked = collection.find((target: chrome.history.HistoryItem) => parseInt(target.id) === parseInt(tab.id));
+                                                                const { id, title, url } = tab;
+                                                                return (
+                                                                    
+                                                                    <div className="my-3">
+                                                                        <TabItem key={`tab-${id}`} id={parseInt(id)} label={title} url={url} onMark={handleMarkTab} marked={isMarked ? true : false} disableEdit={true} disableMark={false} />
+                                                                    </div>
+                                                                );
+                                                            }
+                                                        )}
+                                                    </TabGroup>
+                                                  
                                                 );
                                             }
                                         )
