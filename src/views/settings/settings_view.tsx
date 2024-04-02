@@ -44,7 +44,7 @@ const duplicationWarningOptions: Array<iSettingFieldOption> = [
 const SettingsView = (props: iView): JSX.Element => {
     const [settings, setSettings] = useState<any>({});
 
-    const settingsState = useSelector((state: any) => state.pluginSettingsReducer);
+    const settingsState: iPluginSettings = useSelector((state: any) => state.pluginSettingsReducer);
     const dispatch = useDispatch()
    // const settingsCache = useMemo<iPluginSettings>(() => settingsState, [settingsState])
    

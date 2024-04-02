@@ -14,7 +14,7 @@ import { iFieldOption } from '../../interfaces/dropdown';
 import SaveIcon from '../../components/icons/save_icon';
 import CircleButton from './../../components/utils/circle_button';
 import WindowItem from "../../components/features/window_item";
-
+import iCurrentSessionState from "../../interfaces/states/current_session_state";
 const CurrentSessionView = (props:any): JSX.Element => {
     const [addToWorkSpaceMessage, setAddToFolderMessage] = useState<boolean>(false);
     const [createFolder, setCreateFolder] = useState<boolean>(false);
@@ -24,13 +24,7 @@ const CurrentSessionView = (props:any): JSX.Element => {
     const folderCollectionState: Array<iFolderItem> = useSelector((state: any) => state.folderCollectionReducer);
 
     const dispatch = useDispatch();
-    const sessionSectionState = useSelector((state: any) => state.sessionSectionReducer);
-
-    useEffect(() => {        
-        if(folderCollectionState.length > 0){
-         //   saveToStorage("local", "folders", folderCollectionState);
-        } 
-    }, [folderCollectionState]);
+    const sessionSectionState: any = useSelector((state: any) => state.sessionSectionReducer);
 
     useEffect(() => {
         getAllWindows();
@@ -167,7 +161,8 @@ const CurrentSessionView = (props:any): JSX.Element => {
     }
 
     const renderFolderManager = (): JSX.Element => {
-        let render;
+        let render = <></>;
+
         if(createFolder === true){
             const presetWindows: Array<iWindowItem> = sessionSectionState.windows.map((window: chrome.windows.Window) => {
                 if(window.tabs){
@@ -202,14 +197,12 @@ const CurrentSessionView = (props:any): JSX.Element => {
         } else if(mergeProcess !== null) {
 
             render = <FolderManager type="popup" title={`Merge tabs to ${mergeProcess.name}`} folder={mergeProcess} onClose={handlePopupClose} />;
-        } else {
-            render = <></>;
         }
 
         return render;
     }
 
-    const renderWindows = (): Array<JSX.Element> => {
+    const renderWindows = (): JSX.Element => {
         const existingWindows = sessionSectionState?.windows;
         const existingWindowsElements: Array<JSX.Element> = existingWindows?.map((item: iWindowItem, i: number) => {
             return (
@@ -227,9 +220,9 @@ const CurrentSessionView = (props:any): JSX.Element => {
         })
         
         if (existingWindowsElements?.length > 0){
-            return [...existingWindowsElements];
+            return <>{existingWindowsElements}</>;
         } else {
-            return [renderEmptyMessage()];
+            return <>{renderEmptyMessage()}</>;
         }
     }
 

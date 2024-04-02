@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import randomNumber from "../../../tools/random_number";
 import iWindowManager from "../../../interfaces/window_manager";
 import WindowList from './child_components/window_list';
+import { iFolderItem } from "../../../interfaces/folder_item";
 
 /*
     Section for managing windows and tabs, primarily used
@@ -14,7 +15,7 @@ const WindowManager = (props: iWindowManager): JSX.Element => {
     const [createWindow, setCreateWindow] = useState<boolean>(false);
     const [inCreationId, setIncreationId] = useState<number>(-1);
 
-    const folderManagerState = useSelector((state: any) => state.folderManagerReducer);
+    const folderManagerState: iFolderItem | null = useSelector((state: any) => state.folderManagerReducer);
 
     // Once the inEdit reducer changes, stop creating window
     useEffect(() => {
@@ -30,7 +31,7 @@ const WindowManager = (props: iWindowManager): JSX.Element => {
 
     return (
         <div data-testid="window-manager" className="py-6 min-h-[200px] flex flex-col items-center justify-center">
-            {<WindowList folder={folderManagerState} createWindow={createWindow} inCreationId={inCreationId} />}
+            {folderManagerState && <WindowList folder={folderManagerState} createWindow={createWindow} inCreationId={inCreationId} />}
             { 
                 <div className="flex flex-row mt-10">
                     <PrimaryButton disabled={false} text="New window" onClick={handleCreateWindow} />            

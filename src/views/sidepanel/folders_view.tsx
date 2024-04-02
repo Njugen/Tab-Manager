@@ -24,7 +24,7 @@ const FoldersView = (props: iFoldersView): JSX.Element => {
     const [createFolder, setCreateFolder] = useState<boolean>(false);
 
     const dispatch = useDispatch();
-    const folderCollectionState = useSelector((state: any) => state.folderCollectionReducer);
+    const folderCollectionState: Array<iFolderItem> = useSelector((state: any) => state.folderCollectionReducer);
 
     const storageListener = (changes: any, areaName: string): void => {
         if(areaName === "local"){

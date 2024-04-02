@@ -11,6 +11,7 @@ import {
     filterFoldersByString 
 } from "../../tools/tab_filters";
 import CloseIcon from "../../components/icons/close_icon";
+import iCurrentSessionState from "../../interfaces/states/current_session_state";
 
 function SearchResultsContainer(props:any): JSX.Element {
     const { keyword, onClose } = props;
@@ -18,7 +19,7 @@ function SearchResultsContainer(props:any): JSX.Element {
     const [folderLaunchType, setFolderLaunchType] = useState<string | null>(null); 
     const [totalTabsCount, setTotalTabsCount] = useState<number>(0);
     const [showPerformanceWarning, setShowPerformanceWarning] = useState<boolean>(false);
-
+    
     const handleClose = (): void => {
         onClose();
     }
@@ -82,8 +83,8 @@ function SearchResultsContainer(props:any): JSX.Element {
         });
     }, [folderLaunchType]);
 
-    const folderCollectionState = useSelector((state: any) => state.folderCollectionReducer);
-    const sessionSectionState = useSelector((state: any) => state.sessionSectionReducer);
+    const folderCollectionState: Array<iFolderItem> = useSelector((state: any) => state.folderCollectionReducer);
+    const sessionSectionState: iCurrentSessionState = useSelector((state: any) => state.sessionSectionReducer);
     const historySectionState = useSelector((state: any) => state.historySectionReducer);
 
     // Render all filtered folders

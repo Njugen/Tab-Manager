@@ -12,6 +12,7 @@ import { setCurrentlyEditingTab, setTabInEdits } from "../../redux/actions/misc_
 import TrashIcon from "../icons/trash_icon";
 import CollapseIcon from "../icons/collapse_icon";
 import ExpandIcon from "../icons/expand_icon";
+import { iFolderItem } from "../../interfaces/folder_item";
 
 /*
     Window containing tabs and various window related options. Used primarily
@@ -28,8 +29,8 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
     const dispatch = useDispatch();
 
     // Get information about the folder 
-    const folder_state = useSelector((state: any) => state.folderManagerReducer);
-    const misc_state = useSelector((state: any) => state.miscReducer);
+    const folder_state: iFolderItem | null = useSelector((state: any) => state.folderManagerReducer);
+    const misc_state: any = useSelector((state: any) => state.miscReducer);
 
     // Disable add new tab by setting state
     useEffect(() => {
@@ -43,7 +44,7 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
 
     // Delete this window from redux
     const handleDeleteWindow = (): void => {
-        const windows = folder_state.windows.filter((target: iWindowItem) => target.id !== id);
+        const windows = folder_state?.windows.filter((target: iWindowItem) => target.id !== id);
 
         dispatch(setCurrentlyEditingTab(false));
         dispatch(updateInEditFolder("windows", windows));
@@ -73,9 +74,11 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
 
     // Delete marked tabs
     const handleDeleteTabs = (): void => {
+        if(!folder_state?.windows) return;
+        
         const windows = folder_state.windows.filter((target: iWindowItem) => target.id === id);
-        const targetWindowIndex = folder_state.windows.findIndex((target: iWindowItem) => target.id === id);
-        const tabs = windows[0]?.tabs;
+        const targetWindowIndex = folder_state?.windows.findIndex((target: iWindowItem) => target.id === id);
+        const tabs = windows[0].tabs;
      
         const newTabCollection: Array<iTabItem> = [];
 

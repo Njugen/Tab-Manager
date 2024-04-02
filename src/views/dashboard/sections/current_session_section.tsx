@@ -15,6 +15,7 @@ import { setUpWindowsAction } from '../../../redux/actions/current_session_actio
 import AddToFolderPopup from '../../../components/features/add_to_folder_popup';
 import SectionContainer from "../../../components/utils/section_container";
 import WindowItem from "../../../components/features/window_item";
+import iCurrentSessionState from "../../../interfaces/states/current_session_state";
 
 const CurrentSessionSection = (props: any): JSX.Element => {
     const [addToWorkSpaceMessage, setAddToFolderMessage] = useState<boolean>(false);
@@ -101,7 +102,15 @@ const CurrentSessionSection = (props: any): JSX.Element => {
         )
     }
 
-    const renderContents = (): JSX.Element => {
+    const renderEmptyMessage = (): JSX.Element => {
+        return (
+            <div className={"flex justify-center items-center"}>
+                <p> Your browing history is empty.</p>
+            </div>
+        );
+    }
+
+    const renderWindows = (): JSX.Element => {
         const existingWindows = sessionSectionState?.windows;
         const existingWindowsElements: Array<JSX.Element> = existingWindows?.map((item: iWindowItem, i: number) => {
             return (
@@ -121,7 +130,7 @@ const CurrentSessionSection = (props: any): JSX.Element => {
         if (existingWindowsElements?.length > 0){
             return <>{existingWindowsElements}</>;
         } else {
-            return <></>;
+            return <>{renderEmptyMessage()}</>;
         }
     }
 
@@ -243,7 +252,7 @@ const CurrentSessionSection = (props: any): JSX.Element => {
             {addToWorkSpaceMessage && renderAddTabsMessage()}
             {renderFolderManager()}
             <SectionContainer id="currentSession-view" title="Current session" options={renderOptionsMenu}>
-                {renderContents()}
+                {renderWindows()}
             </SectionContainer>
         </>  
     );

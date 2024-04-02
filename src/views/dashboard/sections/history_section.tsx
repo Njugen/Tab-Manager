@@ -21,7 +21,7 @@ import GridIcon from "../../../components/icons/grid_icon";
 import ListIcon from "../../../components/icons/list_icon";
 import DeselectedCheckboxIcon from "../../../components/icons/deselected_checkbox_icon";
 import HistoryTabGroupsSection from "../../common/HistoryTabGroupsSection";
-
+import iHistoryState from "../../../interfaces/states/history_state";
 // MOHAHAHA. THIS FILE IS A MESS AS OF NOW
 
 const HistorySection = (props: any): JSX.Element => {

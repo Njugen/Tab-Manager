@@ -14,7 +14,7 @@ import windowListChanged from "./window_list_changed";
 import WindowManager from "../window_manager/window_manager";
 import GenericPopup from "../../utils/generic_popup";
 import { useDispatch, useSelector } from "react-redux";
-
+import iWarningState from "../../../interfaces/states/warning_state";
 /*
     A popup providing oversight of a folder's settings and available windows/tabs.
     The settings may be changed by the user, which then gets applied to redux storage
@@ -38,10 +38,10 @@ const FolderManager = (props: iPopup): JSX.Element => {
 
     // Read necessary data from redux. These data are are used in this component
     // for various tasks. Values may be dispatched back to these redux states for use in other multilevel components
-    const misc_state = useSelector((state: any) => state.miscReducer);
-    const folder_collection_state = useSelector((state: any) => state.folderCollectionReducer);
-    const warning_actions_state = useSelector((state: any) => state.WarningActionsReducer);
-    const in_edit_folder_state = useSelector((state: any) => state.folderManagerReducer);
+    const misc_state: any = useSelector((state: any) => state.miscReducer);
+    const folder_collection_state: Array<iFolderItem> = useSelector((state: any) => state.folderCollectionReducer);
+    const warning_actions_state: iWarningState = useSelector((state: any) => state.WarningActionsReducer);
+    const in_edit_folder_state: any = useSelector((state: any) => state.folderManagerReducer);
 
     useEffect(() => {
         // Hide the sidebar of the body. A sidebar of this component is used instead.

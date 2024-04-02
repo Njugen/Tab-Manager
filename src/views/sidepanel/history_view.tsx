@@ -15,6 +15,7 @@ import SaveIcon from '../../components/icons/save_icon';
 import TrashIcon from '../../components/icons/trash_icon';
 import OpenBrowserIcon from "../../components/icons/open_browser_icon";
 import HistoryTabGroupsSection from "../common/HistoryTabGroupsSection";
+import iHistoryState from "../../interfaces/states/history_state";
 
 const HistoryView = (props:any): JSX.Element => {
     const [mergeProcess, setMergeProcess] = useState<iFolderItem | null>(null);
@@ -23,7 +24,7 @@ const HistoryView = (props:any): JSX.Element => {
     const [createFolder, setCreateFolder] = useState<boolean>(false);
 
     const dispatch = useDispatch();
-    const historySectionState = useSelector((state: any) => state.historySectionReducer);
+    const historySectionState: any = useSelector((state: any) => state.historySectionReducer);
     const folderCollectionState: Array<iFolderItem> = useSelector((state: any) => state.folderCollectionReducer);
 
     const handleDeleteFromHistory = (): void => {

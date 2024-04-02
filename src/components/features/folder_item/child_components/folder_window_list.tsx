@@ -1,7 +1,7 @@
 import WindowItem from "../../window_item";
 import { iWindowItem } from "../../../../interfaces/window_item";
 import { useSelector } from "react-redux";
-
+import iFolderState from "../../../../interfaces/states/folder_state";
 interface IFolderWindowListProps {
     windows: Array<iWindowItem>,
     viewMode: "list" | "grid"
@@ -23,7 +23,7 @@ const cols = (folderViewMode: string, windowViewMode: string): number => {
 const FolderWindowList = (props: IFolderWindowListProps): JSX.Element => {
     const { windows, viewMode } = props;
 
-    const folderSettingsState = useSelector((state: any) => state.folderSettingsReducer);
+    const folderSettingsState: iFolderState = useSelector((state: any) => state.folderSettingsReducer);
 
     const decisiveCols: number = cols(folderSettingsState.viewMode, viewMode);
 

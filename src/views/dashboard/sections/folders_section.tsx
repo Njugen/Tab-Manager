@@ -25,6 +25,7 @@ import MergeIcon from '../../../components/icons/merge_icon';
 import TrashIcon from '../../../components/icons/trash_icon';
 import GridIcon from '../../../components/icons/grid_icon';
 import ListIcon from '../../../components/icons/list_icon';
+import iFolderState from '../../../interfaces/states/folder_state';
 
 const { 
     changeFoldersViewMode, 
@@ -60,10 +61,11 @@ const FoldersSection = (props: any): JSX.Element => {
     const [folderLaunchType, setFolderLaunchType] = useState<string | null>(null); 
     const [loaded, setLoaded] = useState<boolean>(false);
 
+
     const dispatch = useDispatch();
 
-    const folderCollectionState = useSelector((state: any) => state.folderCollectionReducer);
-    const folderSettingsState = useSelector((state: any) => state.folderSettingsReducer);
+    const folderCollectionState: Array<iFolderItem> = useSelector((state: any) => state.folderCollectionReducer);
+    const folderSettingsState: iFolderState = useSelector((state: any) => state.folderSettingsReducer);
 
     // Get from browser storage and store into redux 
     useEffect(() => {
