@@ -274,27 +274,6 @@ const HistoryView = (props:any): JSX.Element => {
         return Array.from(groups);
     }
 
-    const loadHistory = (query: chrome.history.HistoryQuery = { text: "", maxResults: 20 }): void => {
-        chrome.history.search(query, (items: Array<chrome.history.HistoryItem>) => {
-            if(items.length === 0) return;
-            const sorted = items.sort((a,b)=> (a.lastVisitTime && b.lastVisitTime && (b.lastVisitTime - a.lastVisitTime)) || 0);
-            const newSnapshot = JSON.stringify(sorted[sorted.length-1].lastVisitTime);
-            
-            if(items.length > 0 && snapshot !== newSnapshot) { 
-                dispatch(setUpTabsAction(sorted));
-                setSnapshot(newSnapshot);
-            }
-        });
-    }
-    
-    const tabViewModeCSS = (): string => {
-        if(historySectionState.viewMode === "list"){
-            return "mx-auto mt-10";
-        } else {
-            return "grid xl:grid-cols-3 2xl:grid-cols-3 grid-flow-dense gap-x-3 gap-y-0 mt-6 pr-2";
-        }
-    }
-
     const renderEmptyMessage = (): JSX.Element => {
         return (
             <div className="flex justify-center items-center bg-white min-h-[350px]">
@@ -368,7 +347,6 @@ const HistoryView = (props:any): JSX.Element => {
                                                         <TabGroup desc={`${group[0]} minutes ago`}>
                                                             {
                                                                 group[1].map((tab: any) => {
-                                                                    const tabUrl = new URL(tab.url);
                                                                     const collection = historySectionState.markedTabs;
                                                                     const isMarked = collection.find((target: chrome.history.HistoryItem) => parseInt(target.id) === parseInt(tab.id));
                                                                     const { id, title, url } = tab;

@@ -41,7 +41,6 @@ const HistorySection = (props: any): JSX.Element => {
     const folderCollectionState: Array<iFolderItem> = useSelector((state: any) => state.folderCollectionReducer);
 
     const historyListRef = useRef<HTMLDivElement>(null);
-    const mountedRef = useRef<HTMLDivElement>(null);
 
     const dispatch = useDispatch();
 
@@ -426,7 +425,6 @@ const HistorySection = (props: any): JSX.Element => {
                                                     <TabGroup desc={`${group[0]} minutes ago`}>
                                                          {
                                                             group[1].map((tab: any) => {
-                                                                const tabUrl = new URL(tab.url);
                                                                 const collection = historySectionState.markedTabs;
                                                                 const isMarked = collection.find((target: chrome.history.HistoryItem) => parseInt(target.id) === parseInt(tab.id));
                                                                 const { id, title, url } = tab;
@@ -466,7 +464,7 @@ const HistorySection = (props: any): JSX.Element => {
             {addToWorkSpaceMessage && renderAddTabsMessage()}
             {renderFolderManager()}
             <SectionContainer id="history-view" title="History" options={renderOptionsMenu} onExpand={(value: boolean) => setExpanded(value)}>
-                <div ref={mountedRef} className="mt-8">                     
+                <div className="mt-8">                     
                     {historySectionState.tabs.length > 0 ? renderContentSection() : renderEmptyMessage()}
                 </div>  
             </SectionContainer>
