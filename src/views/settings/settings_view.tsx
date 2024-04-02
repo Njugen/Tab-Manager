@@ -46,7 +46,7 @@ const SettingsView = (props: iView): JSX.Element => {
 
     const settingsState: iPluginSettings = useSelector((state: any) => state.pluginSettingsReducer);
     const dispatch = useDispatch()
-   // const settingsCache = useMemo<iPluginSettings>(() => settingsState, [settingsState])
+
    
     // Set default values of all fields
     useEffect(() => {

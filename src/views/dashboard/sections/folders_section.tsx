@@ -273,9 +273,9 @@ const FoldersSection = (props: any): JSX.Element => {
             }
         });
     }
-    
+
     // Render the folder list
-    const renderFolders = () => {        
+    const folderList = useMemo(() => {        
         const sortedFolders = [...folderCollectionState].sort((a: any, b: any) => folderSortCondition(a, b) ? 1 : -1);
 
         // Determine the number of columns to be rendered, based on colsCount
@@ -315,7 +315,7 @@ const FoldersSection = (props: any): JSX.Element => {
         const columnsRender: Array<JSX.Element> = colsList.map((col) => <div>{col}</div>);
 
         return <>{columnsRender}</>;
-    }
+    }, [folderCollectionState, folderSortCondition, folderSettingsState.markedFoldersId])
 
     const renderSortOptionsDropdown = (): JSX.Element => {
         const optionsList: Array<iFieldOption> = [
@@ -567,7 +567,7 @@ const FoldersSection = (props: any): JSX.Element => {
                 <>
                     {folderCollectionState.length === 0 && renderMessageBox()}
                     {<div className={`${folderSettingsState.viewMode === "list" ? "mx-auto mt-12" : `grid xl:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-4 grid-flow-dense gap-x-4 gap-y-0 mt-8`}`}>
-                        {renderFolders()}
+                        {folderList}
                     </div>}
                 </>
             </SectionContainer>

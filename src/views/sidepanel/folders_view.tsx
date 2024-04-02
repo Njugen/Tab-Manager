@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { iWindowItem } from '../../interfaces/window_item';
 import { useSelector, useDispatch } from "react-redux";
 import { iFolderItem } from '../../interfaces/folder_item';
@@ -45,12 +45,6 @@ const FoldersView = (props: iFoldersView): JSX.Element => {
             chrome.storage.onChanged.removeListener(storageListener);
           }
     }, []);
-
-    useEffect(() => {        
-        if(folderCollectionState.length > 0){
-            //saveToStorage("local", "folders", folderCollectionState);
-        } 
-    }, [folderCollectionState]);
 
     useEffect(() => {
         
@@ -136,7 +130,7 @@ const FoldersView = (props: iFoldersView): JSX.Element => {
         return render;
     }
 
-    const renderFolders = (): Array<JSX.Element> => {
+    const folderList = useMemo((): Array<JSX.Element> =>  {
         const handleFolderDelete = (target: iFolderItem): void => {
             chrome.storage.local.get("removal_warning_setting", (data) => {
                 if(data.removal_warning_setting === true) {
@@ -168,7 +162,7 @@ const FoldersView = (props: iFoldersView): JSX.Element => {
             );
         })
         return result.length > 0 ? result : [<p className="text-center">There are no folders at the moment.</p>]
-    } 
+    }, [folderCollectionState]) 
 
     const handleCloseFolderManager = (): void => {
         dispatch(clearMarkedFoldersAction());
@@ -208,7 +202,7 @@ const FoldersView = (props: iFoldersView): JSX.Element => {
                     <NewFolderIcon size={20} fill={"#fff"} />
                 </CircleButton>
             </div>
-            {renderFolders()}
+            {folderList}
         </>
     )
 }

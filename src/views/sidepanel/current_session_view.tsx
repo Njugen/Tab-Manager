@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { iWindowItem } from '../../interfaces/window_item';
 import { useSelector, useDispatch } from "react-redux";
 import { iFolderItem } from '../../interfaces/folder_item';
@@ -202,7 +202,7 @@ const CurrentSessionView = (props:any): JSX.Element => {
         return render;
     }
 
-    const renderWindows = (): JSX.Element => {
+    const windowList = useMemo((): JSX.Element => {
         const existingWindows = sessionSectionState?.windows;
         const existingWindowsElements: Array<JSX.Element> = existingWindows?.map((item: iWindowItem, i: number) => {
             return (
@@ -224,7 +224,7 @@ const CurrentSessionView = (props:any): JSX.Element => {
         } else {
             return <>{renderEmptyMessage()}</>;
         }
-    }
+    }, [sessionSectionState.windows])
 
     return (
         <>
@@ -240,7 +240,7 @@ const CurrentSessionView = (props:any): JSX.Element => {
                 </CircleButton>
             </div>
             <div>
-                {renderWindows()}
+                {windowList}
             </div>
         </>
     )

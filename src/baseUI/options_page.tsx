@@ -76,24 +76,16 @@ const RenderOptionsPage = (props: iOptionsPage): JSX.Element => {
     }
   };
 
-  const historyRemovedListener = (result: chrome.history.RemovedResult): void => {
-    searchHistory();
-  }
-
-  const historyVisitedListener = (result: chrome.history.HistoryItem): void => {
-    searchHistory();
-  }
-
   useEffect(() => {
     // Listen for changes in browser storage
     chrome.storage.onChanged.addListener(storageListener);
-    chrome.history.onVisitRemoved.addListener(historyRemovedListener);
-    chrome.history.onVisited.addListener(historyVisitedListener);
+    chrome.history.onVisitRemoved.addListener(searchHistory);
+    chrome.history.onVisited.addListener(searchHistory);
 
     return () => {
       chrome.storage.onChanged.removeListener(storageListener);
-      chrome.history.onVisitRemoved.addListener(historyRemovedListener);
-      chrome.history.onVisited.addListener(historyVisitedListener);
+      chrome.history.onVisitRemoved.addListener(searchHistory);
+      chrome.history.onVisited.addListener(searchHistory);
     }
   }, []);
 

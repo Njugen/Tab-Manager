@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState, useEffect, useCallback, useMemo } from "react";
 import ClosedFolderIcon from "../../icons/closed_folder_icon";
 import Paragraph from "../../utils/paragraph";
 import OpenedFolderIcon from "../../icons/opened_folder_icon";
@@ -6,13 +6,15 @@ import "../../../styles/global_utils.module.scss";
 import { iFolderItem } from "../../../interfaces/folder_item";
 import {  useSelector } from "react-redux";
 import { FolderActionBar, IFolderActionBarHandlers, IFolderActionBarStates } from "./child_components/folder_action_bar";
-import FolderWindowList from "./child_components/folder_window_list";
 import { getFromStorage, saveToStorage } from "../../../services/webex_api/storage";
 import iFolderState from '../../../interfaces/states/folder_state';
+import WindowItem from "../window_item";
+import { iWindowItem } from "../../../interfaces/window_item";
 
 /*
     Folder section containing description, windows and tabs, as well as various folder options
 */
+
 
 const FolderItem = (props: iFolderItem): JSX.Element => {
     const contentsRef = useRef<HTMLDivElement>(null);
@@ -159,6 +161,36 @@ const FolderItem = (props: iFolderItem): JSX.Element => {
     const actionBarHandlers: IFolderActionBarHandlers = { handleExpandClick, handleOpen, handleEdit, handleDelete, handleLaunch, onOpen, onEdit, onDelete, onMark };
     const actionBarStates: IFolderActionBarStates = { expanded, showLaunchOptions, marked, id };
     
+    const windowTabsCols = (folderViewMode: string, windowViewMode: string): number => {
+        if(folderViewMode === "grid"){
+            return 1;
+        } else {
+            if(windowViewMode === "list"){
+                return 4;
+            } else {
+                return 2;
+            }
+        }
+    }
+
+    // Render a list of all windows in the folder. The window components are adjusted to suit folder behaviour
+    const folderWindowList = useMemo((): JSX.Element => {
+        const decisiveCols: number = windowTabsCols(folderSettingsState.viewMode, viewMode);
+    
+        const result: Array<JSX.Element> = windows.map((window, index): JSX.Element => (
+            <WindowItem 
+                tabsCol={decisiveCols} 
+                disableTabMark={true} 
+                disableTabEdit={true} 
+                key={"window-" + index} 
+                id={window.id} 
+                tabs={window.tabs} 
+            />
+        ));
+    
+        return <>{result}</>;
+    }, [windows, viewMode])
+
     return (
         <>
             <div 
@@ -186,7 +218,7 @@ const FolderItem = (props: iFolderItem): JSX.Element => {
                     </div>}
                     
                     <div className="px-5 mb-8 mt-8">
-                        <FolderWindowList windows={windows} viewMode={folderSettingsState.viewMode} />
+                        {folderWindowList}
                     </div></>
                     )}
                 </div>

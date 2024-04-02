@@ -1,7 +1,7 @@
 import "../../../styles/global_utils.module.scss";
 import PrimaryButton from '../../../components/utils/primary_button/primary_button';
 import FolderManager from '../../../components/features/folder_manager/folder_manager';
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { iFolderItem } from '../../../interfaces/folder_item';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearInEditFolder  } from '../../../redux/actions/in_edit_folder_actions';
@@ -110,7 +110,7 @@ const CurrentSessionSection = (props: any): JSX.Element => {
         );
     }
 
-    const renderWindows = (): JSX.Element => {
+    const windowList = useMemo((): JSX.Element => {
         const existingWindows = sessionSectionState?.windows;
         const existingWindowsElements: Array<JSX.Element> = existingWindows?.map((item: iWindowItem, i: number) => {
             return (
@@ -132,7 +132,7 @@ const CurrentSessionSection = (props: any): JSX.Element => {
         } else {
             return <>{renderEmptyMessage()}</>;
         }
-    }
+    }, [sessionSectionState.windows]);
 
     const handleAddToNewFolder = (): void => {
         setAddToFolderMessage(false);
@@ -252,7 +252,7 @@ const CurrentSessionSection = (props: any): JSX.Element => {
             {addToWorkSpaceMessage && renderAddTabsMessage()}
             {renderFolderManager()}
             <SectionContainer id="currentSession-view" title="Current session" options={renderOptionsMenu}>
-                {renderWindows()}
+                {windowList}
             </SectionContainer>
         </>  
     );

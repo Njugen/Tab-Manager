@@ -13,6 +13,7 @@ import TrashIcon from "../icons/trash_icon";
 import CollapseIcon from "../icons/collapse_icon";
 import ExpandIcon from "../icons/expand_icon";
 import { iFolderItem } from "../../interfaces/folder_item";
+import { useMemo } from "react";
 
 /*
     Window containing tabs and various window related options. Used primarily
@@ -117,7 +118,7 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
     }
 
     // Return a list of tabs based on data from parent component
-    const renderTabs = (): Array<JSX.Element> => {
+    const renderTabs: Array<JSX.Element> = useMemo(() => {
         let result = [];
         
         result = tabs.map((tab) => {
@@ -141,17 +142,17 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
         })
 
         return result;
-    }
+    }, [tabs, editTab, misc_state])
     
     // Decide whether or not to show an editable tab field within the tab list
     const evaluateNewTabRender = (): Array<JSX.Element> => {
         if(newTab === true){
             return [
-                ...renderTabs(), 
+                ...renderTabs, 
                 <EditableTabItem windowId={id} onStop={handleEditTabStop} />
             ];
         } else {
-            return renderTabs();
+            return renderTabs;
         }
     }
 

@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { iWindowItem } from "../../../../interfaces/window_item";
 import WindowItem from "../../window_item";
 import { INewWindow, NewWindow } from "./window_manager_new_window";
@@ -11,7 +12,7 @@ const WindowList = (props: IWindowList): JSX.Element => {
     const { folder, inCreationId, createWindow } = props;
 
     const existingWindows = folder?.windows;
-    const existingWindowsElements: Array<JSX.Element> = existingWindows?.map((item: iWindowItem) => {
+    const existingWindowsElements: Array<JSX.Element> = useMemo(() => existingWindows?.map((item: iWindowItem) => {
         return (
             <WindowItem 
                 tabsCol={2} 
@@ -23,7 +24,7 @@ const WindowList = (props: IWindowList): JSX.Element => {
                 initExpand={item.initExpand} 
             />
         )
-    });
+    }), [existingWindows]);
     
     if(createWindow === true && inCreationId > 0){
         return (
