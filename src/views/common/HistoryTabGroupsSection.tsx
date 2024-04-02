@@ -28,10 +28,23 @@ const HistoryTabGroupsSection = (props: iHistoryTabGroupsSection) => {
         }
     }, []);
 
+    const compareHistoryItemByTime = (a: chrome.history.HistoryItem, b: chrome.history.HistoryItem) => {
+        let comparison: number;
+
+        if(a.lastVisitTime && b.lastVisitTime){
+            comparison = a.lastVisitTime && b.lastVisitTime && (b.lastVisitTime - a.lastVisitTime);
+        } else {
+            comparison = 0;
+        }
+
+        return comparison;
+    }
+
     const loadHistory = (query: chrome.history.HistoryQuery = { text: "", maxResults: 20 }): void => {
         chrome.history.search(query, (items: Array<chrome.history.HistoryItem>) => {
             if(items.length === 0) return;
-            const sorted = items.sort((a,b)=> (a.lastVisitTime && b.lastVisitTime && (b.lastVisitTime - a.lastVisitTime)) || 0);
+
+            const sorted = items.sort(compareHistoryItemByTime);
             const newSnapshot = JSON.stringify(sorted[sorted.length-1].lastVisitTime);
             
             if(items.length > 0 && snapshot !== newSnapshot) { 
@@ -42,6 +55,8 @@ const HistoryTabGroupsSection = (props: iHistoryTabGroupsSection) => {
     }
 
     const handleLoadHistory = (): void => {
+        console.log("BLABLABLA");
+
         let query: any = {
             text: "",
             endTime: undefined,
@@ -54,12 +69,12 @@ const HistoryTabGroupsSection = (props: iHistoryTabGroupsSection) => {
 
     
     useEffect(() => {
-        handleLoadHistory()
-    }, []);
+        handleLoadHistory();
+        
+        //window.addEventListener("click", handleLoadHistory);
 
-    useEffect(() => {
-        handleLoadHistory()
-    }, [viewMode])
+        //return () => window.removeEventListener("click", handleLoadHistory);
+    }, []);
 
     const tabViewModeCSS = (mode: "list" | "grid") => {
         if(mode === "list"){

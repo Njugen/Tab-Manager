@@ -18,14 +18,14 @@ const historySectionState: iHistoryState = {
     expanded: false
 }
 
-function historySectionReducer(state = historySectionState, action: any) {
+function historySectionReducer(state: iHistoryState = historySectionState, action: any) {
     const { type, data } = action;
 
     if(type === SET_UP_TABS){
 
         return {
             ...state,
-            tabs: [...data]
+            tabs: data
         }
     } else if(type === SET_MARKED_TABS){
         let currentTabs = state.markedTabs;
