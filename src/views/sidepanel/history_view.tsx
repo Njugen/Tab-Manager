@@ -171,7 +171,7 @@ const HistoryView = (props:any): JSX.Element => {
         <>
             {addToWorkSpaceMessage && renderAddTabsMessage()}
             {renderFolderManager()}
-            <div className="flex justify-end mx-2 mt-4">
+            <div className="flex justify-end mt-4">
                 <CircleButton 
                     disabled={historySectionState.markedTabs.length > 0 ? false : true} 
                     bgCSSClass="bg-tbfColor-lightpurple" 

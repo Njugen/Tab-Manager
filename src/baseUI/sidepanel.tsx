@@ -23,7 +23,6 @@ function RenderSidePanel(props: iRenderSidePanel): JSX.Element {
     let inactiveNavButtonCSS = "text-gray-400 hover:text-tbfColor-lighterpurple transition ease-in-out duration-300 font-semibold";
 
     const handleSetShowScrollUpButton = (e: any): void => {
-        console.log("ABC", window.scrollY);
         if(window.scrollY === 0){
           setShowScrollUpButton(false);
         } else {

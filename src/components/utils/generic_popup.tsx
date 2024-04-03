@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { forwardRef, useEffect } from "react"
 import CloseIcon from "../icons/close_icon"
 import { innerStyleDirection, outerStyleDirection } from "../features/folder_manager/style_directions"
 import GenericIconButton from "./generic_icon_button"
@@ -11,7 +11,7 @@ import styles from "../../styles/global_utils.module.scss";
 // Can encapsulate any components and trigger callback props for when
 // clicking primary/secondary buttons (e.g. save and close)
 
-const GenericPopup = (props: iGenericPopup): JSX.Element => {
+const GenericPopup = forwardRef(function GenericPopup(props: iGenericPopup, ref: any): JSX.Element {
     const { title, type, children, show, save, cancel } = props;
 
     const handleClose = (): void => {
@@ -24,7 +24,7 @@ const GenericPopup = (props: iGenericPopup): JSX.Element => {
     }
 
     return (
-        <div data-testid="generic-popup" className={`${styles.scroll_style} overflow-y-scroll ${outerStyleDirection(type, show)}`}>
+        <div data-testid="generic-popup" ref={ref} className={`${styles.scroll_style} overflow-y-scroll ${outerStyleDirection(type, show)}`}>
             <div className="relative top-0 md:bottom-12 h-screen w-[992px]">
                 <div className={innerStyleDirection(type, show)}>
                     <div id="generic-popup-header" className={`pl-8 pr-5 pb-5 pt-6 border-b border-tbfColor-lgrey w-full flex justify-between`}>
@@ -50,6 +50,6 @@ const GenericPopup = (props: iGenericPopup): JSX.Element => {
             </div>
         </div>
     )
-}
+})
 
 export default GenericPopup;

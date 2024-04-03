@@ -55,8 +55,6 @@ const HistoryTabGroupsSection = (props: iHistoryTabGroupsSection) => {
     }
 
     const handleLoadHistory = (): void => {
-        console.log("BLABLABLA");
-
         let query: any = {
             text: "",
             endTime: undefined,

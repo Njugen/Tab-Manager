@@ -34,6 +34,8 @@ const FolderManager = (props: iPopup): JSX.Element => {
         windows: false
     });
 
+    const managerWrapperRef = useRef<any>(null);
+
     const dispatch = useDispatch();
 
     // Read necessary data from redux. These data are are used in this component
@@ -122,7 +124,7 @@ const FolderManager = (props: iPopup): JSX.Element => {
             callback();
         } else {
             setInValidFields({...updatedFieldState});
-          
+            if(managerWrapperRef.current) managerWrapperRef.current.scrollTo({ top: 0, behavior: "smooth" })
         }
     }
 
@@ -208,7 +210,7 @@ const FolderManager = (props: iPopup): JSX.Element => {
                 />
             }
         
-            <GenericPopup title={title} type={type} show={show} cancel={cancelButtonSpecs} save={saveButtonSpecs}>
+            <GenericPopup ref={managerWrapperRef} title={title} type={type} show={show} cancel={cancelButtonSpecs} save={saveButtonSpecs}>
                 <FormField label="Name *" error={inValidFields.name} description="Give a name to this folder. A sensible name may help your workflow when relevant tabs are needed.">
                     <input 
                         data-testid="name-field" 

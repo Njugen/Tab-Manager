@@ -166,7 +166,7 @@ const FoldersSection = (props: any): JSX.Element => {
                 const input: iFolderItem = {...targetFolder[0]};
 
                 if(targetFolder.length > 0){
-                    render = <FolderManager type="slide-in" title={`Edit folder ${targetFolder[0].id}`} folder={input} onClose={handleCloseFolderManager} />;
+                    render = <FolderManager type="slide-in" title={`Edit folder ${targetFolder[0].name}`} folder={input} onClose={handleCloseFolderManager} />;
                 } else {
                     render = <></>;
                 }

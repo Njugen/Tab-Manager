@@ -7,12 +7,15 @@ import { getFromStorage, saveToStorage } from '../../services/webex_api/storage'
 import { deleteFolderAction, readAllFoldersFromBrowserAction } from '../../redux/actions/folder_collection_actions';
 import FolderManager from "../../components/features/folder_manager/folder_manager";
 import { clearInEditFolder } from "../../redux/actions/in_edit_folder_actions";
-import { clearMarkedFoldersAction } from "../../redux/actions/folder_settings_actions";
+import { clearMarkedFoldersAction, setFoldersSortOrder } from "../../redux/actions/folder_settings_actions";
 import PopupMessage from "../../components/utils/popup_message";
 import PrimaryButton from "../../components/utils/primary_button/primary_button";
 import iFoldersView from "../../interfaces/folders_view";
 import NewFolderIcon from "../../components/icons/new_folder_icon";
 import CircleButton from "../../components/utils/circle_button";
+import Dropdown from "../../components/utils/dropdown/dropdown";
+import { iFieldOption } from "../../interfaces/dropdown";
+import iFolderState from "../../interfaces/states/folder_state";
 
 const FoldersView = (props: iFoldersView): JSX.Element => {
     const [editFolderId, setEditFolderId] = useState<number | null>(null);
@@ -25,6 +28,7 @@ const FoldersView = (props: iFoldersView): JSX.Element => {
 
     const dispatch = useDispatch();
     const folderCollectionState: Array<iFolderItem> = useSelector((state: any) => state.folderCollectionReducer);
+    const folderSettingsState: iFolderState = useSelector((state: any) => state.folderSettingsReducer);
 
     const storageListener = (changes: any, areaName: string): void => {
         if(areaName === "local"){
@@ -130,6 +134,34 @@ const FoldersView = (props: iFoldersView): JSX.Element => {
         return render;
     }
 
+    // Sort all folders
+    const handleSortFolders = (e: any): void => {
+        const newStatus = e.selected;
+
+        saveToStorage("local", "folder_sort", newStatus);
+        dispatch(setFoldersSortOrder(newStatus));
+    }
+
+    const folderSortCondition = (a: iFolderItem, b: iFolderItem): boolean => {
+        const { folderSortOptionId } = folderSettingsState
+        
+        const aNameLowerCase = a.name.toLowerCase();
+        const bNameToLowerCase = b.name.toLowerCase();
+
+        return folderSortOptionId === 0 ? (aNameLowerCase > bNameToLowerCase) : (bNameToLowerCase > aNameLowerCase);
+    }
+
+    const renderSortOptionsDropdown = (): JSX.Element => {
+        const optionsList: Array<iFieldOption> = [
+            {id: 0, label: "Ascending"},
+            {id: 1, label: "Descending"},
+        ];
+
+        const presetOption = optionsList.filter((option: iFieldOption) => option.id === folderSettingsState.folderSortOptionId);
+
+        return <Dropdown tag="sort-folders" preset={presetOption[0] || optionsList[0]} options={optionsList} onCallback={handleSortFolders} />
+    }
+
     const folderList = useMemo((): Array<JSX.Element> =>  {
         const handleFolderDelete = (target: iFolderItem): void => {
             chrome.storage.local.get("removal_warning_setting", (data) => {
@@ -142,7 +174,9 @@ const FoldersView = (props: iFoldersView): JSX.Element => {
             });
         }
 
-        const result = folderCollectionState.map((folder: iFolderItem, i: number) => {
+        const sortedFolders = folderCollectionState.sort((a: any, b: any) => folderSortCondition(a, b) ? 1 : -1);
+
+        const result = sortedFolders.map((folder: iFolderItem, i: number) => {
             return (
                 <FolderItem 
                     onDelete={(e) => handleFolderDelete(folder)} 
@@ -162,7 +196,7 @@ const FoldersView = (props: iFoldersView): JSX.Element => {
             );
         })
         return result.length > 0 ? result : [<p className="text-center">There are no folders at the moment.</p>]
-    }, [folderCollectionState]) 
+    }, [folderCollectionState, folderSettingsState.folderSortOptionId]) 
 
     const handleCloseFolderManager = (): void => {
         dispatch(clearMarkedFoldersAction());
@@ -193,7 +227,8 @@ const FoldersView = (props: iFoldersView): JSX.Element => {
             }
           
             {renderFolderManagerPopup()}
-            <div className="flex justify-end mx-2 mt-4 mb-6">
+            <div className="flex justify-between mt-4 mb-6">
+                
                 <CircleButton 
                     disabled={false} 
                     bgCSSClass="bg-tbfColor-lightpurple" 
@@ -201,6 +236,9 @@ const FoldersView = (props: iFoldersView): JSX.Element => {
                 >
                     <NewFolderIcon size={20} fill={"#fff"} />
                 </CircleButton>
+                <div className="relative w-[175px] flex items-center">
+                    {renderSortOptionsDropdown()}
+                </div>
             </div>
             {folderList}
         </>

@@ -230,7 +230,7 @@ const CurrentSessionView = (props:any): JSX.Element => {
         <>
             {addToWorkSpaceMessage && renderAddTabsMessage()}
             {renderFolderManager()}
-            <div className="flex justify-end mx-2 mt-4 mb-6">
+            <div className="flex justify-end mt-4 mb-6">
                 <CircleButton 
                     disabled={false} 
                     bgCSSClass="bg-tbfColor-lightpurple" 
