@@ -202,9 +202,16 @@ const FoldersSection = (props: any): JSX.Element => {
                 const markedFolderIndex = folderCollectionState.findIndex((folder: iFolderItem) => targetId === folder.id);
 
                 if(markedFolderIndex > -1){
-                    mergedWindows.push(...folderCollectionState[markedFolderIndex].windows);
+                    const queueWindows: Array<iWindowItem> = folderCollectionState[markedFolderIndex].windows.map((window: iWindowItem) => { 
+                        window.id = randomNumber();
+                        return window;
+                    })
+                    mergedWindows.push(...queueWindows);
                 }
             });
+
+            // The new windows needs a new id
+
             folderSpecs.windows = [...mergedWindows];
             setMergeProcess({...folderSpecs});
         }

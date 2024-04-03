@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useId } from "react";
 import GenericIconButton from "../utils/generic_icon_button";
 import PrimaryButton from "../utils/primary_button/primary_button";
 import PurpleBorderButton from "../utils/purple_border_button";
@@ -120,7 +120,7 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
     // Return a list of tabs based on data from parent component
     const renderTabs: Array<JSX.Element> = useMemo(() => {
         let result = [];
-        
+       
         result = tabs.map((tab) => {
             if(editTab === tab.id){
                 return <EditableTabItem windowId={id} id={editTab} preset={tab.url} onStop={handleEditTabStop} />
@@ -142,7 +142,7 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
         })
 
         return result;
-    }, [tabs, editTab, misc_state])
+    }, [tabs, editTab, misc_state.currentlyEditingTab])
     
     // Decide whether or not to show an editable tab field within the tab list
     const evaluateNewTabRender = (): Array<JSX.Element> => {
