@@ -5,17 +5,16 @@ import OpenedFolderIcon from "../../icons/opened_folder_icon";
 import "../../../styles/global_utils.module.scss";
 import { iFolderItem } from "../../../interfaces/folder_item";
 import {  useSelector } from "react-redux";
-import { FolderActionBar, IFolderActionBarHandlers, IFolderActionBarStates } from "./child_components/folder_action_bar";
+import { FolderActionBar } from "./components/folder_action_bar";
 import { getFromStorage, saveToStorage } from "../../../services/webex_api/storage";
 import iFolderState from '../../../interfaces/states/folder_state';
 import WindowItem from "../window_item";
-import { iWindowItem } from "../../../interfaces/window_item";
+import { iFolderActionBarHandlers } from "../../../interfaces/folder_action_bar";
+import { iFolderActionBarStates } from "../../../interfaces/folder_action_bar";
 
 /*
     Folder section containing description, windows and tabs, as well as various folder options
 */
-
-
 const FolderItem = (props: iFolderItem): JSX.Element => {
     const contentsRef = useRef<HTMLDivElement>(null);
     const headerRef = useRef<HTMLDivElement>(null);
@@ -80,6 +79,7 @@ const FolderItem = (props: iFolderItem): JSX.Element => {
     const expContentsCSS: string = `overflow-hidden bg-white rounded-b-md border-t-0`;
     const colContentsCSS: string = `overflow-hidden rounded-b-md`;
 
+    // Update the storage state of folder view mode 
     const updateFolder = (newType: "expanded" | "collapsed") => {
         getFromStorage("local", "folders", (data: any) => {
             const tempCollection: Array<iFolderItem> = data.folders.map((folder: iFolderItem) => {
@@ -91,6 +91,7 @@ const FolderItem = (props: iFolderItem): JSX.Element => {
         })
     }
 
+    // Decide whether or not the folder shows its contents or not.
     const toggleExpand = (init?: string): void => {
         if(expanded === false){
             if(init === "expanded" || !init){
@@ -158,8 +159,8 @@ const FolderItem = (props: iFolderItem): JSX.Element => {
     } 
 
 
-    const actionBarHandlers: IFolderActionBarHandlers = { handleExpandClick, handleOpen, handleEdit, handleDelete, handleLaunch, onOpen, onEdit, onDelete, onMark };
-    const actionBarStates: IFolderActionBarStates = { expanded, showLaunchOptions, marked, id };
+    const actionBarHandlers: iFolderActionBarHandlers = { handleExpandClick, handleOpen, handleEdit, handleDelete, handleLaunch, onOpen, onEdit, onDelete, onMark };
+    const actionBarStates: iFolderActionBarStates = { expanded, showLaunchOptions, marked, id };
     
     const windowTabsCols = (folderViewMode: string, windowViewMode: string): number => {
         if(folderViewMode === "grid"){

@@ -1,39 +1,15 @@
 import CollapseIcon from "../../../icons/collapse_icon"
 import RotationEffect from "../../../effects/rotation_effect"
 import FolderControlButton from "../../../utils/icon_button/icon_button"
-
-import { iFolderItem } from "../../../../interfaces/folder_item"
-import { iWindowItem } from "../../../../interfaces/window_item"
 import OpenBrowserIcon from "../../../icons/open_browser_icon"
 import TrashIcon from "../../../icons/trash_icon"
 import SettingsIcon from "../../../icons/settings_icon"
 import Checkbox from "../../../utils/checkbox"
 import DropdownMenu from "../../../utils/dropdown_menu/dropdown_menu"
 import { iFieldOption } from "../../../../interfaces/dropdown"
+import { iFolderActionBarProps } from "../../../../interfaces/folder_action_bar"
 
-interface IFolderActionBarHandlers {
-    handleExpandClick: (e: any) => void,
-    handleOpen: (e: any) => void,
-    handleEdit: (e: any) => void,
-    handleDelete: (e: any) => void,
-    handleLaunch: (e: any) => void,
-    onOpen?: (e: Array<iWindowItem>, type: string) => void,
-    onMark?: (e: number) => void,
-    onEdit?: (e: number) => void
-    onDelete?: (e: iFolderItem) => void,
-}
 
-interface IFolderActionBarStates {
-    expanded: boolean,
-    showLaunchOptions: boolean,
-    marked: boolean,
-    id: number
-}
-
-interface IRenderActionBarProps {
-    states: IFolderActionBarStates,
-    handlers: IFolderActionBarHandlers
-}
 
 // List of all options on how to launch this folder. The id identifies the option, and
 // actions are performed accordingly.
@@ -53,7 +29,7 @@ const launchOptions: Array<iFieldOption> = [
 ] 
 
 // Renders an action bar containing various UI buttons for handling the behaviour of the folder.
-const FolderActionBar = (props: IRenderActionBarProps): JSX.Element => {
+const FolderActionBar = (props: iFolderActionBarProps): JSX.Element => {
     const { states, handlers } = props;
     const { expanded, showLaunchOptions, marked, id } = states;
     const {
@@ -130,7 +106,5 @@ const FolderActionBar = (props: IRenderActionBarProps): JSX.Element => {
 }
 
 export { 
-    FolderActionBar,
-    IFolderActionBarHandlers,
-    IFolderActionBarStates
+    FolderActionBar
 };
