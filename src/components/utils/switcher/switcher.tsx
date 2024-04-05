@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { iSwitcher } from "../../../interfaces/switcher";
-import buttonStateCSS from "./button_state_css";
-import divStateCSS from "./div_state_css";
+import buttonStateCSS from "./functions/button_state_css";
+import divStateCSS from "./functions/div_state_css";
 
 /*
     Switcher, acts as an dynamic toggle component permitting

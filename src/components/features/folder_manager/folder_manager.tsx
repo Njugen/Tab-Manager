@@ -10,17 +10,17 @@ import PopupMessage from '../../utils/popup_message';
 import { setShowFolderChangeWarning } from "../../../redux/actions/warning_actions";
 import { createFolderAction, updateFolderAction } from "../../../redux/actions/folder_collection_actions";
 import { setCurrentlyEditingTab } from "../../../redux/actions/misc_actions";
-import windowListChanged from "./window_list_changed";
+import windowListChanged from "./functions/window_list_changed";
 import WindowManager from "../window_manager/window_manager";
 import GenericPopup from "../../utils/generic_popup";
 import { useDispatch, useSelector } from "react-redux";
 import iWarningState from "../../../interfaces/states/warning_state";
 /*
     A popup providing oversight of a folder's settings and available windows/tabs.
-    The settings may be changed by the user, which then gets applied to redux storage
+    The settings may be changed by the user, which then gets saved to redux storage
 
     Warning messages may be added using the <PopupMessage/> component. New fields can be added
-    preferably by using the <FormField /> component. See examples in render() function.
+    preferably by using the <FormField /> component. See examples in the return statement
 */
 
 const FolderManager = (props: iPopup): JSX.Element => {

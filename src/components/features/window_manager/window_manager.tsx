@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import randomNumber from "../../../tools/random_number";
 import iWindowManager from "../../../interfaces/window_manager";
-import WindowList from './child_components/window_list';
+import WindowList from './components/window_list';
 import { iFolderItem } from "../../../interfaces/folder_item";
 
 /*

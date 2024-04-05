@@ -1,4 +1,4 @@
-import styles from "./../../../styles/global_utils.module.scss";
+import styles from "./../../../../styles/global_utils.module.scss";
 
 const { opacity_hover_effect } = styles;
 

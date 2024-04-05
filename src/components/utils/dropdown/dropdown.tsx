@@ -2,7 +2,8 @@ import { useRef, useState, useEffect } from "react";
 import CollapseIcon from "../../icons/collapse_icon";
 import { iDropdown } from "../../../interfaces/dropdown";
 import RotationEffect from "../../effects/rotation_effect";
-import { IGetSelectedOptionProps, getSelectedOption } from "./get_selected_option";
+import { getSelectedOption } from "./functions/get_selected_option";
+import { iGetSelectedOptionProps } from "../../../interfaces/dropdown";
 import DropdownMenu from "../dropdown_menu/dropdown_menu";
 
 /*
@@ -79,7 +80,7 @@ const Dropdown = (props: iDropdown): JSX.Element => {
     }, [selected]);
 
     const dropdownBorderCSS = (showSubMenuContainer === true ? " border-tbfColor-lightpurple" : "border-tbfColor-middlegrey4");
-    const optionsProps: IGetSelectedOptionProps = { options, preset, selected };
+    const optionsProps: iGetSelectedOptionProps = { options, preset, selected };
 
     return (
         <div ref={dropdownRef} className={`hover:cursor-pointer bg-white relative text-sm w-full text-tbfColor-darkergrey rounded-lg h-[2.75rem] border transition-all duration-75 ${dropdownBorderCSS}`}>

@@ -1,6 +1,6 @@
 import { forwardRef, useEffect } from "react"
 import CloseIcon from "../icons/close_icon"
-import { innerStyleDirection, outerStyleDirection } from "../features/folder_manager/style_directions"
+import { innerStyleDirection, outerStyleDirection } from "../features/folder_manager/functions/style_directions"
 import GenericIconButton from "./generic_icon_button"
 import PrimaryButton from "./primary_button/primary_button"
 import PurpleBorderButton from "./purple_border_button"

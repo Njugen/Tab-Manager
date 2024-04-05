@@ -1,4 +1,4 @@
-import styles from "../../../styles/global_utils.module.scss";
+import styles from "../../../../styles/global_utils.module.scss";
 
 const { popup_container_transparent_bg, popup_container_default } = styles;
 

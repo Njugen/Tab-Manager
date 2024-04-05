@@ -2,7 +2,7 @@ import "./../../styles/global_utils.module.scss";
 import FormField from '../../components/utils/form_field';
 import Dropdown from '../../components/utils/dropdown/dropdown';
 import Switcher from '../../components/utils/switcher/switcher';
-import { iFieldOption, iSettingFieldOption } from "../../interfaces/dropdown";
+import { iFieldOption } from "../../interfaces/dropdown";
 import { useEffect, useMemo, useState } from 'react';
 import { getFromStorage, saveToStorage } from "../../services/webex_api/storage";
 import SectionContainer from "../../components/utils/section_container";
@@ -22,7 +22,7 @@ import { iPluginSettings } from "../../redux/reducers/settings_reducer";
 */
 
 // Options for performance warnings
-const performanceNotificationOptions: Array<iSettingFieldOption> = [
+const performanceNotificationOptions: Array<iFieldOption> = [
     { id: 5, label: "5" }, 
     { id: 10, label: "10" }, 
     { id: 15, label: "15" }, 
@@ -33,7 +33,7 @@ const performanceNotificationOptions: Array<iSettingFieldOption> = [
 ];
 
 // Options for duplication warnings
-const duplicationWarningOptions: Array<iSettingFieldOption> = [
+const duplicationWarningOptions: Array<iFieldOption> = [
     { id: 2, label: "2 folders" }, 
     { id: 3, label: "3 folders" }, 
     { id: 4, label: "4 folders" }, 

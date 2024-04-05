@@ -1,11 +1,11 @@
 import iDropdownMenu from "../../../interfaces/dropdown_menu";
-import applyStateClasses from "./apply_state_classes";
-import applyStateId from "./apply_state_id";
+import applyStateClasses from "./functions/apply_state_classes";
+import applyStateId from "./functions/apply_state_id";
 
 /*
     Dropdown menu, containing a set of options.
 
-    Applies slides down effect when shown. Hidden by default.
+    Applies slide down effect when shown. Hidden by default.
 */
 
 const DropdownMenu = (props: iDropdownMenu): JSX.Element => {

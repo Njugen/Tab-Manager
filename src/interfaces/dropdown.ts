@@ -3,13 +3,14 @@ interface iFieldOption {
     label: string,
 }
 
-interface iSettingFieldOption {
-    id: number,
-    label: string,
-}
 
 interface iDropdownSelected {
     selected: number | null
+}
+
+interface iGetSelectedOptionProps extends iDropdownSelected {
+    options: Array<iFieldOption>,
+    preset: iFieldOption,
 }
 
 interface iDropdown {
@@ -19,4 +20,5 @@ interface iDropdown {
     onCallback: (e: iDropdownSelected) => void
 }
 
-export { iFieldOption, iSettingFieldOption, iDropdownSelected, iDropdown }
+
+export { iFieldOption, iDropdownSelected, iDropdown, iGetSelectedOptionProps }
