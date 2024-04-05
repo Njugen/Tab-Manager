@@ -34,6 +34,8 @@ const HistorySection = (props: any): JSX.Element => {
     const [searchString, setSearchString] = useState<string>("");
     const [loadTabs, setLoadTabs] = useState<number>(40);
     
+    const defaultLoadTabs = 10;
+
     const historySectionState = useSelector((state: any) => state.historySectionReducer);
     const folderCollectionState: Array<iFolderItem> = useSelector((state: any) => state.folderCollectionReducer);
     const sectionRef = useRef<HTMLDivElement>(null);
@@ -54,7 +56,7 @@ const HistorySection = (props: any): JSX.Element => {
     }
 
     const handleLoadHistory = (fullscreen: boolean, count: number): void => {
-        let toFetch = 5;
+        let toFetch = defaultLoadTabs;
 
         if(fullscreen === true) toFetch = count
 
@@ -92,7 +94,7 @@ const HistorySection = (props: any): JSX.Element => {
             dispatch(changeTabsViewMode(data.history_viewmode));
         })
 
-        handleLoadHistory(false, 5)
+        handleLoadHistory(false, defaultLoadTabs)
     }, []);
 
     useEffect(() => {
@@ -108,8 +110,8 @@ const HistorySection = (props: any): JSX.Element => {
             }, 1000)
             
         } else {
-            setLoadTabs(5)
-            handleLoadHistory(false, 5)
+            setLoadTabs(defaultLoadTabs)
+            handleLoadHistory(false, defaultLoadTabs)
         }
 
         return () => window.removeEventListener("scroll", scrollListener);
