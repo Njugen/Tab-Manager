@@ -2,14 +2,14 @@ import { useRef, useState } from 'react';
 import iSectionContainer from '../../interfaces/section_container';
 import GenericIconButton from './generic_icon_button';
 import CloseIcon from '../icons/close_icon';
-import ExpandIcon from './../icons/expand_icon';
+
 import FullscreenIcon from './../icons/fullscreen_icon';
-import CircleButton from './circle_button';
-import CollapseIcon from './../icons/collapse_icon';
 
 /*
     A white wrapper serving as either main section (contents page wrapper), or part section
     of a view.
+
+    Can be expanded into a fullscreen component by setting fullscreen state to true.
 */
 
 const SectionContainer = (props: iSectionContainer): JSX.Element => {

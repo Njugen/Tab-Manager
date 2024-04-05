@@ -17,7 +17,6 @@ const PopupMessage = (props: iPopupMessage): JSX.Element => {
     // Hide body's scrollbar
     document.body.style.overflowY = "hidden";
 
-
     // Handle a button click. Perform actions based on the button's purposes
     // ... this should be rewritten/refactored at a later time...
     const handleButtonClick = (option: "primary" | "secondary"): void => {

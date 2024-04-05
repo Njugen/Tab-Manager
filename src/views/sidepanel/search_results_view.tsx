@@ -67,19 +67,21 @@ function SearchResultsContainer(props:any): JSX.Element {
     useEffect(() => {
         
         if(!windowsPayload || !folderLaunchType) return;
+
         let tabsCount = 0;
+        
         windowsPayload.forEach((window: iWindowItem) => {
             tabsCount += window.tabs.length;
         });
    
         chrome.storage.local.get("performance_notification_value", (data) => {
             setTotalTabsCount(data.performance_notification_value);
+
             if(data.performance_notification_value !== -1 && data.performance_notification_value <= tabsCount) {
                 setShowPerformanceWarning(true);
             } else {
                 handleLaunchFolder(windowsPayload);
             }
-            //handleLaunchFolder(windowsPayload);
         });
     }, [folderLaunchType]);
 
@@ -91,21 +93,21 @@ function SearchResultsContainer(props:any): JSX.Element {
     const renderFolders = (): Array<JSX.Element> => {
         const folders = filterFoldersByString(folderCollectionState, keyword);
 
-        return folders.map((folder: iFolderItem) => <FolderItem marked={false} id={folder.id!} name={folder.name} viewMode={"list"} type={"collapsed"} desc={folder.desc} windows={folder.windows} onOpen={handlePrepareLaunchFolder} />);
+        return folders.map((folder: iFolderItem) => <FolderItem key={`folder-id-${folder.id}`} marked={false} id={folder.id!} name={folder.name} viewMode={"list"} type={"collapsed"} desc={folder.desc} windows={folder.windows} onOpen={handlePrepareLaunchFolder} />);
     }
 
     // Render all filtered session tabs
     const renderSessionTabs = (): Array<JSX.Element> => {
         const tabs = filterSessionTabsByString(sessionSectionState, keyword);
 
-        return tabs.map((tab) => <TabItem key={tab.id} marked={false} id={tab.id!} label={tab.title!} url={tab.url!} disableEdit={true} disableMark={true} disableCloseButton={false} onClose={() => handleCloseTab(tab.id!)} />)
+        return tabs.map((tab) => <TabItem key={`session-tab-id-${tab.id}`} marked={false} id={tab.id!} label={tab.title!} url={tab.url!} disableEdit={true} disableMark={true} disableCloseButton={false} onClose={() => handleCloseTab(tab.id!)} />)
     }
 
     // Render all filtered history tabs
     const renderHistoryTabs = (): Array<JSX.Element> => {
         const tabs = filterHistoryTabsByString(historySectionState, keyword);
 
-        return tabs.map((tab) => <TabItem key={tab.id} marked={false} id={parseInt(tab.id)} label={tab.title!} url={tab.url!} disableEdit={true} disableMark={true} disableCloseButton={true} onClose={() => {}} />);
+        return tabs.map((tab) => <TabItem key={`history-tab-id-${tab.id}`} marked={false} id={parseInt(tab.id)} label={tab.title!} url={tab.url!} disableEdit={true} disableMark={true} disableCloseButton={true} onClose={() => {}} />);
     }
 
     // Close a tab

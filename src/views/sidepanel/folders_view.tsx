@@ -162,7 +162,7 @@ const FoldersView = (props: iFoldersView): JSX.Element => {
         return <Dropdown tag="sort-folders" preset={presetOption[0] || optionsList[0]} options={optionsList} onCallback={handleSortFolders} />
     }
 
-    const folderList = useMemo((): Array<JSX.Element> =>  {
+    const folderList = useMemo((): JSX.Element =>  {
         const handleFolderDelete = (target: iFolderItem): void => {
             chrome.storage.local.get("removal_warning_setting", (data) => {
                 if(data.removal_warning_setting === true) {
@@ -184,7 +184,7 @@ const FoldersView = (props: iFoldersView): JSX.Element => {
                     //onMark={handleMarkFolder} 
                     onEdit={() => setEditFolderId(folder.id)} 
                     index={folderCollectionState.length-i}
-                    key={folder.id} 
+                    key={`folder-id-${folder.id}`} 
                     type={folder.type} 
                     id={folder.id} 
                     viewMode="list" 
@@ -195,7 +195,7 @@ const FoldersView = (props: iFoldersView): JSX.Element => {
                 />
             );
         })
-        return result.length > 0 ? result : [<p className="text-center">There are no folders at the moment.</p>]
+        return result.length > 0 ? <>{result}</> : <p className="text-center">There are no folders at the moment.</p>
     }, [folderCollectionState, folderSettingsState.folderSortOptionId]) 
 
     const handleCloseFolderManager = (): void => {

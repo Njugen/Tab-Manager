@@ -312,7 +312,7 @@ const FoldersSection = (props: any): JSX.Element => {
                     marked={collection.find((id) => folder.id === id) ? true : false} 
                     onMark={handleMarkFolder} 
                     onEdit={() => setEditFolderId(folder.id)} 
-                    key={folder.id} 
+                    key={`folder-item-${folder.id}`} 
                     type={folder.type} 
                     id={folder.id} 
                     viewMode={folderSettingsState.viewMode} 
@@ -327,9 +327,9 @@ const FoldersSection = (props: any): JSX.Element => {
            
         }
 
-        const columnsRender: Array<JSX.Element> = colsList.map((col) => <div>{col}</div>);
+        const columnsRender: Array<JSX.Element> = colsList.map((col, i: number) => <div key={`column-key- ${i}`}>{col}</div>);
 
-        return <>{columnsRender}</>;
+        return columnsRender;
     }, [folderCollectionState, folderSortCondition, folderSettingsState.markedFoldersId])
 
     const renderSortOptionsDropdown = (): JSX.Element => {
@@ -362,7 +362,7 @@ const FoldersSection = (props: any): JSX.Element => {
             }
         }
 
-        if(hasFolders()){
+        if(folderCollectionState.length > 0){
             return (
                 <>
                     <div className="inline-flex items-center justify-end w-full">
@@ -437,27 +437,6 @@ const FoldersSection = (props: any): JSX.Element => {
         return <></>
     }
 
-    // Render a message. Primarily used when no folders are available
-    const renderMessageBox = (): JSX.Element => {
-        return <>
-            <div className="flex flex-col items-center justify-center h-[50%]">
-                <Paragraph text="You currently have no folders available. Please, create a new folder" />
-                <div className="mt-8">
-                    <PrimaryButton disabled={false} text="Create folder" onClick={() => setCreateFolder(true)} />
-                </div>
-            </div>
-        </>
-    }
-
-    // Check whether or not there are folders stored in redux
-    const hasFolders = (): boolean | null => {
-        if(folderCollectionState.length > 0){
-            return true;
-        } else {
-            return false;
-        }
-    }
-    
     // Prepare to remove multiple folders. Warn the user if set in Settings page
     const handlePrepareMultipleRemovals = (): void => {
         const { markedFoldersId } = folderSettingsState;
@@ -574,7 +553,14 @@ const FoldersSection = (props: any): JSX.Element => {
         
             <SectionContainer id="folder-section" title="Folders" options={renderOptionsMenu}>
                 <>
-                    {folderCollectionState.length === 0 && renderMessageBox()}
+                    {folderCollectionState.length === 0 && (
+                        <div className="flex flex-col items-center justify-center h-[50%]">
+                            <Paragraph text="You currently have no folders available. Please, create a new folder" />
+                            <div className="mt-8">
+                                <PrimaryButton disabled={false} text="Create folder" onClick={() => setCreateFolder(true)} />
+                            </div>
+                        </div>
+                    )}
                     {<div className={`${folderSettingsState.viewMode === "list" ? "mx-auto mt-12" : `grid xl:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-4 grid-flow-dense gap-x-4 gap-y-0 mt-8`}`}>
                         {folderList}
                     </div>}

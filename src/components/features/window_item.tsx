@@ -123,7 +123,7 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
        
         result = tabs.map((tab) => {
             if(editTab === tab.id){
-                return <EditableTabItem windowId={id} id={editTab} preset={tab.url} onStop={handleEditTabStop} />
+                return <EditableTabItem key={`window-${id}-tab-${tab.id}`} windowId={id} id={editTab} preset={tab.url} onStop={handleEditTabStop} />
             } else {
                 return (
                     <TabItem 

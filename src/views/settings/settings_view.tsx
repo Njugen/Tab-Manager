@@ -42,8 +42,6 @@ const duplicationWarningOptions: Array<iFieldOption> = [
 ];
 
 const SettingsView = (props: iView): JSX.Element => {
-    const [settings, setSettings] = useState<any>({});
-
     const settingsState: iPluginSettings = useSelector((state: any) => state.pluginSettingsReducer);
     const dispatch = useDispatch()
 
@@ -74,10 +72,7 @@ const SettingsView = (props: iView): JSX.Element => {
     const saveSelectedOption = (key: string, value: number | null): void => {
         if(value !== null){
             saveToStorage("local", key, value);
-           /* setSettings({
-                ...settings,
-                [key]: value
-            });*/
+
             if(key === "performance_notification_value"){
                 dispatch(changePerformanceNotification(value))
             } else if(key === "duplication_warning_value"){

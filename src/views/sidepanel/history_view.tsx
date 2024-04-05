@@ -14,8 +14,7 @@ import CircleButton from './../../components/utils/circle_button';
 import SaveIcon from '../../components/icons/save_icon';
 import TrashIcon from '../../components/icons/trash_icon';
 import OpenBrowserIcon from "../../components/icons/open_browser_icon";
-import HistoryTabGroupsSection from "../common/HistoryTabGroupsSection";
-import iHistoryState from "../../interfaces/states/history_state";
+import HistoryTabGroupsSection from "../common/history_tab_group_section/history_tab_group_section";
 
 const HistoryView = (props:any): JSX.Element => {
     const [mergeProcess, setMergeProcess] = useState<iFolderItem | null>(null);

@@ -14,7 +14,8 @@ import { iFieldOption } from '../../interfaces/dropdown';
 import SaveIcon from '../../components/icons/save_icon';
 import CircleButton from './../../components/utils/circle_button';
 import WindowItem from "../../components/features/window_item";
-import iCurrentSessionState from "../../interfaces/states/current_session_state";
+
+
 const CurrentSessionView = (props:any): JSX.Element => {
     const [addToWorkSpaceMessage, setAddToFolderMessage] = useState<boolean>(false);
     const [createFolder, setCreateFolder] = useState<boolean>(false);
@@ -79,14 +80,6 @@ const CurrentSessionView = (props:any): JSX.Element => {
         dispatch(clearMarkedTabsAction());
         dispatch(clearMarkedFoldersAction());
         dispatch(clearInEditFolder());
-    }
-
-    const renderEmptyMessage = (): JSX.Element => {
-        return (
-            <div className={"flex justify-center items-center"}>
-                <p> Your browing history is empty.</p>
-            </div>
-        );
     }
 
     const handleAddToNewFolder = (): void => {
@@ -222,7 +215,11 @@ const CurrentSessionView = (props:any): JSX.Element => {
         if (existingWindowsElements?.length > 0){
             return <>{existingWindowsElements}</>;
         } else {
-            return <>{renderEmptyMessage()}</>;
+            return (
+                <div className={"flex justify-center items-center"}>
+                    <p> Your browing history is empty.</p>
+                </div>
+            );
         }
     }, [sessionSectionState.windows])
 

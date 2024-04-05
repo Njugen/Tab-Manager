@@ -8,7 +8,7 @@ import { iGenericPopup } from '../../interfaces/generic_popup';
 import styles from "../../styles/global_utils.module.scss";
 
 // Popup component with providing basic popup features.
-// Can encapsulate any components and trigger callback props for when
+// Can encapsulate any components and trigger callback props when
 // clicking primary/secondary buttons (e.g. save and close)
 
 const GenericPopup = forwardRef(function GenericPopup(props: iGenericPopup, ref: any): JSX.Element {

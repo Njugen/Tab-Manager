@@ -21,7 +21,7 @@ import TrashIcon from "../../../components/icons/trash_icon";
 import GridIcon from "../../../components/icons/grid_icon";
 import ListIcon from "../../../components/icons/list_icon";
 import DeselectedCheckboxIcon from "../../../components/icons/deselected_checkbox_icon";
-import HistoryTabGroupsSection from "../../common/HistoryTabGroupsSection";
+import HistoryTabGroupsSection from "../../common/history_tab_group_section/history_tab_group_section";
 import iHistoryState from "../../../interfaces/states/history_state";
 // MOHAHAHA. THIS FILE IS A MESS AS OF NOW
 
@@ -319,7 +319,8 @@ const HistorySection = (props: any): JSX.Element => {
     } 
 
     const renderFolderManager = (): JSX.Element => {
-        let render;
+        let render = <></>;
+
         if(createFolder === true){
             const markedTabs: Array<iTabItem> = historySectionState.markedTabs.map((tab: chrome.history.HistoryItem) => {
                 return {
@@ -348,8 +349,6 @@ const HistorySection = (props: any): JSX.Element => {
             render = <FolderManager type="slide-in" title="Create folder" folder={folderSpecs} onClose={handlePopupClose} />;
         } else if(mergeProcessFolder !== null) {
             render = <FolderManager type="slide-in" title={`Merge tabs to ${mergeProcessFolder.name}`} folder={mergeProcessFolder} onClose={handlePopupClose} />;
-        } else {
-            render = <></>;
         }
 
         return render;
