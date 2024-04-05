@@ -17,18 +17,15 @@ function folderCollectionReducer(state = folderCollectionState, action: any) {
         return updatedFolders;
     } else if(type === READ_ALL_FOLDERS){
         
-        return [
-            ...data
-        ]
+        return data ? data : []
+        
     } else if(type === READ_ALL_FOLDERS_FROM_BROWSER) {
-     
-       return [
-        ...data
-       ] 
+        //console.log("READIMG", data);
+       return data ? data : []
     } else if(type === READ_FOLDER){
         return state.filter((target) => target.id === data);
     } else if(type === UPDATE_FOLDER){
-        const updatedFolders = state.map((item) => {
+        const updatedFolders: Array<iFolderItem> = state.map((item) => {
             if(item.id === data.id){
 
                 return data;
@@ -42,7 +39,7 @@ function folderCollectionReducer(state = folderCollectionState, action: any) {
             ...updatedFolders
         ]
     } else if(type === DELETE_FOLDER){
-        const updatedFolders = state.filter((target) => target.id !== data)
+        const updatedFolders: Array<iFolderItem> = state.filter((target) => target.id !== data)
 
         if(updatedFolders.length === 0) saveToStorage("local", "folders", []);
 

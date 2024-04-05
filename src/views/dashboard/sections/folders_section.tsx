@@ -327,7 +327,7 @@ const FoldersSection = (props: any): JSX.Element => {
            
         }
 
-        const columnsRender: Array<JSX.Element> = colsList.map((col, i: number) => <div key={`column-key- ${i}`}>{col}</div>);
+        const columnsRender: Array<JSX.Element> = colsList.map((col, i: number) => <div key={`column-key-${i}`}>{col}</div>);
 
         return columnsRender;
     }, [folderCollectionState, folderSortCondition, folderSettingsState.markedFoldersId])
