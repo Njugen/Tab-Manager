@@ -1,16 +1,9 @@
 import React from "react";
-import { iWindowItem } from "../../../interfaces/window_item";
-
-interface ILaunchFolderProps {
-    folderLaunchType: string | null,
-    windowsPayload: Array<iWindowItem> | null,
-    setWindowsPayload: React.Dispatch<React.SetStateAction<iWindowItem[] | null>>,
-    setFolderLaunchType: React.Dispatch<React.SetStateAction<string | null>>,
-    setShowPerformanceWarning: React.Dispatch<React.SetStateAction<boolean>>
-}
+import { iWindowItem } from "../../../../interfaces/window_item";
+import iLaunchFolderProps from "../../../../interfaces/launch_folder_props";
 
 // Event handler showing all the launching options of a folder
-const handleLaunchFolder = (props: ILaunchFolderProps): void => {
+const handleLaunchFolder = (props: iLaunchFolderProps): void => {
     const { 
         folderLaunchType, 
         windowsPayload, 
@@ -44,8 +37,8 @@ const handleLaunchFolder = (props: ILaunchFolderProps): void => {
         chrome.windows.create(windowSettings);
     });
 
-    // Close current session after launching the folder. Only applies when
-    // set in the Settings page
+    // Close current session after launching the folder. Only applies when the
+    // set in the Settings page. Launching windows stored in the snapshot
     chrome.storage.local.get("close_current_setting", (data) => {
         if(data.close_current_setting === true){
             snapshot.forEach((window) => {
@@ -60,4 +53,4 @@ const handleLaunchFolder = (props: ILaunchFolderProps): void => {
     setShowPerformanceWarning(false);
 }
 
-export { ILaunchFolderProps, handleLaunchFolder };
+export { handleLaunchFolder };

@@ -10,6 +10,16 @@ import CollapseIcon from '../../components/icons/collapse_icon';
 import iSidePanel from '../../interfaces/sidepanel';
 import PanelView from './components/panel_view';
 
+/*
+  Base template for the plugin's side panel.
+  
+  A sidepanel in the browser refers to the quick view located to the right or left
+  side of the browser window. It can be accessed by hitting CTRL + B.
+
+  This plugin has its own sidepanel, where the most trivial features are located. More
+  advanced features and extended overview are located in the Option Page 
+*/
+
 function SidePanel(props: iSidePanel): JSX.Element {
     const [view, setView] = useState<string>("folders-view");
     const [keyword, setKeyword] = useState<string>("");

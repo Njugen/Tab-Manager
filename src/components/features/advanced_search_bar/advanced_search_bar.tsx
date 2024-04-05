@@ -7,11 +7,13 @@ import { iWindowItem } from '../../../interfaces/window_item';
 import iCurrentSessionState from "../../../interfaces/states/current_session_state";
 import iHistoryState from "../../../interfaces/states/history_state";
 import iAdvancedSearchBar from "../../../interfaces/advanced_search_bar";
-import { handleShowResultsContainer, IHandleShowResultsContainerProps } from "./handle_show_results_container";
-import { handleWindowClick } from "./window_click_listener";
-import { ILaunchFolderProps, handleLaunchFolder } from "./handle_launch_folder";
-import { SearchResults } from "./child_components/search_bar_results";
+import { handleShowResultsContainer } from "./functions/handle_show_results_container";
+import { handleWindowClick } from "./functions/window_click_listener";
+import { handleLaunchFolder } from "./functions/handle_launch_folder";
+import { SearchResults } from "./components/search_bar_results";
 import PopupMessage from "../../utils/popup_message";
+import iLaunchFolderProps from "../../../interfaces/launch_folder_props";
+import iHandleShowResultsContainerProps from "../../../interfaces/handle_show_results_container_props";
 
 /*
     Search bar placed at the top of the viewport
@@ -36,8 +38,8 @@ const AdvancedSearchBar = (props: iAdvancedSearchBar): JSX.Element => {
     const historySectionState: iHistoryState = useSelector((state: any) => state.historySectionReducer);
 
     const { popup_container_transparent_bg } = styles;
-    const handleShowResultsProps: IHandleShowResultsContainerProps = { searchResultsContainerRef , showResultsContainer, slideDown, setSlideDown, setShowResultsContainer }
-    const handleLaunchFolderProps: ILaunchFolderProps = { folderLaunchType, windowsPayload, setWindowsPayload, setFolderLaunchType, setShowPerformanceWarning }
+    const handleShowResultsProps: iHandleShowResultsContainerProps = { searchResultsContainerRef , showResultsContainer, slideDown, setSlideDown, setShowResultsContainer }
+    const handleLaunchFolderProps: iLaunchFolderProps = { folderLaunchType, windowsPayload, setWindowsPayload, setFolderLaunchType, setShowPerformanceWarning }
 
     const clickListener = (e: any): void => {
         handleWindowClick({ e, handleShowResultsProps });
@@ -58,9 +60,7 @@ const AdvancedSearchBar = (props: iAdvancedSearchBar): JSX.Element => {
     // Adjust the search field features based on the slideDown state
     useEffect(() => {
         if(keyword.length === 0) {
-            if(slideDown === false){
-                searchFieldRef.current!.value = "Search tabs...";
-            } else {
+            if(slideDown === true){
                 searchFieldRef.current!.value = "";
             }
         }
@@ -72,7 +72,7 @@ const AdvancedSearchBar = (props: iAdvancedSearchBar): JSX.Element => {
                     searchResultsContainerRef.current.classList.add("mt-20");
                 }
             }, 50);
-          //  document.body.style.overflowY = "hidden";
+  
             document.body.style.overflowX = "hidden";
         }
     }, [slideDown]);
@@ -105,6 +105,7 @@ const AdvancedSearchBar = (props: iAdvancedSearchBar): JSX.Element => {
         if(slideDown === false) handleShowResultsContainer(handleShowResultsProps);
     }
 
+    // Prepare the windows in a folder for launch, and Instruct the component on how to launch the folder
     const handlePrepareLaunchFolder = (windows: Array<iWindowItem>, type: string): void => {
         setWindowsPayload(windows);
         setFolderLaunchType(type);
@@ -119,7 +120,7 @@ const AdvancedSearchBar = (props: iAdvancedSearchBar): JSX.Element => {
     // Run when user wants to launch folder
     const proceedFolderLaunch = (): void => {
         if(windowsPayload){
-            const tempProps: ILaunchFolderProps = { folderLaunchType, windowsPayload, setWindowsPayload, setFolderLaunchType, setShowPerformanceWarning }
+            const tempProps: iLaunchFolderProps = { folderLaunchType, windowsPayload, setWindowsPayload, setFolderLaunchType, setShowPerformanceWarning }
 
             handleLaunchFolder(tempProps); 
             setShowPerformanceWarning(false);

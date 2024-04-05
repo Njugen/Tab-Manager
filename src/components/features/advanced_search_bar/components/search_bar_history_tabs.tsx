@@ -1,14 +1,9 @@
 import TabItem from '../../tab_item';
 import { filterHistoryTabsByString } from '../../../../tools/tab_filters';
-import iHistoryState from "../../../../interfaces/states/history_state";
-
-interface ISearchBarHistoryTabsProps {
-    items: iHistoryState,
-    keyword: string
-}
+import iSearchBarHistoryTabsProps from './../../../../interfaces/search_bar_history_tabs_props';
 
 // Render all filtered history tabs
-const SearchBarHistoryTabs = (props: ISearchBarHistoryTabsProps): JSX.Element => {
+const SearchBarHistoryTabs = (props: iSearchBarHistoryTabsProps): JSX.Element => {
     const { items, keyword } = props;
     const tabs: Array<chrome.history.HistoryItem> = filterHistoryTabsByString(items, keyword);
 

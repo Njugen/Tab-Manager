@@ -20,7 +20,16 @@ import ExpandedSidebarNav from './components/expanded_sidebar_nav';
 import CollapsedSidebarNav from './components/collapsed_sidebar_nav';
 import PageView from './components/page_view';
 
-// React Component
+/*
+  Base template for the plugin's option page.
+  
+  "Option Page" is the Webextension term for the settings UI of a 
+  browser plugin. E.g. in Chrome, the options page can be accessed through:
+
+  Menu -> Extensions -> Manage Extensions -> Details -> Extension Options
+
+  OR by right clicking on the plugin's icon in the taskbar, and select "Options"
+*/
 const OptionsPage = (props: iOptionsPage): JSX.Element => {
   const [activeNavLink, setActiveNavLink] = useState<string>(presetActiveNavLink("main")); 
   const [sidebarExpanded, setSidebarExpanded] = useState<boolean>(localStorage["expanded_sidebar"] === "true" ? true : false);
@@ -32,9 +41,9 @@ const OptionsPage = (props: iOptionsPage): JSX.Element => {
   const handleSetShowScrollUpButton = (e: any): void => {
     if(window.scrollY === 0){
       setShowScrollUpButton(false);
-    } else {
-      if(showScrollUpButton === false) setShowScrollUpButton(true);
-    }
+    } else if(showScrollUpButton === false){
+      setShowScrollUpButton(true);
+    } 
   }
 
   const searchHistory = () => {
@@ -47,7 +56,6 @@ const OptionsPage = (props: iOptionsPage): JSX.Element => {
     });
   }
 
-
   const storageListener = (changes: any, areaName: string): void => {
     if(areaName === "local"){
         if(changes.folders){
@@ -57,6 +65,7 @@ const OptionsPage = (props: iOptionsPage): JSX.Element => {
   };
 
   useEffect(() => {
+    // Listen to whenever the user scroll's the browser window
     window.addEventListener("scroll", handleSetShowScrollUpButton);
 
     // Listen for changes in browser storage
@@ -65,6 +74,7 @@ const OptionsPage = (props: iOptionsPage): JSX.Element => {
     chrome.history.onVisited.addListener(searchHistory);
 
     return () => {
+      // Remove all listeners once the component gets destroyed.
       window.removeEventListener("scroll", handleSetShowScrollUpButton);
 
       chrome.storage.onChanged.removeListener(storageListener);
@@ -73,7 +83,7 @@ const OptionsPage = (props: iOptionsPage): JSX.Element => {
     }
   }, []);
 
-  // Expand/collapse sidebar, and save the information in the browser storage
+  // Expand/collapse sidebar, and save the information to localStorage
   const handleSidebarExpandButton = (): void => {
     setSidebarExpanded(sidebarExpanded === true ? false : true);
     localStorage.setItem("expanded_sidebar", localStorage["expanded_sidebar"] === "true" ? "false" : "true");
