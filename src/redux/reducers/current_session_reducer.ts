@@ -14,7 +14,7 @@ const sessionSectionState: iCurrentSessionState = {
     viewMode: "grid"
 }
 
-function sessionSectionReducer(state = sessionSectionState, action: any) {
+const sessionSectionReducer = (state = sessionSectionState, action: any): iCurrentSessionState => {
     const { type, data } = action;
 
     if(type === SET_UP_WINDOWS){
@@ -28,7 +28,9 @@ function sessionSectionReducer(state = sessionSectionState, action: any) {
             tabsSort: data
         }
     } else if(type === DELETE_MARKED_CURRENT_TABS_ID){
-
+        return {
+            ...state,
+        }
     } else {
         return state;
     }

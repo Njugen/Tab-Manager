@@ -14,7 +14,7 @@ const folderSettingsState: iFolderState = {
     viewMode: "grid"
 }
 
-function folderSettingsReducer(state = folderSettingsState, action: any) {
+const folderSettingsReducer = (state = folderSettingsState, action: any): iFolderState => {
     const { type, data } = action;
 
     if(type === SET_MARKED_WORKSPACES_ID){

@@ -1,4 +1,3 @@
-import { Tabs } from "jest-chrome/types/jest-chrome";
 import iHistoryState from "../../interfaces/states/history_state";
 import { 
     SET_MARKED_TABS, 
@@ -18,7 +17,7 @@ const historySectionState: iHistoryState = {
     expanded: false
 }
 
-function historySectionReducer(state: iHistoryState = historySectionState, action: any) {
+const historySectionReducer = (state = historySectionState, action: any): iHistoryState => {
     const { type, data } = action;
 
     if(type === SET_UP_TABS){

@@ -7,7 +7,7 @@ const warningActionsState: iWarningState = {
     showMultiFolderRemovalWarning: false
 };
 
-function WarningActionsReducer(state = warningActionsState, action: any) {
+const WarningActionsReducer = (state = warningActionsState, action: any): iWarningState => {
     const { type, data } = action;
 
     if(type === SHOW_FOLDER_CHANGE_WARNING){

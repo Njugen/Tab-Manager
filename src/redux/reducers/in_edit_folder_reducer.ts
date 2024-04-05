@@ -2,9 +2,17 @@ import { iFolderItem } from "../../interfaces/folder_item";
 import { iTabItem } from "../../interfaces/tab_item";
 import { EDIT_FOLDER, UPDATE_IN_EDIT_FOLDER, CLEAR_IN_EDIT_FOLDER, UPDATE_WINDOW_MANAGER } from "../types/in_edit_folders_types";
 
-const folderManagerState: iFolderItem | null = null;
+const folderManagerState: iFolderItem = {
+    id: -1,
+    name: "",
+    desc: "",
+    marked: false,
+    type: "collapsed",
+    viewMode: "list",
+    windows: []
+};
 
-function folderManagerReducer(state = folderManagerState, action: any) {
+const folderManagerReducer = (state: iFolderItem = folderManagerState, action: any): iFolderItem =>{
     const { type, data } = action;
 
     if(type === EDIT_FOLDER){
@@ -12,7 +20,7 @@ function folderManagerReducer(state = folderManagerState, action: any) {
             ...data
         }
     } else if(type === UPDATE_IN_EDIT_FOLDER){
-        let stateClone = { ...state };
+        let stateClone: iFolderItem = state;
 
         if(stateClone && data){
             stateClone = {
@@ -21,11 +29,7 @@ function folderManagerReducer(state = folderManagerState, action: any) {
             };
         }
   
-        return {
-            ...stateClone
-        }
-    } else if(type === CLEAR_IN_EDIT_FOLDER){
-        return null;
+        return stateClone
     } else if(type === UPDATE_WINDOW_MANAGER){
         if(state === null) return state;
 
@@ -95,7 +99,7 @@ function folderManagerReducer(state = folderManagerState, action: any) {
                     
                 }
 
-                
+                return state;
             }
 
         }

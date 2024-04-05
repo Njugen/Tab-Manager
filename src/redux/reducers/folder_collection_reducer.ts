@@ -5,7 +5,7 @@ import { saveToStorage } from "../../services/webex_api/storage";
 
 const folderCollectionState: Array<iFolderItem> = [];
 
-function folderCollectionReducer(state = folderCollectionState, action: any) {
+const folderCollectionReducer = (state = folderCollectionState, action: any): Array<iFolderItem> => {
     const { type, data } = action;
 
     if(type === SET_UP_FOLDERS){

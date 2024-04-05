@@ -1,5 +1,3 @@
-import { iFolderItem } from "../../interfaces/folder_item";
-import { iTabItem } from "../../interfaces/tab_item";
 import { 
     SET_MARKED_TABS, 
     SET_MULTIPLE_MARKED_TABS, 

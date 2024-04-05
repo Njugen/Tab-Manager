@@ -1,4 +1,3 @@
-import { iFolderItem } from "../../interfaces/folder_item";
 import { SET_MARKED_WORKSPACES_ID, 
     SET_MULTIPLE_MARKED_WORKSPACES_ID, 
     CLEAR_ALL_MARKED_WORKSPACES_ID,
