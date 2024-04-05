@@ -20,6 +20,7 @@ const HistoryTabGroupsSection = forwardRef(function HistoryTabGroupsSection(prop
 
     const dispatch = useDispatch();
     const historySectionState: iHistoryState = useSelector((state: any) => state.historySectionReducer);
+    
     useEffect(() => {
         searchHistory();
 

@@ -94,7 +94,7 @@ const HistorySection = (props: any): JSX.Element => {
             dispatch(changeTabsViewMode(data.history_viewmode));
         })
 
-        handleLoadHistory(false, defaultLoadTabs)
+      //  handleLoadHistory(false, defaultLoadTabs)
     }, []);
 
     useEffect(() => {
