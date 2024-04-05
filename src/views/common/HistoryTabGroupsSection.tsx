@@ -2,20 +2,19 @@ import styles from "../../styles/global_utils.module.scss";
 import TabGroup from "../../components/utils/tab_group";
 import TabItem from "../../components/features/tab_item";
 import { useDispatch, useSelector } from "react-redux";
-import { setMarkMultipleTabsAction, setMarkedTabsAction, setUpTabsAction } from "../../redux/actions/history_settings_actions";
+import { setMarkMultipleTabsAction, setMarkedTabsAction, setUpTabsAction, toggleExpansion } from "../../redux/actions/history_settings_actions";
 import { iFolderItem } from "../../interfaces/folder_item";
-import { useEffect, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import iHistoryState from "../../interfaces/states/history_state";
 import iHistoryTabGroupsSection from './../../interfaces/history_tab_groups_section';
 
-
-const HistoryTabGroupsSection = (props: iHistoryTabGroupsSection) => {
+const HistoryTabGroupsSection = forwardRef(function HistoryTabGroupsSection(props: iHistoryTabGroupsSection, ref: any): JSX.Element {
     const { viewMode, tabs } = props;
     const [snapshot, setSnapshot] = useState<string>("");
 
+
     const dispatch = useDispatch();
     const historySectionState: iHistoryState = useSelector((state: any) => state.historySectionReducer);
-
     useEffect(() => {
         searchHistory();
 
@@ -73,7 +72,6 @@ const HistoryTabGroupsSection = (props: iHistoryTabGroupsSection) => {
 
         //return () => window.removeEventListener("click", handleLoadHistory);
     }, []);
-
     const tabViewModeCSS = (mode: "list" | "grid") => {
         if(mode === "list"){
             return "mx-auto mt-4";
@@ -81,7 +79,7 @@ const HistoryTabGroupsSection = (props: iHistoryTabGroupsSection) => {
             return "grid xl:grid-cols-3 2xl:grid-cols-3 grid-flow-dense gap-x-3 gap-y-0 mt-6 pr-2";
         }
     } 
-
+    
     const searchHistory = () => {
         const query = {
             text: "",
@@ -169,11 +167,15 @@ const HistoryTabGroupsSection = (props: iHistoryTabGroupsSection) => {
         return Array.from(groups);
     }
 
+    const expand = (val: boolean) => {
+        dispatch(toggleExpansion(val));
+    }
+
     return (
         <div className="flex justify-center min-h-[350px]">
             <div className="w-full">
                 <div className="pb-6">
-                    <div className={`${styles.scroll_style} ${tabViewModeCSS(viewMode)}`}>
+                    <div ref={ref} className={`${styles.scroll_style} ${tabViewModeCSS(viewMode)}`}>
                         {
                             <>
                                 { 
@@ -207,6 +209,6 @@ const HistoryTabGroupsSection = (props: iHistoryTabGroupsSection) => {
             </div>            
         </div>
     )
-}
+})
 
 export default HistoryTabGroupsSection;

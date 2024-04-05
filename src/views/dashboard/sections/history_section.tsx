@@ -1,4 +1,5 @@
 import styles from "../../../styles/global_utils.module.scss";
+import * as predef from "../../../styles/predef";
 import PrimaryButton from '../../../components/utils/primary_button/primary_button';
 import FolderManager from '../../../components/features/folder_manager/folder_manager';
 import { useEffect, useState, useRef, useMemo } from "react";
@@ -30,10 +31,12 @@ const HistorySection = (props: any): JSX.Element => {
     const [createFolder, setCreateFolder] = useState<boolean>(false);
     const [snapshot, setSnapshot] = useState<string>("");
     const [expanded, setExpanded] = useState<boolean>(false);
+    const [searchString, setSearchString] = useState<string>("");
+    const [loadTabs, setLoadTabs] = useState<number>(40);
     
     const historySectionState = useSelector((state: any) => state.historySectionReducer);
     const folderCollectionState: Array<iFolderItem> = useSelector((state: any) => state.folderCollectionReducer);
-
+    const sectionRef = useRef<HTMLDivElement>(null);
 
     const dispatch = useDispatch();
 
@@ -50,17 +53,34 @@ const HistorySection = (props: any): JSX.Element => {
         });
     }
 
-    const handleLoadHistory = (e?: any): void => {
+    const handleLoadHistory = (fullscreen: boolean, count: number): void => {
+        let toFetch = 5;
+
+        if(fullscreen === true) toFetch = count
+
         let query: any = {
-            text: "",
+            text: searchString,
             endTime: undefined,
             startTime: undefined,
-            maxResults: expanded === false ? 15 : undefined
+            maxResults: toFetch
         }
 
         loadHistory(query)
     }
 
+    const scrollListener = (): void => {
+        if(sectionRef.current){
+           // const { offsetHeight } = sectionRef.current;
+            const { scrollY, outerHeight } = window;
+            const windowYScrollSpace = outerHeight + scrollY;
+
+            if(sectionRef.current && (windowYScrollSpace >= sectionRef.current.clientHeight-1000)){
+                const updatedTabs = loadTabs + 40;
+                setLoadTabs(updatedTabs);
+                handleLoadHistory(true, updatedTabs)
+            }
+        }
+    }
     
     useEffect(() => {
         
@@ -72,12 +92,28 @@ const HistorySection = (props: any): JSX.Element => {
             dispatch(changeTabsViewMode(data.history_viewmode));
         })
 
-        handleLoadHistory()
+        handleLoadHistory(false, 5)
     }, []);
 
     useEffect(() => {
-        handleLoadHistory()
-    }, [expanded])
+        handleLoadHistory(expanded, loadTabs)
+    }, [searchString, expanded])
+    
+    useEffect(() => {
+  
+        if(expanded === true){
+            handleLoadHistory(true, loadTabs)
+            setTimeout(() => {
+                window.addEventListener("scroll", scrollListener);
+            }, 1000)
+            
+        } else {
+            setLoadTabs(5)
+            handleLoadHistory(false, 5)
+        }
+
+        return () => window.removeEventListener("scroll", scrollListener);
+    }, [expanded, loadTabs])
 
 
     // Change tab listing from grid to list, and vice versa
@@ -168,6 +204,7 @@ const HistorySection = (props: any): JSX.Element => {
                     </div>
                     
                     <div className="flex items-center justify-end">
+                        
                         <TextIconButton 
                             disabled={false} 
                             id={historySectionState.viewMode === "list" ? "grid" : "list"} 
@@ -184,6 +221,14 @@ const HistorySection = (props: any): JSX.Element => {
                         {/*<div className="relative w-[175px] mr-4 flex items-center">
                             {renderSortOptionsDropdown()}
                         </div>*/}
+                        <input 
+                            data-testid="history-search-field" 
+                            id="history-search-field" 
+                            type="text" 
+                            placeholder={"Search history..."} 
+                            className={`${predef.textfield} w-[250px] p-2.5 mx-4`} 
+                            onChange={handleSearch}
+                        />
                         <PrimaryButton disabled={markedTabs.length > 0 ? false : true} text="Open selected" onClick={handleOpenSelected} />
                         <PrimaryButton disabled={markedTabs.length > 0 ? false : true} text="Add to folder" onClick={() => setAddToFolderMessage(true)} />
                     </div>
@@ -267,6 +312,10 @@ const HistorySection = (props: any): JSX.Element => {
         dispatch(clearInEditFolder());
     }
 
+    const handleSearch = (e: any): void => {
+        setSearchString(e.target.value)
+    } 
+
     const renderFolderManager = (): JSX.Element => {
         let render;
         if(createFolder === true){
@@ -309,7 +358,7 @@ const HistorySection = (props: any): JSX.Element => {
             {addToWorkSpaceMessage && renderAddTabsMessage()}
             {renderFolderManager()}
             <SectionContainer id="history-view" title="History" options={renderOptionsMenu} onExpand={(value: boolean) => setExpanded(value)}>
-                <HistoryTabGroupsSection viewMode={historySectionState.viewMode} tabs={historySectionState.tabs} />
+                <HistoryTabGroupsSection ref={sectionRef} viewMode={historySectionState.viewMode} tabs={historySectionState.tabs} />
             </SectionContainer>
         </>
     );

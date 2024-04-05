@@ -16,7 +16,7 @@ const SectionContainer = (props: iSectionContainer): JSX.Element => {
     const [fullscreen, setFullscreen] = useState<boolean>(false);
     const { id, title, options, onExpand, children } = props;
     const sectionRef = useRef<HTMLDivElement>(null);
-
+    
     return (
         <>
             {

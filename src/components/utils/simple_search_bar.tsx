@@ -12,7 +12,7 @@ const SimpleSearchBar = (props: iSimpleSearchBar): JSX.Element => {
             <input 
                 data-testid="search-field" 
                 id="search-field" 
-                defaultValue="Search..." 
+                placeholder="Search..." 
                 onChange={onChange} 
                 className={`bg-gray-200 w-full focus:outline-0`} 
                 type="text" 

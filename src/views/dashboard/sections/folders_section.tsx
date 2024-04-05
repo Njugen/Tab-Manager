@@ -281,6 +281,13 @@ const FoldersSection = (props: any): JSX.Element => {
         });
     }
 
+    // Prepare to launch a folder by setting windows to be launched, and how to launch the windows/tabs in it.
+    const handlePrepareLaunchFolder = (windows: Array<iWindowItem>, type: string): void => {
+        setWindowsPayload(windows);
+        setFolderLaunchType(type);
+    }
+
+
     // Render the folder list
     const folderList = useMemo(() => {        
         const sortedFolders = [...folderCollectionState].sort((a: any, b: any) => folderSortCondition(a, b) ? 1 : -1);
@@ -297,6 +304,7 @@ const FoldersSection = (props: any): JSX.Element => {
             let result: JSX.Element = <></>;
             
             const collection: Array<number> = folderSettingsState.markedFoldersId;
+
             result = (
                 <FolderItem 
                     onDelete={(e) => handleFolderDelete(folder)} 
@@ -481,12 +489,6 @@ const FoldersSection = (props: any): JSX.Element => {
             });
             
         }
-    }
-
-    // Prepare to launch a folder by setting windows to be launched, and how to launch the windows/tabs in it.
-    const handlePrepareLaunchFolder = (windows: Array<iWindowItem>, type: string): void => {
-        setWindowsPayload(windows);
-        setFolderLaunchType(type);
     }
 
     // Launch folder
