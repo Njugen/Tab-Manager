@@ -63,10 +63,10 @@ function SidePanel(props: iSidePanel): JSX.Element {
             </div>
             {!keyword && <PanelView view={view} />}
             <div className="shadow font-bold bg-white sticky bottom-0 px-4 py-4 border-t-2 border-t-tbfColor-lightpurple flex justify-around z-50">
-                <Navlink key="folders-nav-link" label="Advanced" url="?view=main" isActive={false} onClick={() => window.open("./options.html?view=main", "_blank")}>
+                <Navlink key="folders-nav-link" label="Advanced" url="?view=main" isActive={false} onClick={() => window.open("./options.html#main", "_blank")}>
                     <MultipleFoldersIcon size={20} fill={"#525252"} />
                 </Navlink>
-                <Navlink key="settings-nav-link" label="Settings" url="?view=settings" isActive={false} onClick={() => window.open("./options.html?view=settings", "_blank")}>
+                <Navlink key="settings-nav-link" label="Settings" url="?view=settings" isActive={false} onClick={() => window.open("./options.html#settings", "_blank")}>
                     <ConfigIcon size={20} fill={"#525252"} />
                 </Navlink>
             </div>

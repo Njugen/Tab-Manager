@@ -112,7 +112,7 @@ const OptionsPage = (props: iOptionsPage): JSX.Element => {
         <div ref={rootRef} id="body" className="container px-16">
           <AdvancedSearchBar />
           <div className="mb-12 mt-16 pb-[50px]">
-            <PageView />
+            <PageView view={activeNavLink} />
           </div>
         </div>
       </div>

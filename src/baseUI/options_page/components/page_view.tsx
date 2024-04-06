@@ -4,15 +4,14 @@ import iPageView from "../../../interfaces/page_view";
 import { useEffect } from "react";
 
 const PageView = (props: iPageView): JSX.Element => {
-    const url: string = window.location.href;
-    const urlSplit: Array<string> = url.split("?");
+    const { view } = props;
     let result: JSX.Element = <></>;
-    
+
     useEffect(() => {
       window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
-    }, [url])
+    }, [view])
 
-    if(urlSplit.length === 1){
+    /*if(urlSplit.length === 1){
       result = <DashboardView data-testid="ffff" />;
     } else if(urlSplit.length === 2){
       const paramSplit: Array<string> =  urlSplit[1].split("=");
@@ -31,6 +30,12 @@ const PageView = (props: iPageView): JSX.Element => {
       } else {
         result = <DashboardView />;
       }
+    }*/
+
+    if(view === "main"){
+      result = <DashboardView />;
+    } else if(view ==="settings") {
+      result = <SettingsView />;
     }
 
     return result;

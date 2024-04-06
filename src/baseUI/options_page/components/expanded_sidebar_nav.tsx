@@ -8,10 +8,10 @@ const ExpandedSidebarNav = (props: iSidebarNav): JSX.Element => {
 
     return (
       <div id="main-menu" className="px-2 py-4">
-          <Navlink key="folders-nav-link" label="Dashboard" url="?view=main" isActive={active === "main" ? true : false} onClick={() => onSetActive("main")}>
+          <Navlink key="folders-nav-link" label="Dashboard" url="#main" isActive={active === "main" ? true : false} onClick={() => onSetActive("main")}>
             <MultipleFoldersIcon size={20} fill={active === "main" ? "rgb(109 0 194)" : "#525252"} />
           </Navlink>
-          <Navlink key="settings-nav-link" label="Settings" url="?view=settings" isActive={active === "settings" ? true : false} onClick={() => onSetActive("settings")}>
+          <Navlink key="settings-nav-link" label="Settings" url="#settings" isActive={active === "settings" ? true : false} onClick={() => onSetActive("settings")}>
             <ConfigIcon size={20} fill={active === "settings" ? "rgb(109 0 194)" : "#525252"} />
           </Navlink>
       </div>
