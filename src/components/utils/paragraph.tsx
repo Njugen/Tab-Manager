@@ -6,11 +6,11 @@ import { iTextContents } from "../../interfaces/text_contents";
 */
 
 const Paragraph = (props: iTextContents): JSX.Element => {
-    const { text, size, lineheight} = props;
+    const { children, size, lineheight} = props;
     
     return (
         <p className={`${size && size} text-base ${lineheight ? lineheight : "leading-7"} text-tbfColor-darkergrey text-start`}>
-            {text}
+            {children}
         </p>
     ); 
 }

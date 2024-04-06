@@ -1,5 +1,5 @@
 import { useState, useEffect, useId } from "react";
-import GenericIconButton from "../utils/generic_icon_button";
+import GenericButton from "../utils/generic_button";
 import PrimaryButton from "../utils/primary_button/primary_button";
 import PurpleBorderButton from "../utils/purple_border_button";
 import TabItem from "./tab_item";
@@ -166,9 +166,9 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
         }
 
         return (
-            <GenericIconButton icon={expanded === true ? "collapse" : "expand"} onClick={handleExpand}>
+            <GenericButton onClick={handleExpand}>
                 {icon}
-            </GenericIconButton>
+            </GenericButton>
         );
     }
 
@@ -180,9 +180,9 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
                 </h3>
                 <div className={`tab-settings`}>
                     {disableEdit === false && (
-                        <GenericIconButton icon="trash" onClick={handleDeleteWindow}>
+                        <GenericButton onClick={handleDeleteWindow}>
                             <TrashIcon fill="#000" size={20} />
-                        </GenericIconButton>
+                        </GenericButton>
                     )}
                     {expandCollapseButton()}
                 </div>

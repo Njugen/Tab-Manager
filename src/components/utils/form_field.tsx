@@ -14,7 +14,7 @@ const FormField = (props: iFormField): JSX.Element => {
     return (
         <div className="mb-12 md:flex md:flex-row items-center">
             <div className={`sm:w-full md:w-2/5`}>
-                <h4 data-testid={`field-title-${error === true ? "error" : "normal"}`} className={`font-semibold text-lg mb-1 ${error === true && "text-red-500"}`}>{label}</h4>
+                <h4 className={`font-semibold text-lg mb-1 ${error === true && "text-red-500"}`}>{label}</h4>
                 <p className={`text-sm leading-6 text-tbfColor-darkergrey text-start ${error === true && "text-red-500"}`}>
                     {description}
                 </p>

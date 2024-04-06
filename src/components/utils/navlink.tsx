@@ -18,10 +18,10 @@ const Navlink = (props: iNavlink): JSX.Element => {
     const stateCSS: String = isActive ? activeLinkStyle : inActiveLinkStyle;
 
     return (
-        <Link to={url} className={`text-left xl:p-2 2xl:p-3 flex items-center text-lg ${stateCSS} ${opacity_hover_effect} ${label && "py-2"} border-color border-tbfColor-lgrey block`} onClick={onClick}>
+        <a href={url} className={`text-left xl:p-2 2xl:p-3 flex items-center text-lg ${stateCSS} ${opacity_hover_effect} ${label && "py-2"} border-color border-tbfColor-lgrey block`} onClick={onClick}>
           {children} 
           {label && <span className="ml-3">{label}</span>}
-        </Link>
+        </a>
     ); 
 }
 

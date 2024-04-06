@@ -214,7 +214,9 @@ const FolderItem = (props: iFolderItem): JSX.Element => {
                 {expanded === true && (
                     <>{desc.length > 0 && <div className="px-5 mt-8 flex justify-between items-start">
                     <div data-testid={"description-section"} className="inline-block w-fit">
-                            <Paragraph text={desc} />
+                            <Paragraph>
+                                {desc}
+                            </Paragraph>
                         </div>
                     </div>}
                     

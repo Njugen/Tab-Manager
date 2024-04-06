@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { iFolderItem } from '../../interfaces/folder_item';
 import FolderItem from "../../components/features/folder_item/folder_item";
 import TabItem from "../../components/features/tab_item";
-import GenericIconButton from "../../components/utils/generic_icon_button";
+import GenericButton from "../../components/utils/generic_button";
 import { 
     filterSessionTabsByString, 
     filterHistoryTabsByString, 
@@ -122,9 +122,9 @@ function SearchResultsContainer(props:any): JSX.Element {
                     <h1 data-testid="manage-folder-title" className="text-3xl text-tbfColor-darkpurple font-light inline-block">
                         Search Results
                     </h1>
-                    <GenericIconButton icon="close" onClick={handleClose}>
+                    <GenericButton onClick={handleClose}>
                         <CloseIcon size={34} fill="rgba(0,0,0,0.2)" />
-                    </GenericIconButton>
+                    </GenericButton>
                 </div>
                 <div className="mt-4">
                     <h3 className="uppercase font-bold text-md mb-4 text-tbfColor-darkergrey">Folders</h3>

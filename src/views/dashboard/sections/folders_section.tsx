@@ -555,7 +555,9 @@ const FoldersSection = (props: any): JSX.Element => {
                 <>
                     {folderCollectionState.length === 0 && (
                         <div className="flex flex-col items-center justify-center h-[50%]">
-                            <Paragraph text="You currently have no folders available. Please, create a new folder" />
+                            <Paragraph>
+                                You currently have no folders available. Please, create a new folder
+                            </Paragraph>
                             <div className="mt-8">
                                 <PrimaryButton disabled={false} text="Create folder" onClick={() => setCreateFolder(true)} />
                             </div>

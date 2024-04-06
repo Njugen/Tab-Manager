@@ -1,10 +1,9 @@
-interface iGenericIconButton {
-    icon: string,
+interface iGenericButton {
     onClick: (e: any) => void
     children: JSX.Element
 }
 
 
 export {
-    iGenericIconButton
+    iGenericButton
 };

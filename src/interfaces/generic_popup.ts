@@ -7,8 +7,8 @@ interface iGenericPopup {
     title: string,
     type: "slide-in" | "popup",
     children: Array<JSX.Element> | JSX.Element,
-    show: boolean,
     cancel: iGPButtonProps,
+    show: boolean,
     save?: iGPButtonProps,
 }
 
