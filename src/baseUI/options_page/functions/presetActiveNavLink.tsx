@@ -4,7 +4,6 @@ const presetActiveNavLink = (preset: string): string => {
     const urlSplit: Array<string> = url.split("#");
    
     if(urlSplit.length === 2){
-      console.log("split", urlSplit);
       return urlSplit[1];
     } else {
       return "main";
