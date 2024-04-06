@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { iFieldOption } from "../../interfaces/dropdown";
-import Dropdown from "../utils/dropdown/dropdown";
-import { iDropdownSelected } from "../../interfaces/dropdown";
+import { iFieldOption } from "../interfaces/dropdown";
+import Dropdown from "../components/utils/dropdown/dropdown";
+import { iDropdownSelected } from "../interfaces/dropdown";
 
 const SimpleCalendar = (props: any) => {
     const currentYear: number = new Date().getFullYear();

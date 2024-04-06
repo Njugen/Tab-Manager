@@ -1,9 +1,9 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import '@testing-library/jest-dom'
-import { store } from "../../redux/reducers";
+import { store } from "../../../redux/reducers";
 import { Provider } from "react-redux";
-import { iFolderItem } from "../../interfaces/folder_item";
-import FolderItem from "../../components/features/folder_item/folder_item";
+import { iFolderItem } from "../../../interfaces/folder_item";
+import FolderItem from "../../../components/features/folder_item/folder_item";
 
 jest.mock("../../redux/mocked_hooks");
 jest.useFakeTimers();

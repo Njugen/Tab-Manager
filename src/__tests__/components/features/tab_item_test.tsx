@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import '@testing-library/jest-dom'
-import { iTabItem } from "../../interfaces/tab_item";
-import TabItem from "../../components/features/tab_item";
+import { iTabItem } from "../../../interfaces/tab_item";
+import TabItem from "../../../components/features/tab_item";
 
 jest.mock("../../redux/mocked_hooks");
 jest.useFakeTimers();
