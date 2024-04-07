@@ -21,7 +21,7 @@ const SectionContainer = (props: iSectionContainer): JSX.Element => {
         <>
             {
             fullscreen ? 
-                <>
+                <div data-testid="section-container-fullscreen">
                     <div ref={sectionRef} id={id} className={`absolute top-0 left-0 transition-all ease-in-out z-[1000] w-full h-auto min-h-full mb-6 pt-10 bg-white shadow`}>
                         <div className="flex justify-between mb-10 pb-8 px-14 border-b border-tbfColor-lgrey">
                             <h1 className="text-4xl text-tbfColor-darkpurple font-light inline-block">
@@ -47,8 +47,8 @@ const SectionContainer = (props: iSectionContainer): JSX.Element => {
                             </div>
                         </div>
                     </div>
-                </> : 
-                <>
+                </div> : 
+                <div data-testid="section-container">
                     <div className="text-right">
                         <GenericButton onClick={() => {
                             window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
@@ -74,7 +74,7 @@ const SectionContainer = (props: iSectionContainer): JSX.Element => {
                         </div>
                     </div>
                     
-                </>
+                </div>
             }
         </>
     )

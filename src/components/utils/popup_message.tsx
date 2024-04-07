@@ -31,22 +31,20 @@ const PopupMessage = (props: iPopupMessage): JSX.Element => {
     }
 
     return (
-        <div data-testid={"warning-message-popup"} className={`${styles.scroll_style} fixed top-0 flex ${popup_container_transparent_bg} justify-center items-center left-0 w-full h-screen overflow-y-scroll z-[1000000]`}>
+        <div className={`${styles.scroll_style} fixed top-0 flex ${popup_container_transparent_bg} justify-center items-center left-0 w-full h-screen overflow-y-scroll z-[1000000]`}>
             <div className="p-10 w-[500px] bg-tbfColor-darkpurple rounded-lg drop-shadow-2xl text-center leading-7 text-md">
-                {title && <h4 className="text-2xl mb-3 text-white">{title}</h4>}
+                {<h4 className="text-2xl mb-3 text-white">{title}</h4>}
                 <p className="mb-8 text-white">
                     {text}
                 </p>
               
                 <button 
-                    data-testid={"decline-cancellation"} 
                     onClick={() => handleButtonClick("secondary")} 
                     className="hover:opacity-60 transition-all ease-in border-2 my-2 border-white bg-tbfColor-darkpurple text-white font-semibold px-3 py-2 mx-2 rounded-md"
                 >
                     { secondaryButton.text }
                 </button>
                 <button 
-                    data-testid={"proceed-cancellation"} 
                     onClick={() => handleButtonClick("primary")} 
                     className="hover:opacity-60 transition-all ease-in border-2 my-2 border-white bg-white text-tbfColor-darkpurple font-semibold px-3 py-2 mx-2 rounded-md"
                 >

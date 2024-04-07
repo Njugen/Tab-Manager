@@ -36,17 +36,16 @@ describe("Test <GenericPopup>", () => {
         const heading = within(popup).queryByRole("heading");
         expect(heading).toHaveTextContent(mockTitle);
 
-        const buttons = within(popup).queryAllByRole("button");
-        const xButton = buttons[0];
+        const xButton = within(popup).getByRole("img");
         
         fireEvent.click(xButton);
         expect(mockCancel.handler).toHaveBeenCalled();
 
-        const closeButton = buttons[1];
-        const saveButton = buttons[2];
+        const closeButton = screen.queryByText(mockCancel.label, { selector: "button" });
+        const saveButton = screen.queryByText(mockSave.label, { selector: "button" });
 
-        expect(closeButton).toBeUndefined()
-        expect(saveButton).toBeUndefined();
+        expect(closeButton).not.toBeInTheDocument()
+        expect(saveButton).not.toBeInTheDocument()
     })
 
     test.each(typeCases)("Popup works when type = %s and save specs exists", (type) => {
@@ -62,20 +61,14 @@ describe("Test <GenericPopup>", () => {
         const heading = within(popup).queryByRole("heading");
         expect(heading).toHaveTextContent(mockTitle);
 
-        const buttons = within(popup).queryAllByRole("button");
-        const xButton = buttons[0];
+        const xButton = within(popup).getByRole("img");
         
         fireEvent.click(xButton);
         expect(mockCancel.handler).toHaveBeenCalled();
 
-        const closeButton = buttons[1];
-        const saveButton = buttons[2];
-
-        expect(closeButton).not.toBeUndefined();
-        expect(saveButton).not.toBeUndefined();
-        expect(closeButton).toHaveTextContent(mockCancel.label)
-        expect(saveButton).toHaveTextContent(mockSave.label);
-
+        const closeButton = screen.getByText(mockCancel.label, { selector: "button" });
+        const saveButton = screen.getByText(mockSave.label, { selector: "button" });
+        
         fireEvent.click(closeButton);
         expect(mockCancel.handler).toHaveBeenCalled();
 

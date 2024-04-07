@@ -41,8 +41,8 @@ const GenericPopup = forwardRef(function GenericPopup(props: iGenericPopup, ref:
                     {
                         save && (
                             <div className="max-sm:justify-center px-8 py-8 mt-4 flex justify-end border-t border-tbfColor-lgrey s">
-                                <PurpleBorderButton disabled={false} text={cancel.label} onClick={handleClose} />
-                                <PrimaryButton disabled={false} text={save.label} onClick={handleSave} />
+                                <PurpleBorderButton text={cancel.label} disabled={false} onClick={handleClose} />
+                                <PrimaryButton text={save.label} disabled={false} onClick={handleSave}/>
                             </div>
                         )
                     }
