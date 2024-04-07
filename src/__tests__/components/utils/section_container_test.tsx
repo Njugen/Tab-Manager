@@ -10,6 +10,8 @@ const mockTitle = randomNumber().toString();
 const mockOption = <div data-testid="mock-options-area"></div>;
 const mockChildren = <div data-testid="mock-child-section"></div>
 
+window.scrollTo = jest.fn((e: any) => e)
+
 describe("Test <SectionContainer>", () => {
     test("Renders with options area, fullscreen feature works with callback", () => {
         render(
