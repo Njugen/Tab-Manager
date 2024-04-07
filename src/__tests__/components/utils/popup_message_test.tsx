@@ -21,18 +21,20 @@ describe("Test <Popup message>", () => {
             <PopupMessage title={mockTitle} text={mockText} primaryButton={pButton} secondaryButton={sButton} />
         )
 
-        const heading = screen.getByRole("heading");
+        const container = screen.getByRole("dialog");
+
+        const heading = within(container).getByRole("heading");
         expect(heading).toHaveTextContent(mockTitle);
 
-        const text = screen.getByText(mockText);
+        const text = within(container).getByText(mockText);
         expect(text).toBeVisible();
         
-        const primaryButton = screen.getByText(pButton.text, { selector: "button" });
+        const primaryButton = within(container).getByText(pButton.text, { selector: "button" });
         expect(primaryButton).toBeVisible();
         fireEvent.click(primaryButton);
         expect(pButton.callback).toHaveBeenCalled();
 
-        const secondaryButton = screen.getByText(sButton.text, { selector: "button" });
+        const secondaryButton = within(container).getByText(sButton.text, { selector: "button" });
         expect(secondaryButton).toBeVisible();
         fireEvent.click(secondaryButton);
         expect(sButton.callback).toHaveBeenCalled();

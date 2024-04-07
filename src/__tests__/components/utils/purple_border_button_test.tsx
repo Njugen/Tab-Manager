@@ -8,7 +8,7 @@ import PurpleBorderButton from "../../../components/utils/purple_border_button";
 const mockText = randomNumber().toString();
 const mockFn = jest.fn();
 
-describe("Test <Popup message>", () => {
+describe("Test <PurpleBorderButton>", () => {
     test("Renders ok and works when not disabled", () => {
         render(
             <PurpleBorderButton text={mockText} disabled={false} onClick={mockFn} />
