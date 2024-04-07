@@ -33,6 +33,7 @@ const SectionContainer = (props: iSectionContainer): JSX.Element => {
                             }}>
                                 <CloseIcon size={38} fill="rgba(0,0,0,0.2)" />
                             </GenericButton>
+              
                         </div>
                         <div className="flex justify-between min-h-[350px]">
                             <div className="w-full mb-6 px-14 pb-4">
