@@ -123,28 +123,24 @@ const SettingsView = (props: iView): JSX.Element => {
                     </FormField>
                     <FormField label="Close at folder launch" description="Close current browser session when launching a folder">
                         <Switcher 
-                            id="close_current_setting" 
                             value={settingsState.close_current_setting} 
                             onCallback={(e) => saveSwitchSetting("close_current_setting", e)} 
                         />
                     </FormField>
                     <FormField label="Cancellation warnings" description="Show a warning message before discarding changes made to folders">
                         <Switcher 
-                            id="cancellation_warning_setting" 
                             value={settingsState.cancellation_warning_setting} 
                             onCallback={(e) => saveSwitchSetting("cancellation_warning_setting", e)} 
                         />
                     </FormField>
                     <FormField label="Removal warnings" description="Show a warning message before deleting folders">
                         <Switcher 
-                            id="removal_warning_setting" 
                             value={settingsState.removal_warning_setting} 
                             onCallback={(e) => saveSwitchSetting("removal_warning_setting", e)} 
                         />
                     </FormField>
                     <FormField label="Log errors" description="Automatically send error reports to the developer">
                         <Switcher 
-                            id="error_log_setting" 
                             value={settingsState.error_log_setting} 
                             onCallback={(e) => saveSwitchSetting("error_log_setting", e)} 
                         />

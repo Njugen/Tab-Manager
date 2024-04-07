@@ -1,7 +1,6 @@
 import { render, screen, within, fireEvent } from "@testing-library/react";
 import '@testing-library/jest-dom'
 import randomNumber from "../../../tools/random_number";
-import PopupMessage from "../../../components/utils/popup_message";
 import SectionContainer from "../../../components/utils/section_container";
 
 const mockExpandFn = jest.fn((val: boolean) => val);

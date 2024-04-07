@@ -49,7 +49,7 @@ const FolderActionBar = (props: iFolderActionBarProps): JSX.Element => {
     let deleteButton: JSX.Element | null = null
     let checkbox: JSX.Element | null = null
     let expand_collapse_button: JSX.Element | null = (
-        <FolderControlButton id={expanded ? "collapse" : "expand"} active={true} onClick={handleExpandClick}>
+        <FolderControlButton id={expanded ? "collapse" : "expand"} disabled={false} onClick={handleExpandClick}>
             <RotationEffect rotated={expanded}>
                 <CollapseIcon size={28} fill={"#000"} />
             </RotationEffect>
@@ -58,21 +58,21 @@ const FolderActionBar = (props: iFolderActionBarProps): JSX.Element => {
 
     if(onOpen){
         openButton = (
-            <FolderControlButton id="open_browser" active={true} onClick={handleOpen}>
+            <FolderControlButton id="open_browser" disabled={false} onClick={handleOpen}>
                 <OpenBrowserIcon size={17} fill={"#000"} />
             </FolderControlButton>
         );
     }
     if(onEdit){
         editButton = (
-            <FolderControlButton id="settings" active={true} onClick={handleEdit}>
+            <FolderControlButton id="settings" disabled={false} onClick={handleEdit}>
                 <SettingsIcon size={17} fill={"#000"} />
             </FolderControlButton>
         );
     }
     if(onDelete){
         deleteButton = (
-            <FolderControlButton id="trash" active={true} onClick={handleDelete}>
+            <FolderControlButton id="trash" disabled={false} onClick={handleDelete}>
                 <TrashIcon size={17} fill={"#000"} />
             </FolderControlButton>
         );

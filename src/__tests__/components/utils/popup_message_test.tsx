@@ -21,7 +21,7 @@ describe("Test <Popup message>", () => {
             <PopupMessage title={mockTitle} text={mockText} primaryButton={pButton} secondaryButton={sButton} />
         )
 
-        const container = screen.getByRole("dialog");
+        const container = screen.getByRole("alert");
 
         const heading = within(container).getByRole("heading");
         expect(heading).toHaveTextContent(mockTitle);

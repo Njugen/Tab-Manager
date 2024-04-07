@@ -10,7 +10,7 @@ import divStateCSS from "./functions/div_state_css";
 
 const Switcher = (props: iSwitcher): JSX.Element => {
     const [switchOn, setSwitchOn] = useState<boolean | null>(null);
-    const { onCallback, label, id, value } = props;
+    const { onCallback, label, value } = props;
 
     // Set the props.value to component's state once identified such exists
     useEffect(() => {
@@ -19,15 +19,14 @@ const Switcher = (props: iSwitcher): JSX.Element => {
 
     // Set the state to either true or false
     const handleSwitch = (): void => {
-        setSwitchOn(switchOn === false ? true : false);
-        onCallback(switchOn === false ? true : false);
+        setSwitchOn(!switchOn ? true : false);
+        onCallback(!switchOn ? true : false);
     }
 
     return (
         <div className={`flex items-center ${label && "mx-5"}`}>
             {label && <span className={`inline-block mr-2 text-sm text-black`}>{label}</span>}
             <button 
-                data-testid={id} 
                 onClick={handleSwitch} 
                 className={`hover:opacity-70 rounded-3xl py-0 px-2 inline-block w-14 h-7 items-center ${buttonStateCSS(switchOn, value)}`}
             >

@@ -1,6 +1,6 @@
 interface iFolderIconButton {
     id: string,
-    active: boolean,
+    disabled: boolean,
     children: Array<JSX.Element> | JSX.Element,
     onClick: (e: any) => void
 }
