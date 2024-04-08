@@ -21,16 +21,19 @@ const folderManagerReducer = (state: iFolderItem = folderManagerState, action: a
         }
     } else if(type === UPDATE_IN_EDIT_FOLDER){
         let stateClone: iFolderItem = state;
-
+      
         if(stateClone && data){
             stateClone = {
                 ...stateClone,
                 [data[0]]: data[1]
             };
         }
-  
-        return stateClone
+
+        return {
+            ...stateClone
+        }
     } else if(type === UPDATE_WINDOW_MANAGER){
+    
         if(state === null) return state;
 
         let stateClone = { ...state };

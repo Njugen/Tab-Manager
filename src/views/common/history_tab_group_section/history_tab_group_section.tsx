@@ -197,7 +197,7 @@ const HistoryTabGroupsSection = forwardRef(function HistoryTabGroupsSection(prop
                                                                 return (
                                                                     
                                                                     <div className="my-3" key={`tab-${id}`}>
-                                                                        <TabItem id={parseInt(id)} label={title} url={url} onMark={handleMarkTab} marked={isMarked ? true : false} disableEdit={true} disableMark={false} disableCloseButton={false} onClose={(id) => handleClose(url)} />
+                                                                        <TabItem id={parseInt(id)} label={title} url={url} onMark={handleMarkTab} marked={isMarked ? true : false} />
                                                                     </div>
                                                                 );
                                                             }

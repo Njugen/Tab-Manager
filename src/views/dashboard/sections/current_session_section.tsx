@@ -18,12 +18,14 @@ import WindowItem from "../../../components/features/window_item";
 import SelectedCheckboxIcon from "../../../components/icons/selected_checkbox_icon";
 import DeselectedCheckboxIcon from "../../../components/icons/deselected_checkbox_icon";
 import TextIconButton from "../../../components/utils/text_icon_button";
+import PopupMessage from "../../../components/utils/popup_message";
 
 
 const CurrentSessionSection = (props: any): JSX.Element => {
     const [addToWorkSpaceMessage, setAddToFolderMessage] = useState<boolean>(false);
     const [mergeProcess, setMergeProcess] = useState<iFolderItem | null>(null);
     const [createFolder, setCreateFolder] = useState<boolean>(false);
+    const [windowIdWarning, setWindowIdWarning] = useState<number>(-1);
 
     const folderCollectionState: Array<iFolderItem> = useSelector((state: any) => state.folderCollectionReducer);
     const sessionSectionState = useSelector((state: any) => state.sessionSectionReducer);
@@ -86,29 +88,22 @@ const CurrentSessionSection = (props: any): JSX.Element => {
         dispatch(clearInEditFolder());
     }
 
-    const handleMarkAllTabs = (): void => {
-        const tabs: Array<chrome.tabs.Tab> = sessionSectionState.tabs as Array<chrome.tabs.Tab>;
-        dispatch(setMarkMultipleTabsAction(tabs));
+    const proceedClose = (windowId: number) => {
+        setWindowIdWarning(-1);
+        chrome.windows.remove(windowId);
     }
 
-    const handleUnMarkAll = (): void => {
-        dispatch(setMarkMultipleTabsAction([]));
-    }
-
-    const handleCloseMultipleTabs = (): void => {
-       /* let updatedMarks = sessionSectionState.tabs;
-
-        sessionSectionState.markedTabs.forEach((tab: chrome.history.HistoryItem) => {
-            chrome.history.deleteUrl({ url: tab.url! });
-            updatedMarks = updatedMarks.filter((target: chrome.history.HistoryItem) => target.url !== tab.url);
+    const handleCloseWindow = (id: number): void => {
+        chrome.windows.getAll({}, (windows: Array<chrome.windows.Window>): void => {
+            if(windows.length === 1) {
+                setWindowIdWarning(id);
+            } else {
+                proceedClose(id)
+            }
         });
-        dispatch(setUpTabsAction(updatedMarks));
-        dispatch(setMarkMultipleTabsAction([]));*/
-    }
+    }   
 
     const renderOptionsMenu = (): JSX.Element => {
-
-
         return (
             <>
                 <div className="inline-flex items-center justify-end">
@@ -135,11 +130,12 @@ const CurrentSessionSection = (props: any): JSX.Element => {
                 <WindowItem 
                     key={`window-item-${i}`} 
                     tabsCol={4} 
+                    onDelete={handleCloseWindow}
                     disableEdit={false} 
-                    disableTabMark={true}
-                    disableTabDelete={false} 
+                    disableMarkTab={true}
+                    disableDeleteTab={false} 
                     disableAddTab={true}
-                    disableTabEdit={true} 
+                    disableEditTab={true}
                     id={item.id} 
                     tabs={item.tabs} 
                     initExpand={true} 
@@ -273,6 +269,23 @@ const CurrentSessionSection = (props: any): JSX.Element => {
 
     return (
         <>
+            {
+                windowIdWarning >= 0 && 
+                (
+                    <PopupMessage 
+                        title="Warning" 
+                        text={"This is the only window currently open. Closing it will close your browser, do you wish to proceed?"} 
+                        primaryButton={{
+                            text: "Yes, close the browser",
+                            callback: () => proceedClose(windowIdWarning)
+                        }}
+                        secondaryButton={{
+                            text: "Cancel",
+                            callback: () => setWindowIdWarning(-1)
+                        }}
+                    />
+                )
+            }
             {addToWorkSpaceMessage && renderAddTabsMessage()}
             {renderFolderManager()}
             <SectionContainer id="currentSession-view" title="Current session" options={renderOptionsMenu}>

@@ -18,10 +18,6 @@ const SearchBarSessionTabs = (props: iSearchBarSessionTabsProps): JSX.Element =>
                     id={id!} 
                     label={title!} 
                     url={url!} 
-                    disableEdit={true} 
-                    disableMark={true} 
-                    disableCloseButton={false} 
-                    onClose={() => id && chrome.tabs.remove(id)} 
                 />
             )
         });

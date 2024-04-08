@@ -25,7 +25,7 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
     const [newTab, setNewTab] = useState<boolean>(false);
     const [editTab, setEditTab] = useState<number | null>(null);
     const [markedTabs, setMarkedTabs] = useState<Array<number>>([]);
-    const { id, tabs, tabsCol, disableEdit, disableTabEdit, disableTabMark, disableTabDelete, disableAddTab } = props;
+    const { id, tabs, tabsCol, onDelete, disableEdit, disableEditTab, disableMarkTab, disableDeleteTab, disableAddTab } = props;
     
     const dispatch = useDispatch();
 
@@ -44,13 +44,7 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
     }
 
     // Delete this window from redux
-    const handleDeleteWindow = (): void => {
-        const windows = folder_state?.windows.filter((target: iWindowItem) => target.id !== id);
-
-        dispatch(setCurrentlyEditingTab(false));
-        dispatch(updateInEditFolder("windows", windows));
-        dispatch(setCurrentlyEditingTab(false));
-    }
+    
 
     // Activate add new tab feature by setting state
     const handleAddNewTab = (): void => {
@@ -62,19 +56,29 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
 
     // Mark/unmark specific tab in this window
     const handleMarkTab = (tabId: number, checked: boolean): void => {
+        console.log("TAB ID", tabId);
+        console.log("EXISTING", folder_state?.windows);
         if(checked === true){
             const findInState = markedTabs.findIndex((target) => target === tabId);
             if(findInState < 0){  
+                console.log("SET", tabId);
                 setMarkedTabs([...markedTabs, tabId]);
             }
         } else {
+            console.log("EH");
             const filteredMarks = markedTabs.filter((id) => id !== tabId);
             setMarkedTabs([...filteredMarks]);
         }
+       
     }
+
+    useEffect(() => {
+        console.log("MARKED", markedTabs);
+    }, [markedTabs])
 
     // Delete marked tabs
     const handleDeleteTabs = (): void => {
+
         if(!folder_state?.windows) return;
         
         const windows = folder_state.windows.filter((target: iWindowItem) => target.id === id);
@@ -93,7 +97,7 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
             });
            
             folder_state.windows[targetWindowIndex].tabs = [...newTabCollection];
-            
+            console.log("TAB", folder_state.windows[targetWindowIndex].tabs);
             setMarkedTabs([]);
             dispatch(updateInEditFolder("windows", folder_state.windows));
             dispatch(setCurrentlyEditingTab(false));
@@ -132,23 +136,20 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
                 return (
                     <TabItem 
                         marked={false} 
-                        disableMark={disableTabMark} 
-                        disableEdit={disableTabEdit}
-                        disableCloseButton={disableTabDelete}
                         key={`window-${id}-tab-${tab.id}`} 
                         id={tab.id} 
                         label={tab.label} 
                         url={tab.url} 
-                        onMark={handleMarkTab} 
-                        onEdit={handleTabEdit}
-                        onClose={handleTabClose}
+                        onMark={disableMarkTab === false ? handleMarkTab : undefined} 
+                        onEdit={disableEditTab === false ? handleTabEdit : undefined}
+                        onClose={disableDeleteTab === false ? handleTabClose : undefined}
                     />
                 );
             }
         })
 
         return result;
-    }, [tabs, editTab, misc_state.currentlyEditingTab])
+    }, [tabs, editTab, misc_state.currentlyEditingTab, markedTabs])
     
     // Decide whether or not to show an editable tab field within the tab list
     const evaluateNewTabRender = (): Array<JSX.Element> => {
@@ -186,7 +187,7 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
                 </h3>
                 <div className={`tab-settings`}>
                     {disableEdit === false && (
-                        <GenericButton onClick={handleDeleteWindow}>
+                        <GenericButton onClick={(e: any) => onDelete && onDelete(id)}>
                             <TrashIcon fill="#000" size={20} />
                         </GenericButton>
                     )}

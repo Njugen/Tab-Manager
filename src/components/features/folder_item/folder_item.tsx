@@ -181,8 +181,8 @@ const FolderItem = (props: iFolderItem): JSX.Element => {
         const result: Array<JSX.Element> = windows.map((window, index): JSX.Element => (
             <WindowItem 
                 tabsCol={decisiveCols} 
-                disableTabMark={true} 
-                disableTabEdit={true} 
+                disableMarkTab={true} 
+                disableEditTab={true} 
                 key={"window-" + index} 
                 id={window.id} 
                 tabs={window.tabs} 
@@ -220,9 +220,9 @@ const FolderItem = (props: iFolderItem): JSX.Element => {
                         </div>
                     </div>}
                     
-                    <div className="px-5 mb-8 mt-8">
+                    <ul className="px-5 mb-8 mt-8">
                         {folderWindowList}
-                    </div></>
+                    </ul></>
                     )}
                 </div>
                 

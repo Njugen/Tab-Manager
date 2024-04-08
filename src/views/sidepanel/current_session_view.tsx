@@ -14,6 +14,7 @@ import { iFieldOption } from '../../interfaces/dropdown';
 import SaveIcon from '../../components/icons/save_icon';
 import CircleButton from './../../components/utils/circle_button';
 import WindowItem from "../../components/features/window_item";
+import PopupMessage from './../../components/utils/popup_message';
 
 
 const CurrentSessionView = (props:any): JSX.Element => {
@@ -21,7 +22,7 @@ const CurrentSessionView = (props:any): JSX.Element => {
     const [createFolder, setCreateFolder] = useState<boolean>(false);
     const [mergeProcess, setMergeProcess] = useState<iFolderItem | null>(null);
     const [editFolderId, setEditFolderId] = useState<number | null>(null);
-
+    const [windowIdWarning, setWindowIdWarning] = useState<number>(-1);
     const folderCollectionState: Array<iFolderItem> = useSelector((state: any) => state.folderCollectionReducer);
 
     const dispatch = useDispatch();
@@ -195,6 +196,21 @@ const CurrentSessionView = (props:any): JSX.Element => {
         return render;
     }
 
+    const proceedClose = (windowId: number) => {
+        setWindowIdWarning(-1);
+        chrome.windows.remove(windowId);
+    }
+
+    const handleCloseWindow = (id: number): void => {
+        chrome.windows.getAll({}, (windows: Array<chrome.windows.Window>): void => {
+            if(windows.length === 1) {
+                setWindowIdWarning(id);
+            } else {
+                proceedClose(id)
+            }
+        });
+    }   
+
     const windowList = useMemo((): JSX.Element => {
         const existingWindows = sessionSectionState?.windows;
         const existingWindowsElements: Array<JSX.Element> = existingWindows?.map((item: iWindowItem, i: number) => {
@@ -202,9 +218,11 @@ const CurrentSessionView = (props:any): JSX.Element => {
                 <WindowItem
                     key={`window-item-${i}`} 
                     tabsCol={1}
-                    disableEdit={sessionSectionState.windows.length < 2 ? true : false} 
-                    disableTabMark={true} 
-                    disableTabEdit={true} 
+                    onDelete={handleCloseWindow}
+                    disableEdit={false} 
+                    disableMarkTab={true} 
+                    disableEditTab={true} 
+                    disableDeleteTab={false} 
                     id={item.id} 
                     tabs={item.tabs} 
                     initExpand={true} 
@@ -224,7 +242,24 @@ const CurrentSessionView = (props:any): JSX.Element => {
     }, [sessionSectionState.windows])
 
     return (
-        <>
+        <> 
+            {
+                windowIdWarning >= 0 && 
+                (
+                    <PopupMessage 
+                        title="Warning" 
+                        text={"This is the only window currently open. Closing it will close your browser, do you wish to proceed?"} 
+                        primaryButton={{
+                            text: "Yes, close the browser",
+                            callback: () => proceedClose(windowIdWarning)
+                        }}
+                        secondaryButton={{
+                            text: "Cancel",
+                            callback: () => setWindowIdWarning(-1)
+                        }}
+                    />
+                )
+            }
             {addToWorkSpaceMessage && renderAddTabsMessage()}
             {renderFolderManager()}
             <div className="flex justify-end mt-4 mb-6">

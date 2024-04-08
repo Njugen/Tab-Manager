@@ -62,7 +62,7 @@ const EditableTabItem = (props: iEditableTabItem): JSX.Element => {
     }
 
     return (
-        <li className="my-2">
+        <li className="mt-1 list-none">
             <input 
                 data-testid="editable-tab"
                 autoFocus 
@@ -71,7 +71,7 @@ const EditableTabItem = (props: iEditableTabItem): JSX.Element => {
                 defaultValue={preset ? preset : "https://"}
                 onBlur={handleBlur}
                 onKeyDown={handleKeyDown}
-                className={`${predef.textfield_full} h-[46px] px-3 w-full text-lg text-tbfColor-darkergrey rounded-lg border border-tbfColor-middlegrey4`} 
+                className={`${predef.textfield_full} h-[46px] px-3 py-6 w-full text-lg text-tbfColor-darkergrey rounded-lg border border-tbfColor-middlegrey4`} 
             />
             {errorMessage && <span data-testid="field-error" className="text-semibold text-red-500 text-sm">{errorMessage}</span>} 
         </li>
