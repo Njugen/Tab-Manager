@@ -130,7 +130,7 @@ function SearchResultsContainer(props:any): JSX.Element {
                 </div>
                 <section className="mt-4">
                     <h3 className="uppercase font-bold text-md mb-4 text-tbfColor-darkergrey">Folders</h3>
-                    <ul>
+                    <ul className="list-none">
                         {
                             renderFolders()
                         }
@@ -138,7 +138,7 @@ function SearchResultsContainer(props:any): JSX.Element {
                 </section>
                 <section className="mt-4">
                     <h3 className="uppercase font-bold text-md mb-4 text-tbfColor-darkergrey">Currently opened</h3>
-                    <ul>
+                    <ul className="list-none">
                         {
                             renderSessionTabs()
                         }
@@ -146,7 +146,7 @@ function SearchResultsContainer(props:any): JSX.Element {
                 </section>
                 <section className="mt-4">
                     <h3 className="uppercase font-bold text-md mb-4 text-tbfColor-darkergrey">History</h3>
-                    <ul>
+                    <ul className="list-none">
                         {
                             renderHistoryTabs()
                         }

@@ -36,13 +36,13 @@ const TabItem = (props: iTabItem): JSX.Element => {
 
     return (
         <>
-            <li data-testid="tab-item" className="bg-gray-100 border px-2 border-gray-100 hover:border-tbfColor-lightpurple hover:bg-tbfColor-lighterpurple hover:text-tbf-middlegrey2 transition-all ease-in duration-100 tab-item my-2 flex items-center justify-between">
+            <li data-testid="tab-item" className="bg-gray-100 border px-2 border-gray-100 hover:border-tbfColor-lightpurple hover:bg-tbfColor-lighterpurple hover:text-tbf-middlegrey2 transition-all ease-in duration-100 tab-item my-1 flex items-center justify-between">
                 <a href={url} rel="noreferrer" className="w-full py-3 text-sm flex hover:no-underline items-center truncate px-2 tab-item-info" target="_blank">
                     {address && <img src={`${chrome.runtime.getURL("/_favicon/")}?pageUrl=${address.origin}&size=18`} alt={""} />}
                     <span className="mx-3">{label || url}</span>
                 </a>
             
-                <div className="tab-item-settings px-2 py-2 flex flex-row">
+                <div className="tab-item-settings pl-2 py-2 pr-0 flex flex-row">
                     {
                         !disableEdit && (
                             <GenericButton onClick={() => onEdit && onEdit(id)}>

@@ -3,6 +3,7 @@ import {
     SET_UP_WINDOWS,
     SET_CURRENT_TABS_SORT_ORDER,
     DELETE_MARKED_CURRENT_TABS_ID,
+    SET_MARKED_CURRENT_TABS_ID
 } from "../types/current_session_settings_types";
 
 
@@ -30,6 +31,11 @@ const sessionSectionReducer = (state = sessionSectionState, action: any): iCurre
     } else if(type === DELETE_MARKED_CURRENT_TABS_ID){
         return {
             ...state,
+        }
+    } else if(type === SET_MARKED_CURRENT_TABS_ID){
+        return {
+            ...sessionSectionState,
+            markedTabs: [...data]
         }
     } else {
         return state;

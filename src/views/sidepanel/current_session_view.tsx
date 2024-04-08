@@ -213,7 +213,7 @@ const CurrentSessionView = (props:any): JSX.Element => {
         })
         
         if (existingWindowsElements?.length > 0){
-            return <ul>{existingWindowsElements}</ul>;
+            return <ul className="list-none">{existingWindowsElements}</ul>;
         } else {
             return (
                 <div className={"flex justify-center items-center"}>

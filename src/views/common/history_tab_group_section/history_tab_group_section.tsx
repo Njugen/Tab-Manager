@@ -170,6 +170,11 @@ const HistoryTabGroupsSection = forwardRef(function HistoryTabGroupsSection(prop
         return Array.from(groups);
     }
 
+    const handleClose = (url: string): void => {
+        chrome.history.deleteUrl({
+            url: url
+        })
+    }
 
     return (
         <div className="flex justify-center min-h-[350px]">
@@ -183,7 +188,7 @@ const HistoryTabGroupsSection = forwardRef(function HistoryTabGroupsSection(prop
 
                                             return (
                                                 <Group key={`group-${i}`} desc={`${group[0]} minutes ago`}>
-                                                    <ul>
+                                                    <ul className="list-none">
                                                         {
                                                             group[1].map((tab: any) => {
                                                                 const collection = historySectionState.markedTabs;
@@ -192,7 +197,7 @@ const HistoryTabGroupsSection = forwardRef(function HistoryTabGroupsSection(prop
                                                                 return (
                                                                     
                                                                     <div className="my-3" key={`tab-${id}`}>
-                                                                        <TabItem id={parseInt(id)} label={title} url={url} onMark={handleMarkTab} marked={isMarked ? true : false} disableEdit={true} disableMark={false} />
+                                                                        <TabItem id={parseInt(id)} label={title} url={url} onMark={handleMarkTab} marked={isMarked ? true : false} disableEdit={true} disableMark={false} disableCloseButton={false} onClose={(id) => handleClose(url)} />
                                                                     </div>
                                                                 );
                                                             }

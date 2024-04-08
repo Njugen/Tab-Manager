@@ -195,7 +195,7 @@ const FoldersView = (props: iFoldersView): JSX.Element => {
                 />
             );
         })
-        return result.length > 0 ? <ul>{result}</ul> : <p className="text-center">There are no folders at the moment.</p>
+        return result.length > 0 ? <ul className="list-none">{result}</ul> : <p className="text-center">There are no folders at the moment.</p>
     }, [folderCollectionState, folderSettingsState.folderSortOptionId]) 
 
     const handleCloseFolderManager = (): void => {
@@ -240,7 +240,7 @@ const FoldersView = (props: iFoldersView): JSX.Element => {
                     {renderSortOptionsDropdown()}
                 </div>
             </div>
-            <ul>
+            <ul className="list-none">
                 {folderList}
             </ul>
         </>

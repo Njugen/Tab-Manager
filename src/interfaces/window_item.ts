@@ -8,7 +8,9 @@ interface iWindowItem {
     disableMark?: boolean,
     disableEdit?: boolean,
     disableTabMark?: boolean,
-    disableTabEdit?: boolean
+    disableTabEdit?: boolean,
+    disableTabDelete?: boolean,
+    disableAddTab?: boolean
 }
 
 export {

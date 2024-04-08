@@ -25,7 +25,7 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
     const [newTab, setNewTab] = useState<boolean>(false);
     const [editTab, setEditTab] = useState<number | null>(null);
     const [markedTabs, setMarkedTabs] = useState<Array<number>>([]);
-    const { id, tabs, tabsCol, disableEdit, disableTabEdit, disableTabMark } = props;
+    const { id, tabs, tabsCol, disableEdit, disableTabEdit, disableTabMark, disableTabDelete, disableAddTab } = props;
     
     const dispatch = useDispatch();
 
@@ -117,6 +117,10 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
         setEditTab(null);
     }
 
+    const handleTabClose = (tabId: number): void => {
+        chrome.tabs.remove(tabId)
+    }
+
     // Return a list of tabs based on data from parent component
     const renderTabs: Array<JSX.Element> = useMemo(() => {
         let result = [];
@@ -129,13 +133,15 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
                     <TabItem 
                         marked={false} 
                         disableMark={disableTabMark} 
-                        disableEdit={disableTabEdit} 
+                        disableEdit={disableTabEdit}
+                        disableCloseButton={disableTabDelete}
                         key={`window-${id}-tab-${tab.id}`} 
                         id={tab.id} 
                         label={tab.label} 
                         url={tab.url} 
                         onMark={handleMarkTab} 
-                        onEdit={handleTabEdit} 
+                        onEdit={handleTabEdit}
+                        onClose={handleTabClose}
                     />
                 );
             }
@@ -192,12 +198,12 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
                 data-visibility={expanded ? "visible" : "hidden"} 
                 className={`tabs-list mt-3 overflow-hidden ${expanded === true ? "max-h-[2000px] ease-out visible" : "max-h-0 ease-in invisible"} duration-200 transition-all`}
             >
-                <ul className={`${tabsCol && tabsCol > 1 && window.innerWidth >= 640 ? `grid grid-cols-${tabsCol ? tabsCol : 2} gap-x-3 gap-y-0` : ""}`}>
+                <ul className={`list-none grid ${tabsCol && tabsCol > 1 && window.innerWidth >= 640 ? `grid-cols-${tabsCol ? tabsCol : 2} gap-x-3 gap-y-1` : "gap-y-1 grid-cols-1"}`}>
                     {tabs.length > 0 ? [...evaluateNewTabRender()] : <EditableTabItem windowId={id} onStop={handleEditTabStop} />}
                 </ul>
                 {tabs.length > 0 && disableEdit === false && <div className="mt-10 mb-8 flex justify-end">
                     {markedTabs.length > 0 && <PurpleBorderButton disabled={false} text="Delete tabs" onClick={handleDeleteTabs} />}
-                    {disableEdit === false && <PrimaryButton disabled={false} text="New tab" onClick={handleAddNewTab} />}
+                    {disableAddTab === false && <PrimaryButton disabled={false} text="New tab" onClick={handleAddNewTab} />}
                 </div>}
             </div>
             

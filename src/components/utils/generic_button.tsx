@@ -10,7 +10,7 @@ function GenericButton(props: iGenericButton): JSX.Element {
     const { opacity_hover_effect } = styles;
 
     return (
-        <button className={`${opacity_hover_effect}`} onClick={onClick}>
+        <button className={`${opacity_hover_effect} m-2`} onClick={onClick}>
             {children}
         </button>
     ); 

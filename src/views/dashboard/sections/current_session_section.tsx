@@ -11,10 +11,14 @@ import { clearMarkedFoldersAction } from '../../../redux/actions/folder_settings
 import { clearMarkedTabsAction} from '../../../redux/actions/history_settings_actions';
 import { iTabItem } from '../../../interfaces/tab_item';
 import { iFieldOption } from '../../../interfaces/dropdown';
-import { setUpWindowsAction } from '../../../redux/actions/current_session_actions';
+import { setMarkMultipleTabsAction, setUpWindowsAction } from '../../../redux/actions/current_session_actions';
 import AddToFolderPopup from '../../../components/features/add_to_folder_popup';
 import SectionContainer from "../../../components/utils/section_container";
 import WindowItem from "../../../components/features/window_item";
+import SelectedCheckboxIcon from "../../../components/icons/selected_checkbox_icon";
+import DeselectedCheckboxIcon from "../../../components/icons/deselected_checkbox_icon";
+import TextIconButton from "../../../components/utils/text_icon_button";
+
 
 const CurrentSessionSection = (props: any): JSX.Element => {
     const [addToWorkSpaceMessage, setAddToFolderMessage] = useState<boolean>(false);
@@ -82,12 +86,34 @@ const CurrentSessionSection = (props: any): JSX.Element => {
         dispatch(clearInEditFolder());
     }
 
+    const handleMarkAllTabs = (): void => {
+        const tabs: Array<chrome.tabs.Tab> = sessionSectionState.tabs as Array<chrome.tabs.Tab>;
+        dispatch(setMarkMultipleTabsAction(tabs));
+    }
+
+    const handleUnMarkAll = (): void => {
+        dispatch(setMarkMultipleTabsAction([]));
+    }
+
+    const handleCloseMultipleTabs = (): void => {
+       /* let updatedMarks = sessionSectionState.tabs;
+
+        sessionSectionState.markedTabs.forEach((tab: chrome.history.HistoryItem) => {
+            chrome.history.deleteUrl({ url: tab.url! });
+            updatedMarks = updatedMarks.filter((target: chrome.history.HistoryItem) => target.url !== tab.url);
+        });
+        dispatch(setUpTabsAction(updatedMarks));
+        dispatch(setMarkMultipleTabsAction([]));*/
+    }
+
     const renderOptionsMenu = (): JSX.Element => {
+
+
         return (
             <>
                 <div className="inline-flex items-center justify-end">
                     <div className="flex">
-                   
+
                     </div>
                     <div className="flex items-center justify-end">
                         <PrimaryButton 
@@ -104,12 +130,15 @@ const CurrentSessionSection = (props: any): JSX.Element => {
     const windowList = useMemo((): JSX.Element => {
         const existingWindows = sessionSectionState?.windows;
         const existingWindowsElements: Array<JSX.Element> = existingWindows?.map((item: iWindowItem, i: number) => {
+
             return (
                 <WindowItem 
                     key={`window-item-${i}`} 
                     tabsCol={4} 
-                    disableEdit={true} 
-                    disableTabMark={true} 
+                    disableEdit={false} 
+                    disableTabMark={true}
+                    disableTabDelete={false} 
+                    disableAddTab={true}
                     disableTabEdit={true} 
                     id={item.id} 
                     tabs={item.tabs} 
@@ -119,7 +148,7 @@ const CurrentSessionSection = (props: any): JSX.Element => {
         });
         
         if (existingWindowsElements?.length > 0){
-            return <ul>{existingWindowsElements}</ul>;
+            return <ul className="list-none">{existingWindowsElements}</ul>;
         } else {
             return (
                 <div className={"flex justify-center items-center"}>
