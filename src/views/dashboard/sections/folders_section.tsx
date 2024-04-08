@@ -563,9 +563,9 @@ const FoldersSection = (props: any): JSX.Element => {
                             </div>
                         </div>
                     )}
-                    {<div className={`${folderSettingsState.viewMode === "list" ? "mx-auto mt-12" : `grid xl:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-4 grid-flow-dense gap-x-4 gap-y-0 mt-8`}`}>
+                    {<ul className={`${folderSettingsState.viewMode === "list" ? "mx-auto mt-12" : `grid xl:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-4 grid-flow-dense gap-x-4 gap-y-0 mt-8`}`}>
                         {folderList}
-                    </div>}
+                    </ul>}
                 </>
             </SectionContainer>
         </>)}

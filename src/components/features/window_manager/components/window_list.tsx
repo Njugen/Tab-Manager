@@ -35,7 +35,9 @@ const WindowList = (props: IWindowList): JSX.Element => {
         );
     } else {
         if (existingWindowsElements?.length > 0){
-            return <>{existingWindowsElements}</>;
+            return (
+                <ul>{existingWindowsElements}</ul>
+            );
         } else {
             return <p>There are no windows in this folder. Please, create one by clicking the button below.</p>;
         }

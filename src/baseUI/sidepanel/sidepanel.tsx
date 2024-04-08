@@ -53,23 +53,24 @@ function SidePanel(props: iSidePanel): JSX.Element {
             </CircleButton>
             {keyword && <SearchResultsContainer keyword={keyword} onClose={() => setKeyword("")} />}
             <div className={"p-4 border-b border-gray-100 sticky top-0 z-50 bg-white"}>
-                
-                <SimpleSearchBar onChange={handleSearchBarChange} />
-                <div className="flex justify-between mt-8">
+                <section>
+                    <SimpleSearchBar onChange={handleSearchBarChange} />
+                </section>
+                <nav className="flex justify-between mt-8">
                     <button onClick={() => setView("folders-view")} className={view === "folders-view" ? activeNavButtonCSS : inactiveNavButtonCSS}>Folders</button>
                     <button onClick={() => setView("current-session-view")} className={view === "current-session-view" ? activeNavButtonCSS : inactiveNavButtonCSS}>Current session</button>
                     <button onClick={() => setView("history-view")} className={view === "history-view" ? activeNavButtonCSS : inactiveNavButtonCSS}>History</button>
-                </div>
+                </nav>
             </div>
             {!keyword && <PanelView view={view} />}
-            <div className="shadow font-bold bg-white sticky bottom-0 px-4 py-4 border-t-2 border-t-tbfColor-lightpurple flex justify-around z-50">
+            <footer className="shadow font-bold bg-white sticky bottom-0 px-4 py-4 border-t-2 border-t-tbfColor-lightpurple flex justify-around z-50">
                 <Navlink key="folders-nav-link" label="Advanced" url="?view=main" isActive={false} onClick={() => window.open("./options.html#main", "_blank")}>
                     <MultipleFoldersIcon size={20} fill={"#525252"} />
                 </Navlink>
                 <Navlink key="settings-nav-link" label="Settings" url="?view=settings" isActive={false} onClick={() => window.open("./options.html#settings", "_blank")}>
                     <ConfigIcon size={20} fill={"#525252"} />
                 </Navlink>
-            </div>
+            </footer>
         </>
     )
 }

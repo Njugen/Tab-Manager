@@ -27,7 +27,7 @@ const SearchBarFolderList = (props: iSearchBarFolderListProps): JSX.Element => {
             />
         });
 
-        return <>{list}</>
+        return <ul>{list}</ul>
     }
     
     return (

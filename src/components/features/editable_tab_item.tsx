@@ -62,7 +62,7 @@ const EditableTabItem = (props: iEditableTabItem): JSX.Element => {
     }
 
     return (
-        <div className="my-2">
+        <li className="my-2">
             <input 
                 data-testid="editable-tab"
                 autoFocus 
@@ -74,7 +74,7 @@ const EditableTabItem = (props: iEditableTabItem): JSX.Element => {
                 className={`${predef.textfield_full} h-[46px] px-3 w-full text-lg text-tbfColor-darkergrey rounded-lg border border-tbfColor-middlegrey4`} 
             />
             {errorMessage && <span data-testid="field-error" className="text-semibold text-red-500 text-sm">{errorMessage}</span>} 
-        </div>
+        </li>
     ); 
 }
 

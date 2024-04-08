@@ -183,19 +183,22 @@ const HistoryTabGroupsSection = forwardRef(function HistoryTabGroupsSection(prop
 
                                             return (
                                                 <Group key={`group-${i}`} desc={`${group[0]} minutes ago`}>
+                                                    <ul>
                                                         {
-                                                        group[1].map((tab: any) => {
-                                                            const collection = historySectionState.markedTabs;
-                                                            const isMarked = collection.find((target: chrome.history.HistoryItem) => parseInt(target.id) === parseInt(tab.id));
-                                                            const { id, title, url } = tab;
-                                                            return (
-                                                                
-                                                                <div className="my-3" key={`tab-${id}`}>
-                                                                    <TabItem id={parseInt(id)} label={title} url={url} onMark={handleMarkTab} marked={isMarked ? true : false} disableEdit={true} disableMark={false} />
-                                                                </div>
-                                                            );
-                                                        }
-                                                    )}
+                                                            group[1].map((tab: any) => {
+                                                                const collection = historySectionState.markedTabs;
+                                                                const isMarked = collection.find((target: chrome.history.HistoryItem) => parseInt(target.id) === parseInt(tab.id));
+                                                                const { id, title, url } = tab;
+                                                                return (
+                                                                    
+                                                                    <div className="my-3" key={`tab-${id}`}>
+                                                                        <TabItem id={parseInt(id)} label={title} url={url} onMark={handleMarkTab} marked={isMarked ? true : false} disableEdit={true} disableMark={false} />
+                                                                    </div>
+                                                                );
+                                                            }
+                                                        )}
+                                                    </ul>
+
                                                 </Group>
                                                 
                                             );

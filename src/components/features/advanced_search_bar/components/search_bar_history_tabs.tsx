@@ -23,7 +23,7 @@ const SearchBarHistoryTabs = (props: iSearchBarHistoryTabsProps): JSX.Element =>
             />
         });
 
-        return <>{list}</>
+        return <ul>{list}</ul>
     }
 
     return (

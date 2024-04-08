@@ -119,25 +119,39 @@ function SearchResultsContainer(props:any): JSX.Element {
         <>
             <div className="bg-white absolute top-20 z-[200] px-4 w-full">
                 <div id="popup-header" className="pb-5 border-tbfColor-lgrey w-full flex justify-between">
-                    <h1 data-testid="manage-folder-title" className="text-3xl text-tbfColor-darkpurple font-light inline-block">
-                        Search Results
-                    </h1>
+                    <header>
+                        <h1 data-testid="manage-folder-title" className="text-3xl text-tbfColor-darkpurple font-light inline-block">
+                            Search Results
+                        </h1>
+                    </header>
                     <GenericButton onClick={handleClose}>
                         <CloseIcon size={34} fill="rgba(0,0,0,0.2)" />
                     </GenericButton>
                 </div>
-                <div className="mt-4">
+                <section className="mt-4">
                     <h3 className="uppercase font-bold text-md mb-4 text-tbfColor-darkergrey">Folders</h3>
-                    {renderFolders()}
-                </div>
-                <div className="mt-4">
+                    <ul>
+                        {
+                            renderFolders()
+                        }
+                    </ul>
+                </section>
+                <section className="mt-4">
                     <h3 className="uppercase font-bold text-md mb-4 text-tbfColor-darkergrey">Currently opened</h3>
-                    {renderSessionTabs()}
-                </div>
-                <div className="mt-4">
+                    <ul>
+                        {
+                            renderSessionTabs()
+                        }
+                    </ul>
+                </section>
+                <section className="mt-4">
                     <h3 className="uppercase font-bold text-md mb-4 text-tbfColor-darkergrey">History</h3>
-                    {renderHistoryTabs()}
-                </div>
+                    <ul>
+                        {
+                            renderHistoryTabs()
+                        }
+                    </ul>
+                </section>
             </div>
         </>
     )

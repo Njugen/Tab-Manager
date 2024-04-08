@@ -95,25 +95,25 @@ const OptionsPage = (props: iOptionsPage): JSX.Element => {
           <CollapseIcon size={32} fill="#fff" />  
       </CircleButton>
       <div className="flex h-full w-full relative bg-gray-50">
-        <div id="sidebar" className={`drop-shadow-md h-[calc(100vh)] transition-all sticky top-0 self-start ${sidebarExpanded === true ? `w-[220px]` : `w-[70px]`} items-end flex flex-col justify-between border-tbfColor-middlegrey bg-white`}>
-            <div className="w-full px-2 overflow-hidden">
+        <aside id="sidebar" className={`drop-shadow-md h-[calc(100vh)] transition-all sticky top-0 self-start ${sidebarExpanded === true ? `w-[220px]` : `w-[70px]`} items-end flex flex-col justify-between border-tbfColor-middlegrey bg-white`}>
+            <nav className="w-full px-2 overflow-hidden">
               {
                 sidebarExpanded === true ? 
                 <ExpandedSidebarNav active={activeNavLink} onSetActive={setActiveNavLink} /> 
                 : <CollapsedSidebarNav active={activeNavLink} onSetActive={setActiveNavLink} />
               }
-            </div>
+            </nav>
             <button className={`flex justify-center bottom-0 right-0 float-right h-6 ${sidebarExpanded === true ? "w-full" : "w-full"} bg-tbfColor-middlegrey2 hover:opacity-70 transition-all ease-in`} onClick={handleSidebarExpandButton}>
               {sidebarExpanded === true ? <LeftIcon size={20} fill="#828282" /> : <RightIcon size={20} fill="#828282" />}
             </button>  
-        </div>
+        </aside>
     
         
         <div ref={rootRef} id="body" className="container px-16">
           <AdvancedSearchBar />
-          <div className="mb-12 mt-16 pb-[50px]">
+          <main className="mb-12 mt-16 pb-[50px]">
             <PageView view={activeNavLink} />
-          </div>
+          </main>
         </div>
       </div>
     </>

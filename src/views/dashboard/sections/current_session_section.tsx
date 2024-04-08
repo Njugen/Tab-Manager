@@ -119,11 +119,11 @@ const CurrentSessionSection = (props: any): JSX.Element => {
         });
         
         if (existingWindowsElements?.length > 0){
-            return <>{existingWindowsElements}</>;
+            return <ul>{existingWindowsElements}</ul>;
         } else {
             return (
                 <div className={"flex justify-center items-center"}>
-                    <p> Your browing history is empty.</p>
+                    <p>Your browing history is empty.</p>
                 </div>
             );
         }

@@ -17,9 +17,9 @@ const PanelView = (props: iPanelView): JSX.Element => {
     }
 
     return(
-        <div className={`overflow-y-auto px-2 pb-24 pt-2 ${styles.scroll_style} bg-white min-h-[1000px]`}> 
+        <main className={`overflow-y-auto px-2 pb-24 pt-2 ${styles.scroll_style} bg-white min-h-[1000px]`}> 
             {component}
-        </div>
+        </main>
     );
 }
 

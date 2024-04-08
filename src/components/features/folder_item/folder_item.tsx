@@ -18,7 +18,7 @@ import { iFolderActionBarStates } from "../../../interfaces/folder_action_bar";
 const FolderItem = (props: iFolderItem): JSX.Element => {
     const contentsRef = useRef<HTMLDivElement>(null);
     const headerRef = useRef<HTMLDivElement>(null);
-    const folderRef = useRef<HTMLDivElement>(null);
+    const folderRef = useRef<HTMLLIElement>(null);
     const [expanded, setExpanded] = useState<boolean>(props.type === "expanded" ? true : false);
     const [showLaunchOptions, setShowLaunchOptions] = useState<boolean>(false);
     const [slideDown, setSlideDown] = useState<boolean>(false);
@@ -194,7 +194,7 @@ const FolderItem = (props: iFolderItem): JSX.Element => {
 
     return (
         <>
-            <div 
+            <li 
                 ref={folderRef} 
                 data-testid={"folder-item"} 
                 className={`shadow-[0_0px_3px_1px_rgba(0,0,0,0.125)] ${viewMode === "list" ? "my-4 duration-75" : "my-4 duration-75"} sticky transition-all ease-in w-full rounded-md`}
@@ -226,7 +226,7 @@ const FolderItem = (props: iFolderItem): JSX.Element => {
                     )}
                 </div>
                 
-            </div>
+            </li>
         </>
     );
 }

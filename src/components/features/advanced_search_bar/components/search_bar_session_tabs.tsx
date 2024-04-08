@@ -26,7 +26,7 @@ const SearchBarSessionTabs = (props: iSearchBarSessionTabsProps): JSX.Element =>
             )
         });
 
-        return <>{list}</>
+        return <ul>{list}</ul>
     } 
     
     return (
