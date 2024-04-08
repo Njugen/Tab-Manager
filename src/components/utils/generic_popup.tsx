@@ -24,17 +24,17 @@ const GenericPopup = forwardRef(function GenericPopup(props: iGenericPopup, ref:
     }
 
     return (
-        <div role="dialog" ref={ref} className={`${styles.scroll_style} overflow-y-scroll ${outerStyleDirection(type, show)}`}>
+        <section role="dialog" ref={ref} className={`${styles.scroll_style} overflow-y-scroll ${outerStyleDirection(type, show)}`}>
             <div className="relative top-0 md:bottom-12 h-screen w-[992px]">
                 <div className={innerStyleDirection(type, show)}>
-                    <div id="generic-popup-header" className={`pl-8 pr-5 pb-5 pt-6 border-b border-tbfColor-lgrey w-full flex items-center justify-between`}>
+                    <header id="generic-popup-header" className={`pl-8 pr-5 pb-5 pt-6 border-b border-tbfColor-lgrey w-full flex items-center justify-between`}>
                         <h1 data-testid="generic-popup-title" className="text-3xl text-tbfColor-darkpurple font-light inline-block">
                             {title}
                         </h1>
                         <GenericButton onClick={handleClose}>
                             <CloseIcon size={34} fill="rgba(0,0,0,0.2)" />
                         </GenericButton>
-                    </div>
+                    </header>
                     <div id="generic-popup-body" className="px-8 pt-6">
                         {children}
                     </div>
@@ -48,7 +48,7 @@ const GenericPopup = forwardRef(function GenericPopup(props: iGenericPopup, ref:
                     }
                 </div>
             </div>
-        </div>
+        </section>
     )
 })
 
