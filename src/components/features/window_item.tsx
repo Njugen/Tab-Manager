@@ -56,25 +56,17 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
 
     // Mark/unmark specific tab in this window
     const handleMarkTab = (tabId: number, checked: boolean): void => {
-        console.log("TAB ID", tabId);
-        console.log("EXISTING", folder_state?.windows);
         if(checked === true){
             const findInState = markedTabs.findIndex((target) => target === tabId);
             if(findInState < 0){  
-                console.log("SET", tabId);
                 setMarkedTabs([...markedTabs, tabId]);
             }
         } else {
-            console.log("EH");
             const filteredMarks = markedTabs.filter((id) => id !== tabId);
             setMarkedTabs([...filteredMarks]);
         }
        
     }
-
-    useEffect(() => {
-        console.log("MARKED", markedTabs);
-    }, [markedTabs])
 
     // Delete marked tabs
     const handleDeleteTabs = (): void => {
@@ -97,7 +89,7 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
             });
            
             folder_state.windows[targetWindowIndex].tabs = [...newTabCollection];
-            console.log("TAB", folder_state.windows[targetWindowIndex].tabs);
+
             setMarkedTabs([]);
             dispatch(updateInEditFolder("windows", folder_state.windows));
             dispatch(setCurrentlyEditingTab(false));
