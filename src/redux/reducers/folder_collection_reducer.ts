@@ -20,7 +20,6 @@ const folderCollectionReducer = (state = folderCollectionState, action: any): Ar
         return data ? data : []
         
     } else if(type === READ_ALL_FOLDERS_FROM_BROWSER) {
-        //console.log("READIMG", data);
        return data ? data : []
     } else if(type === READ_FOLDER){
         return state.filter((target) => target.id === data);

@@ -79,7 +79,6 @@ const FoldersSection = (props: any): JSX.Element => {
         })
 
         getFromStorage("local", "folder_viewmode", (data) => {  
-            console.log("DDDD", data);
             dispatch(changeFoldersViewMode(data.folder_viewmode));
         })
     }, []);

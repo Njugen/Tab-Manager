@@ -29,7 +29,6 @@ const WindowList = (props: IWindowList): JSX.Element => {
     }
     
     const existingWindowsElements: Array<JSX.Element> = useMemo(() => existingWindows?.map((item: iWindowItem) => {
-        console.log("EX", item);
         return (
             <WindowItem 
                 tabsCol={2} 
