@@ -138,7 +138,6 @@ const CurrentSessionSection = (props: any): JSX.Element => {
                     disableEditTab={true}
                     id={item.id} 
                     tabs={item.tabs} 
-                    initExpand={true} 
                 />
             );
         });

@@ -23,9 +23,9 @@ const EditableTabItem = (props: iEditableTabItem): JSX.Element => {
     
     // Automatically focus on the textfield once this component has been invoked.
     useEffect(() => {
-        setTimeout(() => {
+      
             if(fieldRef.current) fieldRef.current.focus();
-        }, 200);
+       
     }, []);
     
     // Save the changes to redux once verified.
@@ -64,7 +64,6 @@ const EditableTabItem = (props: iEditableTabItem): JSX.Element => {
     return (
         <li className="mt-1 list-none">
             <input 
-                data-testid="editable-tab"
                 autoFocus 
                 ref={fieldRef} 
                 type="text" 

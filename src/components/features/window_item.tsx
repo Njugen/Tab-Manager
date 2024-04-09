@@ -187,7 +187,6 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
                 </div>
             </div>
             <div 
-                data-testid={`tab-list`} 
                 data-visibility={expanded ? "visible" : "hidden"} 
                 className={`tabs-list mt-3 overflow-hidden ${expanded === true ? "max-h-[2000px] ease-out visible" : "max-h-0 ease-in invisible"} duration-200 transition-all`}
             >

@@ -42,7 +42,6 @@ const WindowList = (props: IWindowList): JSX.Element => {
                 key={item.id} 
                 id={item.id} 
                 tabs={item.tabs} 
-                initExpand={item.initExpand} 
             />
         )
     }), [folder]);

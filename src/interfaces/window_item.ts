@@ -5,7 +5,6 @@ interface iWindowItem {
     tabs: Array<iTabItem>,
     onDelete?: (id: number) => void, 
     tabsCol?: number,
-    initExpand?: boolean,
     disableMark?: boolean,
     disableEdit?: boolean,
     disableMarkTab?: boolean,

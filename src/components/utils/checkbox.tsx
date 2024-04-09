@@ -33,7 +33,8 @@ const Checkbox = (props: iCheckbox): JSX.Element => {
     return (
         <div className={`flex items-center ${label ? "mx-5" : "ml-2 mr-0"}`}>
             {label && <span className={`inline-block mr-2 text-sm text-black`}>{label}</span>}
-            <button 
+            <button
+                data-testid={"checkbox"} 
                 onClick={handleChecked} 
                 className={`relative border border-tbfColor-middlegrey3 bg-white h-[1.1rem] w-[1.1rem]`}
             >

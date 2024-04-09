@@ -225,7 +225,6 @@ const CurrentSessionView = (props:any): JSX.Element => {
                     disableDeleteTab={false} 
                     id={item.id} 
                     tabs={item.tabs} 
-                    initExpand={true} 
                 />
             );
         })

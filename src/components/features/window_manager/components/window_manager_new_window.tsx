@@ -28,7 +28,6 @@ const NewWindow = (props: INewWindow): JSX.Element => {
                 disableEdit={false} 
                 id={inCreationId} 
                 tabs={[]} 
-                initExpand={true} 
             />
         );
     } else {
