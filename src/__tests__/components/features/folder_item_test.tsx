@@ -10,7 +10,6 @@ import { iFolderItem } from "../../../interfaces/folder_item";
 import FolderItem from "../../../components/features/folder_item/folder_item";
 import { act } from "react-dom/test-utils";
 
-
 const createMockWindows = (mocks: number): Array<iWindowItem> => {
     const result: Array<iWindowItem> = [];
     
@@ -35,6 +34,8 @@ const createMockWindows = (mocks: number): Array<iWindowItem> => {
 
     return result;
 }
+
+
 
 describe("Test <FolderItem>", () => {
     describe("When folder is initially expanded", () => {

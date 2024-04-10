@@ -8,7 +8,7 @@ const mockTestId = randomNumber();
 const mockChild = <p data-testid={mockTestId}></p>
 
 describe("Test <CircleButton />", () => {
-    test("Clicking active button does work", () => {
+    test("There is a child component in the button", () => {
         render(
             <CircleButton onClick={mockCallback} disabled={false}>
                 {mockChild}
@@ -19,6 +19,16 @@ describe("Test <CircleButton />", () => {
         const child = within(button).getByTestId(mockTestId);
 
         expect(child).toBeVisible();
+    })
+
+    test("Clicking active button does work", () => {
+        render(
+            <CircleButton onClick={mockCallback} disabled={false}>
+                {mockChild}
+            </CircleButton>
+        );
+
+        const button = screen.getByRole("button");
 
         fireEvent.click(button);
         expect(mockCallback).toHaveBeenCalled();

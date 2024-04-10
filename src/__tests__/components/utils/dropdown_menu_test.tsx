@@ -30,7 +30,6 @@ describe("Test <DropdownMenu>", () => {
         
         mockOptions.forEach((option) => {
             const item = within(menu).getByText(option.label, { selector: "button" });
-            expect(item).toBeInTheDocument();
             fireEvent.click(item);
 
             expect(mockCallback).toHaveBeenCalledWith(option.id);
@@ -44,7 +43,6 @@ describe("Test <DropdownMenu>", () => {
         
         mockOptions.forEach((option) => {
             const item = within(menu).getByText(option.label, { selector: "button" });
-            expect(item).toBeInTheDocument();
             fireEvent.click(item);
 
             expect(mockCallback).toHaveBeenCalledWith(option.id);
