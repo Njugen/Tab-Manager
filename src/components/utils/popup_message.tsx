@@ -40,13 +40,13 @@ const PopupMessage = (props: iPopupMessage): JSX.Element => {
               
                 <button 
                     onClick={() => handleButtonClick("secondary")} 
-                    className="hover:opacity-60 transition-all ease-in border-2 my-2 border-white bg-tbfColor-darkpurple text-white font-semibold px-3 py-2 mx-2 rounded-md"
+                    className="hover:opacity-60 transition-all ease-in border-2 my-2 border-white bg-tbfColor-darkpurple text-white font-semibold px-3 py-2 mx-2 rounded-3xl"
                 >
                     { secondaryButton.text }
                 </button>
                 <button 
                     onClick={() => handleButtonClick("primary")} 
-                    className="hover:opacity-60 transition-all ease-in border-2 my-2 border-white bg-white text-tbfColor-darkpurple font-semibold px-3 py-2 mx-2 rounded-md"
+                    className="hover:opacity-60 transition-all ease-in border-2 my-2 border-white bg-white text-tbfColor-darkpurple font-semibold px-3 py-2 mx-2 rounded-3xl"
                 >
                     { primaryButton.text }
                 </button>

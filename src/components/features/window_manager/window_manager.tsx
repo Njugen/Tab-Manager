@@ -32,7 +32,7 @@ const WindowManager = (props: iWindowManager): JSX.Element => {
     }
 
     return (
-        <div data-testid="window-manager" className="py-6 min-h-[200px] flex flex-col items-center justify-center">
+        <div className="py-6 min-h-[200px] flex flex-col items-center justify-center">
             {folderManagerState && <WindowList folder={folderManagerState} createWindow={createWindow} inCreationId={inCreationId} />}
             { 
                 <div className="flex flex-row mt-10">

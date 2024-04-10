@@ -41,11 +41,15 @@ describe("Test <EditableTabItem>", () => {
         textfield = screen.getByRole("textbox");
         expect(textfield).toHaveValue("https://");
 
+        const errfield = screen.getByTestId("field-error");
+        expect(errfield).toBeInTheDocument();
+
         // Change to new value
         fireEvent.change(textfield);
         fireEvent.blur(textfield, { target: { value:  mockNewValue} });
         expect(textfield).toHaveValue(mockNewValue);
         expect(mockFn).toHaveBeenCalled();
+        expect(errfield).not.toBeInTheDocument();
     });
 
     test("Works correctly with tab id and preset value", async () => {
@@ -70,6 +74,8 @@ describe("Test <EditableTabItem>", () => {
         // Value remains the same
         textfield = screen.getByRole("textbox");
         expect(textfield).toHaveValue(mockPreset);
+        const errfield = screen.queryByTestId("field-error");
+        expect(errfield).not.toBeInTheDocument();
 
         // Change to new value
         fireEvent.change(textfield);
