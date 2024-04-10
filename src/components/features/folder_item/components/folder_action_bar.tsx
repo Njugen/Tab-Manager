@@ -85,7 +85,7 @@ const FolderActionBar = (props: iFolderActionBarProps): JSX.Element => {
         <div className="absolute flex items-center right-4">
             { 
                 showLaunchOptions === true && 
-                <div className={"w-[200px] absolute mt-12 right-10"}>
+                <div data-testid={"open-folder-options"} className={"w-[200px] absolute mt-12 right-10"}>
                     <DropdownMenu 
                         selected={null} 
                         tag={"folder-control-dropdown"} 

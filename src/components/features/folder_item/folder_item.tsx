@@ -15,6 +15,8 @@ import { iFolderActionBarStates } from "../../../interfaces/folder_action_bar";
 /*
     Folder section containing description, windows and tabs, as well as various folder options
 */
+
+
 const FolderItem = (props: iFolderItem): JSX.Element => {
     const contentsRef = useRef<HTMLDivElement>(null);
     const headerRef = useRef<HTMLDivElement>(null);
@@ -92,16 +94,10 @@ const FolderItem = (props: iFolderItem): JSX.Element => {
     }
 
     // Decide whether or not the folder shows its contents or not.
-    const toggleExpand = (init?: string): void => {
+    const toggleExpand = (): void => {
         if(expanded === false){
-            if(init === "expanded" || !init){
-                updateFolder("expanded");
-                setExpanded(true);
-            } else {
-                //col();
-                updateFolder("collapsed");
-                setExpanded(false);
-            }
+            updateFolder("expanded");
+            setExpanded(true);
         } else {
             //col()
             updateFolder("collapsed");
