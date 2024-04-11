@@ -3,16 +3,22 @@ import '@testing-library/jest-dom'
 import CircleButton from '../../../components/utils/circle_button';
 import randomNumber from "../../../tools/random_number";
 import FormField from "../../../components/utils/form_field";
+import { iFormField } from "../../../interfaces/form_field";
 
 const mockLabel = randomNumber().toString();
 const mockDesc = randomNumber().toString();
 const mockTestId = randomNumber().toString();
 const mockChild = <p data-testid={mockTestId}></p>
 
+const props: iFormField = {
+    label: mockLabel,
+    description: mockDesc
+}
+
 describe("Test <FormField>", () => {
-    test("Field has label as heading", () => {
+    test("Field has 'label' prop as heading", () => {
         render(
-            <FormField label={mockLabel} description={mockDesc}>
+            <FormField {...props}>
                 {mockChild}
             </FormField>
         )
@@ -21,9 +27,9 @@ describe("Test <FormField>", () => {
         expect(label).toHaveTextContent(mockLabel);
     })
 
-    test("Field displays description props", () => {
+    test("Field displays 'description' prop", () => {
         render(
-            <FormField label={mockLabel} description={mockDesc}>
+            <FormField {...props}>
                 {mockChild}
             </FormField>
         )
@@ -34,7 +40,7 @@ describe("Test <FormField>", () => {
 
     test("Field has child component", () => {
         render(
-            <FormField label={mockLabel} description={mockDesc}>
+            <FormField {...props}>
                 {mockChild}
             </FormField>
         )
@@ -43,9 +49,9 @@ describe("Test <FormField>", () => {
         expect(child).toBeInTheDocument();
     })
 
-    test("Field indicates error", () => {
+    test("Field indicates error when 'error' prop is set", () => {
         render(
-            <FormField label={mockLabel} description={mockDesc} error={true}>
+            <FormField {...props} error={true}>
                 {mockChild}
             </FormField>
         )
@@ -54,7 +60,7 @@ describe("Test <FormField>", () => {
         expect(label).toBeInTheDocument();
     })
 
-    test("Field does not", () => {
+    test("Field does not indicate error when 'error' prop is not set", () => {
         render(
             <FormField label={mockLabel} description={mockDesc}>
                 {mockChild}

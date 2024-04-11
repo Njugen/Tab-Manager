@@ -2,6 +2,7 @@ import { render, screen, within, fireEvent } from "@testing-library/react";
 import '@testing-library/jest-dom'
 import randomNumber from "../../../tools/random_number";
 import SectionContainer from "../../../components/utils/section_container";
+import iSectionContainer from "../../../interfaces/section_container";
 
 const mockExpandFn = jest.fn((val: boolean) => val);
 const mockId = randomNumber().toString();
@@ -13,9 +14,17 @@ window.scrollTo = jest.fn((e: any) => e)
 
 describe("Test <SectionContainer>", () => {
     describe("When rendering with options area", () => {
+        const props: iSectionContainer = {
+            id: mockId,
+            title: mockTitle,
+            options: () => mockOption,
+            onExpand: mockExpandFn,
+            children: mockChildren
+        }
+        
         test("Full screen is turned off", () => {
             render(
-                <SectionContainer id={mockId} title={mockTitle} options={() => mockOption} onExpand={mockExpandFn}>
+                <SectionContainer {...props}>
                     {mockChildren}
                 </SectionContainer>
             )
@@ -25,9 +34,9 @@ describe("Test <SectionContainer>", () => {
             expect(fullscreen).not.toBeInTheDocument();
         })
 
-        test("Title props is displayed in the heading", () => {
+        test("'title' prop is displayed in the heading", () => {
             render(
-                <SectionContainer id={mockId} title={mockTitle} options={() => mockOption} onExpand={mockExpandFn}>
+                <SectionContainer {...props}>
                     {mockChildren}
                 </SectionContainer>
             )
@@ -37,9 +46,9 @@ describe("Test <SectionContainer>", () => {
             expect(heading).toHaveTextContent(mockTitle);
         })
 
-        test("Option area exists", () => {
+        test("Options are provided by 'option' prop", () => {
             render(
-                <SectionContainer id={mockId} title={mockTitle} options={() => mockOption} onExpand={mockExpandFn}>
+                <SectionContainer {...props}>
                     {mockChildren}
                 </SectionContainer>
             )
@@ -51,7 +60,7 @@ describe("Test <SectionContainer>", () => {
         
         test("There are child components in options area", () => {
             render(
-                <SectionContainer id={mockId} title={mockTitle} options={() => mockOption} onExpand={mockExpandFn}>
+                <SectionContainer {...props}>
                     {mockChildren}
                 </SectionContainer>
             )
@@ -62,9 +71,9 @@ describe("Test <SectionContainer>", () => {
             expect(children).toBeInTheDocument();
         })
 
-        test("Clicking the expand button triggers expand callback", () => {
+        test("Clicking the expand button triggers 'onExpand' callback", () => {
             render(
-                <SectionContainer id={mockId} title={mockTitle} options={() => mockOption} onExpand={mockExpandFn}>
+                <SectionContainer {...props}>
                     {mockChildren}
                 </SectionContainer>
             )
@@ -79,7 +88,7 @@ describe("Test <SectionContainer>", () => {
 
         test("Clicking the expand button hides ordinary section area", () => {
             render(
-                <SectionContainer id={mockId} title={mockTitle} options={() => mockOption} onExpand={mockExpandFn}>
+                <SectionContainer {...props}>
                     {mockChildren}
                 </SectionContainer>
             )
@@ -95,7 +104,7 @@ describe("Test <SectionContainer>", () => {
 
         test("Clicking the expand button triggers the component's fullscreen layer", () => {
             render(
-                <SectionContainer id={mockId} title={mockTitle} options={() => mockOption} onExpand={mockExpandFn}>
+                <SectionContainer {...props}>
                     {mockChildren}
                 </SectionContainer>
             )
@@ -112,7 +121,7 @@ describe("Test <SectionContainer>", () => {
 
         test("Full screen layer has heading", () => {
             render(
-                <SectionContainer id={mockId} title={mockTitle} options={() => mockOption} onExpand={mockExpandFn} initFullscreen={true}>
+                <SectionContainer {...props} initFullscreen={true}>
                     {mockChildren}
                 </SectionContainer>
             )
@@ -124,7 +133,7 @@ describe("Test <SectionContainer>", () => {
 
         test("Fullscreen has options area", () => {
             render(
-                <SectionContainer id={mockId} title={mockTitle} options={() => mockOption} onExpand={mockExpandFn} initFullscreen={true}>
+                <SectionContainer {...props} initFullscreen={true}>
                     {mockChildren}
                 </SectionContainer>
             )
@@ -136,7 +145,7 @@ describe("Test <SectionContainer>", () => {
 
         test("Fullscreen has child components", () => {
             render(
-                <SectionContainer id={mockId} title={mockTitle} options={() => mockOption} onExpand={mockExpandFn} initFullscreen={true}>
+                <SectionContainer {...props} initFullscreen={true}>
                     {mockChildren}
                 </SectionContainer>
             )
@@ -148,7 +157,7 @@ describe("Test <SectionContainer>", () => {
         
         test("Section returns to normal once expand button is clicked", () => {
             render(
-                <SectionContainer id={mockId} title={mockTitle} options={() => mockOption} onExpand={mockExpandFn} initFullscreen={true}>
+                <SectionContainer {...props} initFullscreen={true}>
                     {mockChildren}
                 </SectionContainer>
             )

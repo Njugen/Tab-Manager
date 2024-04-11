@@ -51,4 +51,17 @@ describe("Test <Switcher>", () => {
         expect(mockFn).toHaveBeenCalledWith(false)
     });
 
+    test("Toggline off", () => {
+        render(
+            <Switcher label={mockLabel} value={true} onCallback={mockFn} />
+        )
+        
+        const label = screen.getByText(mockLabel);
+        expect(label).toBeInTheDocument();
+
+        const button = screen.getByRole("button");
+        fireEvent.click(button);
+        expect(mockFn).toHaveBeenCalledWith(false)
+    });
+
 });

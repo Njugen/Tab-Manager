@@ -21,7 +21,7 @@ describe("Test <CircleButton />", () => {
         expect(child).toBeVisible();
     })
 
-    test("Clicking active button does work", () => {
+    test("Clicking enabled button triggers 'onClick' callback", () => {
         render(
             <CircleButton onClick={mockCallback} disabled={false}>
                 {mockChild}
@@ -34,7 +34,7 @@ describe("Test <CircleButton />", () => {
         expect(mockCallback).toHaveBeenCalled();
     })
 
-    test("Clicking disabled button does nothing", () => {
+    test("Clicking disabled button does not trigger 'onClick' callback", () => {
         render(
             <CircleButton onClick={mockCallback} disabled={true}>
                 {mockChild}

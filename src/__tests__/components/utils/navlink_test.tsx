@@ -5,6 +5,7 @@ import randomNumber from "../../../tools/random_number";
 import FormField from "../../../components/utils/form_field";
 import Group from "../../../components/utils/group";
 import Navlink from "../../../components/utils/navlink";
+import { iNavlink } from "../../../interfaces/nav_link";
 
  
 const mockChild = <img src="/favicon.ico" alt="test" data-testid="mock-child" />
@@ -12,10 +13,17 @@ const mockUrl = "http://google.com";
 const mockFn = jest.fn();
 const mockLabel = randomNumber().toString();
 
+const props: iNavlink = {
+    url: mockUrl,
+    label: mockLabel,
+    onClick: mockFn,
+    children: mockChild
+}
+
 describe("Test <Navlink>", () => {
-    test("Link shows label", () => {
+    test("Link has 'label' prop as text", () => {
         render(
-            <Navlink url={mockUrl} label={mockLabel} onClick={mockFn}>
+            <Navlink {...props}>
                 {mockChild}
             </Navlink>
         )
@@ -24,9 +32,9 @@ describe("Test <Navlink>", () => {
         expect(link).toHaveTextContent(mockLabel);
     });
 
-    test("Link has url in href attribue", () => {
+    test("Link has 'url' prop as href attribute", () => {
         render(
-            <Navlink url={mockUrl} label={mockLabel} onClick={mockFn}>
+            <Navlink {...props}>
                 {mockChild}
             </Navlink>
         )
@@ -37,7 +45,7 @@ describe("Test <Navlink>", () => {
 
     test("Link has child component", () => {
         render(
-            <Navlink url={mockUrl} label={mockLabel} onClick={mockFn}>
+            <Navlink {...props}>
                 {mockChild}
             </Navlink>
         )
@@ -47,9 +55,9 @@ describe("Test <Navlink>", () => {
         expect(child).toBeInTheDocument()
     });
 
-    test("Clicking the link triggers callback", () => {
+    test("Clicking the link triggers 'onClick' callback", () => {
         render(
-            <Navlink url={mockUrl} label={mockLabel} onClick={mockFn}>
+            <Navlink {...props}>
                 {mockChild}
             </Navlink>
         )

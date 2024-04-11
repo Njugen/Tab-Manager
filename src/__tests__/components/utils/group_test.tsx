@@ -9,7 +9,7 @@ const mockDesc = randomNumber().toString();
 const mockChild = <img src="/favicon.ico" alt="test" data-testid="mock-child" />
 
 describe("Test <Group>", () => {
-    test("Description is visible", () => {
+    test("'desc' prop is visible", () => {
         render(
             <Group desc={mockDesc}>
                 {mockChild}

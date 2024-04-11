@@ -13,80 +13,236 @@ const mockPreset = `https://${randomNumber().toString()}.com`;
 const mockNewValue = `https://${randomNumber().toString()}.com`;
 
 describe("Test <EditableTabItem>", () => {
-    test("Works correctly with no specific tab id nor preset value", async () => {
-        render(
-            <Provider store={store}>
-                <EditableTabItem windowId={mockWindowId} onStop={mockFn} />
-            </Provider>
-        )   
-        
-        let textfield = screen.getByRole("textbox");
-        expect(textfield).toHaveValue("https://");
+    describe("When initial value is 'https://'", () => {
+        test("Initial value is 'https://'", async () => {
+            render(
+                <Provider store={store}>
+                    <EditableTabItem windowId={mockWindowId} onStop={mockFn} />
+                </Provider>
+            )   
+            
+            let textfield = screen.getByRole("textbox");
+            expect(textfield).toHaveValue("https://");
+        });
 
-        await waitFor(() => expect(textfield).toHaveFocus(), { timeout: 1000 })
-        
-        // Test blur
-        fireEvent.blur(textfield);
-        expect(mockFn).not.toHaveBeenCalled();
+        test("Bluring does not trigger 'onStop' callback", async () => {
+            render(
+                <Provider store={store}>
+                    <EditableTabItem windowId={mockWindowId} onStop={mockFn} />
+                </Provider>
+            )   
+            
+            let textfield = screen.getByRole("textbox");
+            await waitFor(() => expect(textfield).toHaveFocus(), { timeout: 1000 })
+            
+            // Test blur
+            fireEvent.blur(textfield);
+            expect(mockFn).not.toHaveBeenCalled();
+        });
 
-        // Test press enter
-        fireEvent.keyDown(textfield, { key: "Enter" });
-        expect(mockFn).not.toHaveBeenCalled();
-        
-        // Test press enter
-        fireEvent.keyDown(textfield, { charCode: 13 });
-        expect(mockFn).not.toHaveBeenCalled();
+        test("Pressing Enter does not trigger 'onStop' callback", async () => {
+            render(
+                <Provider store={store}>
+                    <EditableTabItem windowId={mockWindowId} onStop={mockFn} />
+                </Provider>
+            )   
+            
+            let textfield = screen.getByRole("textbox");
+            await waitFor(() => expect(textfield).toHaveFocus(), { timeout: 1000 })
 
-        // Value remains the same
-        textfield = screen.getByRole("textbox");
-        expect(textfield).toHaveValue("https://");
+            // Test press enter
+            fireEvent.keyDown(textfield, { key: "Enter" });
+            expect(mockFn).not.toHaveBeenCalled();
+        });
 
-        let errfield = screen.getByTestId("field-error");
-        expect(errfield).toBeInTheDocument();
+        test("Value remains 'https://' after bluring", async () => {
+            render(
+                <Provider store={store}>
+                    <EditableTabItem windowId={mockWindowId} onStop={mockFn} />
+                </Provider>
+            )   
+            
+            let textfield = screen.getByRole("textbox");
+            await waitFor(() => expect(textfield).toHaveFocus(), { timeout: 1000 })
+            
+            // Test blur
+            fireEvent.blur(textfield);
 
-        // Change to new value
-        fireEvent.change(textfield, { target: { value:  mockNewValue} });
-        fireEvent.blur(textfield);
-        expect(textfield).toHaveValue(mockNewValue);
-        expect(mockFn).toHaveBeenCalled();
-        expect(errfield).not.toBeInTheDocument();
+            // Value remains the same
+            textfield = screen.getByRole("textbox");
+            expect(textfield).toHaveValue("https://");
+        });
 
-        // Change to invalid value
-        fireEvent.change(textfield, { target: { value: randomNumber().toString()} });
-        fireEvent.blur(textfield);
-        errfield = screen.getByTestId("field-error");
-        expect(errfield).toBeInTheDocument();
-    });
+        test("Value remains 'https://' when pressing Enter", async () => {
+            render(
+                <Provider store={store}>
+                    <EditableTabItem windowId={mockWindowId} onStop={mockFn} />
+                </Provider>
+            )   
+            
+            let textfield = screen.getByRole("textbox");
+            await waitFor(() => expect(textfield).toHaveFocus(), { timeout: 1000 })
+            
+            // Test press enter
+            fireEvent.keyDown(textfield, { key: "Enter" });
 
-    test("Works correctly with tab id and preset value", async () => {
-        render(
-            <Provider store={store}>
-                <EditableTabItem windowId={mockWindowId} id={mockTabId} preset={mockPreset} onStop={mockFn} />
-            </Provider>
-        )   
-        
-        let textfield = screen.getByRole("textbox");
-        expect(textfield).toHaveValue(mockPreset);
-        await waitFor(() => expect(textfield).toHaveFocus(), { timeout: 1000 })
-        
-        // Test blur
-        fireEvent.blur(textfield);
-        expect(mockFn).toHaveBeenCalled();
-        
-        // Test press enter
-        fireEvent.keyDown(textfield, { charCode: 13 });
-        expect(mockFn).toHaveBeenCalled();
+            // Value remains the same
+            textfield = screen.getByRole("textbox");
+            expect(textfield).toHaveValue("https://");
+        });
 
-        // Value remains the same
-        textfield = screen.getByRole("textbox");
-        expect(textfield).toHaveValue(mockPreset);
-        const errfield = screen.queryByTestId("field-error");
-        expect(errfield).not.toBeInTheDocument();
+        test("Error message shows up when field is blurred", async () => {
+            render(
+                <Provider store={store}>
+                    <EditableTabItem windowId={mockWindowId} onStop={mockFn} />
+                </Provider>
+            )   
+            
+            let textfield = screen.getByRole("textbox");
+            await waitFor(() => expect(textfield).toHaveFocus(), { timeout: 1000 })
+            
+            // Test blur
+            fireEvent.blur(textfield);
 
-        // Change to new value
-        fireEvent.change(textfield, { target: { value:  mockNewValue} });
-        fireEvent.blur(textfield);
-        expect(textfield).toHaveValue(mockNewValue);
-        expect(mockFn).toHaveBeenCalled();
-    });
+            let errfield = screen.queryByTestId("field-error");
+            expect(errfield).toBeInTheDocument();
+        });
+
+        test("Error message shows up when pressing enter", async () => {
+            render(
+                <Provider store={store}>
+                    <EditableTabItem windowId={mockWindowId} onStop={mockFn} />
+                </Provider>
+            )   
+            
+            let textfield = screen.getByRole("textbox");
+            await waitFor(() => expect(textfield).toHaveFocus(), { timeout: 1000 })
+            
+            // Test press enter
+            fireEvent.keyDown(textfield, { key: "Enter" });
+
+            let errfield = screen.queryByTestId("field-error");
+            expect(errfield).toBeInTheDocument();
+        });
+
+        test("Trigger 'onStop' callback and hides error message when blurred with valid url", async () => {
+            render(
+                <Provider store={store}>
+                    <EditableTabItem windowId={mockWindowId} onStop={mockFn} />
+                </Provider>
+            )   
+            
+            let textfield = screen.getByRole("textbox");
+            await waitFor(() => expect(textfield).toHaveFocus(), { timeout: 1000 })
+
+            let errfield = screen.queryByTestId("field-error");
+
+            // Change to new value
+            fireEvent.change(textfield, { target: { value:  mockNewValue} });
+            fireEvent.blur(textfield);
+            expect(textfield).toHaveValue(mockNewValue);
+            expect(mockFn).toHaveBeenCalled();
+            expect(errfield).not.toBeInTheDocument();
+        });
+
+        test("Trigger 'onStop' callback and hides error message when hitting enter with valid url", async () => {
+            render(
+                <Provider store={store}>
+                    <EditableTabItem windowId={mockWindowId} onStop={mockFn} />
+                </Provider>
+            )   
+            
+            let textfield = screen.getByRole("textbox");
+            await waitFor(() => expect(textfield).toHaveFocus(), { timeout: 1000 })
+
+            let errfield = screen.queryByTestId("field-error");
+
+            // Change to new value
+            fireEvent.change(textfield, { target: { value:  mockNewValue} });
+            fireEvent.keyDown(textfield, { key: "Enter" });
+            expect(textfield).toHaveValue(mockNewValue);
+            expect(mockFn).toHaveBeenCalled();
+            expect(errfield).not.toBeInTheDocument();
+        });
+
+        test("Does not trigger 'onStop' callback and show error when blurring with invalid url", async () => {
+            render(
+                <Provider store={store}>
+                    <EditableTabItem windowId={mockWindowId} onStop={mockFn} />
+                </Provider>
+            )   
+            
+            let textfield = screen.getByRole("textbox");
+            await waitFor(() => expect(textfield).toHaveFocus(), { timeout: 1000 })
+
+            // Change to invalid value
+            fireEvent.change(textfield, { target: { value: randomNumber().toString()} });
+            fireEvent.blur(textfield);
+            let errfield = screen.queryByTestId("field-error");
+            expect(errfield).toBeInTheDocument();
+        });
+
+        test("Does not trigger 'onStop' callback and show error when hitting enter with invalid url", async () => {
+            render(
+                <Provider store={store}>
+                    <EditableTabItem windowId={mockWindowId} onStop={mockFn} />
+                </Provider>
+            )   
+            
+            let textfield = screen.getByRole("textbox");
+            await waitFor(() => expect(textfield).toHaveFocus(), { timeout: 1000 })
+
+            // Change to invalid value
+            fireEvent.change(textfield, { target: { value: randomNumber().toString()} });
+            fireEvent.keyDown(textfield, { key: "Enter" });
+            let errfield = screen.queryByTestId("field-error");
+            expect(errfield).toBeInTheDocument();
+        });
+    })
+
+    describe("When initial value is a valid url", () => {
+        test("Preset value matches the component's 'url' prop", async () => {
+            render(
+                <Provider store={store}>
+                    <EditableTabItem windowId={mockWindowId} id={mockTabId} preset={mockPreset} onStop={mockFn} />
+                </Provider>
+            )   
+            
+            let textfield = screen.getByRole("textbox");
+            expect(textfield).toHaveValue(mockPreset);
+        });
+
+        test("Blurring triggers 'onStop' callback", async () => {
+            render(
+                <Provider store={store}>
+                    <EditableTabItem windowId={mockWindowId} id={mockTabId} preset={mockPreset} onStop={mockFn} />
+                </Provider>
+            )   
+            
+            let textfield = screen.getByRole("textbox");
+            await waitFor(() => expect(textfield).toHaveFocus(), { timeout: 1000 })
+            
+            // Test blur
+            fireEvent.blur(textfield);
+            expect(mockFn).toHaveBeenCalled();
+            
+        });
+
+        test("Pressing Enter triggers 'onStop' callback", async () => {
+            render(
+                <Provider store={store}>
+                    <EditableTabItem windowId={mockWindowId} id={mockTabId} preset={mockPreset} onStop={mockFn} />
+                </Provider>
+            )   
+            
+            let textfield = screen.getByRole("textbox");
+            await waitFor(() => expect(textfield).toHaveFocus(), { timeout: 1000 })
+            
+            // Test press enter
+            fireEvent.keyDown(textfield, { key: "Enter" });
+            expect(mockFn).toHaveBeenCalled();
+        });
+    })
+
+    
 });

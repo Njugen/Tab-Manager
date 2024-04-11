@@ -3,6 +3,7 @@ import '@testing-library/jest-dom'
 import randomNumber from "../../../tools/random_number";
 import DropdownMenu from "../../../components/utils/dropdown_menu/dropdown_menu";
 import { iFieldOption } from "../../../interfaces/dropdown";
+import iDropdownMenu from "../../../interfaces/dropdown_menu";
 
 const mockPreset: iFieldOption = {
     id: randomNumber(),
@@ -22,9 +23,16 @@ for(let i = 0; i < 5; i++){
     )
 }
 
+const props: iDropdownMenu = {
+    options: mockOptions,
+    tag: mockTag,
+    onSelect: mockCallback,
+    selected: null
+}
+
 describe("Test <DropdownMenu>", () => {
-    test("Renders ok, each option triggers callback when clicked", () => {
-        render(<DropdownMenu tag={mockTag} options={mockOptions} onSelect={mockCallback} selected={null} />);
+    test("Renders ok, each option props trigger 'onSelect' callback when clicked", () => {
+        render(<DropdownMenu { ...props } selected={null} />);
 
         const menu = screen.getByRole("list");
         
@@ -36,8 +44,8 @@ describe("Test <DropdownMenu>", () => {
         })
     })
 
-    test("Renders and works ok with preset", () => {
-        render(<DropdownMenu tag={mockTag} options={mockOptions} onSelect={mockCallback} selected={mockOptions[0].id} />);
+    test("Renders and works ok with preset 'selected' prop", () => {
+        render(<DropdownMenu { ...props } selected={mockOptions[0].id} />);
 
         const menu = screen.getByRole("list");
         

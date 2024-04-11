@@ -6,7 +6,7 @@ const mockChild = <span data-testid="mock-child"></span>;
 const mockFn = jest.fn()
 
 describe("Test <GenericButton>", () => {
-    test("button triggers callback when clicked", () => {
+    test("button triggers 'onClick' callback when clicked", () => {
         render(
             <GenericButton onClick={mockFn}>
                 {mockChild}

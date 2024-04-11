@@ -3,7 +3,7 @@ import '@testing-library/jest-dom'
 import CircleButton from '../../../components/utils/circle_button';
 import randomNumber from "../../../tools/random_number";
 import Dropdown from "../../../components/utils/dropdown/dropdown";
-import { iFieldOption } from "../../../interfaces/dropdown";
+import { iDropdown, iFieldOption } from "../../../interfaces/dropdown";
 
 const mockPreset: iFieldOption = {
     id: randomNumber(),
@@ -23,10 +23,17 @@ for(let i = 0; i < 5; i++){
     )
 }
 
+const props: iDropdown = {
+    tag: mockTag,
+    preset: mockPreset,
+    options: mockOptions,
+    onCallback: mockCallback
+}
+
 describe("Test <Dropdown />", () => {
-    test("Shows a preset label", () => {
+    test("Shows the 'preset' as label", () => {
         render(
-            <Dropdown tag={mockTag} preset={mockPreset} options={mockOptions} onCallback={mockCallback}  />
+            <Dropdown {...props}  />
         );
 
         const dropdown = screen.getByRole("menu");
@@ -36,9 +43,9 @@ describe("Test <Dropdown />", () => {
         expect(selectedLabel).toBeInTheDocument();
     })
 
-    test("Initial render ok, no list visible yet", () => {
+    test("Initial render ok, no options list visible yet", () => {
         render(
-            <Dropdown tag={mockTag} preset={mockPreset} options={mockOptions} onCallback={mockCallback}  />
+            <Dropdown {...props}  />
         );
 
         const dropdown = screen.getByRole("menu");
@@ -47,9 +54,9 @@ describe("Test <Dropdown />", () => {
         expect(optionsList).not.toBeInTheDocument();
     })
 
-    test("Clicking the dropdown shows the menu with all options listed", () => {
+    test("Clicking the dropdown shows the menu with all 'options' prop listed", () => {
         render(
-            <Dropdown tag={mockTag} preset={mockPreset} options={mockOptions} onCallback={mockCallback}  />
+            <Dropdown {...props} />
         );
         let dropdown = screen.getByRole("menu");
         let selectedLabel = within(dropdown).getByText(mockPreset.label);
@@ -65,9 +72,9 @@ describe("Test <Dropdown />", () => {
         })
     })
 
-    test("Clicking an option hides the list and triggers callback", () => {
+    test("Clicking an option hides the list and triggers 'onCallback' prop", () => {
         render(
-            <Dropdown tag={mockTag} preset={mockPreset} options={mockOptions} onCallback={mockCallback}  />
+            <Dropdown {...props} />
         );
         const dropdown = screen.getByRole("menu");
         let selectedLabel = within(dropdown).getByText(mockPreset.label);
@@ -97,7 +104,7 @@ describe("Test <Dropdown />", () => {
 
     test("Clicking outside options menu will hide it", () => {
         render(
-            <Dropdown tag={mockTag} preset={mockPreset} options={mockOptions} onCallback={mockCallback}  />
+            <Dropdown {...props} />
         );
         const dropdown = screen.getByRole("menu");
         let selectedLabel = within(dropdown).getByText(mockPreset.label);

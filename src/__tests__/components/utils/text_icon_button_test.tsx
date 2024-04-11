@@ -5,16 +5,26 @@ import PopupMessage from "../../../components/utils/popup_message";
 import PurpleBorderButton from "../../../components/utils/purple_border_button";
 import SimpleSearchBar from "../../../components/utils/simple_search_bar";
 import TextIconButton from "../../../components/utils/text_icon_button";
+import { iTextIconButton } from "../../../interfaces/text_icon_button";
 
 const mockFn = jest.fn();
 const mockText = randomNumber().toString();
 const mockId = randomNumber().toString();
 const mockChild = <span data-testid="mock-span"></span>
 
+const props: iTextIconButton = {
+    id: mockId,
+    text: mockText,
+    textSize: "h-2",
+    onClick: mockFn,
+    children: mockChild,
+    disabled: false
+}
+
 describe("Test <TextIconButton>", () => {
-    test("triggers callback when clicked", () => {
+    test("triggers 'onClick' callback when clicked", () => {
         render(
-            <TextIconButton id={mockId} text={mockText} disabled={false} textSize={"h-2"} onClick={mockFn}>
+            <TextIconButton {...props}>
                 {mockChild}
             </TextIconButton>
         )
@@ -27,7 +37,7 @@ describe("Test <TextIconButton>", () => {
 
     test("Button has text", () => {
         render(
-            <TextIconButton id={mockId} text={mockText} disabled={false} textSize={"h-2"} onClick={mockFn}>
+            <TextIconButton {...props}>
                 {mockChild}
             </TextIconButton>
         )
@@ -38,7 +48,7 @@ describe("Test <TextIconButton>", () => {
 
     test("Button has child component", () => {
         render(
-            <TextIconButton id={mockId} text={mockText} disabled={false} textSize={"h-2"} onClick={mockFn}>
+            <TextIconButton {...props}>
                 {mockChild}
             </TextIconButton>
         )
@@ -50,9 +60,9 @@ describe("Test <TextIconButton>", () => {
 
     });
 
-    test("button callback does not trigger when disabled", () => {
+    test("'onClick' callback does not trigger at click when disabled", () => {
         render(
-            <TextIconButton id={mockId} text={mockText} disabled={true} textSize={"h-2"} onClick={mockFn}>
+            <TextIconButton {...props} disabled={true}>
                 {mockChild}
             </TextIconButton>
         )

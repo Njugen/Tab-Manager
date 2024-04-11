@@ -23,10 +23,16 @@ describe("Test <GenericPopup>", () => {
     const typeCases: Array<"slide-in" | "popup"> = ["slide-in", "popup"];
     
 
-    describe("When save button/specs is missing", () => {
+    describe("When 'save' prop is missing", () => {
+        const props = {
+            title: mockTitle,
+            show: true,
+            cancel: mockCancel
+        }
+
         test.each(typeCases)("Popup renders", (type) => {
             render(
-                <GenericPopup title={mockTitle} type={type} show={true} cancel={mockCancel}>
+                <GenericPopup type={type} {...props}>
                     {mockChild}
                 </GenericPopup>
             );
@@ -35,9 +41,9 @@ describe("Test <GenericPopup>", () => {
             expect(popup).toBeInTheDocument();
         })
 
-        test.each(typeCases)("Displays title props in heading", (type) => {
+        test.each(typeCases)("Displays 'title' prop in heading", (type) => {
             render(
-                <GenericPopup title={mockTitle} type={type} show={true} cancel={mockCancel}>
+                <GenericPopup type={type} {...props}>
                     {mockChild}
                 </GenericPopup>
             );
@@ -47,9 +53,9 @@ describe("Test <GenericPopup>", () => {
             expect(heading).toHaveTextContent(mockTitle);
         })
 
-        test.each(typeCases)("X button exists and triggers callback when clicked", (type) => {
+        test.each(typeCases)("X button exists and triggers 'cancel' callback when clicked", (type) => {
             render(
-                <GenericPopup title={mockTitle} type={type} show={true} cancel={mockCancel}>
+                <GenericPopup type={type} {...props}>
                     {mockChild}
                 </GenericPopup>
             );
@@ -61,9 +67,9 @@ describe("Test <GenericPopup>", () => {
             expect(mockCancel.handler).toHaveBeenCalled();
         })
 
-        test.each(typeCases)("Close button is not visible due to missing save specs", (type) => {
+        test.each(typeCases)("Close button is not visible due to missing 'save' prop", (type) => {
             render(
-                <GenericPopup title={mockTitle} type={type} show={true} cancel={mockCancel}>
+                <GenericPopup type={type} {...props}>
                     {mockChild}
                 </GenericPopup>
             );
@@ -73,9 +79,9 @@ describe("Test <GenericPopup>", () => {
             expect(closeButton).not.toBeInTheDocument()
         })
 
-        test.each(typeCases)("Save button is not visible due to missing save specs", (type) => {
+        test.each(typeCases)("Save button is not visible due to missing 'save' prop", (type) => {
             render(
-                <GenericPopup title={mockTitle} type={type} show={true} cancel={mockCancel}>
+                <GenericPopup type={type} {...props}>
                     {mockChild}
                 </GenericPopup>
             );
@@ -86,10 +92,17 @@ describe("Test <GenericPopup>", () => {
     })
     
 
-    describe("When save button/specs is available", () => {
+    describe("When 'save' prop is provided", () => {
+        const props = {
+            title: mockTitle,
+            show: true,
+            cancel: mockCancel,
+            save: mockSave
+        }
+
         test.each(typeCases)("Popup renders", (type) => {
             render(
-                <GenericPopup title={mockTitle} type={type} show={true} cancel={mockCancel} save={mockSave}>
+                <GenericPopup {...props} type={type}>
                     {mockChild}
                 </GenericPopup>
             );
@@ -98,9 +111,9 @@ describe("Test <GenericPopup>", () => {
             expect(popup).toBeInTheDocument();
         })
 
-        test.each(typeCases)("Displays title props in heading", (type) => {
+        test.each(typeCases)("Displays 'title' prop in heading", (type) => {
             render(
-                <GenericPopup title={mockTitle} type={type} show={true} cancel={mockCancel} save={mockSave}>
+                <GenericPopup {...props} type={type}>
                     {mockChild}
                 </GenericPopup>
             );
@@ -110,9 +123,9 @@ describe("Test <GenericPopup>", () => {
             expect(heading).toHaveTextContent(mockTitle);
         })
 
-        test.each(typeCases)("X button exists and triggers callback when clicked", (type) => {
+        test.each(typeCases)("X button exists and triggers 'cancel' callback when clicked", (type) => {
             render(
-                <GenericPopup title={mockTitle} type={type} show={true} cancel={mockCancel} save={mockSave}>
+                <GenericPopup {...props} type={type}>
                     {mockChild}
                 </GenericPopup>
             );
@@ -126,7 +139,7 @@ describe("Test <GenericPopup>", () => {
 
         test.each(typeCases)("Close button is visible", (type) => {
             render(
-                <GenericPopup title={mockTitle} type={type} show={true} cancel={mockCancel} save={mockSave}>
+                <GenericPopup {...props} type={type}>
                     {mockChild}
                 </GenericPopup>
             );
@@ -136,9 +149,9 @@ describe("Test <GenericPopup>", () => {
             expect(closeButton).toBeInTheDocument()
         })
 
-        test.each(typeCases)("Close button triggers callback when clicked", (type) => {
+        test.each(typeCases)("Close button triggers 'cancel' callback when clicked", (type) => {
             render(
-                <GenericPopup title={mockTitle} type={type} show={true} cancel={mockCancel} save={mockSave}>
+                <GenericPopup {...props} type={type}>
                     {mockChild}
                 </GenericPopup>
             );
@@ -150,7 +163,7 @@ describe("Test <GenericPopup>", () => {
 
         test.each(typeCases)("Save button is visible", (type) => {
             render(
-                <GenericPopup title={mockTitle} type={type} show={true} cancel={mockCancel} save={mockSave}>
+                <GenericPopup {...props} type={type}>
                     {mockChild}
                 </GenericPopup>
             );
@@ -159,9 +172,9 @@ describe("Test <GenericPopup>", () => {
             expect(saveButton).toBeInTheDocument()
         })
 
-        test.each(typeCases)("Save button triggers callback when clicked", (type) => {
+        test.each(typeCases)("Save button triggers 'save' callback when clicked", (type) => {
             render(
-                <GenericPopup title={mockTitle} type={type} show={true} cancel={mockCancel} save={mockSave}>
+                <GenericPopup {...props} type={type}>
                     {mockChild}
                 </GenericPopup>
             );

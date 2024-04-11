@@ -2,6 +2,7 @@ import { render, screen, within, fireEvent } from "@testing-library/react";
 import '@testing-library/jest-dom'
 import randomNumber from "../../../tools/random_number";
 import PopupMessage from "../../../components/utils/popup_message";
+import iPopupMessage from "../../../interfaces/popup_message";
 
 
 const mockText = randomNumber().toString();
@@ -15,10 +16,17 @@ const sButton = {
     callback: jest.fn()
 }
 
-describe("Test <Popup message>", () => {
-    test("Has title props in the heading", () => {
+const props: iPopupMessage = {
+    title: mockTitle,
+    text: mockText,
+    primaryButton: pButton,
+    secondaryButton: sButton 
+}
+
+describe("Test <PopupMessage>", () => {
+    test("heading shows 'title' prop", () => {
         render(
-            <PopupMessage title={mockTitle} text={mockText} primaryButton={pButton} secondaryButton={sButton} />
+            <PopupMessage {...props} />
         )
 
         const container = screen.getByRole("alert");
@@ -27,9 +35,9 @@ describe("Test <Popup message>", () => {
         expect(heading).toHaveTextContent(mockTitle);
     })
 
-    test("Shows text inserted through props", () => {
+    test("Shows text inserted through 'text' prop", () => {
         render(
-            <PopupMessage title={mockTitle} text={mockText} primaryButton={pButton} secondaryButton={sButton} />
+            <PopupMessage {...props} />
         )
 
         const container = screen.getByRole("alert");
@@ -40,7 +48,7 @@ describe("Test <Popup message>", () => {
 
     test("Clicking primary button triggers its callback", () => {
         render(
-            <PopupMessage title={mockTitle} text={mockText} primaryButton={pButton} secondaryButton={sButton} />
+            <PopupMessage {...props} />
         )
 
         const container = screen.getByRole("alert");
@@ -52,7 +60,7 @@ describe("Test <Popup message>", () => {
 
     test("Clicking secondary button triggers its callback", () => {
         render(
-            <PopupMessage title={mockTitle} text={mockText} primaryButton={pButton} secondaryButton={sButton} />
+            <PopupMessage {...props} />
         )
 
         const container = screen.getByRole("alert");

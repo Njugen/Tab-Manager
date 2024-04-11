@@ -20,7 +20,7 @@ describe("Test <FolderControlButton>", () => {
         expect(children).toBeInTheDocument();
     });
 
-    test("Clicking the button triggers callback", () => {
+    test("Clicking the button triggers 'onClick' callback", () => {
         render(
             <FolderControlButton id={mockId} disabled={false} onClick={mockFn}>
                 {mockChildren}
@@ -33,7 +33,7 @@ describe("Test <FolderControlButton>", () => {
         expect(mockFn).toHaveBeenCalled();
     });
 
-    test("Clicking triggers nothing when disabled", () => {
+    test("Clicking the button (when disabled) does not trigger 'onClick' callback", () => {
         render(
             <FolderControlButton id={mockId} disabled={true} onClick={mockFn}>
                 {mockChildren}

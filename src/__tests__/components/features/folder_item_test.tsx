@@ -36,9 +36,8 @@ const createMockWindows = (mocks: number): Array<iWindowItem> => {
 }
 
 
-
 describe("Test <FolderItem>", () => {
-    describe("When folder is initially expanded", () => {
+    describe("When folder is initially expanded ('type' prop set to 'expanded')", () => {
         describe.each(["list", "grid"])("%s mode", (mode: any) => {
             const mockFolderItem: iFolderItem = {
                 id: randomNumber(),
@@ -52,7 +51,7 @@ describe("Test <FolderItem>", () => {
 
             const { id, name, desc, marked, type, viewMode, windows } = mockFolderItem;
     
-            test("Folder renders correctly with options bar and can be collapsed", () => {
+            test("Folder shows 'name' prop in the heading", () => {
                 render(
                     <Provider store={store}>
                         <FolderItem {...mockFolderItem} />
@@ -62,44 +61,200 @@ describe("Test <FolderItem>", () => {
                 const folderItem = screen.getByTestId("folder-item");
                 const heading = within(folderItem).queryByRole("heading", { level: 2 });
                 expect(heading).toHaveTextContent(name);
+            })
 
+            test("Folder shows description prop", () => {
+                render(
+                    <Provider store={store}>
+                        <FolderItem {...mockFolderItem} />
+                    </Provider>
+                )
+                
+                const folderItem = screen.getByTestId("folder-item");
                 let paragraph = within(folderItem).queryByText(desc, {selector: "p"});
                 expect(paragraph).toHaveTextContent(desc);
+            })
 
-                let windowListItem = within(folderItem).queryAllByTestId("window-item");
+            test(`There are ${mockFolderItem.windows.length} windows listed (windows prop)`, () => {
+                render(
+                    <Provider store={store}>
+                        <FolderItem {...mockFolderItem} />
+                    </Provider>
+                )
+                
+                const folderItem = screen.getByTestId("folder-item");
+
+                let windowListItem = within(folderItem).getAllByTestId("window-item");
 
                 windowListItem.forEach((window, i) => {
                     expect(window).toBeInTheDocument();
                 });
 
+                expect(windowListItem.length).toEqual(mockFolderItem.windows.length);
+            })
+
+            test("Open browser option is not visible when 'onOpen' prop is missing", () => {
+                render(
+                    <Provider store={store}>
+                        <FolderItem {...mockFolderItem} />
+                    </Provider>
+                )
+                
+                const folderItem = screen.getByTestId("folder-item");
+
                 const openButton = within(folderItem).queryByTestId("open-browser-icon");
                 expect(openButton).not.toBeInTheDocument();
+            })
+
+            test("Settings option not visible when 'onEdit' prop is missing", () => {
+                render(
+                    <Provider store={store}>
+                        <FolderItem {...mockFolderItem} />
+                    </Provider>
+                )
+                
+                const folderItem = screen.getByTestId("folder-item");
 
                 const settingsButton = within(folderItem).queryByTestId("settings-icon");
                 expect(settingsButton).not.toBeInTheDocument();
+            })
+
+            test("Trash/delete option not visible when 'onDelete' prop is missing", () => {
+                render(
+                    <Provider store={store}>
+                        <FolderItem {...mockFolderItem} />
+                    </Provider>
+                )
+                
+                const folderItem = screen.getByTestId("folder-item");
 
                 const deleteButton = within(folderItem).queryByTestId("trash-icon");
                 expect(deleteButton).not.toBeInTheDocument();
 
+            })
+
+            test("Checkbox is missing when 'onMark' prop is missing", () => {
+                render(
+                    <Provider store={store}>
+                        <FolderItem {...mockFolderItem} />
+                    </Provider>
+                )
+                
+                const folderItem = screen.getByTestId("folder-item");
+
                 const checkbox = within(folderItem).queryByTestId("checkbox");
                 expect(checkbox).not.toBeInTheDocument();
+            })
+
+            test("Collapsing folder hides the windows and description", () => {
+                render(
+                    <Provider store={store}>
+                        <FolderItem {...mockFolderItem} />
+                    </Provider>
+                )
+                
+                const folderItem = screen.getByTestId("folder-item");
 
                 const collapseButton = within(folderItem).getAllByTestId("collapse-icon");
                 fireEvent.click(collapseButton[0], { bubbles: true });
 
-                paragraph = within(folderItem).queryByText(desc, {selector: "p"});
+                let paragraph = within(folderItem).queryByText(desc, {selector: "p"});
                 expect(paragraph).not.toBeInTheDocument();
 
-                windowListItem = within(folderItem).queryAllByTestId("window-item");
+                let windowListItem = within(folderItem).queryAllByTestId("window-item");
                 expect(windowListItem.length).toEqual(0);
             })
 
-            test("Folder renders with a working launch folder icon", async () => {
-                mockFolderItem.onOpen = jest.fn((e: Array<iWindowItem>, type: string): void => {});
+            test("Expanding folder hides the windows and description", () => {
+                render(
+                    <Provider store={store}>
+                        <FolderItem {...mockFolderItem} type="collapsed" />
+                    </Provider>
+                )
+                
+                const folderItem = screen.getByTestId("folder-item");
 
-                const { onOpen } = mockFolderItem;
+                const expandButton = within(folderItem).getAllByTestId("collapse-icon");
+                fireEvent.click(expandButton[0], { bubbles: true });
 
-                jest.useFakeTimers();
+                let paragraph = within(folderItem).queryByText(desc, {selector: "p"});
+                expect(paragraph).toBeInTheDocument();
+
+                let windowListItem = within(folderItem).queryAllByTestId("window-item");
+                expect(windowListItem.length).toEqual(mockFolderItem.windows.length);
+                
+            })
+
+            describe("Focus on the launch/open folder button", () => {
+                test("Folder open button is visible when 'onOpen' prop is provided", async () => {
+                    mockFolderItem.onOpen = jest.fn((e: Array<iWindowItem>, type: string): void => {});
+    
+                    jest.useFakeTimers();
+    
+                    render(
+                        <Provider store={store}>
+                            <FolderItem {...mockFolderItem} />
+                        </Provider>
+                    )
+                    
+                    const folderItem = screen.getByTestId("folder-item");
+                    let openButton = within(folderItem).getByTestId("open-browser-icon");
+                    expect(openButton).toBeInTheDocument();
+                })
+
+                test("Launching option sequence through submenu works", async () => {
+                    mockFolderItem.onOpen = jest.fn((e: Array<iWindowItem>, type: string): void => {});
+    
+                    const { onOpen } = mockFolderItem;
+    
+                    jest.useFakeTimers();
+    
+                    render(
+                        <Provider store={store}>
+                            <FolderItem {...mockFolderItem} />
+                        </Provider>
+                    )
+                    
+                    const folderItem = screen.getByTestId("folder-item");
+
+                    ////////// START: Test the open folder button and all of its buttons
+                    for(let i = 0; i < 3; i++){
+                        /* Click the open button */
+                        let openButton = within(folderItem).getByTestId("open-browser-icon");
+                        fireEvent.click(openButton, { bubbles: true });
+                        
+                        /* make sure the launch options are visible */
+                        let openFolderOptionsMenu = within(folderItem).getByTestId("open-folder-options");
+
+    
+                        /* Click a launch options */
+                        let optionsButton = within(openFolderOptionsMenu).getAllByRole("button");
+                        fireEvent.click(optionsButton[i], { bubbles: true });
+    
+                        /* Once options have been clicked, make sure appropriate callback has been called */
+                        expect(onOpen).toHaveBeenCalled();
+    
+                        /* Hide the folders options */
+                        let updatedFolderOptionsMenu = within(folderItem).queryByTestId("open-folder-options")
+                        expect(updatedFolderOptionsMenu).not.toBeInTheDocument();
+    
+                        /* Click the open button again */
+                        fireEvent.click(openButton, { bubbles: true });
+    
+                        /* Make sure the launch options are visible again */
+                        openFolderOptionsMenu = within(folderItem).getByTestId("open-folder-options");
+                        expect(openFolderOptionsMenu).toBeInTheDocument();
+    
+                        ////////// END
+                        
+                    }
+    
+                })
+            })
+
+            test("Checkbox is visible and works when 'onMark' prop is provided", () => {
+                mockFolderItem.onMark = jest.fn((e: number): void => {});
+                const { onMark } = mockFolderItem;
 
                 render(
                     <Provider store={store}>
@@ -108,58 +263,15 @@ describe("Test <FolderItem>", () => {
                 )
                 
                 const folderItem = screen.getByTestId("folder-item");
-                
-                ////////// START: Test the open folder button and all of its buttons
-                for(let i = 0; i < 3; i++){
-                    /* Click the open button */
-                    let openButton = within(folderItem).getByTestId("open-browser-icon");
-                    fireEvent.click(openButton, { bubbles: true });
-                    
-                    /* make sure the launch options are visible */
-                    let openFolderOptionsMenu = within(folderItem).getByTestId("open-folder-options");
-                    expect(openFolderOptionsMenu).toBeInTheDocument();
-
-                    /* Click a launch options */
-                    let optionsButton = within(openFolderOptionsMenu).getAllByRole("button");
-                    fireEvent.click(optionsButton[i], { bubbles: true });
-
-                    /* Once options have been clicked, make sure appropriate callback has been called */
-                    expect(onOpen).toHaveBeenCalled();
-
-                    /* Hide the folders options */
-                    let updatedFolderOptionsMenu = within(folderItem).queryByTestId("open-folder-options")
-                    expect(updatedFolderOptionsMenu).not.toBeInTheDocument();
-
-                    /* Click the open button again */
-                    fireEvent.click(openButton, { bubbles: true });
-
-                    /* Make sure the launch options are visible again */
-                    openFolderOptionsMenu = within(folderItem).getByTestId("open-folder-options");
-                    expect(openFolderOptionsMenu).toBeInTheDocument();
-
-                    ////////// END
-                    
-                }
-
-                /* Once clicked outside the options menu, hide the options */
-                fireEvent.click(window);
-
-                act(() => {
-                    jest.runAllTimers();
-                });
-                fireEvent.click(window);
-                
-                let updatedFolderOptionsMenu = within(folderItem).queryByTestId("open-folder-options")
-                expect(updatedFolderOptionsMenu).not.toBeInTheDocument();
-                jest.useRealTimers();
+                const checkbox = within(folderItem).getByTestId("checkbox");
+                fireEvent.click(checkbox, { bubbles: true });
+                expect(onMark).toHaveBeenCalled();
             })
 
-            test("Folder renders with working mark, edit and delete buttons", () => {
-                mockFolderItem.onMark = jest.fn((e: number): void => {});
+            test("Settings button is visible and works when 'onEdit' prop is provided", () => {
                 mockFolderItem.onEdit = jest.fn((e: number): void => {});
-                mockFolderItem.onDelete = jest.fn((e: iFolderItem): void => {});
 
-                const { onMark, onEdit, onDelete } = mockFolderItem;
+                const { onEdit } = mockFolderItem;
 
                 render(
                     <Provider store={store}>
@@ -172,20 +284,30 @@ describe("Test <FolderItem>", () => {
                 const settingsButton = within(folderItem).getByTestId("settings-icon");
                 fireEvent.click(settingsButton, { bubbles: true });
                 expect(onEdit).toHaveBeenCalled();
+            })
+
+            test("Trash/delete button is visible and works when 'onDelete' is provided", () => {
+                mockFolderItem.onDelete = jest.fn((e: iFolderItem): void => {});
+
+                const { onDelete } = mockFolderItem;
+
+                render(
+                    <Provider store={store}>
+                        <FolderItem {...mockFolderItem} />
+                    </Provider>
+                )
+                
+                const folderItem = screen.getByTestId("folder-item");
 
                 const deleteButton = within(folderItem).getByTestId("trash-icon");
                 fireEvent.click(deleteButton, { bubbles: true });
                 expect(onDelete).toHaveBeenCalled();
-
-                const checkbox = within(folderItem).getByTestId("checkbox");
-                fireEvent.click(checkbox, { bubbles: true });
-                expect(onMark).toHaveBeenCalled();
             })
 
         })
     })
 
-    describe("When folder is initially collapsed", () => {
+    describe("When folder is initially collapsed ('type' prop is set to 'collapsed'", () => {
         describe.each(["list", "grid"])("%s mode", (mode: any) => {
             const mockFolderItem: iFolderItem = {
                 id: randomNumber(),
@@ -199,7 +321,7 @@ describe("Test <FolderItem>", () => {
 
             const { id, name, desc, marked, type, viewMode, windows } = mockFolderItem;
     
-            test("Folder renders correctly with options bar and can be expanded", () => {
+            test("Folder shows 'name' prop in the heading", () => {
                 render(
                     <Provider store={store}>
                         <FolderItem {...mockFolderItem} />
@@ -209,45 +331,176 @@ describe("Test <FolderItem>", () => {
                 const folderItem = screen.getByTestId("folder-item");
                 const heading = within(folderItem).queryByRole("heading", { level: 2 });
                 expect(heading).toHaveTextContent(name);
+            })
 
+            test("Folder does not show description prop", () => {
+                render(
+                    <Provider store={store}>
+                        <FolderItem {...mockFolderItem} />
+                    </Provider>
+                )
+                
+                const folderItem = screen.getByTestId("folder-item");
                 let paragraph = within(folderItem).queryByText(desc, {selector: "p"});
                 expect(paragraph).not.toBeInTheDocument();
+            })
+
+            test(`There are no windows listed (no windows provided in prop)`, () => {
+                render(
+                    <Provider store={store}>
+                        <FolderItem {...mockFolderItem} />
+                    </Provider>
+                )
+                
+                const folderItem = screen.getByTestId("folder-item");
 
                 let windowListItem = within(folderItem).queryAllByTestId("window-item");
 
-                windowListItem.forEach((window, i) => {
-                    expect(window).not.toBeInTheDocument();
-                });
+                expect(windowListItem.length).toEqual(0);
+            })
+
+            test("Open browser option not visible when 'onOpen' prop is missing", () => {
+                render(
+                    <Provider store={store}>
+                        <FolderItem {...mockFolderItem} />
+                    </Provider>
+                )
+                
+                const folderItem = screen.getByTestId("folder-item");
 
                 const openButton = within(folderItem).queryByTestId("open-browser-icon");
                 expect(openButton).not.toBeInTheDocument();
+            })
+
+            test("Settings option not visible when 'onEdit' prop is missing", () => {
+                render(
+                    <Provider store={store}>
+                        <FolderItem {...mockFolderItem} />
+                    </Provider>
+                )
+                
+                const folderItem = screen.getByTestId("folder-item");
 
                 const settingsButton = within(folderItem).queryByTestId("settings-icon");
                 expect(settingsButton).not.toBeInTheDocument();
+            })
+
+            test("Trash/delete option not visible when 'onDelete' prop is missing", () => {
+                render(
+                    <Provider store={store}>
+                        <FolderItem {...mockFolderItem} />
+                    </Provider>
+                )
+                
+                const folderItem = screen.getByTestId("folder-item");
 
                 const deleteButton = within(folderItem).queryByTestId("trash-icon");
                 expect(deleteButton).not.toBeInTheDocument();
 
-                const checkbox = within(folderItem).queryByTestId("checkbox");
-                expect(checkbox).not.toBeInTheDocument();
-
-                const collapseButton = within(folderItem).getAllByTestId("collapse-icon");
-                fireEvent.click(collapseButton[0], { bubbles: true });
-
-                paragraph = within(folderItem).queryByText(desc, {selector: "p"});
-                expect(paragraph).toHaveTextContent(desc);
-
-                windowListItem = within(folderItem).queryAllByTestId("window-item");
-                windowListItem.forEach((window, i) => {
-                    expect(window).toBeInTheDocument();
-                });
             })
 
-            test("Folder renders with a working launch folder icon", () => {
-                mockFolderItem.onOpen = jest.fn((e: Array<iWindowItem>, type: string): void => {});
+            test("Checkbox is missing when 'onMark' prop is missing", () => {
+                render(
+                    <Provider store={store}>
+                        <FolderItem {...mockFolderItem} />
+                    </Provider>
+                )
+                
+                const folderItem = screen.getByTestId("folder-item");
 
-                const { onOpen } = mockFolderItem;
-                jest.useFakeTimers();
+                const checkbox = within(folderItem).queryByTestId("checkbox");
+                expect(checkbox).not.toBeInTheDocument();
+            })
+
+            test("Expanding folder shows the windows and description", () => {
+                render(
+                    <Provider store={store}>
+                        <FolderItem {...mockFolderItem} />
+                    </Provider>
+                )
+                
+                const folderItem = screen.getByTestId("folder-item");
+
+                const expandButton = within(folderItem).getAllByTestId("collapse-icon");
+                fireEvent.click(expandButton[0], { bubbles: true });
+
+                let paragraph = within(folderItem).queryByText(desc, {selector: "p"});
+                expect(paragraph).toBeInTheDocument();
+
+                let windowListItem = within(folderItem).queryAllByTestId("window-item");
+                expect(windowListItem.length).toEqual(mockFolderItem.windows.length);
+            })
+
+            describe("Focus on the launch/open folder button", () => {
+                test("Folder open button is visible when 'onOpen' prop is provided", async () => {
+                    mockFolderItem.onOpen = jest.fn((e: Array<iWindowItem>, type: string): void => {});
+    
+                    jest.useFakeTimers();
+    
+                    render(
+                        <Provider store={store}>
+                            <FolderItem {...mockFolderItem} />
+                        </Provider>
+                    )
+                    
+                    const folderItem = screen.getByTestId("folder-item");
+                    let openButton = within(folderItem).getByTestId("open-browser-icon");
+                    expect(openButton).toBeInTheDocument();
+                })
+
+                test("Launching option sequence through submenu works", async () => {
+                    mockFolderItem.onOpen = jest.fn((e: Array<iWindowItem>, type: string): void => {});
+    
+                    const { onOpen } = mockFolderItem;
+    
+                    jest.useFakeTimers();
+    
+                    render(
+                        <Provider store={store}>
+                            <FolderItem {...mockFolderItem} />
+                        </Provider>
+                    )
+                    
+                    const folderItem = screen.getByTestId("folder-item");
+
+                    ////////// START: Test the open folder button and all of its buttons
+                    for(let i = 0; i < 3; i++){
+                        /* Click the open button */
+                        let openButton = within(folderItem).getByTestId("open-browser-icon");
+                        fireEvent.click(openButton, { bubbles: true });
+                        
+                        /* make sure the launch options are visible */
+                        let openFolderOptionsMenu = within(folderItem).getByTestId("open-folder-options");
+
+    
+                        /* Click a launch options */
+                        let optionsButton = within(openFolderOptionsMenu).getAllByRole("button");
+                        fireEvent.click(optionsButton[i], { bubbles: true });
+    
+                        /* Once options have been clicked, make sure appropriate callback has been called */
+                        expect(onOpen).toHaveBeenCalled();
+    
+                        /* Hide the folders options */
+                        let updatedFolderOptionsMenu = within(folderItem).queryByTestId("open-folder-options")
+                        expect(updatedFolderOptionsMenu).not.toBeInTheDocument();
+    
+                        /* Click the open button again */
+                        fireEvent.click(openButton, { bubbles: true });
+    
+                        /* Make sure the launch options are visible again */
+                        openFolderOptionsMenu = within(folderItem).getByTestId("open-folder-options");
+                        expect(openFolderOptionsMenu).toBeInTheDocument();
+    
+                        ////////// END
+                        
+                    }
+    
+                })
+            })
+
+            test("Checkbox is visible and works when 'onMark' prop is provided", () => {
+                mockFolderItem.onMark = jest.fn((e: number): void => {});
+                const { onMark } = mockFolderItem;
 
                 render(
                     <Provider store={store}>
@@ -256,58 +509,15 @@ describe("Test <FolderItem>", () => {
                 )
                 
                 const folderItem = screen.getByTestId("folder-item");
-                
-                ////////// START: Test the open folder button and all of its buttons
-                for(let i = 0; i < 3; i++){
-                    /* Click the open button */
-                    let openButton = within(folderItem).getByTestId("open-browser-icon");
-                    fireEvent.click(openButton, { bubbles: true });
-                    
-                    /* make sure the launch options are visible */
-                    let openFolderOptionsMenu = within(folderItem).getByTestId("open-folder-options");
-                    expect(openFolderOptionsMenu).toBeInTheDocument();
-
-                    /* Click a launch options */
-                    let optionsButton = within(openFolderOptionsMenu).getAllByRole("button");
-                    fireEvent.click(optionsButton[i], { bubbles: true });
-
-                    /* Once options have been clicked, make sure appropriate callback has been called */
-                    expect(onOpen).toHaveBeenCalled();
-
-                    /* Hide the folders options */
-                    let updatedFolderOptionsMenu = within(folderItem).queryByTestId("open-folder-options")
-                    expect(updatedFolderOptionsMenu).not.toBeInTheDocument();
-
-                    /* Click the open button again */
-                    fireEvent.click(openButton, { bubbles: true });
-
-                    /* Make sure the launch options are visible again */
-                    openFolderOptionsMenu = within(folderItem).getByTestId("open-folder-options");
-                    expect(openFolderOptionsMenu).toBeInTheDocument();
-                    
-                }
-                ////////// END
-
-               
-                /* Once clicked outside the options menu, hide the options */
-                fireEvent.click(window);
-
-                act(() => {
-                    jest.runAllTimers();
-                });
-                fireEvent.click(window);
-
-                let updatedFolderOptionsMenu = within(folderItem).queryByTestId("open-folder-options")
-                expect(updatedFolderOptionsMenu).not.toBeInTheDocument();
-                jest.useRealTimers();
+                const checkbox = within(folderItem).getByTestId("checkbox");
+                fireEvent.click(checkbox, { bubbles: true });
+                expect(onMark).toHaveBeenCalled();
             })
 
-            test("Folder renders with working mark, edit and delete buttons", () => {
-                mockFolderItem.onMark = jest.fn((e: number): void => {});
+            test("Settings button is visible and works when 'onEdit' prop is provided", () => {
                 mockFolderItem.onEdit = jest.fn((e: number): void => {});
-                mockFolderItem.onDelete = jest.fn((e: iFolderItem): void => {});
 
-                const { onMark, onEdit, onDelete } = mockFolderItem;
+                const { onEdit } = mockFolderItem;
 
                 render(
                     <Provider store={store}>
@@ -320,14 +530,24 @@ describe("Test <FolderItem>", () => {
                 const settingsButton = within(folderItem).getByTestId("settings-icon");
                 fireEvent.click(settingsButton, { bubbles: true });
                 expect(onEdit).toHaveBeenCalled();
+            })
+
+            test("Trash/delete button is visible and works when 'onDelete' is provided", () => {
+                mockFolderItem.onDelete = jest.fn((e: iFolderItem): void => {});
+
+                const { onDelete } = mockFolderItem;
+
+                render(
+                    <Provider store={store}>
+                        <FolderItem {...mockFolderItem} />
+                    </Provider>
+                )
+                
+                const folderItem = screen.getByTestId("folder-item");
 
                 const deleteButton = within(folderItem).getByTestId("trash-icon");
                 fireEvent.click(deleteButton, { bubbles: true });
                 expect(onDelete).toHaveBeenCalled();
-
-                const checkbox = within(folderItem).getByTestId("checkbox");
-                fireEvent.click(checkbox, { bubbles: true });
-                expect(onMark).toHaveBeenCalled();
             })
 
         })

@@ -28,7 +28,7 @@ const mockProps: iAddToFolderPopup = {
 }
 
 describe("Test <AddToFolderPopup>", () => {
-    test("Triggers onNewFolder when 'To a new folder' button is clicked", () => {
+    test("Triggers 'onNewFolder' prop when 'To a new folder' button is clicked", () => {
         render(
             <AddToFolderPopup {...mockProps} />
         );
@@ -39,7 +39,7 @@ describe("Test <AddToFolderPopup>", () => {
         expect(mockProps.onNewFolder).toHaveBeenCalled();
     })
 
-    test("Triggers onCancel when 'To a new folder' button is clicked", () => {
+    test("Triggers 'onCancel' prop when 'To a new folder' button is clicked", () => {
         render(
             <AddToFolderPopup {...mockProps} />
         );
@@ -50,7 +50,7 @@ describe("Test <AddToFolderPopup>", () => {
         expect(mockProps.onCancel).toHaveBeenCalled();
     })
 
-    test("Triggers onCancel when 'X' button is clicked", () => {
+    test("Triggers 'onCancel' prop when 'X' button is clicked", () => {
         render(
             <AddToFolderPopup {...mockProps} />
         );
@@ -61,7 +61,7 @@ describe("Test <AddToFolderPopup>", () => {
         expect(mockProps.onCancel).toHaveBeenCalled();
     });
 
-    test("triggers onExistingFolder when selecting an existing folder", () => {
+    test("triggers 'onExistingFolder' prop when selecting an existing folder", () => {
         render(
             <AddToFolderPopup {...mockProps} />
         );
@@ -79,7 +79,7 @@ describe("Test <AddToFolderPopup>", () => {
         expect(mockProps.onExistingFolder).toHaveBeenCalledWith({ selected: mockProps.dropdownOptions[1].id });
     })
 
-    test("triggers onCancel when selecting an existing folder", () => {
+    test("triggers' onCancel' prop when selecting an existing folder", () => {
         render(
             <AddToFolderPopup {...mockProps} />
         );
@@ -97,7 +97,7 @@ describe("Test <AddToFolderPopup>", () => {
         expect(mockProps.onCancel).toHaveBeenCalled()
     })
 
-    test("Title is in place", () => {
+    test("'title' prop is visible in the component", () => {
         render(
             <AddToFolderPopup {...mockProps} />
         );
