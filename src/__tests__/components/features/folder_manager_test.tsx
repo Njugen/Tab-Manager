@@ -28,19 +28,6 @@ afterEach(() => {
     jest.useRealTimers();
 })
 
-/*
-const chrome = {
-    storage: {
-        local: {
-                get: jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
-                    callback({ cancellation_warning_setting: false })
-            })
-        
-        }
-    }
-}
-*/
-
 describe("Test <FolderManager>", () => {
     describe("Empty plate (e.g. add new folder)", () => {
         const mockProps: iPopup = {
