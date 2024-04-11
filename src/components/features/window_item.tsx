@@ -25,7 +25,7 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
     const [newTab, setNewTab] = useState<boolean>(false);
     const [editTab, setEditTab] = useState<number | null>(null);
     const [markedTabs, setMarkedTabs] = useState<Array<number>>([]);
-    const { id, tabs, tabsCol, onDelete, disableEdit, disableEditTab, disableMarkTab, disableDeleteTab, disableAddTab } = props;
+    const { id, tabs, tabsCol, onDelete, onDeleteTabs, disableEdit, disableEditTab, disableMarkTab, disableDeleteTab, disableAddTab } = props;
     
     const dispatch = useDispatch();
 
@@ -71,7 +71,7 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
     // Delete marked tabs
     const handleDeleteTabs = (): void => {
 
-        if(!folder_state?.windows) return;
+        if(folder_state?.windows && folder_state.windows.length > 0){
         
         const windows = folder_state.windows.filter((target: iWindowItem) => target.id === id);
         const targetWindowIndex = folder_state?.windows.findIndex((target: iWindowItem) => target.id === id);
@@ -79,20 +79,26 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
      
         const newTabCollection: Array<iTabItem> = [];
 
-        if(tabs){
-            tabs.forEach((tab: iTabItem) => {
-                const markedTabIndex = markedTabs.findIndex((target) => target === tab.id);
-           
-                if(markedTabIndex === -1){
-                    newTabCollection.push(tab);                    
-                }
-            });
-           
-            folder_state.windows[targetWindowIndex].tabs = [...newTabCollection];
+            if(tabs){
+                tabs.forEach((tab: iTabItem) => {
+                    const markedTabIndex = markedTabs.findIndex((target) => target === tab.id);
+            
+                    if(markedTabIndex === -1){
+                        newTabCollection.push(tab);                    
+                    }
+                });
+            
+                folder_state.windows[targetWindowIndex].tabs = [...newTabCollection];
 
-            setMarkedTabs([]);
-            dispatch(updateInEditFolder("windows", folder_state.windows));
-            dispatch(setCurrentlyEditingTab(false));
+                setMarkedTabs([]);
+                dispatch(updateInEditFolder("windows", folder_state.windows));
+                dispatch(setCurrentlyEditingTab(false));
+            }
+        } else {
+            if(onDeleteTabs) {
+                onDeleteTabs(markedTabs);
+                setMarkedTabs([]);
+            } 
         }
     }
 

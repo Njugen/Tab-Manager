@@ -6,7 +6,19 @@ const mockChild = <span data-testid="mock-child"></span>;
 const mockFn = jest.fn()
 
 describe("Test <GenericButton>", () => {
-    test("button works ok ok", () => {
+    test("button triggers callback when clicked", () => {
+        render(
+            <GenericButton onClick={mockFn}>
+                {mockChild}
+            </GenericButton>
+        );
+
+        const button = screen.getByRole("button");
+        fireEvent.click(button);
+        expect(mockFn).toHaveBeenCalled();
+    })
+
+    test("button has child component", () => {
         render(
             <GenericButton onClick={mockFn}>
                 {mockChild}
@@ -17,8 +29,5 @@ describe("Test <GenericButton>", () => {
         const child = within(button).getByTestId("mock-child");
 
         expect(child).toBeInTheDocument();
-
-        fireEvent.click(button);
-        expect(mockFn).toHaveBeenCalled();
     })
 });

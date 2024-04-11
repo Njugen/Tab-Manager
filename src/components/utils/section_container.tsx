@@ -13,7 +13,7 @@ import FullscreenIcon from './../icons/fullscreen_icon';
 */
 
 const SectionContainer = (props: iSectionContainer): JSX.Element => {
-    const [fullscreen, setFullscreen] = useState<boolean>(false);
+    const [fullscreen, setFullscreen] = useState<boolean>(props.initFullscreen === true ? true : false);
     const { id, title, options, onExpand, children } = props;
     const sectionRef = useRef<HTMLDivElement>(null);
     

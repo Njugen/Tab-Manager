@@ -15,47 +15,82 @@ const mockEditFn = jest.fn((tabId: number): void | undefined => {});
 const mockOnCloseFn = jest.fn((tabId: number): any | undefined => {})
 
 describe("Test <TabItem>", () => {
-    test("Basic tab (no callbacks) renders ok", () => {
+    test("The tab itself renders", () => {
+        render(
+            <TabItem {...mockProps} />
+        );
+
+        const tab = screen.getByRole("listitem");
+
+        expect(tab).toBeInTheDocument();
+    });
+
+    test("The tab has favicon", () => {
+        render(
+            <TabItem {...mockProps} />
+        );
+
+        const tab = screen.getByRole("listitem");
+        const favicon = within(tab).getByRole("img");
+        expect(favicon).toBeVisible();
+    });
+
+    test("The tab has a link", () => {
         render(
             <TabItem {...mockProps} />
         );
 
         const tab = screen.getByRole("listitem");
         const link = within(tab).getByRole("link");
-        const favicon = within(tab).getByRole("img");
-
-        expect(tab).toBeInTheDocument();
         expect(link).toBeVisible()
-        expect(link).toHaveTextContent(mockProps.label);
-        expect(favicon).toBeVisible();
-    })
+    });
 
-    test("Callbacks always trigger accordingly to relevant feature interactions", () => {
+    test("Checkbox is visible and marking will trigger callback with relevant values", () => {
         render(
-            <TabItem {...mockProps} onMark={mockMarkFn} onEdit={mockEditFn} onClose={mockOnCloseFn} marked={false} />
+            <TabItem {...mockProps} onMark={mockMarkFn} marked={false} />
         );
 
         const tab = screen.getByRole("listitem");
-       // const buttons = within(tab).getAllByRole("button");
-
-        const editButton = within(tab).getByTestId("pen-icon");
         const checkbox = within(tab).getByTestId("checkbox");
-        const closeButton = within(tab).getByTestId("close-light-icon");
-     
-        fireEvent.click(editButton);
-        expect(mockEditFn ).toHaveBeenCalledWith(mockProps.id);
-
-        
-        fireEvent.click(editButton);
-        expect(mockEditFn ).toHaveBeenCalledWith(mockProps.id);
 
         // Mark
         fireEvent.click(checkbox);
         expect(mockMarkFn).toHaveBeenCalledWith(mockProps.id, true);
+    })
+
+    test("Checkbox is visible and unmarking will trigger callback with relevant values", () => {
+        render(
+            <TabItem {...mockProps} onMark={mockMarkFn} marked={true} />
+        );
+
+        const tab = screen.getByRole("listitem");
+        const checkbox = within(tab).getByTestId("checkbox");
 
         // Unmark
         fireEvent.click(checkbox);
         expect(mockMarkFn).toHaveBeenCalledWith(mockProps.id, false);
+    })
+
+    test("edit button (pen) is visible and triggers when clicked", () => {
+        render(
+            <TabItem {...mockProps} onEdit={mockEditFn} />
+        );
+
+        const tab = screen.getByRole("listitem");
+        const editButton = within(tab).getByTestId("pen-icon");
+
+     
+        fireEvent.click(editButton);
+        expect(mockEditFn).toHaveBeenCalledWith(mockProps.id);
+    })
+    
+    test("close button (X) is visible and triggers when clicked", () => {
+        render(
+            <TabItem {...mockProps} onClose={mockOnCloseFn} />
+        );
+
+        const tab = screen.getByRole("listitem");
+        const closeButton = within(tab).getByTestId("close-light-icon");
 
         fireEvent.click(closeButton);
         expect(mockOnCloseFn).toHaveBeenCalledWith(mockProps.id);

@@ -24,7 +24,19 @@ for(let i = 0; i < 5; i++){
 }
 
 describe("Test <Dropdown />", () => {
-    test("Initial render ok, dropdown list in place and reacts to user interaction", () => {
+    test("Shows a preset label", () => {
+        render(
+            <Dropdown tag={mockTag} preset={mockPreset} options={mockOptions} onCallback={mockCallback}  />
+        );
+
+        const dropdown = screen.getByRole("menu");
+
+        // Check the dropdown feature itself
+        let selectedLabel = within(dropdown).getByText(mockPreset.label);
+        expect(selectedLabel).toBeInTheDocument();
+    })
+
+    test("Initial render ok, no list visible yet", () => {
         render(
             <Dropdown tag={mockTag} preset={mockPreset} options={mockOptions} onCallback={mockCallback}  />
         );
@@ -33,53 +45,71 @@ describe("Test <Dropdown />", () => {
         let optionsList = within(dropdown).queryByRole("list");
 
         expect(optionsList).not.toBeInTheDocument();
+    })
 
-        // Check the dropdown feature itself
+    test("Clicking the dropdown shows the menu with all options listed", () => {
+        render(
+            <Dropdown tag={mockTag} preset={mockPreset} options={mockOptions} onCallback={mockCallback}  />
+        );
+        let dropdown = screen.getByRole("menu");
         let selectedLabel = within(dropdown).getByText(mockPreset.label);
-        expect(selectedLabel).toBeInTheDocument();
 
-        // Make an initial click on the dropdown
+        fireEvent.click(selectedLabel);
+        
+        let optionsList: any = within(dropdown).getByRole("list");
+        
+        mockOptions.forEach((option) => {
+            optionsList = within(dropdown).getByRole("list");
+            const target = within(optionsList).getByText(option.label, { selector: "button" });
+            expect(target).toBeInTheDocument();
+        })
+    })
+
+    test("Clicking an option hides the list and triggers callback", () => {
+        render(
+            <Dropdown tag={mockTag} preset={mockPreset} options={mockOptions} onCallback={mockCallback}  />
+        );
+        const dropdown = screen.getByRole("menu");
+        let selectedLabel = within(dropdown).getByText(mockPreset.label);
+
         fireEvent.click(selectedLabel);
 
-        // Now, check that the menu is visible, all mock options are visible. Loop through each
-        // of the options and click them. The component should react accordingly
+        let optionsList: any = within(dropdown).getByRole("list");
+        
         mockOptions.forEach((option) => {
-
-            // List is visible
-            optionsList = within(dropdown).getByRole("list");
-            expect(optionsList).toBeInTheDocument();
-            
-            // This mock option is in the list
-            const target = within(optionsList).getByText(option.label, { selector: "button" });
-            expect(target).toBeVisible();
-
-            // Click this mock option.
-            fireEvent.click(target);
             optionsList = within(dropdown).queryByRole("list");
-            expect(optionsList).not.toBeInTheDocument();
+            const target = within(optionsList).getByText(option.label, { selector: "button" });
+            fireEvent.click(target);
 
+            
+            expect(optionsList).not.toBeInTheDocument();
             expect(mockCallback).toHaveBeenCalledWith(
-                expect.objectContaining({
+                {
                     selected: option.id
-                })
+                }
             );
 
             // Prepare for next loop
             selectedLabel = within(dropdown).getByText(option.label);
-            expect(selectedLabel).toBeInTheDocument();
-    
             fireEvent.click(selectedLabel);
         })
-        
-        optionsList = within(dropdown).getByRole("list");
-        expect(optionsList).toBeInTheDocument();
+    })
 
+    test("Clicking outside options menu will hide it", () => {
+        render(
+            <Dropdown tag={mockTag} preset={mockPreset} options={mockOptions} onCallback={mockCallback}  />
+        );
+        const dropdown = screen.getByRole("menu");
+        let selectedLabel = within(dropdown).getByText(mockPreset.label);
+
+        fireEvent.click(selectedLabel);
+
+        let optionsList: any = within(dropdown).getByRole("list");
         // Clicking outside the dropdown will hide its menu
         fireEvent.click(window);
         optionsList = within(dropdown).queryByRole("list");
         expect(optionsList).not.toBeInTheDocument()
-     
-    })
         
+    })
     
 })

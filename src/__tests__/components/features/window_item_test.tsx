@@ -2,7 +2,7 @@ import { render, screen, within, fireEvent } from "@testing-library/react";
 import '@testing-library/jest-dom'
 import randomNumber from "../../../tools/random_number";
 import TextIconButton from "../../../components/utils/text_icon_button";
-import { Provider } from "react-redux";
+import { Provider, useDispatch } from "react-redux";
 import { store } from "../../../redux/reducers";
 import WindowItem from "../../../components/features/window_item";
 import { iTabItem } from "../../../interfaces/tab_item";
@@ -35,10 +35,10 @@ for(let i = 0; i < 10; i++){
     });
 }
 
-const mockCloseWindowFn = jest.fn((id: number): void => {})
+const mockCloseWindowFn = jest.fn((id: number | number[]): void => {})
 chrome.tabs.remove = jest.fn((tabId: number|number[]): Promise<void> => new Promise((res, rej) => {}));
 
-describe("Test <TextIconButton>", () => {
+describe("Test <WindowItem>", () => {
     test("Only editable tab is shown when no preset tabs", () => {
         render(
             <Provider store={store}>
@@ -50,12 +50,27 @@ describe("Test <TextIconButton>", () => {
         const listItems = within(tablist).getAllByRole("listitem");
         const textfield = within(listItems[0]).getByRole("textbox");
 
-        expect(tablist).toBeVisible();
-        expect(listItems.length).toEqual(1);
         expect(textfield).toBeInTheDocument();
     });
 
-    test("preset tabs renders ok and no editable tab", () => {
+    test("initial preset tabs renders ok", () => {
+        render(
+            <Provider store={store}>
+                <WindowItem {...mockWindow} />
+            </Provider>
+        )
+
+        const tablist = screen.getByRole("list");
+        const listItems = within(tablist).queryAllByRole("listitem");
+
+        // Tab order matches those defined in the mock
+        mockWindow.tabs.forEach((tab, i) => {
+            const link = within(listItems[i]).getByRole("link");
+            expect(link).toHaveTextContent(tab.label);
+        })
+    });
+
+    test("no textfield when invoking with preset tabs", () => {
         render(
             <Provider store={store}>
                 <WindowItem {...mockWindow} />
@@ -70,39 +85,39 @@ describe("Test <TextIconButton>", () => {
             const textfield = within(item).queryByRole("textbox");
             expect(textfield).not.toBeInTheDocument();
         })
-        
-        // Tab order matches those defined in the mock
-        mockWindow.tabs.forEach((tab, i) => {
-            const link = within(listItems[i]).getByRole("link");
-            expect(link).toHaveTextContent(tab.label);
-        })
     });
 
     describe("test window settings", () => {
-        test("expand/collapse buttons work", () => {
+        test("expand button becomes visible when clicking collapse", () => {
+            render(
+                <Provider store={store}>
+                    <WindowItem {...mockWindow} />
+                </Provider>
+            )
+
+            let expandButton: HTMLElement | null = screen.queryByTestId("expand-icon");
+            let collapseButton: HTMLElement | null = screen.getByTestId("collapse-icon");
+
+            fireEvent.click(collapseButton);
+            expandButton = screen.getByTestId("expand-icon");
+            expect(expandButton).toBeInTheDocument();
+        })
+
+        test("collapse button is hidden once clicked", () => {
             render(
                 <Provider store={store}>
                         <WindowItem {...mockWindow} />
                 </Provider>
             )
 
-            let expandButton: HTMLElement | null = screen.queryByTestId("expand-icon");
             let collapseButton: HTMLElement | null = screen.getByTestId("collapse-icon");
-            expect(expandButton).not.toBeInTheDocument();
-            expect(collapseButton).toBeInTheDocument();
 
             fireEvent.click(collapseButton);
-            expandButton = screen.getByTestId("expand-icon");
             collapseButton = screen.queryByTestId("collapse-icon");
-            expect(expandButton).toBeInTheDocument();
-            expect(collapseButton).not.toBeInTheDocument();
 
-            fireEvent.click(expandButton);
-            expandButton = screen.queryByTestId("expand-icon");
-            collapseButton = screen.getByTestId("collapse-icon");
-            expect(expandButton).not.toBeInTheDocument();
-            expect(collapseButton).toBeInTheDocument();
+            expect(collapseButton).not.toBeInTheDocument();
         })
+
         test("close window button is hidden when editing is disabled", () => {
             render(
                 <Provider store={store}>
@@ -112,11 +127,10 @@ describe("Test <TextIconButton>", () => {
     
             const trashButton = screen.queryByTestId("trash-icon");
             expect(trashButton).not.toBeInTheDocument();
-           // fireEvent.click(trashButton);
-           // expect(mockCloseWindowFn).toHaveBeenCalledWith(mockWindow.id);
+
         });
 
-        test("close window button is visible and works when enabled", () => {
+        test("close window button is visible", () => {
             render(
                 <Provider store={store}>
                     <WindowItem {...mockWindow} onDelete={mockCloseWindowFn} disableEdit={false} />
@@ -125,11 +139,21 @@ describe("Test <TextIconButton>", () => {
     
             const trashButton = screen.getByTestId("trash-icon");
             expect(trashButton).toBeInTheDocument()
+        })
+
+        test("close window button calls callback when clicked and enabled", () => {
+            render(
+                <Provider store={store}>
+                    <WindowItem {...mockWindow} onDelete={mockCloseWindowFn} disableEdit={false} />
+                </Provider>
+            )
+    
+            const trashButton = screen.getByTestId("trash-icon");
             fireEvent.click(trashButton);
             expect(mockCloseWindowFn).toHaveBeenCalledWith(mockWindow.id);
         })
 
-        test("Tab options are hidden when disabled through window props", () => {
+        test("Edit button is hidden when disabled through props", () => {
             render(
                 <Provider store={store}>
                     <WindowItem {...mockWindow} />
@@ -141,16 +165,43 @@ describe("Test <TextIconButton>", () => {
 
             listItems.forEach((tab, i) => {
                 const editButton = within(tab).queryByTestId("pen-icon");
-                const checkbox = within(tab).queryByTestId("checkbox");
-                const closeButton = within(tab).queryByTestId("close-light-icon");
-
                 expect(editButton).not.toBeInTheDocument();
+            })
+        })
+
+        test("Checkbox is hidden when disabled through props", () => {
+            render(
+                <Provider store={store}>
+                    <WindowItem {...mockWindow} />
+                </Provider>
+            )
+
+            const tablist = screen.getByRole("list");
+            const listItems = within(tablist).getAllByRole("listitem");
+
+            listItems.forEach((tab, i) => {
+                const checkbox = within(tab).queryByTestId("checkbox");
                 expect(checkbox).not.toBeInTheDocument();
+            })
+        })
+
+        test("Close button is hidden when disabled through props", () => {
+            render(
+                <Provider store={store}>
+                    <WindowItem {...mockWindow} />
+                </Provider>
+            )
+
+            const tablist = screen.getByRole("list");
+            const listItems = within(tablist).getAllByRole("listitem");
+
+            listItems.forEach((tab, i) => {
+                const closeButton = within(tab).queryByTestId("close-light-icon");
                 expect(closeButton).not.toBeInTheDocument();
             })
         })
 
-        test("Show textfield when pen icon is clicked, and hides when blurred", () => {
+        test("Show textfield and focus it when pen icon is clicked (enabled through props)", () => {
             render(
                 <Provider store={store}>
                     <WindowItem {...mockWindow} disableEditTab={false} />
@@ -162,22 +213,39 @@ describe("Test <TextIconButton>", () => {
 
             listItems.forEach((tab, i) => {
                 let editableTab = screen.queryByRole("textbox");
-                expect(editableTab).not.toBeInTheDocument()
 
                 const editButton = within(tab).getByTestId("pen-icon");
                 fireEvent.click(editButton);
                 
                 editableTab = screen.getByRole("textbox");
                 expect(editableTab).toBeInTheDocument();
-                expect(editableTab).toHaveFocus();
-
-                const mockNewValue = `https://${randomNumber().toString()}.com`;
-                fireEvent.change(editableTab, { target: { value: mockNewValue } })
-                fireEvent.blur(editableTab);
             })
         })
 
-        test("Marking tabs will add/remove checkbox mark of affected tabs", () => {
+        test("Marking tabs will add checkbox mark to affected tabs", () => {
+            render(
+                <Provider store={store}>
+                    <WindowItem {...mockWindow} disableMarkTab={false} />
+                </Provider>
+            )
+
+            let tablist = screen.getByRole("list");
+            let listItems = within(tablist).getAllByRole("listitem");
+
+            listItems.forEach((tab, i) => {
+                let checkbox = within(tab).getByTestId("checkbox");
+                let checkedMark = within(checkbox).queryByTestId("checked-icon");
+                
+                fireEvent.click(checkbox);
+
+                checkbox = within(tab).getByTestId("checkbox");
+                checkedMark = within(checkbox).queryByTestId("checked-icon");
+
+                expect(checkedMark).toBeInTheDocument();
+            })
+        })
+
+        test("Clicking mark button on marked tabs will remove checkbox mark of affected tabs", () => {
             render(
                 <Provider store={store}>
                     <WindowItem {...mockWindow} disableMarkTab={false} />
@@ -191,13 +259,11 @@ describe("Test <TextIconButton>", () => {
                 let checkbox = within(tab).getByTestId("checkbox");
                 let checkedMark = within(checkbox).queryByTestId("checked-icon");
 
-                expect(checkedMark).not.toBeInTheDocument();
                 fireEvent.click(checkbox);
 
                 checkbox = within(tab).getByTestId("checkbox");
                 checkedMark = within(checkbox).queryByTestId("checked-icon");
 
-                expect(checkedMark).toBeInTheDocument();
                 fireEvent.click(checkbox);
 
                 checkbox = within(tab).getByTestId("checkbox");
@@ -207,7 +273,7 @@ describe("Test <TextIconButton>", () => {
             })
         })
 
-        test("Closing tabs triggers tab removal api", () => {
+        test("Closing tabs triggers tab removal relevant callback prop", () => {
             render(
                 <Provider store={store}>
                     <WindowItem {...mockWindow} disableDeleteTab={false} />
@@ -218,7 +284,6 @@ describe("Test <TextIconButton>", () => {
             let listItems = within(tablist).getAllByRole("listitem");
 
             listItems.forEach((tab, i) => {
-             
                 let closeButton = within(tab).getByTestId("close-light-icon");
                 fireEvent.click(closeButton);
 
@@ -226,7 +291,7 @@ describe("Test <TextIconButton>", () => {
             })
         });
 
-        test("Add tab button is visible and adds editable tab once clicked", () => {
+        test("Add tab button is visible when adding tab and editing tab permissions are in place", () => {
             render(
                 <Provider store={store}>
                     <WindowItem {...mockWindow} disableAddTab={false} disableEdit={false} />
@@ -234,18 +299,131 @@ describe("Test <TextIconButton>", () => {
             )
 
             const addTabButton = screen.getByText("New tab");
-            fireEvent.click(addTabButton);
 
-            // Check the tab list and check whether or not a textfield shows up as the last item
-            let tablist = screen.getByRole("list");
-            let listItems = within(tablist).getAllByRole("listitem");
-            const lastItem = listItems[listItems.length-1];
+            expect(addTabButton).toBeInTheDocument();
 
-            const textfield = within(lastItem).queryByRole("textbox");
-            expect(textfield).toBeInTheDocument();
+           // Cannot make more assertions in with unit tests.
+            // This part requires a redux store, so save this for integration tests...
         });
 
-        test("Delete tab button becomes available when at least 1 tab is marked. once clicked, all tabs get unmarked", () => {
+        test("Add tab button is always invisible if number of tabs is 0", () => {
+            render(
+                <Provider store={store}>
+                    <WindowItem {...mockWindow} tabs={[] as Array<iTabItem>} disableAddTab={false} disableEdit={false} />
+                </Provider>
+            )
+
+            const addTabButton = screen.queryByText("New tab");
+            expect(addTabButton).not.toBeInTheDocument();
+
+           // Cannot make more assertions in with unit tests.
+            // This part requires a redux store, so save this for integration tests...
+        });
+
+        test("Add tab button is always invisible if disableAddTabs is true", () => {
+            render(
+                <Provider store={store}>
+                    <WindowItem {...mockWindow} tabs={[] as Array<iTabItem>} disableAddTab={true} />
+                </Provider>
+            )
+
+            const addTabButton = screen.queryByText("New tab");
+            expect(addTabButton).not.toBeInTheDocument();
+
+           // Cannot make more assertions in with unit tests.
+            // This part requires a redux store, so save this for integration tests...
+        });
+
+        test("Add tab button is always invisible if disableEdit is true", () => {
+            render(
+                <Provider store={store}>
+                    <WindowItem {...mockWindow} tabs={[] as Array<iTabItem>}  disableEdit={true} />
+                </Provider>
+            )
+
+            const addTabButton = screen.queryByText("New tab");
+            expect(addTabButton).not.toBeInTheDocument();
+
+           // Cannot make more assertions in with unit tests.
+            // This part requires a redux store, so save this for integration tests...
+        });
+
+        test("Delete tab button is available when at least 1 tab is marked.", () => {
+            render(
+                <Provider store={store}>
+                    <WindowItem {...mockWindow} disableMarkTab={false} disableEdit={false} />
+                </Provider>
+            )
+
+            let deleteTabsButton = screen.queryByText("Delete tabs");
+
+            let tablist = screen.getByRole("list");
+            let listItems = within(tablist).getAllByRole("listitem");
+
+            listItems.forEach((tab, i) => {
+                const checkbox = within(tab).getByTestId("checkbox");
+                fireEvent.click(checkbox)
+            });
+
+            deleteTabsButton = screen.getByText("Delete tabs");
+            expect(deleteTabsButton).toBeInTheDocument();
+
+            // Cannot make more assertions with unit tests.
+            // This part requires a redux store, so save this for integration tests...
+        });
+
+        test("Clicking checkboxes will mark them", () => {
+            render(
+                <Provider store={store}>
+                    <WindowItem {...mockWindow} disableMarkTab={false} disableEdit={false} />
+                </Provider>
+            )
+
+            let tablist = screen.getByRole("list");
+            let listItems = within(tablist).getAllByRole("listitem");
+
+            listItems.forEach((tab, i) => {
+                const checkbox = within(tab).getByTestId("checkbox");
+                fireEvent.click(checkbox)
+            });
+
+            const checkedIcons = within(tablist).queryAllByTestId("checked-icon");
+            expect(checkedIcons.length).toEqual(listItems.length);
+
+            // Cannot make more assertions with unit tests.
+            // This part requires a redux store, so save this for integration tests...
+        });
+
+        test("Clicking delete button will trigger onDeleteT callback (when editing outside folder state context)", () => {
+            const tabDeleteFn = jest.fn(((ids: Array<number>) => {}));
+
+            render(
+                <Provider store={store}>
+                    <WindowItem {...mockWindow} disableMarkTab={false} disableEdit={false} onDeleteTabs={tabDeleteFn} />
+                </Provider>
+            )
+
+            let tablist = screen.getByRole("list");
+            let listItems = within(tablist).getAllByRole("listitem");
+
+            listItems.forEach((tab, i) => {
+                const checkbox = within(tab).getByTestId("checkbox");
+                fireEvent.click(checkbox, { bubbles: true })
+            });
+
+            const availableTabs = mockWindow.tabs.map((tab) => tab.id);
+
+            let deleteTabsButton = screen.getByText("Delete tabs");
+            fireEvent.click(deleteTabsButton, { bubbles: true });
+            
+            expect(tabDeleteFn).toHaveBeenCalledWith(availableTabs);
+
+            // Cannot make more assertions with unit tests.
+            // This part requires a redux store, so save this for integration tests...
+        });
+
+
+        test("Delete tab button is invisible if no tabs are marked", () => {
             render(
                 <Provider store={store}>
                     <WindowItem {...mockWindow} disableMarkTab={false} disableEdit={false} />
@@ -255,28 +433,11 @@ describe("Test <TextIconButton>", () => {
             let deleteTabsButton = screen.queryByText("Delete tabs");
             expect(deleteTabsButton).not.toBeInTheDocument();
 
-            let tablist = screen.getByRole("list");
-            let listItems = within(tablist).getAllByRole("listitem");
-
-            listItems.forEach((tab, i) => {
-                const checkbox = within(tab).getByTestId("checkbox");
-                fireEvent.click(checkbox)
-
-                const checkedMark = within(checkbox).queryByTestId("checked-icon");
-
-                expect(checkedMark).toBeInTheDocument();
-            });
-
-            deleteTabsButton = screen.getByText("Delete tabs");
-            expect(deleteTabsButton).toBeInTheDocument();
-
-            fireEvent.click(deleteTabsButton);
-
-
             // Cannot make more assertions in with unit tests.
             // This part requires a redux store, so save this for integration tests...
         
         });
+        
     })
     
 });

@@ -10,7 +10,7 @@ const mockTestId = randomNumber().toString();
 const mockChild = <p data-testid={mockTestId}></p>
 
 describe("Test <FormField>", () => {
-    test("Form field renders ok", () => {
+    test("Field has label as heading", () => {
         render(
             <FormField label={mockLabel} description={mockDesc}>
                 {mockChild}
@@ -19,28 +19,49 @@ describe("Test <FormField>", () => {
 
         const label = screen.getByRole("heading");
         expect(label).toHaveTextContent(mockLabel);
+    })
+
+    test("Field displays description props", () => {
+        render(
+            <FormField label={mockLabel} description={mockDesc}>
+                {mockChild}
+            </FormField>
+        )
 
         const desc = screen.getByText(mockDesc);
         expect(desc).toBeInTheDocument();
+    })
+
+    test("Field has child component", () => {
+        render(
+            <FormField label={mockLabel} description={mockDesc}>
+                {mockChild}
+            </FormField>
+        )
 
         const child = screen.getByTestId(mockTestId);
         expect(child).toBeInTheDocument();
     })
 
-    test("Form field renders ok when error", () => {
+    test("Field indicates error", () => {
         render(
             <FormField label={mockLabel} description={mockDesc} error={true}>
                 {mockChild}
             </FormField>
         )
 
-        const label = screen.getByRole("heading");
-        expect(label).toHaveTextContent(mockLabel);
+        const label = screen.queryByTestId("error-true")
+        expect(label).toBeInTheDocument();
+    })
 
-        const desc = screen.getByText(mockDesc);
-        expect(desc).toBeInTheDocument();
+    test("Field does not", () => {
+        render(
+            <FormField label={mockLabel} description={mockDesc}>
+                {mockChild}
+            </FormField>
+        )
 
-        const child = screen.getByTestId(mockTestId);
-        expect(child).toBeInTheDocument();
+        const label = screen.queryByTestId("error-true")
+        expect(label).not.toBeInTheDocument();
     })
 });

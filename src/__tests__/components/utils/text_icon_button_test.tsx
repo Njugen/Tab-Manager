@@ -12,7 +12,20 @@ const mockId = randomNumber().toString();
 const mockChild = <span data-testid="mock-span"></span>
 
 describe("Test <TextIconButton>", () => {
-    test("Renders non disabled button and triggers callback when clicked", () => {
+    test("triggers callback when clicked", () => {
+        render(
+            <TextIconButton id={mockId} text={mockText} disabled={false} textSize={"h-2"} onClick={mockFn}>
+                {mockChild}
+            </TextIconButton>
+        )
+
+        const button = screen.getByRole("button");
+
+        fireEvent.click(button);
+        expect(mockFn).toHaveBeenCalled();
+    });
+
+    test("Button has text", () => {
         render(
             <TextIconButton id={mockId} text={mockText} disabled={false} textSize={"h-2"} onClick={mockFn}>
                 {mockChild}
@@ -21,13 +34,20 @@ describe("Test <TextIconButton>", () => {
 
         const button = screen.getByRole("button");
         expect(button).toHaveTextContent(mockText);
-        expect(button).toBeVisible();
+    });
+
+    test("Button has child component", () => {
+        render(
+            <TextIconButton id={mockId} text={mockText} disabled={false} textSize={"h-2"} onClick={mockFn}>
+                {mockChild}
+            </TextIconButton>
+        )
+
+        const button = screen.getByRole("button");
         
         const child = within(button).getByTestId("mock-span");
         expect(child).toBeInTheDocument();
 
-        fireEvent.click(button);
-        expect(mockFn).toHaveBeenCalled();
     });
 
     test("button callback does not trigger when disabled", () => {

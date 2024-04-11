@@ -9,13 +9,21 @@ const mockText = randomNumber().toString();
 const mockFn = jest.fn();
 
 describe("Test <PurpleBorderButton>", () => {
-    test("Renders ok and works when not disabled", () => {
+    test("Button has props text", () => {
         render(
             <PurpleBorderButton text={mockText} disabled={false} onClick={mockFn} />
         )
 
         const button = screen.getByText(mockText, { selector: "button" });
         expect(button).toBeInTheDocument();
+    });
+
+    test("Clicking the button triggers callback", () => {
+        render(
+            <PurpleBorderButton text={mockText} disabled={false} onClick={mockFn} />
+        )
+
+        const button = screen.getByText(mockText, { selector: "button" });
         fireEvent.click(button);
         expect(mockFn).toHaveBeenCalled();
     });

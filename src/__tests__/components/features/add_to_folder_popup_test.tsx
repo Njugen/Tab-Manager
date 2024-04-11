@@ -28,7 +28,7 @@ const mockProps: iAddToFolderPopup = {
 }
 
 describe("Test <AddToFolderPopup>", () => {
-    test("Triggers onNewFolder/onCancel when 'To a new folder' button is clicked", () => {
+    test("Triggers onNewFolder when 'To a new folder' button is clicked", () => {
         render(
             <AddToFolderPopup {...mockProps} />
         );
@@ -37,6 +37,16 @@ describe("Test <AddToFolderPopup>", () => {
         fireEvent.click(addToNewFolderButton);
 
         expect(mockProps.onNewFolder).toHaveBeenCalled();
+    })
+
+    test("Triggers onCancel when 'To a new folder' button is clicked", () => {
+        render(
+            <AddToFolderPopup {...mockProps} />
+        );
+
+        const addToNewFolderButton = screen.getByText("To a new folder");
+        fireEvent.click(addToNewFolderButton);
+
         expect(mockProps.onCancel).toHaveBeenCalled();
     })
 
@@ -51,7 +61,7 @@ describe("Test <AddToFolderPopup>", () => {
         expect(mockProps.onCancel).toHaveBeenCalled();
     });
 
-    test("triggers onExistingFolder/onCancel when selecting an existing folder", () => {
+    test("triggers onExistingFolder when selecting an existing folder", () => {
         render(
             <AddToFolderPopup {...mockProps} />
         );
@@ -67,6 +77,23 @@ describe("Test <AddToFolderPopup>", () => {
         fireEvent.click(targetButton);
 
         expect(mockProps.onExistingFolder).toHaveBeenCalledWith({ selected: mockProps.dropdownOptions[1].id });
+    })
+
+    test("triggers onCancel when selecting an existing folder", () => {
+        render(
+            <AddToFolderPopup {...mockProps} />
+        );
+
+        const dropdown = screen.getByRole("menu");
+        let selectedLabel = within(dropdown).getByText(mockProps.dropdownOptions[0].label);
+        fireEvent.click(selectedLabel);
+
+
+        let menu = within(dropdown).getByRole("list");
+        let options = within(menu).getAllByRole("listitem");
+        let targetButton = within(options[1]).getByRole("button");
+        fireEvent.click(targetButton);
+
         expect(mockProps.onCancel).toHaveBeenCalled()
     })
 

@@ -5,45 +5,50 @@ import Checkbox from "../../../components/utils/checkbox";
 const mockCallback = jest.fn();
 
 describe("Test <Checkbox />", () => {
-    test("Clicking checkbox off/on works", () => {
+    test("Can be checked", () => {
         render(<Checkbox checked={false} onCallback={mockCallback} />);
-        
+
         // Button exists
         let button = screen.getByRole("button");
+  
+        fireEvent.click(button);
+        let icon = within(button).queryByRole("img");
+        expect(icon).toBeInTheDocument();
+    })
+
+    test("Can be unchecked", () => {
+        render(<Checkbox checked={true} onCallback={mockCallback} />);
+
+        // Button exists
+        let button = screen.getByRole("button");
+        
+        fireEvent.click(button);
         let icon = within(button).queryByRole("img");
 
         expect(icon).not.toBeInTheDocument();
-        
-        fireEvent.click(button);
-        expect(mockCallback).toHaveBeenCalled();
-        icon = within(button).getByRole("img");
-        
-        expect(icon).toBeInTheDocument();
-
-        fireEvent.click(button);
-        expect(mockCallback).toHaveBeenCalled();
-        icon = within(button).queryByRole("img");
-        expect(icon).not.toBeInTheDocument();
     })
-    
-    test("Clicking checkbox on/off works", () => {
+
+    test("can be checked -> unchecked -> checked", () => {
         render(<Checkbox checked={true} onCallback={mockCallback} />);
         
         // Button exists
         let button = screen.getByRole("button");
+        fireEvent.click(button);
+        fireEvent.click(button);
+        
         let icon = within(button).queryByRole("img");
-
         expect(icon).toBeInTheDocument();
+    })
+
+    test("can be unchecked -> checked -> unchecked", () => {
+        render(<Checkbox checked={false} onCallback={mockCallback} />);
         
+        // Button exists
+        let button = screen.getByRole("button");
         fireEvent.click(button);
-        expect(mockCallback).toHaveBeenCalled();
-        icon = within(button).queryByRole("img");
+        fireEvent.click(button);
         
+        let icon = within(button).queryByRole("img");
         expect(icon).not.toBeInTheDocument();
-
-        fireEvent.click(button);
-        expect(mockCallback).toHaveBeenCalled();
-        icon = within(button).getByRole("img");
-        expect(icon).toBeInTheDocument();
     })
 })

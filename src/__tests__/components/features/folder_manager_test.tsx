@@ -1,3 +1,4 @@
+
 import { render, screen, within, fireEvent } from "@testing-library/react";
 import '@testing-library/jest-dom'
 import randomNumber from "../../../tools/random_number";
@@ -27,6 +28,19 @@ afterEach(() => {
     jest.useRealTimers();
 })
 
+/*
+const chrome = {
+    storage: {
+        local: {
+                get: jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
+                    callback({ cancellation_warning_setting: false })
+            })
+        
+        }
+    }
+}
+*/
+
 describe("Test <FolderManager>", () => {
     describe("Empty plate (e.g. add new folder)", () => {
         const mockProps: iPopup = {
@@ -37,6 +51,8 @@ describe("Test <FolderManager>", () => {
 
         test("Renders empty form. Attempt at saving empty form results won't trigger onClose callback", () => {
             // Mock the chrome storage getter
+
+            // @ts-expect-error
             chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
                 callback({ cancellation_warning_setting: false })
             })
@@ -80,6 +96,8 @@ describe("Test <FolderManager>", () => {
 
         test("Saving with non-empty fields will trigger onClose callback", () => {
             // Mock the chrome storage getter
+
+            // @ts-expect-error
             chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
                 callback({ cancellation_warning_setting: false })
             })
@@ -126,6 +144,8 @@ describe("Test <FolderManager>", () => {
         describe("Test cancellation warning popup", () => {
             test("Attempt at cancelling when name field has changed will trigger a warning", () => {
                 // Mock the chrome storage getter
+
+                // @ts-expect-error
                 chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
                     callback({ cancellation_warning_setting: true })
                 })
@@ -178,6 +198,8 @@ describe("Test <FolderManager>", () => {
 
             test("Attempt at cancelling when description field has changed will trigger a warning", () => {
                 // Mock the chrome storage getter
+
+                // @ts-expect-error
                 chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
                     callback({ cancellation_warning_setting: true })
                 })
@@ -230,6 +252,8 @@ describe("Test <FolderManager>", () => {
 
             test("Attempt at cancelling once a window/tab has been added will  trigger a warning", () => {
                 // Mock the chrome storage getter
+
+                // @ts-expect-error
                 chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
                     callback({ cancellation_warning_setting: true })
                 })

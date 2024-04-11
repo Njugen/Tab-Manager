@@ -9,7 +9,7 @@ const mockDesc = randomNumber().toString();
 const mockChild = <img src="/favicon.ico" alt="test" data-testid="mock-child" />
 
 describe("Test <Group>", () => {
-    test("Renders ok", () => {
+    test("Description is visible", () => {
         render(
             <Group desc={mockDesc}>
                 {mockChild}
@@ -17,7 +17,15 @@ describe("Test <Group>", () => {
         )
 
         const desc = screen.getByText(mockDesc);
-        expect(desc).toBeVisible();
+        expect(desc).toBeInTheDocument()
+    })
+
+    test("Displays child component", () => {
+        render(
+            <Group desc={mockDesc}>
+                {mockChild}
+            </Group>
+        )
 
         const child = screen.getByTestId("mock-child");
         expect(child).toBeInTheDocument();

@@ -8,7 +8,7 @@ const mockChildren = <p data-testid="mock-component"></p>
 const mockFn = jest.fn();
 
 describe("Test <FolderControlButton>", () => {
-    test("Renders and works ok", () => {
+    test("Shows child component", () => {
         render(
             <FolderControlButton id={mockId} disabled={false} onClick={mockFn}>
                 {mockChildren}
@@ -18,6 +18,16 @@ describe("Test <FolderControlButton>", () => {
         const button = screen.getByRole("button");
         const children = within(button).getByTestId("mock-component");
         expect(children).toBeInTheDocument();
+    });
+
+    test("Clicking the button triggers callback", () => {
+        render(
+            <FolderControlButton id={mockId} disabled={false} onClick={mockFn}>
+                {mockChildren}
+            </FolderControlButton>
+        )
+    
+        const button = screen.getByRole("button");
     
         fireEvent.click(button);
         expect(mockFn).toHaveBeenCalled();

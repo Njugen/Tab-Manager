@@ -10,16 +10,21 @@ const mockFn = jest.fn((e: any) => e.target.value);
 const mockText = randomNumber().toString();
 
 describe("Test <SimpleSearchBar>", () => {
-    test("Renders ok and triggers change event correctly", () => {
+    test("Renders field with icon", () => {
         render(
             <SimpleSearchBar onChange={mockFn} />
         )
 
         const icon = screen.getByRole("img");
         expect(icon).toBeInTheDocument();
+    });
 
+    test("Field can be focused and changes to desired values", () => {
+        render(
+            <SimpleSearchBar onChange={mockFn} />
+        )
         const textfield = screen.getByRole("textbox");
-        fireEvent.click(textfield);
+        fireEvent.focus(textfield);
         fireEvent.change(textfield, { target: { value: mockText } });
 
         expect(mockFn).toHaveBeenCalledWith(

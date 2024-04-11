@@ -8,7 +8,36 @@ const mockLabel = randomNumber().toString();
 const mockFn = jest.fn((e: boolean | null) => e);
 
 describe("Test <Switcher>", () => {
-    test("Renders and toggle callback between true and false when clicked", () => {
+    test("Label is visible", () => {
+        render(
+            <Switcher label={mockLabel} value={false} onCallback={mockFn} />
+        )
+        
+        const label = screen.getByText(mockLabel);
+        expect(label).toBeInTheDocument();
+    });
+
+    test("Label is not visible without props", () => {
+        render(
+            <Switcher value={false} onCallback={mockFn} />
+        )
+        
+        const label = screen.queryByText(mockLabel);
+        expect(label).not.toBeInTheDocument();
+    });
+
+    test("Toggling on works", () => {
+        render(
+            <Switcher label={mockLabel} value={false} onCallback={mockFn} />
+        )
+
+        const button = screen.getByRole("button");
+        fireEvent.click(button);
+
+        expect(mockFn).toHaveBeenCalledWith(true);
+    });
+
+    test("Toggline on->off works", () => {
         render(
             <Switcher label={mockLabel} value={false} onCallback={mockFn} />
         )
@@ -18,25 +47,8 @@ describe("Test <Switcher>", () => {
 
         const button = screen.getByRole("button");
         fireEvent.click(button);
-
-        expect(mockFn).toHaveBeenCalledWith(true);
         fireEvent.click(button);
         expect(mockFn).toHaveBeenCalledWith(false)
-        fireEvent.click(button);
-    });
-
-    test("Renders without label ok", () => {
-        render(
-            <Switcher value={false} onCallback={mockFn} />
-        )
-        
-        const button = screen.getByRole("button");
-        fireEvent.click(button);
-
-        expect(mockFn).toHaveBeenCalledWith(true);
-        fireEvent.click(button);
-        expect(mockFn).toHaveBeenCalledWith(false)
-        fireEvent.click(button);
     });
 
 });

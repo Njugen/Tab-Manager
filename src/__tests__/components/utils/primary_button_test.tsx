@@ -7,7 +7,7 @@ const mockText = randomNumber().toString();
 const mockFn = jest.fn();
 
 describe("Test <PrimaryButton>", () => {
-    test("Renders and works ok", () => {
+    test("Button has text inserted through props", () => {
         render(
             <PrimaryButton text={mockText} disabled={false} onClick={mockFn} />
         )
@@ -15,6 +15,14 @@ describe("Test <PrimaryButton>", () => {
         const button = screen.getByRole("button");
         const text = within(button).getByText(mockText);
         expect(text).toHaveTextContent(mockText);
+    });
+
+    test("Clicking the button triggers callback", () => {
+        render(
+            <PrimaryButton text={mockText} disabled={false} onClick={mockFn} />
+        )
+
+        const button = screen.getByRole("button");
 
         fireEvent.click(button);
         expect(mockFn).toHaveBeenCalled();

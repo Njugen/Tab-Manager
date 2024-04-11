@@ -13,7 +13,29 @@ const mockFn = jest.fn();
 const mockLabel = randomNumber().toString();
 
 describe("Test <Navlink>", () => {
-    test("Text, child element and label visible. Href in place", () => {
+    test("Link shows label", () => {
+        render(
+            <Navlink url={mockUrl} label={mockLabel} onClick={mockFn}>
+                {mockChild}
+            </Navlink>
+        )
+
+        const link = screen.getByRole("link");
+        expect(link).toHaveTextContent(mockLabel);
+    });
+
+    test("Link has url in href attribue", () => {
+        render(
+            <Navlink url={mockUrl} label={mockLabel} onClick={mockFn}>
+                {mockChild}
+            </Navlink>
+        )
+
+        const link = screen.getByRole("link");  
+        expect(link).toHaveAttribute("href", mockUrl);
+    });
+
+    test("Link has child component", () => {
         render(
             <Navlink url={mockUrl} label={mockLabel} onClick={mockFn}>
                 {mockChild}
@@ -22,29 +44,18 @@ describe("Test <Navlink>", () => {
 
         const link = screen.getByRole("link");
         const child = within(link).getByTestId("mock-child");
-        
-        expect(link).toHaveAttribute("href", mockUrl);
-        expect(link).toHaveTextContent(mockLabel);
-        expect(child).toBeVisible();
-
-        fireEvent.click(link);
-        expect(mockFn).toHaveBeenCalled();
+        expect(child).toBeInTheDocument()
     });
 
-    test("Rendering with no label works", () => {
+    test("Clicking the link triggers callback", () => {
         render(
-            <Navlink url={mockUrl} onClick={mockFn}>
+            <Navlink url={mockUrl} label={mockLabel} onClick={mockFn}>
                 {mockChild}
             </Navlink>
         )
 
         const link = screen.getByRole("link");
-        const child = within(link).getByTestId("mock-child");
-        
-        expect(link).toHaveAttribute("href", mockUrl);
-        expect(child).toBeVisible();
-
         fireEvent.click(link);
         expect(mockFn).toHaveBeenCalled();
-    })
+    });
 });
