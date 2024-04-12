@@ -28,15 +28,15 @@ afterEach(() => {
     jest.useRealTimers();
 })
 
-describe("Test <FolderManager>", () => {
-    describe("Empty plate (e.g. add new folder)", () => {
-        const mockProps: iPopup = {
-            title: randomNumber().toString(),
-            type: "slide-in",
-            onClose: mockFn
-        }
+const mockProps: iPopup = {
+    title: randomNumber().toString(),
+    type: "slide-in",
+    onClose: mockFn
+}
 
-        test("Renders empty form. Attempt at saving empty form results won't trigger onClose callback", () => {
+describe("Test <FolderManager>", () => {
+    describe("Start with empty plate (e.g. add new folder)", () => {
+        test("All text fields are empty", () => {
             // Mock the chrome storage getter
 
             // @ts-expect-error
@@ -51,23 +51,71 @@ describe("Test <FolderManager>", () => {
             )
             
             let managerPopup = screen.getByRole("dialog");
-            expect(managerPopup).toBeInTheDocument();
-
             const fields = within(managerPopup).getAllByRole("textbox");
             fields.forEach((field) => {
                 expect(field).toHaveDisplayValue("")
             })
 
+            
+        })
+
+        test("There are no windows listed", () => {
+            // Mock the chrome storage getter
+
+            // @ts-expect-error
+            chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
+                callback({ cancellation_warning_setting: false })
+            })
+
+            render(
+                <Provider store={store}>
+                    <FolderManager {...mockProps} />
+                </Provider>
+            )
+            
+            let managerPopup = screen.getByRole("dialog");
             const windows = within(managerPopup).queryAllByTestId("window-item");
             expect(windows.length).toEqual(0);
+            
+        })
+
+        test("Attempt at saving empty form results won't trigger 'onClose' callback", () => {
+            // Mock the chrome storage getter
+
+            // @ts-expect-error
+            chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
+                callback({ cancellation_warning_setting: false })
+            })
+
+            render(
+                <Provider store={store}>
+                    <FolderManager {...mockProps} />
+                </Provider>
+            )
+            
+            let managerPopup = screen.getByRole("dialog");
 
             // Try save it. The onClose callback won't be called
             const saveButton = within(managerPopup).getByText("Create", { selector: "button" });
             fireEvent.click(saveButton, { bubbles: true });
             expect(mockProps.onClose).not.toHaveBeenCalled();
+        })
+
+        test("Clicking the cancel button will trigger 'onClose' callback", () => {
+            // Mock the chrome storage getter
+
+            // @ts-expect-error
+            chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
+                callback({ cancellation_warning_setting: false })
+            })
+
+            render(
+                <Provider store={store}>
+                    <FolderManager {...mockProps} />
+                </Provider>
+            )
             
-            managerPopup = screen.getByRole("dialog");
-            expect(managerPopup).toBeInTheDocument();
+            let managerPopup = screen.getByRole("dialog");
 
             // Cancelling closes the popup
             const cancelButton = within(managerPopup).getByText("Cancel", { selector: "button" });
@@ -81,7 +129,70 @@ describe("Test <FolderManager>", () => {
             
         })
 
-        test("Saving with non-empty fields will trigger onClose callback", () => {
+        test("Clicking the X button will trigger 'onClose' callback", () => {
+            // Mock the chrome storage getter
+
+            // @ts-expect-error
+            chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
+                callback({ cancellation_warning_setting: false })
+            })
+
+            render(
+                <Provider store={store}>
+                    <FolderManager {...mockProps} />
+                </Provider>
+            )
+            
+            let managerPopup = screen.getByRole("dialog");
+
+            // Cancelling closes the popup
+            const xButton = within(managerPopup).getByTestId("close-icon");
+            fireEvent.click(xButton, { bubbles: true });
+
+            act(() => {
+                jest.runAllTimers();
+            });
+
+            expect(mockProps.onClose).toHaveBeenCalled();
+            
+        })
+    })
+
+    describe("Test user interaction with the form", () => {
+        test("Clicking Create/Save won't trigger 'onClose' prop when only namefield has been changed", () => {
+            // Mock the chrome storage getter
+
+            // @ts-expect-error
+            chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
+                callback({ cancellation_warning_setting: false })
+            })
+
+            render(
+                <Provider store={store}>
+                    <FolderManager {...mockProps} />
+                </Provider>
+            )
+            
+            let managerPopup = screen.getByRole("dialog");
+            
+            // Change the name field value
+            const nameField = within(managerPopup).getByTestId("name-field");
+            fireEvent.focus(nameField);
+            fireEvent.change(nameField, { target: { value: randomNumber().toString() } } )
+            fireEvent.blur(nameField);
+
+
+            const saveButton = within(managerPopup).getByText("Create", { selector: "button" });
+            fireEvent.click(saveButton, { bubbles: true });
+
+            act(() => {
+                jest.runAllTimers();
+            });
+
+            expect(mockProps.onClose).not.toHaveBeenCalled();
+        })
+
+        test("Clicking Create/Save won't trigger 'onClose' when only description field has been changed", () => {
             // Mock the chrome storage getter
 
             // @ts-expect-error
@@ -99,6 +210,79 @@ describe("Test <FolderManager>", () => {
             let managerPopup = screen.getByRole("dialog");
             
             // Change the name field value
+            const descField = within(managerPopup).getByTestId("desc-field");
+            fireEvent.focus(descField);
+            fireEvent.change(descField, { target: { value: randomNumber().toString() } } )
+            fireEvent.blur(descField);
+
+            const saveButton = within(managerPopup).getByText("Create", { selector: "button" });
+            fireEvent.click(saveButton, { bubbles: true });
+
+            act(() => {
+                jest.runAllTimers();
+            });
+
+            expect(mockProps.onClose).not.toHaveBeenCalled();
+
+            
+        })
+
+        test("Clicking Create/Save won't trigger 'onClose' when only window list has been changed", () => {
+            // Mock the chrome storage getter
+
+            // @ts-expect-error
+            chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
+                callback({ cancellation_warning_setting: false })
+            })
+
+
+            render(
+                <Provider store={store}>
+                    <FolderManager {...mockProps} />
+                </Provider>
+            )
+            
+            let managerPopup = screen.getByRole("dialog");
+            
+
+            // Add a few new windows (and one tab in each)
+            for(let i = 0; i < 5; i++){
+                const newWindowButton = within(managerPopup).getByText("New window", { selector: "button" });
+                fireEvent.click(newWindowButton);
+                const window = within(managerPopup).getAllByTestId("window-item");
+                const editableTabField = within(window[i]).getByTestId("editable-tab");
+                fireEvent.focus(editableTabField);
+                fireEvent.change(editableTabField, { target: { value: `https://${randomNumber().toString()}.com` } } )
+                fireEvent.blur(editableTabField);
+            }
+
+            // Try save it. It should pass
+            const saveButton = within(managerPopup).getByText("Create", { selector: "button" });
+            fireEvent.click(saveButton, { bubbles: true });
+
+            act(() => {
+                jest.runAllTimers();
+            });
+
+            expect(mockProps.onClose).not.toHaveBeenCalled();
+
+            
+        })
+
+        test("Clicking Create/Save will triger 'onClose' prop when window list and name fields have been values", () => {
+            // @ts-expect-error
+            chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
+                callback({ cancellation_warning_setting: false })
+            })
+
+            render(
+                <Provider store={store}>
+                    <FolderManager {...mockProps} />
+                </Provider>
+            )
+    
+            let managerPopup = screen.getByRole("dialog");        
+
             const nameField = within(managerPopup).getByTestId("name-field");
             fireEvent.focus(nameField);
             fireEvent.change(nameField, { target: { value: randomNumber().toString() } } )
@@ -124,8 +308,6 @@ describe("Test <FolderManager>", () => {
             });
 
             expect(mockProps.onClose).toHaveBeenCalled();
-
-            
         })
 
         describe("Test cancellation warning popup", () => {
@@ -294,7 +476,6 @@ describe("Test <FolderManager>", () => {
                 
             })
         })
-        
     })
     
 });
