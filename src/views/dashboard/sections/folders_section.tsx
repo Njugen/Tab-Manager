@@ -147,21 +147,19 @@ const FoldersSection = (props: any): JSX.Element => {
     // Open a specific folder
     const renderFolderManagerPopup = (): JSX.Element => {
         let render;
-
+     
         if(createFolder === true){
             render = <FolderManager type="slide-in" title="Create folder" onClose={handleCloseFolderManager} />;
+        } else if(mergeProcess !== null){
+            return <FolderManager type="slide-in" title={`Create folder by merge`} folder={mergeProcess} onClose={handleCloseFolderManager} />
         } else {
-            if(mergeProcess !== null){
-                return <FolderManager type="slide-in" title={`Create folder by merge`} folder={mergeProcess} onClose={handleCloseFolderManager} />
-            } else {
-                const targetFolder: Array<iFolderItem> = folderCollectionState.filter((item: iFolderItem) => editFolderId === item.id);
-                const input: iFolderItem = {...targetFolder[0]};
+            const targetFolder: Array<iFolderItem> = folderCollectionState.filter((item: iFolderItem) => editFolderId === item.id);
+            const input: iFolderItem = {...targetFolder[0]};
 
-                if(targetFolder.length > 0){
-                    render = <FolderManager type="slide-in" title={`Edit folder ${targetFolder[0].name}`} folder={input} onClose={handleCloseFolderManager} />;
-                } else {
-                    render = <></>;
-                }
+            if(targetFolder.length > 0){
+                render = <FolderManager type="slide-in" title={`Edit folder ${targetFolder[0].name}`} folder={input} onClose={handleCloseFolderManager} />;
+            } else {
+                render = <></>;
             }
         }
 

@@ -91,9 +91,9 @@ const FolderManager = (props: iPopup): JSX.Element => {
     // - key: a string to identify the changed field
     // - value: the new value of this field
     const handleChangeField = (key: string, value: string): void => {
-        if(!in_edit_folder_state) return;
-        
-        if(modified === false && JSON.stringify(in_edit_folder_state[key]) !== JSON.stringify(value)) setModified(true);
+        if(!in_edit_folder_state) {
+            return;
+        } else if(modified === false && JSON.stringify(in_edit_folder_state[key]) !== JSON.stringify(value)) setModified(true);
 
         // Inform redux about the field change
         dispatch(updateInEditFolder(key, value));

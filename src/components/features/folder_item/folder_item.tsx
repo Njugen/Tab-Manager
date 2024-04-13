@@ -57,7 +57,6 @@ const FolderItem = (props: iFolderItem): JSX.Element => {
 
     // Show a list of options for how to launch this folder
     const handleShowLaunchOptionsMenu = useCallback((): void => {
-        console.log("BLABLA", showLaunchOptions);
         if(showLaunchOptions === false){
             setShowLaunchOptions(true);
             setTimeout(() => {

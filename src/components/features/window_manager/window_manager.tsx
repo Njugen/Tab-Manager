@@ -17,8 +17,6 @@ const WindowManager = (props: iWindowManager): JSX.Element => {
 
     const folderManagerState: iFolderItem | null = useSelector((state: any) => state.folderManagerReducer);
 
-    
-
     // Once the inEdit reducer changes, stop creating window
     useEffect(() => {
         setIncreationId(-1);
