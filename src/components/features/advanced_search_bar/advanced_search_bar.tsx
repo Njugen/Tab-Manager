@@ -81,27 +81,24 @@ const AdvancedSearchBar = (props: iAdvancedSearchBar): JSX.Element => {
     }, [showResultsContainer]);
 
 
-    // Decide whether or not to show performance warning, or launch a folder directly
-    useEffect(() => {
-        if(!windowsPayload || !folderLaunchType) return;
-
+    const evaluatePerformanceWarning = (type: string, windows: Array<iWindowItem>) => {
+        if(!windows) return;
         let tabsCount = 0;
-        windowsPayload.forEach((window: iWindowItem) => {
+        windows.forEach((window: iWindowItem) => {
             tabsCount += window.tabs.length;
         });
    
         chrome.storage.local.get("performance_notification_value", (data) => {
-            const { performance_notification_value } = data;
-
-            setTotalTabsCount(performance_notification_value);
-            if(performance_notification_value !== -1 && performance_notification_value <= tabsCount) {
+            setTotalTabsCount(data.performance_notification_value);
+            if(data.performance_notification_value !== -1 && data.performance_notification_value <= tabsCount) {
                 setShowPerformanceWarning(true);
             } else {
-                handleLaunchFolderProps.windowsPayload = windowsPayload;
+                handleLaunchFolderProps.windowsPayload = windows;
+                handleLaunchFolderProps.folderLaunchType = type;
                 handleLaunchFolder(handleLaunchFolderProps);
             }
         });
-    }, [folderLaunchType]);
+    }
 
     // Show search results area unless already shown
     const handleActivateSearch = (e: any): void => {
@@ -110,25 +107,12 @@ const AdvancedSearchBar = (props: iAdvancedSearchBar): JSX.Element => {
 
     // Prepare the windows in a folder for launch, and Instruct the component on how to launch the folder
     const handlePrepareLaunchFolder = (windows: Array<iWindowItem>, type: string): void => {
+        console.log("TYPE", type);
         setWindowsPayload(windows);
-        setFolderLaunchType(type);
+        evaluatePerformanceWarning(type, windows);
     }
 
-    // Run when user don't want to open folder.
-    const denyFolderLaunch = (): void => { 
-        setShowPerformanceWarning(false); setWindowsPayload(null);
-        setFolderLaunchType(null); setShowPerformanceWarning(false);
-    }
 
-    // Run when user wants to launch folder
-    const proceedFolderLaunch = (): void => {
-        if(windowsPayload){
-            const tempProps: iLaunchFolderProps = { folderLaunchType, windowsPayload, setWindowsPayload, setFolderLaunchType, setShowPerformanceWarning }
-
-            handleLaunchFolder(tempProps); 
-            setShowPerformanceWarning(false);
-        }
-    }
 
     return (
         <>
@@ -136,8 +120,21 @@ const AdvancedSearchBar = (props: iAdvancedSearchBar): JSX.Element => {
                 <PopupMessage
                     title="Warning" 
                     text={`You are about to open ${totalTabsCount} or more tabs at once. Opening this many may slow down your browser. Do you want to proceed?`}
-                    primaryButton={{ text: "Yes, open selected folders", callback: proceedFolderLaunch}}
-                    secondaryButton={{ text: "No, do not open", callback: denyFolderLaunch}}    
+                    primaryButton={{ 
+                        text: "Yes, open selected folders", 
+                        callback: () => { 
+                            if(windowsPayload) {
+                                handleLaunchFolderProps.windowsPayload = windowsPayload;
+                                handleLaunchFolder(handleLaunchFolderProps);
+                            }
+                            setShowPerformanceWarning(false)
+                        }
+                    }}
+                    secondaryButton={{ 
+                        text: "No, do not open", 
+                        callback: () => { 
+                            setShowPerformanceWarning(false); 
+                            setWindowsPayload(null)}}}     
                 />
             }
             <div className="mt-8 flex justify-center">
