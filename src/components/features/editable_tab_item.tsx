@@ -2,7 +2,7 @@
 import "./../../styles/global_utils.module.scss";
 import { iEditableTabItem } from "../../interfaces/editable_tab_item";
 import * as predef from "../../styles/predef";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import randomNumber from "../../tools/random_number";
 import { iTabItem } from "../../interfaces/tab_item";
 import { useDispatch } from "react-redux";
@@ -20,13 +20,6 @@ const EditableTabItem = (props: iEditableTabItem): JSX.Element => {
     const fieldRef = useRef<HTMLInputElement>(null);
 
     const dispatch = useDispatch();
-    
-    // Automatically focus on the textfield once this component has been invoked.
-    useEffect(() => {
-      
-            if(fieldRef.current) fieldRef.current.focus();
-       
-    }, []);
     
     // Save the changes to redux once verified.
     // Show error message, and prevent saving if field is invalid.

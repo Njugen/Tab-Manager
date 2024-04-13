@@ -11,27 +11,6 @@ const PageView = (props: iPageView): JSX.Element => {
       window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
     }, [view])
 
-    /*if(urlSplit.length === 1){
-      result = <DashboardView data-testid="ffff" />;
-    } else if(urlSplit.length === 2){
-      const paramSplit: Array<string> =  urlSplit[1].split("=");
-      const key: string = paramSplit[0];
-      const val: string = paramSplit[1]
-      
-      if(key === "view"){
-        if(val === "main"){
-          result = <DashboardView />
-        } else if(val === "settings"){
-          result = <SettingsView />;
-        } else {
-          result = <DashboardView />;
-        }
-        
-      } else {
-        result = <DashboardView />;
-      }
-    }*/
-
     if(view === "main"){
       result = <DashboardView />;
     } else if(view ==="settings") {

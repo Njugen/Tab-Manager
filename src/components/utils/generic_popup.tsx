@@ -1,4 +1,4 @@
-import { forwardRef, useEffect } from "react"
+import { forwardRef } from "react"
 import CloseIcon from "../icons/close_icon"
 import { innerStyleDirection, outerStyleDirection } from "../features/folder_manager/functions/style_directions"
 import GenericButton from "./generic_button"

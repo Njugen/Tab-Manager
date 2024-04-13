@@ -83,13 +83,11 @@ const FoldersSection = (props: any): JSX.Element => {
         })
     }, []);
 
-    // Prepare to launch a folder: Once folderLaunchType changes, then open all windows and tabs in the specific folder
-    // Warn the user if the number of tabs exceeeds the amount set in Settings page.
-    useEffect(() => {
-        
-        if(!windowsPayload || !folderLaunchType) return;
+
+    const evaluatePerformanceWarning = (type: string, windows: Array<iWindowItem>) => {
+        if(!windows) return;
         let tabsCount = 0;
-        windowsPayload.forEach((window: iWindowItem) => {
+        windows.forEach((window: iWindowItem) => {
             tabsCount += window.tabs.length;
         });
    
@@ -98,16 +96,10 @@ const FoldersSection = (props: any): JSX.Element => {
             if(data.performance_notification_value !== -1 && data.performance_notification_value <= tabsCount) {
                 setShowPerformanceWarning(true);
             } else {
-                handleLaunchFolder(windowsPayload);
+                handleLaunchFolder(windows, type);
             }
         });
-    }, [folderLaunchType]);
-
-    
-    // Close the performance warning if opened.
-    useEffect(() => {
-        if(showPerformanceWarning === false) setWindowsPayload(null);
-    }, [showPerformanceWarning]);
+    }
 
     // Delete one or more marked folders
     const handleDeleteFolders = (): void => {
@@ -284,7 +276,7 @@ const FoldersSection = (props: any): JSX.Element => {
     // Prepare to launch a folder by setting windows to be launched, and how to launch the windows/tabs in it.
     const handlePrepareLaunchFolder = (windows: Array<iWindowItem>, type: string): void => {
         setWindowsPayload(windows);
-        setFolderLaunchType(type);
+        evaluatePerformanceWarning(type, windows);
     }
 
 
@@ -471,7 +463,7 @@ const FoldersSection = (props: any): JSX.Element => {
     }
 
     // Launch folder
-    const handleLaunchFolder = (windows: Array<iWindowItem>): void => {
+    const handleLaunchFolder = (windows: Array<iWindowItem>, launchType?: string): void => {
         // Now, prepare a snapshot, where currently opened windows get stored
         let snapshot: Array<chrome.windows.Window> = [];
 
@@ -490,7 +482,7 @@ const FoldersSection = (props: any): JSX.Element => {
             const windowSettings = {
                 focused: i === 0 ? true : false,
                 url: window.tabs.map((tab) => tab.url),
-                incognito: folderLaunchType === "incognito" ? true : false
+                incognito: launchType === "incognito" ? true : false
             }
             chrome.windows.create(windowSettings);
         });
@@ -507,7 +499,7 @@ const FoldersSection = (props: any): JSX.Element => {
 
         // Unset all relevant states to prevent interferance with other features once the folder has been launched
         setWindowsPayload(null);
-        setFolderLaunchType(null);
+        //evaluatePerformanceWarning(null);
         setShowPerformanceWarning(false);
     }
     
@@ -519,9 +511,18 @@ const FoldersSection = (props: any): JSX.Element => {
                 <PopupMessage
                     title="Warning" 
                     text={`You are about to open ${totalTabsCount} or more tabs at once. Opening this many may slow down your browser. Do you want to proceed?`}
-                    primaryButton={{ text: "Yes, open selected folders", callback: () => { windowsPayload && handleLaunchFolder(windowsPayload); setShowPerformanceWarning(false)}}}
-                    secondaryButton={{ text: "No, do not open", callback: () => { setShowPerformanceWarning(false); setWindowsPayload(null);
-                        setFolderLaunchType(null); setShowPerformanceWarning(false);}}}    
+                    primaryButton={{ 
+                        text: "Yes, open selected folders", 
+                        callback: () => { 
+                            if(windowsPayload) handleLaunchFolder(windowsPayload); 
+                            setShowPerformanceWarning(false)
+                        }
+                    }}
+                    secondaryButton={{ 
+                        text: "No, do not open", 
+                        callback: () => { 
+                            setShowPerformanceWarning(false); 
+                            setWindowsPayload(null)}}}    
                 />
             }
 
@@ -529,16 +530,33 @@ const FoldersSection = (props: any): JSX.Element => {
                 <PopupMessage
                     title="Warning" 
                     text={`You are about to duplicate ${folderSettingsState.markedFoldersId.length} or more folders at once. Unnecessary duplications may clutter your dashboard, do you want to proceed?`}
-                    primaryButton={{ text: "Yes, proceed", callback: () => { handleDuplicateFolders(); setShowDuplicationWarning(false)}}}
-                    secondaryButton={{ text: "No, do not duplicate", callback: () => setShowDuplicationWarning(false)}}    
+                    primaryButton={{ 
+                        text: "Yes, proceed", 
+                        callback: () => { 
+                            handleDuplicateFolders(); 
+                            setShowDuplicationWarning(false)
+                        }}
+                    }
+                    secondaryButton={{ 
+                        text: "No, do not duplicate", 
+                        callback: () => setShowDuplicationWarning(false)
+                    }}    
                 />
             }
             {removalTarget &&
                 <PopupMessage
                     title="Warning" 
                     text={`You are about to remove the "${removalTarget.name}" folder and all its contents. This is irreversible, do you want to proceed?`}
-                    primaryButton={{ text: "Yes, remove this folder", callback: () => { dispatch(deleteFolderAction(removalTarget.id)); setRemovalTarget(null)}}}
-                    secondaryButton={{ text: "No, don't remove", callback: () => setRemovalTarget(null)}}    
+                    primaryButton={{ 
+                        text: "Yes, remove this folder", 
+                        callback: () => { 
+                            dispatch(deleteFolderAction(removalTarget.id)); 
+                            setRemovalTarget(null)
+                        }}}
+                    secondaryButton={{ 
+                        text: "No, don't remove", 
+                        callback: () => setRemovalTarget(null)
+                    }}    
                 />
             }
             {showDeleteWarning === true && 

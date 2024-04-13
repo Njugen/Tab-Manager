@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import iPopupMessage from '../../interfaces/popup_message';
 import styles from "../../styles/global_utils.module.scss";
 

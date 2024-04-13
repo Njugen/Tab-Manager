@@ -1,4 +1,4 @@
-import { useState, useEffect, useId } from "react";
+import { useState,  useId } from "react";
 import GenericButton from "../utils/generic_button";
 import PrimaryButton from "../utils/primary_button/primary_button";
 import PurpleBorderButton from "../utils/purple_border_button";
@@ -32,11 +32,6 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
     // Get information about the folder 
     const folder_state: iFolderItem | null = useSelector((state: any) => state.folderManagerReducer);
     const misc_state: any = useSelector((state: any) => state.miscReducer);
-
-    // Disable add new tab by setting state
-    useEffect(() => {
-        if(newTab === true) setNewTab(false);
-    }, [folder_state]);
 
     // Expand or collapse a window (show/hide tabs within)
     const handleExpand = (): void => {
@@ -117,6 +112,7 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
         dispatch(setTabInEdits(isEditingTabs > 0 ? isEditingTabs - 1 : 0)); 
         dispatch(setCurrentlyEditingTab(false));
         setEditTab(null);
+        setNewTab(false);
     }
 
     const handleTabClose = (tabId: number): void => {

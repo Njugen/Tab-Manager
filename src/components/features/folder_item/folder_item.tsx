@@ -42,7 +42,6 @@ const FolderItem = (props: iFolderItem): JSX.Element => {
         onEdit 
     } = props;
 
-    //useEffect(() => toggleExpand(type), []);
     
     useEffect(() => {
         // Listen for clicks in the viewport. If the options list is visible, then hide it once
@@ -56,12 +55,9 @@ const FolderItem = (props: iFolderItem): JSX.Element => {
         }
     }, [slideDown])
 
-    useEffect(() => {
-        if(index && folderRef.current) folderRef.current.style.zIndex = index.toString();
-    }, [folderRef])
-
     // Show a list of options for how to launch this folder
     const handleShowLaunchOptionsMenu = useCallback((): void => {
+        console.log("BLABLA", showLaunchOptions);
         if(showLaunchOptions === false){
             setShowLaunchOptions(true);
             setTimeout(() => {
@@ -193,7 +189,7 @@ const FolderItem = (props: iFolderItem): JSX.Element => {
             <li 
                 ref={folderRef} 
                 data-testid={"folder-item"} 
-                className={`shadow-[0_0px_3px_1px_rgba(0,0,0,0.125)] ${viewMode === "list" ? "my-4 duration-75" : "my-4 duration-75"} sticky transition-all ease-in w-full rounded-md`}
+                className={`z-${index && index} shadow-[0_0px_3px_1px_rgba(0,0,0,0.125)] ${viewMode === "list" ? "my-4 duration-75" : "my-4 duration-75"}  transition-all ease-in w-full rounded-md`}
             >
                 <div ref={headerRef} className={expanded === true ? expHeaderCSS : colHeaderCSS}>
                     <div className="inline-block">

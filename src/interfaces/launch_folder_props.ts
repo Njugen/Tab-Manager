@@ -1,7 +1,7 @@
 import { iWindowItem } from "./window_item"
 
 interface iLaunchFolderProps {
-    folderLaunchType: string | null,
+    folderLaunchType?: string | null,
     windowsPayload: Array<iWindowItem> | null,
     setWindowsPayload: React.Dispatch<React.SetStateAction<iWindowItem[] | null>>,
     setFolderLaunchType: React.Dispatch<React.SetStateAction<string | null>>,

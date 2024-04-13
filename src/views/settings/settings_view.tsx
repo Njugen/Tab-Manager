@@ -49,12 +49,7 @@ const SettingsView = (props: iView): JSX.Element => {
     // Set default values of all fields
     useEffect(() => {
         getFromStorage("local", null, (data) => {
-            const { performance_notification_value, duplication_warning_value, close_current_setting, cancellation_warning_setting, removal_warning_setting, error_log_setting } = data;
-
-            const payload = {
-                performance_notification_value, duplication_warning_value, close_current_setting, cancellation_warning_setting, removal_warning_setting, error_log_setting
-            }
-            dispatch(readAllPluginSettings(payload));
+            dispatch(readAllPluginSettings(data));
         })
     }, []);
 

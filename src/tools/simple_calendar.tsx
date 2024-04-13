@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { iFieldOption } from "../interfaces/dropdown";
 import Dropdown from "../components/utils/dropdown/dropdown";
 import { iDropdownSelected } from "../interfaces/dropdown";
