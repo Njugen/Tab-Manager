@@ -2,11 +2,11 @@ import iHandleShowResultsContainerProps from "../../../../interfaces/handle_show
 
  // Show search results by sliding in the results area
 const handleShowResultsContainer = (props: iHandleShowResultsContainerProps): void => {
-    const { searchResultsContainerRef, showResultsContainer, slideDown, setSlideDown, setShowResultsContainer } = props;
+    const { searchResultsContainerRef, showResultsContainer, slideDown, handleSlideDown, setShowResultsContainer } = props;
 
     if(showResultsContainer === false){
         setShowResultsContainer(true);
-        setSlideDown(slideDown === true ? false : true);
+        handleSlideDown(slideDown === true ? false : true);
       
     } else {
         if(searchResultsContainerRef.current){
@@ -14,7 +14,7 @@ const handleShowResultsContainer = (props: iHandleShowResultsContainerProps): vo
             searchResultsContainerRef.current.classList.add("mt-10");
         } 
         document.body.style.overflowY = "auto";
-        setSlideDown(false);
+        handleSlideDown(false);
         setShowResultsContainer(false);
     }
 }

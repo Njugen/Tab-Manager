@@ -38,7 +38,30 @@ const AdvancedSearchBar = (props: iAdvancedSearchBar): JSX.Element => {
     const historySectionState: iHistoryState = useSelector((state: any) => state.historySectionReducer);
 
     const { popup_container_transparent_bg } = styles;
-    const handleShowResultsProps: iHandleShowResultsContainerProps = { searchResultsContainerRef , showResultsContainer, slideDown, setSlideDown, setShowResultsContainer }
+
+    const handleSlideDown = (status: boolean) => {
+        // Adjust the search field features based on the slideDown state
+
+        if(keyword.length === 0) {
+            if(status === true){
+                searchFieldRef.current!.value = "";
+            }
+        }
+
+        if(status === true){
+            setTimeout(() => {
+                if(searchResultsContainerRef.current){
+                    searchResultsContainerRef.current.classList.remove("mt-10");
+                    searchResultsContainerRef.current.classList.add("mt-20");
+                }
+            }, 50);
+  
+            document.body.style.overflowX = "hidden";
+        }
+        setSlideDown(status);
+    } 
+
+    const handleShowResultsProps: iHandleShowResultsContainerProps = { searchResultsContainerRef , showResultsContainer, slideDown, handleSlideDown, setShowResultsContainer }
     const handleLaunchFolderProps: iLaunchFolderProps = { folderLaunchType, windowsPayload, setWindowsPayload, setFolderLaunchType, setShowPerformanceWarning }
 
     const clickListener = (e: any): void => {
@@ -56,26 +79,6 @@ const AdvancedSearchBar = (props: iAdvancedSearchBar): JSX.Element => {
             window.removeEventListener("click", clickListener);
         }
     }, [showResultsContainer]);
-
-    // Adjust the search field features based on the slideDown state
-    useEffect(() => {
-        if(keyword.length === 0) {
-            if(slideDown === true){
-                searchFieldRef.current!.value = "";
-            }
-        }
-
-        if(slideDown === true){
-            setTimeout(() => {
-                if(searchResultsContainerRef.current){
-                    searchResultsContainerRef.current.classList.remove("mt-10");
-                    searchResultsContainerRef.current.classList.add("mt-20");
-                }
-            }, 50);
-  
-            document.body.style.overflowX = "hidden";
-        }
-    }, [slideDown]);
 
 
     // Decide whether or not to show performance warning, or launch a folder directly
