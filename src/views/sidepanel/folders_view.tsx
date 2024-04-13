@@ -20,7 +20,6 @@ import iFolderState from "../../interfaces/states/folder_state";
 const FoldersView = (props: iFoldersView): JSX.Element => {
     const [editFolderId, setEditFolderId] = useState<number | null>(null);
     const [windowsPayload, setWindowsPayload] = useState<Array<iWindowItem> | null>(null);
-    const [folderLaunchType, setFolderLaunchType] = useState<string | null>(null); 
     const [totalTabsCount, setTotalTabsCount] = useState<number>(0);
     const [showPerformanceWarning, setShowPerformanceWarning] = useState<boolean>(false);
     const [removalTarget, setRemovalTarget] = useState<iFolderItem | null>(null);
@@ -50,11 +49,10 @@ const FoldersView = (props: iFoldersView): JSX.Element => {
           }
     }, []);
 
-    useEffect(() => {
-        
-        if(!windowsPayload || !folderLaunchType) return;
+    const evaluatePerformanceWarning = (type: string, windows: Array<iWindowItem>) => {
+        if(!windows) return;
         let tabsCount = 0;
-        windowsPayload.forEach((window: iWindowItem) => {
+        windows.forEach((window: iWindowItem) => {
             tabsCount += window.tabs.length;
         });
    
@@ -63,18 +61,17 @@ const FoldersView = (props: iFoldersView): JSX.Element => {
             if(data.performance_notification_value !== -1 && data.performance_notification_value <= tabsCount) {
                 setShowPerformanceWarning(true);
             } else {
-                handleLaunchFolder(windowsPayload);
+                handleLaunchFolder(windows, type);
             }
         });
-    }, [folderLaunchType]);
-
+    }
 
     const handlePrepareLaunchFolder = (windows: Array<iWindowItem>, type: string): void => {
         setWindowsPayload(windows);
-        setFolderLaunchType(type);
+        evaluatePerformanceWarning(type, windows);
     }
 
-    const handleLaunchFolder = (windows: Array<iWindowItem>): void => {
+    const handleLaunchFolder = (windows: Array<iWindowItem>, launchType?: string): void => {
         // Now, prepare a snapshot, where currently opened windows get stored
         let snapshot: Array<chrome.windows.Window> = [];
 
@@ -93,7 +90,7 @@ const FoldersView = (props: iFoldersView): JSX.Element => {
             const windowSettings = {
                 focused: i === 0 ? true : false,
                 url: window.tabs.map((tab) => tab.url),
-                incognito: folderLaunchType === "incognito" ? true : false
+                incognito: launchType === "incognito" ? true : false
             }
             chrome.windows.create(windowSettings);
         });
@@ -110,7 +107,6 @@ const FoldersView = (props: iFoldersView): JSX.Element => {
 
         // Unset all relevant states to prevent interferance with other features once the folder has been launched
         setWindowsPayload(null);
-        setFolderLaunchType(null);
         setShowPerformanceWarning(false);
     }
     
@@ -212,17 +208,36 @@ const FoldersView = (props: iFoldersView): JSX.Element => {
                 <PopupMessage
                     title="Warning" 
                     text={`You are about to open ${totalTabsCount} or more tabs at once. Opening this many may slow down your browser. Do you want to proceed?`}
-                    primaryButton={{ text: "Yes, open selected folders", callback: () => { windowsPayload && handleLaunchFolder(windowsPayload); setShowPerformanceWarning(false)}}}
-                    secondaryButton={{ text: "No, do not open", callback: () => { setShowPerformanceWarning(false); setWindowsPayload(null);
-                        setFolderLaunchType(null); setShowPerformanceWarning(false);}}}    
+                    primaryButton={{ 
+                        text: "Yes, open selected folders", 
+                        callback: () => { 
+                            if(windowsPayload) handleLaunchFolder(windowsPayload); 
+                            setShowPerformanceWarning(false)}
+                        }}
+                    secondaryButton={{ 
+                        text: "No, do not open", 
+                        callback: () => { 
+                            setShowPerformanceWarning(false);
+                            setWindowsPayload(null)
+                        }}}    
                 />
             }
             {removalTarget &&
                 <PopupMessage
                     title="Warning" 
                     text={`You are about to remove the "${removalTarget.name}" folder and all its contents. This is irreversible, do you want to proceed?`}
-                    primaryButton={{ text: "Yes, remove this folder", callback: () => { dispatch(deleteFolderAction(removalTarget.id)); setRemovalTarget(null)}}}
-                    secondaryButton={{ text: "No, don't remove", callback: () => setRemovalTarget(null)}}    
+                    primaryButton={{ 
+                        text: "Yes, remove this folder", 
+                        callback: () => { 
+                            dispatch(deleteFolderAction(removalTarget.id)); 
+                            setRemovalTarget(null)}
+                        }}
+                    secondaryButton={{ 
+                        text: "No, don't remove", 
+                        callback: () => { 
+                            setRemovalTarget(null)
+                        }
+                    }}    
                 />
             }
           

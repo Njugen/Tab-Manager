@@ -22,6 +22,14 @@ const HistoryTabGroupsSection = forwardRef(function HistoryTabGroupsSection(prop
     const historySectionState: iHistoryState = useSelector((state: any) => state.historySectionReducer);
     
     useEffect(() => {
+        let query: any = {
+            text: "",
+            endTime: undefined,
+            startTime: undefined,
+            maxResults: viewMode === "grid" ? 15 : undefined
+        }
+
+        loadHistory(query);
         searchHistory();
 
         chrome.history.onVisitRemoved.addListener(historyRemovedListener);
@@ -59,21 +67,6 @@ const HistoryTabGroupsSection = forwardRef(function HistoryTabGroupsSection(prop
         });
     }
 
-    const handleLoadHistory = (): void => {
-        let query: any = {
-            text: "",
-            endTime: undefined,
-            startTime: undefined,
-            maxResults: viewMode === "grid" ? 15 : undefined
-        }
-
-        loadHistory(query)
-    }
-
-    
-    useEffect(() => {
-        handleLoadHistory();
-    }, []);
 
     const tabViewModeCSS = (mode: "list" | "grid") => {
         if(mode === "list"){
@@ -100,18 +93,6 @@ const HistoryTabGroupsSection = forwardRef(function HistoryTabGroupsSection(prop
     const historyVisitedListener = (result: chrome.history.HistoryItem): void => {
         searchHistory();
     }
-
-    useEffect(() => {
-        searchHistory();
-
-        chrome.history.onVisitRemoved.addListener(historyRemovedListener);
-        chrome.history.onVisited.addListener(historyVisitedListener);
-
-        return () => {
-            chrome.history.onVisitRemoved.addListener(historyRemovedListener);
-            chrome.history.onVisited.addListener(historyVisitedListener);
-        }
-    }, []);
 
     const handleMarkTab = (id: number): void => {
         const tabCollection: Array<chrome.history.HistoryItem> = historySectionState.tabs;

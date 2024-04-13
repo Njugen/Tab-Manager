@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { iWindowItem } from '../../interfaces/window_item';
 import { useSelector, useDispatch } from "react-redux";
 import { iFolderItem } from '../../interfaces/folder_item';

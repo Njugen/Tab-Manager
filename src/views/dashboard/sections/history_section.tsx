@@ -97,9 +97,6 @@ const HistorySection = (props: any): JSX.Element => {
       //  handleLoadHistory(false, defaultLoadTabs)
     }, []);
 
-    useEffect(() => {
-        handleLoadHistory(expanded, loadTabs)
-    }, [searchString, expanded])
     
     useEffect(() => {
   
@@ -315,7 +312,8 @@ const HistorySection = (props: any): JSX.Element => {
     }
 
     const handleSearch = (e: any): void => {
-        setSearchString(e.target.value)
+        setSearchString(e.target.value);
+        handleLoadHistory(expanded, loadTabs)
     } 
 
     const renderFolderManager = (): JSX.Element => {
@@ -358,7 +356,7 @@ const HistorySection = (props: any): JSX.Element => {
         <>
             {addToWorkSpaceMessage && renderAddTabsMessage()}
             {renderFolderManager()}
-            <SectionContainer id="history-view" title="History" options={renderOptionsMenu} onExpand={(value: boolean) => setExpanded(value)}>
+            <SectionContainer id="history-view" title="History" options={renderOptionsMenu} onExpand={(value: boolean) => handleLoadHistory(value, loadTabs)}>
                 <HistoryTabGroupsSection ref={sectionRef} viewMode={historySectionState.viewMode} tabs={historySectionState.tabs} />
             </SectionContainer>
         </>
