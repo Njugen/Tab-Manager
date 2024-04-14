@@ -9,7 +9,7 @@ const initialState: iHistoryState = {
     expanded: false
 }
 
-const sessionSectionSlice = createSlice({
+const historySlice = createSlice({
     name: "history_section_slice",
     initialState,
     reducers: {
@@ -69,5 +69,5 @@ export const {
     unMarkAllTabs,
     changeSortOption,
     changeViewMode
-} = sessionSectionSlice.actions;
-export default sessionSectionSlice.reducer;
+} = historySlice.actions;
+export default historySlice.reducer;
