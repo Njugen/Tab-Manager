@@ -78,6 +78,11 @@ const pluginSettingsSlice = createSlice({
 })
 
 export const { 
-
+    changePerformanceWarningValue,
+    changeDuplicationWarningValue,
+    changeCloseSession,
+    changeShowFolderChangeWarning,
+    changeFolderRemovalWarning,
+    allowErrorLog
 } = pluginSettingsSlice.actions;
 export default pluginSettingsSlice.reducer;
