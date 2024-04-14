@@ -19,6 +19,9 @@ import SelectedCheckboxIcon from "../../../components/icons/selected_checkbox_ic
 import DeselectedCheckboxIcon from "../../../components/icons/deselected_checkbox_icon";
 import TextIconButton from "../../../components/utils/text_icon_button";
 import PopupMessage from "../../../components/utils/popup_message";
+import { setUpWindows } from "../../../redux-toolkit/slices/session_section_slice";
+import { unMarkAllTabs } from "../../../redux-toolkit/slices/history_section_slice";
+import { unMarkAllFolders } from "../../../redux-toolkit/slices/folders_section_slice";
 
 
 const CurrentSessionSection = (props: any): JSX.Element => {
@@ -27,8 +30,8 @@ const CurrentSessionSection = (props: any): JSX.Element => {
     const [createFolder, setCreateFolder] = useState<boolean>(false);
     const [windowIdWarning, setWindowIdWarning] = useState<number>(-1);
 
-    const folderCollectionState: Array<iFolderItem> = useSelector((state: any) => state.folderCollectionReducer);
-    const sessionSectionState = useSelector((state: any) => state.sessionSectionReducer);
+    const folderState: Array<iFolderItem> = useSelector((state: any) => state.folder);
+    const sessionSectionState = useSelector((state: any) => state.sessionSection);
 
     const dispatch = useDispatch();
 
@@ -74,7 +77,7 @@ const CurrentSessionSection = (props: any): JSX.Element => {
             windowTypes: ["normal", "popup"]
         };
         chrome.windows.getAll(queryOptions, (windows: Array<chrome.windows.Window>) => {
-            dispatch(setUpWindowsAction(windows));
+            dispatch(setUpWindows(windows));
         });
     };
 
@@ -83,9 +86,8 @@ const CurrentSessionSection = (props: any): JSX.Element => {
         setCreateFolder(false);
         setMergeProcess(null);
 
-        dispatch(clearMarkedTabsAction());
-        dispatch(clearMarkedFoldersAction());
-        dispatch(clearInEditFolder());
+        dispatch(unMarkAllTabs());
+        dispatch(unMarkAllFolders());
     }
 
     const proceedClose = (windowId: number) => {
@@ -162,7 +164,7 @@ const CurrentSessionSection = (props: any): JSX.Element => {
         if(e.selected === -1) return;
 
         const targetFolderId = e.selected;
-        const targetFolder: iFolderItem | undefined = folderCollectionState.find((folder: iFolderItem) => folder.id === targetFolderId);
+        const targetFolder: iFolderItem | undefined = folderState.find((folder: iFolderItem) => folder.id === targetFolderId);
      
         if(!targetFolder) return;
         
@@ -199,7 +201,7 @@ const CurrentSessionSection = (props: any): JSX.Element => {
     }
 
     const renderAddTabsMessage = (): JSX.Element => {
-        const currentFolders: Array<iFolderItem> = folderCollectionState;
+        const currentFolders: Array<iFolderItem> = folderState;
 
         const options: Array<iFieldOption> = currentFolders.map((folder) => {
             return { id: folder.id, label: folder.name }

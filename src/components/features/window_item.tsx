@@ -14,6 +14,11 @@ import CollapseIcon from "../icons/collapse_icon";
 import ExpandIcon from "../icons/expand_icon";
 import { iFolderItem } from "../../interfaces/folder_item";
 import { useMemo } from "react";
+import iFolderState from "../../interfaces/states/folder_state";
+import { RootState } from "../../redux-toolkit/store";
+import { setCurrentTabEdits, setIsEditingTab } from "../../redux-toolkit/slices/misc_slice";
+import { updateFolder } from "../../redux-toolkit/slices/folder_management_slice";
+
 
 /*
     Window containing tabs and various window related options. Used primarily
@@ -30,8 +35,10 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
     const dispatch = useDispatch();
 
     // Get information about the folder 
-    const folder_state: iFolderItem | null = useSelector((state: any) => state.folderManagerReducer);
-    const misc_state: any = useSelector((state: any) => state.miscReducer);
+    //const folder_state: iFolderItem | null = useSelector((state: any) => state.folderManagerReducer);
+    //const miscState: any = useSelector((state: any) => state.miscReducer);
+    const folderManagementState: iFolderItem | null = useSelector((state: RootState) => state.folderManagement);
+    const miscState: any = useSelector((state: RootState) => state.misc);
 
     // Expand or collapse a window (show/hide tabs within)
     const handleExpand = (): void => {
@@ -43,8 +50,8 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
 
     // Activate add new tab feature by setting state
     const handleAddNewTab = (): void => {
-        if(editTab === null && misc_state.currentlyEditingTab === false) {
-            dispatch(setCurrentlyEditingTab(true));
+        if(editTab === null && miscState.currentlyEditingTab === false) {
+            dispatch(setIsEditingTab(true));
             setNewTab(true);
         }
     }
@@ -66,10 +73,10 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
     // Delete marked tabs
     const handleDeleteTabs = (): void => {
 
-        if(folder_state?.windows && folder_state.windows.length > 0){
+        if(folderManagementState?.windows && folderManagementState.windows.length > 0){
         
-        const windows = folder_state.windows.filter((target: iWindowItem) => target.id === id);
-        const targetWindowIndex = folder_state?.windows.findIndex((target: iWindowItem) => target.id === id);
+        const windows = folderManagementState.windows.filter((target: iWindowItem) => target.id === id);
+        const targetWindowIndex = folderManagementState?.windows.findIndex((target: iWindowItem) => target.id === id);
         const tabs = windows[0].tabs;
      
         const newTabCollection: Array<iTabItem> = [];
@@ -83,11 +90,11 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
                     }
                 });
             
-                folder_state.windows[targetWindowIndex].tabs = [...newTabCollection];
+                folderManagementState.windows[targetWindowIndex].tabs = [...newTabCollection];
 
                 setMarkedTabs([]);
-                dispatch(updateInEditFolder("windows", folder_state.windows));
-                dispatch(setCurrentlyEditingTab(false));
+                dispatch(updateFolder(["windows", folderManagementState.windows]));
+                dispatch(setIsEditingTab(false));
             }
         } else {
             if(onDeleteTabs) {
@@ -98,19 +105,19 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
     }
 
     const handleTabEdit = (id: number): void => {
-        const { isEditingTabs, currentlyEditingTab } = misc_state;
+        const { isEditingTabs, currentlyEditingTab } = miscState;
 
         if(currentlyEditingTab === true) return;
-        
-        dispatch(setTabInEdits(isEditingTabs + 1));
-        dispatch(setCurrentlyEditingTab(true));
+
+        dispatch(setCurrentTabEdits(isEditingTabs + 1));
+        dispatch(setIsEditingTab(true));
         setEditTab(id);
     }
 
     const handleEditTabStop = (): void => {
-        const { isEditingTabs } = misc_state;
-        dispatch(setTabInEdits(isEditingTabs > 0 ? isEditingTabs - 1 : 0)); 
-        dispatch(setCurrentlyEditingTab(false));
+        const { isEditingTabs } = miscState;
+        dispatch(setCurrentTabEdits(isEditingTabs > 0 ? isEditingTabs - 1 : 0)); 
+        dispatch(setIsEditingTab(false));
         setEditTab(null);
         setNewTab(false);
     }
@@ -143,7 +150,7 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
         })
 
         return result;
-    }, [tabs, editTab, misc_state.currentlyEditingTab, markedTabs])
+    }, [tabs, editTab, miscState.currentlyEditingTab, markedTabs])
     
     // Decide whether or not to show an editable tab field within the tab list
     const evaluateNewTabRender = (): Array<JSX.Element> => {

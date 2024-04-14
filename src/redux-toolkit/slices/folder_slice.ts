@@ -18,7 +18,7 @@ const folderSlice = createSlice({
 
             return payload;
         },
-        createFolder: (state, action: PayloadAction<iFolderItem>): Array<iFolderItem> => {
+        createNewFolder: (state, action: PayloadAction<iFolderItem>): Array<iFolderItem> => {
             const { payload } = action;
 
             const updatedFolders = [ ...state, payload ];
@@ -63,7 +63,7 @@ const folderSlice = createSlice({
 export const { 
     setUpFolders,
     readAllStorageFolders,
-    createFolder,
+    createNewFolder,
     readFolder,
     updateFolder,
     deleteFolder

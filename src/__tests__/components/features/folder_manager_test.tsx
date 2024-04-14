@@ -4,7 +4,7 @@ import '@testing-library/jest-dom'
 import randomNumber from "../../../tools/random_number";
 import FolderControlButton from "../../../components/utils/icon_button/icon_button";
 import { iPopup } from "../../../interfaces/popup";
-import { store } from "../../../redux/reducers";
+import { store } from "../../../redux-toolkit/store";
 import { Provider } from 'react-redux';
 import FolderManager from "../../../components/features/folder_manager/folder_manager";
 import { act } from "react-dom/test-utils";
@@ -41,7 +41,7 @@ describe("Test <FolderManager>", () => {
 
             // @ts-expect-error
             chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
-                callback({ cancellation_warning_setting: false })
+                callback({ showFolderChangeWarning: false })
             })
 
             render(
@@ -64,7 +64,7 @@ describe("Test <FolderManager>", () => {
 
             // @ts-expect-error
             chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
-                callback({ cancellation_warning_setting: false })
+                callback({ showFolderChangeWarning: false })
             })
 
             render(
@@ -84,7 +84,7 @@ describe("Test <FolderManager>", () => {
 
             // @ts-expect-error
             chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
-                callback({ cancellation_warning_setting: false })
+                callback({ showFolderChangeWarning: false })
             })
 
             render(
@@ -106,7 +106,7 @@ describe("Test <FolderManager>", () => {
 
             // @ts-expect-error
             chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
-                callback({ cancellation_warning_setting: false })
+                callback({ showFolderChangeWarning: false })
             })
 
             render(
@@ -134,7 +134,7 @@ describe("Test <FolderManager>", () => {
 
             // @ts-expect-error
             chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
-                callback({ cancellation_warning_setting: false })
+                callback({ showFolderChangeWarning: false })
             })
 
             render(
@@ -164,7 +164,7 @@ describe("Test <FolderManager>", () => {
 
             // @ts-expect-error
             chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
-                callback({ cancellation_warning_setting: false })
+                callback({ showFolderChangeWarning: false })
             })
 
             render(
@@ -197,7 +197,7 @@ describe("Test <FolderManager>", () => {
 
             // @ts-expect-error
             chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
-                callback({ cancellation_warning_setting: false })
+                callback({ showFolderChangeWarning: false })
             })
 
 
@@ -232,7 +232,7 @@ describe("Test <FolderManager>", () => {
 
             // @ts-expect-error
             chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
-                callback({ cancellation_warning_setting: false })
+                callback({ showFolderChangeWarning: false })
             })
 
 
@@ -272,7 +272,7 @@ describe("Test <FolderManager>", () => {
         test("Clicking Create/Save will triger 'onClose' prop when window list and name fields have been values", () => {
             // @ts-expect-error
             chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
-                callback({ cancellation_warning_setting: false })
+                callback({ showFolderChangeWarning: false })
             })
 
             render(
@@ -316,7 +316,7 @@ describe("Test <FolderManager>", () => {
 
                 // @ts-expect-error
                 chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
-                    callback({ cancellation_warning_setting: true })
+                    callback({ showFolderChangeWarning: true })
                 })
                 
 
@@ -370,7 +370,7 @@ describe("Test <FolderManager>", () => {
 
                 // @ts-expect-error
                 chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
-                    callback({ cancellation_warning_setting: true })
+                    callback({ showFolderChangeWarning: true })
                 })
                 
     
@@ -424,7 +424,7 @@ describe("Test <FolderManager>", () => {
 
                 // @ts-expect-error
                 chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
-                    callback({ cancellation_warning_setting: true })
+                    callback({ showFolderChangeWarning: true })
                 })
     
                 render(

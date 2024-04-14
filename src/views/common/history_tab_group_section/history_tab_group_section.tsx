@@ -7,6 +7,7 @@ import { iFolderItem } from "../../../interfaces/folder_item";
 import { forwardRef, useEffect, useState } from "react";
 import iHistoryState from "../../../interfaces/states/history_state";
 import iHistoryTabGroupsSection from '../../../interfaces/history_tab_groups_section';
+import { markMultipleTabs, setUpTabs } from "../../../redux-toolkit/slices/history_section_slice";
 
 /*
     Component which displays browsing history pulled straight from the browser api.
@@ -19,7 +20,7 @@ const HistoryTabGroupsSection = forwardRef(function HistoryTabGroupsSection(prop
 
 
     const dispatch = useDispatch();
-    const historySectionState: iHistoryState = useSelector((state: any) => state.historySectionReducer);
+    const historySectionState: iHistoryState = useSelector((state: any) => state.historySection);
     
     useEffect(() => {
         let query: any = {
@@ -61,7 +62,7 @@ const HistoryTabGroupsSection = forwardRef(function HistoryTabGroupsSection(prop
             const newSnapshot = JSON.stringify(sorted[sorted.length-1].lastVisitTime);
             
             if(items.length > 0 && snapshot !== newSnapshot) { 
-                dispatch(setUpTabsAction(sorted));
+                dispatch(setUpTabs(sorted));
                 setSnapshot(newSnapshot);
             }
         });
@@ -82,7 +83,7 @@ const HistoryTabGroupsSection = forwardRef(function HistoryTabGroupsSection(prop
             maxResults: 25
         }
         chrome.history.search(query, (items: Array<chrome.history.HistoryItem>) => {
-            dispatch(setUpTabsAction(items));
+            dispatch(setUpTabs(items));
         });
     }
 
@@ -107,10 +108,10 @@ const HistoryTabGroupsSection = forwardRef(function HistoryTabGroupsSection(prop
             if(isMarked){
                 const updatedMarkedTabCollection: Array<chrome.history.HistoryItem> = markedTabs.filter((tab) => parseInt(tab.id) !== id);
 
-                dispatch(setMarkMultipleTabsAction(updatedMarkedTabCollection));
+                dispatch(markMultipleTabs(updatedMarkedTabCollection));
             } else {
                 const newTab = tabCollection[index];
-                dispatch(setMarkedTabsAction(newTab));
+                dispatch(markMultipleTabs([newTab]));
             }  
         }
     }

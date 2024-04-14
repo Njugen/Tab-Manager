@@ -3,7 +3,7 @@ import '@testing-library/jest-dom'
 import GenericButton from "../../../components/utils/generic_button";
 import WindowManager from "../../../components/features/window_manager/window_manager";
 import { Provider, useSelector } from "react-redux";
-import { store } from "../../../redux/reducers";
+import { store } from "../../../redux-toolkit/store";
 import { createStore, applyMiddleware } from "redux";
 import { combineReducers } from "redux";
 import thunk from "redux-thunk";

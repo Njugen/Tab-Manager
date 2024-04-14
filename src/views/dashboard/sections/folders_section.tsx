@@ -26,6 +26,8 @@ import TrashIcon from '../../../components/icons/trash_icon';
 import GridIcon from '../../../components/icons/grid_icon';
 import ListIcon from '../../../components/icons/list_icon';
 import iFolderState from '../../../interfaces/states/folder_state';
+import { createNewFolder, deleteFolder, readAllStorageFolders } from '../../../redux-toolkit/slices/folder_slice';
+import { changeSortOption, changeViewMode, markFolder, markMultipleFolders, unMarkAllFolders } from '../../../redux-toolkit/slices/folders_section_slice';
 
 const { 
     changeFoldersViewMode, 
@@ -64,22 +66,22 @@ const FoldersSection = (props: any): JSX.Element => {
 
     const dispatch = useDispatch();
 
-    const folderCollectionState: Array<iFolderItem> = useSelector((state: any) => state.folderCollectionReducer);
-    const folderSettingsState: iFolderState = useSelector((state: any) => state.folderSettingsReducer);
+    const folderState: Array<iFolderItem> = useSelector((state: any) => state.folder);
+    const foldersSectionState: iFolderState = useSelector((state: any) => state.foldersSection);
 
     // Get from browser storage and store into redux 
     useEffect(() => {
         getFromStorage("local", "folders", (data) => {  
-            dispatch(readAllFoldersFromBrowserAction(data.folders));
+            dispatch(readAllStorageFolders(data.folders));
             setLoaded(true);
         })
 
         getFromStorage("local", "folder_sort", (data) => {  
-            dispatch(setFoldersSortOrder(data.folder_sort));
+            dispatch(changeSortOption(data.folder_sort));
         })
 
         getFromStorage("local", "folder_viewmode", (data) => {  
-            dispatch(changeFoldersViewMode(data.folder_viewmode));
+            dispatch(changeViewMode(data.folder_viewmode));
         })
     }, []);
 
@@ -91,9 +93,9 @@ const FoldersSection = (props: any): JSX.Element => {
             tabsCount += window.tabs.length;
         });
    
-        chrome.storage.local.get("performance_notification_value", (data) => {
-            setTotalTabsCount(data.performance_notification_value);
-            if(data.performance_notification_value !== -1 && data.performance_notification_value <= tabsCount) {
+        chrome.storage.local.get("performanceWarningValue", (data) => {
+            setTotalTabsCount(data.performanceWarningValue);
+            if(data.performanceWarningValue !== -1 && data.performanceWarningValue <= tabsCount) {
                 setShowPerformanceWarning(true);
             } else {
                 handleLaunchFolder(windows, type);
@@ -103,31 +105,31 @@ const FoldersSection = (props: any): JSX.Element => {
 
     // Delete one or more marked folders
     const handleDeleteFolders = (): void => {
-        const { markedFoldersId } = folderSettingsState;
-        if(folderCollectionState && markedFoldersId){
+        const { markedFoldersId } = foldersSectionState;
+        if(folderState && markedFoldersId){
             markedFoldersId.forEach((targetId: number) => {
-                const markedFolderIndex = folderCollectionState.findIndex((folder: iFolderItem) => targetId === folder.id);
+                const markedFolderIndex = folderState.findIndex((folder: iFolderItem) => targetId === folder.id);
 
                 if(markedFolderIndex > -1){
-                    dispatch(deleteFolderAction(folderCollectionState[markedFolderIndex].id));
+                    dispatch(deleteFolder(folderState[markedFolderIndex].id));
                     
                 }
             });
             setShowDeleteWarning(false);
-            dispatch(clearMarkedFoldersAction());
+            dispatch(unMarkAllFolders());
         }
     }
 
     // Duplicate one of more marked folders
     const handleDuplicateFolders = (): void => {
-        const { markedFoldersId } = folderSettingsState;
+        const { markedFoldersId } = foldersSectionState;
 
-        if(folderCollectionState && markedFoldersId){
+        if(folderState && markedFoldersId){
             markedFoldersId.forEach((targetId: number) => {
-                const markedFolderIndex = folderCollectionState.findIndex((folder: iFolderItem) => targetId === folder.id);
+                const markedFolderIndex = folderState.findIndex((folder: iFolderItem) => targetId === folder.id);
 
                 if(markedFolderIndex > -1){
-                    const newFolder: iFolderItem = {...folderCollectionState[markedFolderIndex]};
+                    const newFolder: iFolderItem = {...folderState[markedFolderIndex]};
 
                     newFolder.id = randomNumber();
                     newFolder.windows.forEach((window) => {
@@ -136,13 +138,13 @@ const FoldersSection = (props: any): JSX.Element => {
                     });
                     newFolder.name = newFolder.name + " (duplicate)";
 
-                    dispatch(createFolderAction({...newFolder}));
+                    dispatch(createNewFolder({...newFolder}));
                 }
             });
             setShowDuplicationWarning(false);
-            dispatch(clearMarkedFoldersAction());
+            dispatch(unMarkAllFolders());
         }
-    }
+    } 
 
     // Open a specific folder
     const renderFolderManagerPopup = (): JSX.Element => {
@@ -153,7 +155,7 @@ const FoldersSection = (props: any): JSX.Element => {
         } else if(mergeProcess !== null){
             return <FolderManager type="slide-in" title={`Create folder by merge`} folder={mergeProcess} onClose={handleCloseFolderManager} />
         } else {
-            const targetFolder: Array<iFolderItem> = folderCollectionState.filter((item: iFolderItem) => editFolderId === item.id);
+            const targetFolder: Array<iFolderItem> = folderState.filter((item: iFolderItem) => editFolderId === item.id);
             const input: iFolderItem = {...targetFolder[0]};
 
             if(targetFolder.length > 0){
@@ -168,13 +170,13 @@ const FoldersSection = (props: any): JSX.Element => {
 
     // Mark a specific folder
     const handleMarkFolder = (id: number): void => {
-        dispatch(setMarkedFoldersAction(id));
+        dispatch(markFolder(id));
     }
 
     // Merge selected folders
     const handleMergeFolders = (): void => {
         const newId = randomNumber();
-        const { markedFoldersId } = folderSettingsState;
+        const { markedFoldersId } = foldersSectionState;
 
         const folderSpecs: iFolderItem = {
             id: newId,
@@ -186,13 +188,13 @@ const FoldersSection = (props: any): JSX.Element => {
             windows: [],
         }
 
-        if(folderCollectionState && markedFoldersId){
+        if(folderState && markedFoldersId){
             const mergedWindows: Array<iWindowItem> = [];
             markedFoldersId.forEach((targetId: number) => {
-                const markedFolderIndex = folderCollectionState.findIndex((folder: iFolderItem) => targetId === folder.id);
+                const markedFolderIndex = folderState.findIndex((folder: iFolderItem) => targetId === folder.id);
 
                 if(markedFolderIndex > -1){
-                    const queueWindows: Array<iWindowItem> = folderCollectionState[markedFolderIndex].windows.map((window: iWindowItem) => { 
+                    const queueWindows: Array<iWindowItem> = folderState[markedFolderIndex].windows.map((window: iWindowItem) => { 
                         window.id = randomNumber();
                         return window;
                     })
@@ -213,34 +215,34 @@ const FoldersSection = (props: any): JSX.Element => {
         setCreateFolder(false);
         setMergeProcess(null);
 
-        dispatch(clearMarkedFoldersAction());
-        dispatch(clearInEditFolder());
+        dispatch(unMarkAllFolders());
+      //  dispatch(clearInEditFolder());
     }
 
     // Unmark all listed folders
     const handleUnmarkAllFolders = (): void => {
-        dispatch(setMarkMultipleFoldersAction([]));
+        dispatch(unMarkAllFolders());
     }
 
     // Mark all listed folders
     const handleMarkAllFolders = (): void => {
         const updatedMarks: Array<number> = [];
 
-        folderCollectionState.forEach((folder: iFolderItem) => {
+        folderState.forEach((folder: iFolderItem) => {
             updatedMarks.push(folder.id);
             
         });
 
-        dispatch(setMarkMultipleFoldersAction([...updatedMarks]));        
+        dispatch(markMultipleFolders([...updatedMarks]));        
     }
 
     // Toggle between grid and list view
     const handleChangeViewMode = (): void => {
-        const { viewMode } = folderSettingsState;
+        const { viewMode } = foldersSectionState;
         
         const newStatus = viewMode === "list" ? "grid" : "list"
         saveToStorage("local", "folder_viewmode", newStatus)
-        dispatch(changeFoldersViewMode(newStatus));
+        dispatch(changeViewMode(newStatus));
     }
 
     // Sort all folders
@@ -248,11 +250,11 @@ const FoldersSection = (props: any): JSX.Element => {
         const newStatus = e.selected;
 
         saveToStorage("local", "folder_sort", newStatus);
-        dispatch(setFoldersSortOrder(newStatus));
+        dispatch(changeSortOption(newStatus));
     }
 
     const folderSortCondition = (a: iFolderItem, b: iFolderItem): boolean => {
-        const { folderSortOptionId } = folderSettingsState
+        const { folderSortOptionId } = foldersSectionState
         
         const aNameLowerCase = a.name.toLowerCase();
         const bNameToLowerCase = b.name.toLowerCase();
@@ -261,11 +263,11 @@ const FoldersSection = (props: any): JSX.Element => {
     }
 
     const handleFolderDelete = (target: iFolderItem): void => {
-        chrome.storage.local.get("removal_warning_setting", (data) => {
-            if(data.removal_warning_setting === true) {
+        chrome.storage.local.get("folderRemovalWarning", (data) => {
+            if(data.folderRemovalWarning === true) {
                 setRemovalTarget(target);
             } else {
-                dispatch(deleteFolderAction(target.id)); 
+                dispatch(deleteFolder(target.id)); 
                 setRemovalTarget(null);
             }
         });
@@ -280,7 +282,7 @@ const FoldersSection = (props: any): JSX.Element => {
 
     // Render the folder list
     const folderList = useMemo(() => {        
-        const sortedFolders = [...folderCollectionState].sort((a: any, b: any) => folderSortCondition(a, b) ? 1 : -1);
+        const sortedFolders = [...folderState].sort((a: any, b: any) => folderSortCondition(a, b) ? 1 : -1);
 
         // Determine the number of columns to be rendered, based on colsCount
         let colsList: Array<Array<JSX.Element>> = [];
@@ -293,7 +295,7 @@ const FoldersSection = (props: any): JSX.Element => {
             const folder = sortedFolders[i];
             let result: JSX.Element = <></>;
             
-            const collection: Array<number> = folderSettingsState.markedFoldersId;
+            const collection: Array<number> = foldersSectionState.markedFoldersId;
 
             result = (
                 <FolderItem 
@@ -305,7 +307,7 @@ const FoldersSection = (props: any): JSX.Element => {
                     key={`folder-item-${folder.id}`} 
                     type={folder.type} 
                     id={folder.id} 
-                    viewMode={folderSettingsState.viewMode} 
+                    viewMode={foldersSectionState.viewMode} 
                     name={folder.name} 
                     desc={folder.desc} 
                     windows={folder.windows} 
@@ -320,7 +322,7 @@ const FoldersSection = (props: any): JSX.Element => {
         const columnsRender: Array<JSX.Element> = colsList.map((col, i: number) => <div key={`column-key-${i}`}>{col}</div>);
 
         return columnsRender;
-    }, [folderCollectionState, folderSortCondition, folderSettingsState.markedFoldersId])
+    }, [folderState, folderSortCondition, foldersSectionState.markedFoldersId])
 
     const renderSortOptionsDropdown = (): JSX.Element => {
         const optionsList: Array<iFieldOption> = [
@@ -328,14 +330,14 @@ const FoldersSection = (props: any): JSX.Element => {
             {id: 1, label: "Descending"},
         ];
 
-        const presetOption = optionsList.filter((option: iFieldOption) => option.id === folderSettingsState.folderSortOptionId);
+        const presetOption = optionsList.filter((option: iFieldOption) => option.id === foldersSectionState.folderSortOptionId);
 
         return <Dropdown tag="sort-folders" preset={presetOption[0] || optionsList[0]} options={optionsList} onCallback={handleSortFolders} />
     }
 
     // Render the action buttons for folder area
     const renderOptionsMenu = (): JSX.Element => {
-        const { markedFoldersId } = folderSettingsState;
+        const { markedFoldersId } = foldersSectionState;
         let markSpecs: any;
 
         if(markedFoldersId.length > 0){
@@ -352,7 +354,7 @@ const FoldersSection = (props: any): JSX.Element => {
             }
         }
 
-        if(folderCollectionState.length > 0){
+        if(folderState.length > 0){
             return (
                 <>
                     <div className="inline-flex items-center justify-end w-full">
@@ -403,13 +405,13 @@ const FoldersSection = (props: any): JSX.Element => {
                         <div className="flex items-center justify-end">     
                             <TextIconButton 
                                 disabled={false} 
-                                id={folderSettingsState.viewMode === "list" ? "grid" : "list"} 
+                                id={foldersSectionState.viewMode === "list" ? "grid" : "list"} 
                                 textSize="text-sm"
-                                text={folderSettingsState.viewMode === "list" ? "Grid" : "List"} 
+                                text={foldersSectionState.viewMode === "list" ? "Grid" : "List"} 
                                 onClick={handleChangeViewMode} 
                             >
                                 { 
-                                    folderSettingsState.viewMode === "list" ? 
+                                    foldersSectionState.viewMode === "list" ? 
                                     <GridIcon size={20} fill={"#6D00C2"} /> : 
                                     <ListIcon size={20} fill={"#6D00C2"} />
                                 }
@@ -429,11 +431,11 @@ const FoldersSection = (props: any): JSX.Element => {
 
     // Prepare to remove multiple folders. Warn the user if set in Settings page
     const handlePrepareMultipleRemovals = (): void => {
-        const { markedFoldersId } = folderSettingsState;
+        const { markedFoldersId } = foldersSectionState;
         
         if(markedFoldersId.length > 0) {
-            chrome.storage.local.get("removal_warning_setting", (data) => {
-                if(data.removal_warning_setting === true) {
+            chrome.storage.local.get("folderRemovalWarning", (data) => {
+                if(data.folderRemovalWarning === true) {
                     setShowDeleteWarning(true);
                 } else {
                     handleDeleteFolders();
@@ -444,13 +446,13 @@ const FoldersSection = (props: any): JSX.Element => {
 
     // Prepare to duplicate multiple folders. Warn the user if set in Settings page
     const handlePrepareDuplication = (): void => {
-        const { markedFoldersId } = folderSettingsState;
+        const { markedFoldersId } = foldersSectionState;
         
         // Run if there are more than 0 marked folders
         if(markedFoldersId.length > 0) {
-            chrome.storage.local.get("duplication_warning_value", (data) => {
+            chrome.storage.local.get("duplicationWarningValue", (data) => {
                 // If the duplication warning is set in settings, and the number of marked tabs exceeds the threshold, then warn the user
-                if(data.duplication_warning_value !== -1 && data.duplication_warning_value <= folderSettingsState.markedFoldersId.length) {
+                if(data.duplicationWarningValue !== -1 && data.duplicationWarningValue <= foldersSectionState.markedFoldersId.length) {
                     setShowDuplicationWarning(true);
                 } else {
                     handleDuplicateFolders();
@@ -493,8 +495,8 @@ const FoldersSection = (props: any): JSX.Element => {
 
         // Close current session after launching the folder. Only applies when
         // set in the Pettings page
-        chrome.storage.local.get("close_current_setting", (data) => {
-            if(data.close_current_setting === true){
+        chrome.storage.local.get("closeSessionAtFolderLaunch", (data) => {
+            if(data.closeSessionAtFolderLaunch === true){
                 snapshot.forEach((window) => {
                     if(window.id) chrome.windows.remove(window.id);
                 });
@@ -509,7 +511,7 @@ const FoldersSection = (props: any): JSX.Element => {
     
 
     return (
-        <>{folderCollectionState && folderSettingsState && (
+        <>{folderState && foldersSectionState && (
             <>
             {showPerformanceWarning &&
                 <PopupMessage
@@ -533,7 +535,7 @@ const FoldersSection = (props: any): JSX.Element => {
             {showDuplicationWarning &&
                 <PopupMessage
                     title="Warning" 
-                    text={`You are about to duplicate ${folderSettingsState.markedFoldersId.length} or more folders at once. Unnecessary duplications may clutter your dashboard, do you want to proceed?`}
+                    text={`You are about to duplicate ${foldersSectionState.markedFoldersId.length} or more folders at once. Unnecessary duplications may clutter your dashboard, do you want to proceed?`}
                     primaryButton={{ 
                         text: "Yes, proceed", 
                         callback: () => { 
@@ -554,7 +556,7 @@ const FoldersSection = (props: any): JSX.Element => {
                     primaryButton={{ 
                         text: "Yes, remove this folder", 
                         callback: () => { 
-                            dispatch(deleteFolderAction(removalTarget.id)); 
+                            dispatch(deleteFolder(removalTarget.id)); 
                             setRemovalTarget(null)
                         }}}
                     secondaryButton={{ 
@@ -575,7 +577,7 @@ const FoldersSection = (props: any): JSX.Element => {
         
             <SectionContainer id="folder-section" title="Folders" options={renderOptionsMenu}>
                 <>
-                    {folderCollectionState.length === 0 && (
+                    {folderState.length === 0 && (
                         <div className="flex flex-col items-center justify-center h-[50%]">
                             <Paragraph>
                                 You currently have no folders available. Please, create a new folder
@@ -585,7 +587,7 @@ const FoldersSection = (props: any): JSX.Element => {
                             </div>
                         </div>
                     )}
-                    {<ul className={`list-none ${folderSettingsState.viewMode === "list" ? "mx-auto mt-12" : `grid xl:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-4 grid-flow-dense gap-x-4 gap-y-0 mt-8`}`}>
+                    {<ul className={`list-none ${foldersSectionState.viewMode === "list" ? "mx-auto mt-12" : `grid xl:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-4 grid-flow-dense gap-x-4 gap-y-0 mt-8`}`}>
                         {folderList}
                     </ul>}
                 </>

@@ -15,6 +15,9 @@ import SaveIcon from '../../components/icons/save_icon';
 import CircleButton from './../../components/utils/circle_button';
 import WindowItem from "../../components/features/window_item";
 import PopupMessage from './../../components/utils/popup_message';
+import { setUpWindows } from "../../redux-toolkit/slices/session_section_slice";
+import { unMarkAllFolders } from "../../redux-toolkit/slices/folders_section_slice";
+import { unMarkAllTabs } from "../../redux-toolkit/slices/history_section_slice";
 
 
 const CurrentSessionView = (props:any): JSX.Element => {
@@ -23,10 +26,10 @@ const CurrentSessionView = (props:any): JSX.Element => {
     const [mergeProcess, setMergeProcess] = useState<iFolderItem | null>(null);
     const [editFolderId, setEditFolderId] = useState<number | null>(null);
     const [windowIdWarning, setWindowIdWarning] = useState<number>(-1);
-    const folderCollectionState: Array<iFolderItem> = useSelector((state: any) => state.folderCollectionReducer);
 
+    const folderState: Array<iFolderItem> = useSelector((state: any) => state.folder);
     const dispatch = useDispatch();
-    const sessionSectionState: any = useSelector((state: any) => state.sessionSectionReducer);
+    const sessionSectionState: any = useSelector((state: any) => state.sessionSection);
 
     useEffect(() => {
         getAllWindows();
@@ -69,7 +72,7 @@ const CurrentSessionView = (props:any): JSX.Element => {
             windowTypes: ["normal", "popup"]
         };
         chrome.windows.getAll(queryOptions, (windows: Array<chrome.windows.Window>) => {
-            dispatch(setUpWindowsAction(windows));
+            dispatch(setUpWindows(windows));
         });
     };
 
@@ -78,9 +81,8 @@ const CurrentSessionView = (props:any): JSX.Element => {
         setCreateFolder(false);
         setMergeProcess(null);
 
-        dispatch(clearMarkedTabsAction());
-        dispatch(clearMarkedFoldersAction());
-        dispatch(clearInEditFolder());
+        dispatch(unMarkAllTabs());
+        dispatch(unMarkAllFolders());
     }
 
     const handleAddToNewFolder = (): void => {
@@ -92,7 +94,7 @@ const CurrentSessionView = (props:any): JSX.Element => {
         if(e.selected === -1) return;
 
         const targetFolderId = e.selected;
-        const targetFolder: iFolderItem | undefined = folderCollectionState.find((folder: iFolderItem) => folder.id === targetFolderId);
+        const targetFolder: iFolderItem | undefined = folderState.find((folder: iFolderItem) => folder.id === targetFolderId);
      
         if(!targetFolder) return;
 
@@ -128,7 +130,7 @@ const CurrentSessionView = (props:any): JSX.Element => {
     }
 
     const renderAddTabsMessage = (): JSX.Element => {
-        const currentFolders: Array<iFolderItem> = folderCollectionState;
+        const currentFolders: Array<iFolderItem> = folderState;
 
         const options: Array<iFieldOption> = currentFolders.map((folder) => {
             return { id: folder.id, label: folder.name }

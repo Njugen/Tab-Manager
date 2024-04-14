@@ -1,7 +1,7 @@
 // Check whether or not the set of windows has been modified
 const windowListChanged = (origin: string, modified: string): boolean => {
     const presetWindows: string = origin;
-    const modifiedWindows: string = JSON.stringify(modified);
+    const modifiedWindows: string = modified;
 
     if(!modifiedWindows || !presetWindows) return false;
     if(origin !== modifiedWindows){

@@ -3,7 +3,7 @@ import '@testing-library/jest-dom'
 import randomNumber from "../../../tools/random_number";
 import TextIconButton from "../../../components/utils/text_icon_button";
 import { Provider, useDispatch } from "react-redux";
-import { store } from "../../../redux/reducers";
+import { store } from "../../../redux-toolkit/store";
 import WindowItem from "../../../components/features/window_item";
 import { iTabItem } from "../../../interfaces/tab_item";
 import { iWindowItem } from "../../../interfaces/window_item";

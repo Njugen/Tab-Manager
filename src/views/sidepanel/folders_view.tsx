@@ -56,9 +56,9 @@ const FoldersView = (props: iFoldersView): JSX.Element => {
             tabsCount += window.tabs.length;
         });
    
-        chrome.storage.local.get("performance_notification_value", (data) => {
-            setTotalTabsCount(data.performance_notification_value);
-            if(data.performance_notification_value !== -1 && data.performance_notification_value <= tabsCount) {
+        chrome.storage.local.get("performanceWarningValue", (data) => {
+            setTotalTabsCount(data.performanceWarningValue);
+            if(data.performanceWarningValue !== -1 && data.performanceWarningValue <= tabsCount) {
                 setShowPerformanceWarning(true);
             } else {
                 handleLaunchFolder(windows, type);
@@ -97,8 +97,8 @@ const FoldersView = (props: iFoldersView): JSX.Element => {
 
         // Close current session after launching the folder. Only applies when
         // set in the Pettings page
-        chrome.storage.local.get("close_current_setting", (data) => {
-            if(data.close_current_setting === true){
+        chrome.storage.local.get("closeSessionAtFolderLaunch", (data) => {
+            if(data.closeSessionAtFolderLaunch === true){
                 snapshot.forEach((window) => {
                     if(window.id) chrome.windows.remove(window.id);
                 });
@@ -160,8 +160,8 @@ const FoldersView = (props: iFoldersView): JSX.Element => {
 
     const folderList = useMemo((): JSX.Element =>  {
         const handleFolderDelete = (target: iFolderItem): void => {
-            chrome.storage.local.get("removal_warning_setting", (data) => {
-                if(data.removal_warning_setting === true) {
+            chrome.storage.local.get("folderRemovalWarning", (data) => {
+                if(data.folderRemovalWarning === true) {
                     setRemovalTarget(target);
                 } else {
                     dispatch(deleteFolderAction(target.id)); 

@@ -39,8 +39,8 @@ const handleLaunchFolder = (props: iLaunchFolderProps): void => {
 
     // Close current session after launching the folder. Only applies when the
     // set in the Settings page. Launching windows stored in the snapshot
-    chrome.storage.local.get("close_current_setting", (data) => {
-        if(data.close_current_setting === true){
+    chrome.storage.local.get("closeSessionAtFolderLaunch", (data) => {
+        if(data.closeSessionAtFolderLaunch === true){
             snapshot.forEach((window) => {
                 if(window.id) chrome.windows.remove(window.id);
             });

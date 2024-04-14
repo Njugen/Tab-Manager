@@ -11,11 +11,11 @@ import iFolderState from '../../../interfaces/states/folder_state';
 import WindowItem from "../window_item";
 import { iFolderActionBarHandlers } from "../../../interfaces/folder_action_bar";
 import { iFolderActionBarStates } from "../../../interfaces/folder_action_bar";
+import { RootState } from "../../../redux-toolkit/store";
 
 /*
     Folder section containing description, windows and tabs, as well as various folder options
 */
-
 
 const FolderItem = (props: iFolderItem): JSX.Element => {
     const contentsRef = useRef<HTMLDivElement>(null);
@@ -25,7 +25,7 @@ const FolderItem = (props: iFolderItem): JSX.Element => {
     const [showLaunchOptions, setShowLaunchOptions] = useState<boolean>(false);
     const [slideDown, setSlideDown] = useState<boolean>(false);
 
-    const folderSettingsState: iFolderState = useSelector((state: any) => state.folderSettingsReducer);
+    const foldersSectionState: iFolderState = useSelector((state: RootState) => state.foldersSection);
 
     const { 
         id,
@@ -167,7 +167,7 @@ const FolderItem = (props: iFolderItem): JSX.Element => {
 
     // Render a list of all windows in the folder. The window components are adjusted to suit folder behaviour
     const folderWindowList = useMemo((): JSX.Element => {
-        const decisiveCols: number = windowTabsCols(folderSettingsState.viewMode, viewMode);
+        const decisiveCols: number = windowTabsCols(foldersSectionState.viewMode, viewMode);
     
         const result: Array<JSX.Element> = windows.map((window, index): JSX.Element => (
             <WindowItem 

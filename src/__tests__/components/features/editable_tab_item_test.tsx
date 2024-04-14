@@ -3,7 +3,7 @@ import '@testing-library/jest-dom'
 import randomNumber from "../../../tools/random_number";
 import TextIconButton from "../../../components/utils/text_icon_button";
 import EditableTabItem from "../../../components/features/editable_tab_item";
-import { store } from "../../../redux/reducers";
+import { store } from "../../../redux-toolkit/store";
 import { Provider } from "react-redux";
 
 const mockFn = jest.fn();

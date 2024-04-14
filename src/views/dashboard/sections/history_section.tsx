@@ -23,6 +23,8 @@ import ListIcon from "../../../components/icons/list_icon";
 import DeselectedCheckboxIcon from "../../../components/icons/deselected_checkbox_icon";
 import HistoryTabGroupsSection from "../../common/history_tab_group_section/history_tab_group_section";
 import iHistoryState from "../../../interfaces/states/history_state";
+import { changeSortOption, changeViewMode, markMultipleTabs, setUpTabs, unMarkAllTabs } from "../../../redux-toolkit/slices/history_section_slice";
+import { unMarkAllFolders } from "../../../redux-toolkit/slices/folders_section_slice";
 // MOHAHAHA. THIS FILE IS A MESS AS OF NOW
 
 const HistorySection = (props: any): JSX.Element => {
@@ -36,8 +38,8 @@ const HistorySection = (props: any): JSX.Element => {
     
     const defaultLoadTabs = 10;
 
-    const historySectionState = useSelector((state: any) => state.historySectionReducer);
-    const folderCollectionState: Array<iFolderItem> = useSelector((state: any) => state.folderCollectionReducer);
+    const historySectionState = useSelector((state: any) => state.historySection);
+    const folderState: Array<iFolderItem> = useSelector((state: any) => state.folder);
     const sectionRef = useRef<HTMLDivElement>(null);
 
     const dispatch = useDispatch();
@@ -49,7 +51,7 @@ const HistorySection = (props: any): JSX.Element => {
             const newSnapshot = JSON.stringify(sorted[sorted.length-1].lastVisitTime);
             
             if(items.length > 0 && snapshot !== newSnapshot) { 
-                dispatch(setUpTabsAction(sorted));
+                dispatch(setUpTabs(sorted));
                 setSnapshot(newSnapshot);
             }
         });
@@ -87,11 +89,11 @@ const HistorySection = (props: any): JSX.Element => {
     useEffect(() => {
         
         getFromStorage("local", "history_sort", (data) => {  
-            dispatch(setTabsSortOrder(data.history_sort));
+            dispatch(changeSortOption(data.history_sort));
         })
 
         getFromStorage("local", "history_viewmode", (data) => {  
-            dispatch(changeTabsViewMode(data.history_viewmode));
+            dispatch(changeViewMode(data.history_viewmode));
         })
 
       //  handleLoadHistory(false, defaultLoadTabs)
@@ -121,16 +123,16 @@ const HistorySection = (props: any): JSX.Element => {
         
         const newStatus = viewMode === "list" ? "grid" : "list"
         saveToStorage("local", "history_viewmode", newStatus)
-        dispatch(changeTabsViewMode(newStatus));
+        dispatch(changeViewMode(newStatus));
     }
 
     const handleMarkAllTabs = (): void => {
         const tabs: Array<chrome.history.HistoryItem> = historySectionState.tabs as Array<chrome.history.HistoryItem>;
-        dispatch(setMarkMultipleTabsAction(tabs));
+        dispatch(markMultipleTabs(tabs));
     }
 
     const handleUnMarkAll = (): void => {
-        dispatch(setMarkMultipleTabsAction([]));
+        dispatch(unMarkAllTabs());
     }
 
     const handleDeleteFromHistory = (): void => {
@@ -140,8 +142,8 @@ const HistorySection = (props: any): JSX.Element => {
             chrome.history.deleteUrl({ url: tab.url! });
             updatedMarks = updatedMarks.filter((target: chrome.history.HistoryItem) => target.url !== tab.url);
         });
-        dispatch(setUpTabsAction(updatedMarks));
-        dispatch(setMarkMultipleTabsAction([]));
+        dispatch(setUpTabs(updatedMarks));
+        dispatch(unMarkAllTabs());
     }
 
     const handleOpenSelected = (): void => {
@@ -245,7 +247,7 @@ const HistorySection = (props: any): JSX.Element => {
         if(e.selected === -1) return;
 
         const targetFolderId = e.selected;
-        const targetFolder: iFolderItem | undefined = folderCollectionState.find((folder: iFolderItem) => folder.id === targetFolderId);
+        const targetFolder: iFolderItem | undefined = folderState.find((folder: iFolderItem) => folder.id === targetFolderId);
      
         if(!targetFolder) return;
         
@@ -274,7 +276,7 @@ const HistorySection = (props: any): JSX.Element => {
     }
 
     const renderAddTabsMessage = (): JSX.Element => {
-        const currentFolders: Array<iFolderItem> = folderCollectionState;
+        const currentFolders: Array<iFolderItem> = folderState;
 
         const options: Array<iFieldOption> = currentFolders.map((folder) => {
             return { id: folder.id, label: folder.name }
@@ -306,9 +308,8 @@ const HistorySection = (props: any): JSX.Element => {
         setCreateFolder(false);
         setMergeProcessFolder(null);
 
-        dispatch(clearMarkedTabsAction());
-        dispatch(clearMarkedFoldersAction());
-        dispatch(clearInEditFolder());
+        dispatch(unMarkAllTabs());
+        dispatch(unMarkAllFolders());
     }
 
     const handleSearch = (e: any): void => {

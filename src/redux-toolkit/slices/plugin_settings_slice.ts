@@ -3,15 +3,8 @@ import { iFolderItem } from "../../interfaces/folder_item"
 import iFolderState from "../../interfaces/states/folder_state"
 import iCurrentSessionState from "../../interfaces/states/current_session_state"
 import { iWindowItem } from "../../interfaces/window_item"
+import iPluginSettings from './../../interfaces/states/plugin_settings_state';
 
-interface iPluginSettings {
-    performanceWarningValue: number | null,
-    duplicationWarningValue: number | null,
-    closeSessionAtFolderLaunch: boolean,
-    showFolderChangeWarning: boolean,
-    folderRemovalWarning: boolean,
-    allowErrorLog: boolean
-}
 
 const initialState: iPluginSettings = {
     performanceWarningValue: 0,
@@ -26,6 +19,13 @@ const pluginSettingsSlice = createSlice({
     name: "plugin_settings_slice",
     initialState,
     reducers: {
+        readAllPluginSettings: (state, action: PayloadAction<iPluginSettings>): iPluginSettings => {
+            const { payload } = action;
+
+            return {
+                ...payload
+            }
+        },
         changePerformanceWarningValue: (state, action: PayloadAction<number>): iPluginSettings => {
             const { payload } = action;
 
@@ -71,13 +71,14 @@ const pluginSettingsSlice = createSlice({
 
             return {
                 ...state,
-                folderRemovalWarning: payload
+                allowErrorLog: payload
             }
         },
     },
 })
 
 export const { 
+    readAllPluginSettings,
     changePerformanceWarningValue,
     changeDuplicationWarningValue,
     changeCloseSession,

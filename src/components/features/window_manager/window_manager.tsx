@@ -15,13 +15,13 @@ const WindowManager = (props: iWindowManager): JSX.Element => {
     const [createWindow, setCreateWindow] = useState<boolean>(false);
     const [inCreationId, setIncreationId] = useState<number>(-1);
 
-    const folderManagerState: iFolderItem | null = useSelector((state: any) => state.folderManagerReducer);
+    const folderManagementState: iFolderItem | null = useSelector((state: any) => state.folderManagement);
 
     // Once the inEdit reducer changes, stop creating window
     useEffect(() => {
         setIncreationId(-1);
         setCreateWindow(false);
-    }, [folderManagerState]);
+    }, [folderManagementState]);
 
     // Add a new window with a random id
     const handleCreateWindow = (): void => {
@@ -31,7 +31,7 @@ const WindowManager = (props: iWindowManager): JSX.Element => {
 
     return (
         <div className="py-6 min-h-[200px] flex flex-col items-center justify-center">
-            {folderManagerState && <WindowList folder={folderManagerState} createWindow={createWindow} inCreationId={inCreationId} />}
+            {folderManagementState && <WindowList folder={folderManagementState} createWindow={createWindow} inCreationId={inCreationId} />}
             { 
                 <div className="flex flex-row mt-10">
                     <PrimaryButton disabled={false} text="New window" onClick={handleCreateWindow} />            

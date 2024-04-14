@@ -8,8 +8,9 @@ import { getFromStorage, saveToStorage } from "../../services/webex_api/storage"
 import SectionContainer from "../../components/utils/section_container";
 import iView from "../../interfaces/view";
 import { useDispatch, useSelector } from "react-redux";
-import { changeCancellationWarnings, changeCloseAtLaunch, changeDuplicationWarnings, changeLogErrors, changePerformanceNotification, changeRemovalWarning, readAllPluginSettings } from "../../redux/actions/settings_actions";
-import { iPluginSettings } from "../../redux/reducers/settings_reducer";
+import { allowErrorLog, changeCloseSession, changeDuplicationWarningValue, changeFolderRemovalWarning, changePerformanceWarningValue, changeShowFolderChangeWarning, readAllPluginSettings } from "../../redux-toolkit/slices/plugin_settings_slice";
+import { RootState } from "../../redux-toolkit/store";
+import iPluginSettings from "../../interfaces/states/plugin_settings_state";
 
 /*
     Settings view
@@ -42,7 +43,7 @@ const duplicationWarningOptions: Array<iFieldOption> = [
 ];
 
 const SettingsView = (props: iView): JSX.Element => {
-    const settingsState: iPluginSettings = useSelector((state: any) => state.pluginSettingsReducer);
+    const pluginSettingsState: iPluginSettings = useSelector((state: RootState) => state.pluginSettings);
     const dispatch = useDispatch()
 
    
@@ -54,12 +55,12 @@ const SettingsView = (props: iView): JSX.Element => {
     }, []);
 
     const getPresetPerformanceNotification = (): any => {
-        const result = performanceNotificationOptions.filter((target) => target.id === settingsState.performance_notification_value);
+        const result = performanceNotificationOptions.filter((target) => target.id === pluginSettingsState.performanceWarningValue);
         return result[0] || performanceNotificationOptions[0];
     }
 
     const getPresetDuplicationWarning = (): any => {
-        const result = duplicationWarningOptions.filter((target) => target.id === settingsState.duplication_warning_value);
+        const result = duplicationWarningOptions.filter((target) => target.id === pluginSettingsState.duplicationWarningValue);
         return result[0] || duplicationWarningOptions[0];
     }
 
@@ -68,10 +69,10 @@ const SettingsView = (props: iView): JSX.Element => {
         if(value !== null){
             saveToStorage("local", key, value);
 
-            if(key === "performance_notification_value"){
-                dispatch(changePerformanceNotification(value))
-            } else if(key === "duplication_warning_value"){
-                dispatch(changeDuplicationWarnings(value))
+            if(key === "performanceWarningValue"){
+                dispatch(changePerformanceWarningValue(value))
+            } else if(key === "duplicationWarningValue"){
+                dispatch(changeDuplicationWarningValue(value))
             }
        
         }
@@ -83,14 +84,15 @@ const SettingsView = (props: iView): JSX.Element => {
 
         saveToStorage("local", key, value);
 
-        if(key === "close_current_setting"){
-            dispatch(changeCloseAtLaunch(value));
-        } else if(key === "cancellation_warning_setting"){
-            dispatch(changeCancellationWarnings(value));
-        } else if(key === "removal_warning_setting"){
-            dispatch(changeRemovalWarning(value))
-        } else if(key === "error_log_setting"){
-            dispatch(changeLogErrors(value))
+        if(key === "closeSessionAtFolderLaunch"){
+            dispatch(changeCloseSession(value));
+        } else if(key === "showFolderChangeWarning"){
+            dispatch(changeShowFolderChangeWarning(value));
+        } else if(key === "folderRemovalWarning"){
+            dispatch(changeFolderRemovalWarning(value))
+        } else if(key === "allowErrorLog"){
+            dispatch(allowErrorLog(value))
+           
         }
     }
 
@@ -99,10 +101,10 @@ const SettingsView = (props: iView): JSX.Element => {
     return (
         <SectionContainer id="settings-view" title="Settings">
             <div className="flex 2xl:flex-row justify-center 2xl:justify-normal">
-                {Object.entries(settingsState).length > 0 && <div className="w-10/12 2xl:w-7/12">
+                {Object.entries(pluginSettingsState).length > 0 && <div className="w-10/12 2xl:w-7/12">
                     <FormField label="Performance notification" description="Warn me if the total amount of tabs exceeds a certain threshold when launching multiple tabs">
                         <Dropdown 
-                            onCallback={(e) => saveSelectedOption("performance_notification_value", e.selected)} 
+                            onCallback={(e) => saveSelectedOption("performanceWarningValue", e.selected)} 
                             tag="performance-dropdown" 
                             preset={getPresetPerformanceNotification()} 
                             options={performanceNotificationOptions} 
@@ -110,7 +112,7 @@ const SettingsView = (props: iView): JSX.Element => {
                     </FormField>                      
                     <FormField label="Duplication warnings" description="Show a warning message before duplicating at least a certain amount of selected folders">
                         <Dropdown 
-                            onCallback={(e) => saveSelectedOption("duplication_warning_value", e.selected)} 
+                            onCallback={(e) => saveSelectedOption("duplicationWarningValue", e.selected)} 
                             tag="duplication-warning-dropdown" 
                             preset={getPresetDuplicationWarning()} 
                             options={duplicationWarningOptions} 
@@ -118,26 +120,26 @@ const SettingsView = (props: iView): JSX.Element => {
                     </FormField>
                     <FormField label="Close at folder launch" description="Close current browser session when launching a folder">
                         <Switcher 
-                            value={settingsState.close_current_setting} 
-                            onCallback={(e) => saveSwitchSetting("close_current_setting", e)} 
+                            value={pluginSettingsState.closeSessionAtFolderLaunch} 
+                            onCallback={(e) => saveSwitchSetting("closeSessionAtFolderLaunch", e)} 
                         />
                     </FormField>
                     <FormField label="Cancellation warnings" description="Show a warning message before discarding changes made to folders">
                         <Switcher 
-                            value={settingsState.cancellation_warning_setting} 
-                            onCallback={(e) => saveSwitchSetting("cancellation_warning_setting", e)} 
+                            value={pluginSettingsState.showFolderChangeWarning} 
+                            onCallback={(e) => saveSwitchSetting("showFolderChangeWarning", e)} 
                         />
                     </FormField>
                     <FormField label="Removal warnings" description="Show a warning message before deleting folders">
                         <Switcher 
-                            value={settingsState.removal_warning_setting} 
-                            onCallback={(e) => saveSwitchSetting("removal_warning_setting", e)} 
+                            value={pluginSettingsState.folderRemovalWarning} 
+                            onCallback={(e) => saveSwitchSetting("folderRemovalWarning", e)} 
                         />
                     </FormField>
                     <FormField label="Log errors" description="Automatically send error reports to the developer">
                         <Switcher 
-                            value={settingsState.error_log_setting} 
-                            onCallback={(e) => saveSwitchSetting("error_log_setting", e)} 
+                            value={pluginSettingsState.allowErrorLog} 
+                            onCallback={(e) => saveSwitchSetting("allowErrorLog", e)} 
                         />
                     </FormField>
                 </div>}

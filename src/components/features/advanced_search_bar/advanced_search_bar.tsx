@@ -14,6 +14,7 @@ import { SearchResults } from "./components/search_bar_results";
 import PopupMessage from "../../utils/popup_message";
 import iLaunchFolderProps from "../../../interfaces/launch_folder_props";
 import iHandleShowResultsContainerProps from "../../../interfaces/handle_show_results_container_props";
+import { RootState } from "../../../redux-toolkit/store";
 
 /*
     Search bar placed at the top of the viewport
@@ -33,9 +34,9 @@ const AdvancedSearchBar = (props: iAdvancedSearchBar): JSX.Element => {
     const searchResultsContainerRef = useRef<HTMLDivElement>(null);
     const searchFieldRef = useRef<HTMLInputElement>(null);
 
-    const folderCollectionState: Array<iFolderItem> = useSelector((state: any) => state.folderCollectionReducer);
-    const sessionSectionState: iCurrentSessionState = useSelector((state: any) => state.sessionSectionReducer);
-    const historySectionState: iHistoryState = useSelector((state: any) => state.historySectionReducer);
+    const folderState: Array<iFolderItem> = useSelector((state: RootState) => state.folder);
+    const sessionSectionState: iCurrentSessionState = useSelector((state: RootState) => state.sessionSection);
+    const historySectionState: iHistoryState = useSelector((state: RootState) => state.historySection);
 
     const { popup_container_transparent_bg } = styles;
 
@@ -88,9 +89,9 @@ const AdvancedSearchBar = (props: iAdvancedSearchBar): JSX.Element => {
             tabsCount += window.tabs.length;
         });
    
-        chrome.storage.local.get("performance_notification_value", (data) => {
-            setTotalTabsCount(data.performance_notification_value);
-            if(data.performance_notification_value !== -1 && data.performance_notification_value <= tabsCount) {
+        chrome.storage.local.get("performanceWarningValue", (data) => {
+            setTotalTabsCount(data.performanceWarningValue);
+            if(data.performanceWarningValue !== -1 && data.performanceWarningValue <= tabsCount) {
                 setShowPerformanceWarning(true);
             } else {
                 handleLaunchFolderProps.windowsPayload = windows;
@@ -157,7 +158,7 @@ const AdvancedSearchBar = (props: iAdvancedSearchBar): JSX.Element => {
                     (
                         <section data-testid="search-results-area" id="search-results-area" className={`${popup_container_transparent_bg} w-screen h-full top-0 bg-[rgba-] absolute z-500 left-0 flex justify-center`}>
                             <div ref={searchResultsContainerRef} className={`bg-white absolute p-6 ml-16 mt-10 transition-all ease-in duration-75 overflow-hidden w-7/12 z-10 rounded-lg drop-shadow-[0_3px_2px_rgba(0,0,0,0.15)]`}>
-                                <SearchResults keyword={keyword} folders={folderCollectionState} session={sessionSectionState} history={historySectionState} launchFolder={handlePrepareLaunchFolder} />   
+                                <SearchResults keyword={keyword} folders={folderState} session={sessionSectionState} history={historySectionState} launchFolder={handlePrepareLaunchFolder} />   
                             </div>
                         </section>
                     ) 

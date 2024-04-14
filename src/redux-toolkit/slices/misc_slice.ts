@@ -13,10 +13,10 @@ const initialState: any = {
 }
 
 const miscSlice = createSlice({
-    name: "session_section_slice",
+    name: "misc_section_slice",
     initialState,
     reducers: {
-        setCurrentTabEdit: (state, action: PayloadAction<number>): iCurrentSessionState => {
+        setCurrentTabEdits: (state, action: PayloadAction<number>): any => {
             const { payload } = action;
 
             return {
@@ -24,7 +24,7 @@ const miscSlice = createSlice({
                 tabBeingEdited: payload
             }
         },
-        setIsEditingTab: (state, action: PayloadAction<boolean>): iCurrentSessionState => {
+        setIsEditingTab: (state, action: PayloadAction<boolean>): any => {
             const { payload } = action;
 
             return {
@@ -36,7 +36,7 @@ const miscSlice = createSlice({
 })
 
 export const { 
-    setCurrentTabEdit,
+    setCurrentTabEdits,
     setIsEditingTab
 } = miscSlice.actions;
 export default miscSlice.reducer;

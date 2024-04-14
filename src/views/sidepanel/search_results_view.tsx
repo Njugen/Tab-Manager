@@ -55,8 +55,8 @@ function SearchResultsContainer(props:any): JSX.Element {
 
         // Close current session after launching the folder. Only applies when
         // set in the Pettings page
-        chrome.storage.local.get("close_current_setting", (data) => {
-            if(data.close_current_setting === true){
+        chrome.storage.local.get("closeSessionAtFolderLaunch", (data) => {
+            if(data.closeSessionAtFolderLaunch === true){
                 snapshot.forEach((window) => {
                     if(window.id) chrome.windows.remove(window.id);
                 });
@@ -74,10 +74,10 @@ function SearchResultsContainer(props:any): JSX.Element {
             tabsCount += window.tabs.length;
         });
    
-        chrome.storage.local.get("performance_notification_value", (data) => {
-            setTotalTabsCount(data.performance_notification_value);
+        chrome.storage.local.get("performanceWarningValue", (data) => {
+            setTotalTabsCount(data.performanceWarningValue);
 
-            if(data.performance_notification_value !== -1 && data.performance_notification_value <= tabsCount) {
+            if(data.performanceWarningValue !== -1 && data.performanceWarningValue <= tabsCount) {
                 setShowPerformanceWarning(true);
             } else {
                 handleLaunchFolder(windowsPayload);
@@ -85,13 +85,13 @@ function SearchResultsContainer(props:any): JSX.Element {
         });
     }, [folderLaunchType]);
 
-    const folderCollectionState: Array<iFolderItem> = useSelector((state: any) => state.folderCollectionReducer);
-    const sessionSectionState: iCurrentSessionState = useSelector((state: any) => state.sessionSectionReducer);
-    const historySectionState = useSelector((state: any) => state.historySectionReducer);
+    const folderState: Array<iFolderItem> = useSelector((state: any) => state.folderReducer);
+    const sessionSectionState: iCurrentSessionState = useSelector((state: any) => state.sessionSection);
+    const historySectionState = useSelector((state: any) => state.historySection);
 
     // Render all filtered folders
     const renderFolders = (): Array<JSX.Element> => {
-        const folders = filterFoldersByString(folderCollectionState, keyword);
+        const folders = filterFoldersByString(folderState, keyword);
 
         return folders.map((folder: iFolderItem) => <FolderItem key={`folder-id-${folder.id}`} marked={false} id={folder.id!} name={folder.name} viewMode={"list"} type={"collapsed"} desc={folder.desc} windows={folder.windows} onOpen={handlePrepareLaunchFolder} />);
     }
