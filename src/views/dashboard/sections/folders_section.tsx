@@ -460,6 +460,12 @@ const FoldersSection = (props: any): JSX.Element => {
         }
     }
 
+    // Run when user don't want to open folder.
+    const denyFolderLaunch = (): void => { 
+        setShowPerformanceWarning(false); setWindowsPayload(null);
+        setFolderLaunchType(null); setShowPerformanceWarning(false);
+    }
+
     // Launch folder
     const handleLaunchFolder = (windows: Array<iWindowItem>, launchType?: string): void => {
         // Now, prepare a snapshot, where currently opened windows get stored

@@ -1,8 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { combinedReducers } from "../redux/reducers";
+import folderReducer from "./slices/folder_slice";
 
-const store = configureStore({
-    reducer: combinedReducers
+export const store = configureStore({
+    reducer: {
+        folder: folderReducer
+    }
 });
 
-export default store;
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
