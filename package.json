@@ -77,6 +77,7 @@
   "jest": {
     "coveragePathIgnorePatterns": [
       "./redux/",
+      "./redux-toolkit/",
       "./tools/",
       "./webextension/",
       "./services/",

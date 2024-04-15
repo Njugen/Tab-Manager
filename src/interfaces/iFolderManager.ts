@@ -1,10 +1,10 @@
 import { iFolderItem } from "./folder_item"
 
-interface iPopup {
+interface iFolderManager {
     title: string,
     type: "slide-in" | "popup"
     folder?: iFolderItem,
     onClose: () => void
 }
 
-export {iPopup};
+export {iFolderManager};

@@ -7,6 +7,16 @@ import miscReducer from "./slices/misc_slice";
 import sessionSectionReducer from "./slices/session_section_slice";
 import pluginSettingsReducer from "./slices/plugin_settings_slice";
 
+const reducers: any = {
+    folderManagement: folderManagementReducer,
+    folder: folderReducer,
+    foldersSection: foldersSectionReducer,
+    sessionSection: sessionSectionReducer,
+    historySection: historySectionReducer,
+    misc: miscReducer,
+    pluginSettings: pluginSettingsReducer
+}
+
 export const store = configureStore({
     reducer: {
         folderManagement: folderManagementReducer,
@@ -18,6 +28,8 @@ export const store = configureStore({
         pluginSettings: pluginSettingsReducer
     }
 });
+
+export { reducers };
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

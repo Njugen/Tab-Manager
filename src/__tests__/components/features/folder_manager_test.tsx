@@ -3,36 +3,22 @@ import { render, screen, within, fireEvent } from "@testing-library/react";
 import '@testing-library/jest-dom'
 import randomNumber from "../../../tools/random_number";
 import FolderControlButton from "../../../components/utils/icon_button/icon_button";
-import { iPopup } from "../../../interfaces/popup";
-import { store } from "../../../redux-toolkit/store";
+import { iFolderManager } from "../../../interfaces/iFolderManager";
+import { reducers, store } from "../../../redux-toolkit/store";
 import { Provider } from 'react-redux';
 import FolderManager from "../../../components/features/folder_manager/folder_manager";
 import { act } from "react-dom/test-utils";
 import React from "react";
+import { configureStore } from "@reduxjs/toolkit";
+import { combinedReducers } from "../../../redux/reducers";
+import { iWindowItem } from "../../../interfaces/window_item";
+import { iFolderItem } from "../../../interfaces/folder_item";
 
 const mockId = randomNumber().toString();
 const mockChildren = <p data-testid="mock-component"></p>
 const mockFn = jest.fn();
 
-beforeEach(() => {
-    // Mock the managerwrapperref
-    jest.spyOn(React , "useRef").mockReturnValue({
-        current: {
-            scrollTo: (a: any) => {}
-        }
-    });
-    jest.useFakeTimers();
-});
 
-afterEach(() => {
-    jest.useRealTimers();
-})
-
-const mockProps: iPopup = {
-    title: randomNumber().toString(),
-    type: "slide-in",
-    onClose: mockFn
-}
 
 describe("Test <FolderManager>", () => {
     describe("Start with empty plate (e.g. add new folder)", () => {
@@ -269,7 +255,7 @@ describe("Test <FolderManager>", () => {
             
         })
 
-        test("Clicking Create/Save will triger 'onClose' prop when window list and name fields have been values", () => {
+        test("Clicking Create/Save will triger 'onClose' prop when window list and name fields have values", () => {
             // @ts-expect-error
             chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
                 callback({ showFolderChangeWarning: false })
@@ -476,6 +462,78 @@ describe("Test <FolderManager>", () => {
                 
             })
         })
+    })
+    
+});
+
+beforeEach(() => {
+    // Mock the managerwrapperref
+    jest.spyOn(React , "useRef").mockReturnValue({
+        current: {
+            scrollTo: (a: any) => {}
+        }
+    });
+    jest.useFakeTimers();
+});
+
+afterEach(() => {
+    jest.useRealTimers();
+})
+
+const mockProps: iFolderManager = {
+    title: randomNumber().toString(),
+    type: "slide-in",
+    onClose: mockFn
+}
+
+describe("Integration test: <FolderManager> with redux", () => {
+    const mockFolder: iFolderItem = {
+        id: randomNumber(),
+        name: randomNumber().toString(),
+        desc: randomNumber().toString(),
+        marked: false,
+        type: "collapsed",
+        viewMode: "list",
+        windows: [{ 
+            id: randomNumber(), 
+            tabs: [{
+                id: 0,
+                label: "http://blablabla.com",
+                url: "http://google.com"
+            }] 
+        }]
+    }
+
+    for(let winCount = 0; winCount < 100; winCount++){
+        let window: iWindowItem = {
+            id: randomNumber(),
+            tabs: []
+        }
+
+        for(let tabCount = 0; tabCount < 100; tabCount++){
+            window.tabs.push({
+                id: randomNumber(),
+                label: randomNumber().toString(),
+                url: `http://${randomNumber()}.com`
+            })
+        }
+        mockFolder.windows.push(window);
+    }
+
+    const mockStore = configureStore({
+        reducer: reducers,
+        preloadedState: {
+            "folderManagement": mockFolder,
+            "misc": {
+                tabBeingEdited: 0,
+                currentlyEditingTab: false
+            }
+        }
+
+    })
+    
+    describe("Verify all preset aspects matches those retrieved from redux", () => {
+
     })
     
 });

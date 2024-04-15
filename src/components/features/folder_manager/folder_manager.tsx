@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import FormField from "../../utils/form_field";
 import * as predef from "../../../styles/predef";
-import { iPopup } from "../../../interfaces/popup";
+import { iFolderManager } from "../../../interfaces/iFolderManager";
 
 import randomNumber from "../../../tools/random_number";
 import { initInEditFolder, updateInEditFolder} from "../../../redux/actions/in_edit_folder_actions";
@@ -29,7 +29,7 @@ import { createNewFolder, saveFolder } from "../../../redux-toolkit/slices/folde
     preferably by using the <FormField /> component. See examples in the return statement
 */
 
-const FolderManager = (props: iPopup): JSX.Element => {
+const FolderManager = (props: iFolderManager): JSX.Element => {
     const { onClose, type, folder, title } = props;
     const [show, setShow] = useState<boolean>(false);
     const [isCreate, setIsCreate] = useState<boolean>(false);
@@ -122,7 +122,7 @@ const FolderManager = (props: iPopup): JSX.Element => {
             updatedFieldState.name = true;
         } 
 
-        if((data.windows && data.windows.length === 0) || miscState.isEditingTabs > 0) {
+        if((data.windows && data.windows.length === 0) || miscState.toBeingEdited > 0) {
             updatedFieldState.windows = true;
         } 
         

@@ -3,7 +3,7 @@ import '@testing-library/jest-dom'
 import randomNumber from "../../../tools/random_number";
 import TextIconButton from "../../../components/utils/text_icon_button";
 import { Provider, useDispatch } from "react-redux";
-import { store } from "../../../redux-toolkit/store";
+import { reducers, store } from "../../../redux-toolkit/store";
 import WindowItem from "../../../components/features/window_item";
 import { iTabItem } from "../../../interfaces/tab_item";
 import { iWindowItem } from "../../../interfaces/window_item";
@@ -11,12 +11,16 @@ import { iWindowItem } from "../../../interfaces/window_item";
 import { createStore, applyMiddleware } from "redux";
 import { combineReducers } from "redux";
 import thunk from "redux-thunk";
+import * as reactRedux from "react-redux"
+import { configureStore } from "@reduxjs/toolkit";
+
 
 const mockWindow: iWindowItem = {
     id: randomNumber(),
     tabs: [],
     tabsCol: 2
 }
+
 
 const mockMarkTabFn = jest.fn((tabId: number, checked: boolean): void | undefined => {});
 const mockEditTabFn = jest.fn((tabId: number): void | undefined => {})
@@ -291,7 +295,7 @@ describe("Test <WindowItem>", () => {
             })
         });
 
-        test("Add tab button is visible when adding tab and editing tab permissions are in place", () => {
+        test("'New tab' button is visible when adding tab and editing tab permissions are in place", () => {
             render(
                 <Provider store={store}>
                     <WindowItem {...mockWindow} disableAddTab={false} disableEdit={false} />
@@ -301,9 +305,6 @@ describe("Test <WindowItem>", () => {
             const addTabButton = screen.getByText("New tab");
 
             expect(addTabButton).toBeInTheDocument();
-
-           // Cannot make more assertions in with unit tests.
-            // This part requires a redux store, so save this for integration tests...
         });
 
         test("Add tab button is always invisible if number of tabs is 0", () => {
@@ -316,8 +317,6 @@ describe("Test <WindowItem>", () => {
             const addTabButton = screen.queryByText("New tab");
             expect(addTabButton).not.toBeInTheDocument();
 
-           // Cannot make more assertions in with unit tests.
-            // This part requires a redux store, so save this for integration tests...
         });
 
         test("Add tab button is always invisible if disableAddTabs is true", () => {
@@ -329,9 +328,6 @@ describe("Test <WindowItem>", () => {
 
             const addTabButton = screen.queryByText("New tab");
             expect(addTabButton).not.toBeInTheDocument();
-
-           // Cannot make more assertions in with unit tests.
-            // This part requires a redux store, so save this for integration tests...
         });
 
         test("Add tab button is always invisible if disableEdit is true", () => {
@@ -343,9 +339,6 @@ describe("Test <WindowItem>", () => {
 
             const addTabButton = screen.queryByText("New tab");
             expect(addTabButton).not.toBeInTheDocument();
-
-           // Cannot make more assertions in with unit tests.
-            // This part requires a redux store, so save this for integration tests...
         });
 
         test("Delete tab button is available when at least 1 tab is marked.", () => {
@@ -367,9 +360,6 @@ describe("Test <WindowItem>", () => {
 
             deleteTabsButton = screen.getByText("Delete tabs");
             expect(deleteTabsButton).toBeInTheDocument();
-
-            // Cannot make more assertions with unit tests.
-            // This part requires a redux store, so save this for integration tests...
         });
 
         test("Clicking checkboxes will mark them", () => {
@@ -422,7 +412,6 @@ describe("Test <WindowItem>", () => {
             // This part requires a redux store, so save this for integration tests...
         });
 
-
         test("Delete tab button is invisible if no tabs are marked", () => {
             render(
                 <Provider store={store}>
@@ -432,10 +421,6 @@ describe("Test <WindowItem>", () => {
 
             let deleteTabsButton = screen.queryByText("Delete tabs");
             expect(deleteTabsButton).not.toBeInTheDocument();
-
-            // Cannot make more assertions in with unit tests.
-            // This part requires a redux store, so save this for integration tests...
-        
         });
         
     })
