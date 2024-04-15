@@ -20,6 +20,26 @@ const mockFn = jest.fn();
 
 
 
+beforeEach(() => {
+    // Mock the managerwrapperref
+    jest.spyOn(React , "useRef").mockReturnValue({
+        current: {
+            scrollTo: (a: any) => {}
+        }
+    });
+    jest.useFakeTimers();
+});
+
+afterEach(() => {
+    jest.useRealTimers();
+})
+
+const mockProps: iFolderManager = {
+    title: randomNumber().toString(),
+    type: "slide-in",
+    onClose: mockFn
+}
+
 describe("Test <FolderManager>", () => {
     describe("Start with empty plate (e.g. add new folder)", () => {
         test("All text fields are empty", () => {
@@ -466,27 +486,21 @@ describe("Test <FolderManager>", () => {
     
 });
 
-beforeEach(() => {
-    // Mock the managerwrapperref
-    jest.spyOn(React , "useRef").mockReturnValue({
-        current: {
-            scrollTo: (a: any) => {}
-        }
-    });
-    jest.useFakeTimers();
-});
 
-afterEach(() => {
-    jest.useRealTimers();
-})
+describe("Test <FolderManager> with prefilled values and redux defined values", () => {
+    const totalWindowsCount = 20;
+    const totalTabsInWindowCount = 15;
 
-const mockProps: iFolderManager = {
-    title: randomNumber().toString(),
-    type: "slide-in",
-    onClose: mockFn
-}
+    const emptyFolder: iFolderItem = {
+        id: randomNumber(),
+        name: randomNumber().toString(),
+        desc: randomNumber().toString(),
+        marked: false,
+        type: "collapsed",
+        viewMode: "list",
+        windows: []
+    };
 
-describe("Integration test: <FolderManager> with redux", () => {
     const mockFolder: iFolderItem = {
         id: randomNumber(),
         name: randomNumber().toString(),
@@ -494,23 +508,16 @@ describe("Integration test: <FolderManager> with redux", () => {
         marked: false,
         type: "collapsed",
         viewMode: "list",
-        windows: [{ 
-            id: randomNumber(), 
-            tabs: [{
-                id: 0,
-                label: "http://blablabla.com",
-                url: "http://google.com"
-            }] 
-        }]
+        windows: []
     }
 
-    for(let winCount = 0; winCount < 100; winCount++){
+    for(let winCount = 0; winCount < totalWindowsCount; winCount++){
         let window: iWindowItem = {
             id: randomNumber(),
             tabs: []
         }
 
-        for(let tabCount = 0; tabCount < 100; tabCount++){
+        for(let tabCount = 0; tabCount < totalTabsInWindowCount; tabCount++){
             window.tabs.push({
                 id: randomNumber(),
                 label: randomNumber().toString(),
@@ -520,20 +527,86 @@ describe("Integration test: <FolderManager> with redux", () => {
         mockFolder.windows.push(window);
     }
 
-    const mockStore = configureStore({
-        reducer: reducers,
-        preloadedState: {
-            "folderManagement": mockFolder,
-            "misc": {
-                tabBeingEdited: 0,
-                currentlyEditingTab: false
+    const mockPresetProps = {
+        ...mockProps,
+        folder: mockFolder
+    }
+
+    /*
+        const mockStore = configureStore({
+            reducer: reducers,
+            preloadedState: {
+                "folderManagement": emptyFolder,
+                "misc": {
+                    tabBeingEdited: 0,
+                    currentlyEditingTab: false
+                },
+                "pluginSettings": {
+                    performanceWarningValue: 0,
+                    duplicationWarningValue: 0,
+                    closeSessionAtFolderLaunch: false,
+                    showFolderChangeWarning: false,
+                    folderRemovalWarning: false,
+                    allowErrorLog: false
+                },
+                "folder": []
             }
-        }
 
-    })
+        })
+    */
     
-    describe("Verify all preset aspects matches those retrieved from redux", () => {
+    describe("Test prefilled fields (props data)", () => {
+        test(`There are ${totalWindowsCount} windows in total`, () => {
+            // @ts-expect-error
+            chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
+                callback({ showFolderChangeWarning: false })
+            })
 
+            render(
+                <Provider store={store}>
+                    <FolderManager {...mockPresetProps} />
+                </Provider>
+            )
+
+            const tabItems = screen.queryAllByTestId("window-item");
+            expect(tabItems.length).toEqual(totalWindowsCount)
+        });
+
+        test(`There are ${totalTabsInWindowCount} tabs in each window`, () => {
+            // @ts-expect-error
+            chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
+                callback({ showFolderChangeWarning: false })
+            })
+
+            render(
+                <Provider store={store}>
+                    <FolderManager {...mockPresetProps} />
+                </Provider>
+            )
+
+            const windows = screen.queryAllByTestId("window-item");
+
+            windows.forEach((window) => {
+                const tabs = within(window).queryAllByTestId("tab-item");
+                expect(tabs.length).toEqual(totalTabsInWindowCount);
+            })
+        });
+
+        test(`There are ${totalTabsInWindowCount*totalWindowsCount} tabs in total`, () => {
+            // @ts-expect-error
+            chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
+                callback({ showFolderChangeWarning: false })
+            })
+
+            render(
+                <Provider store={store}>
+                    <FolderManager {...mockPresetProps} />
+                </Provider>
+            )
+
+            const tabs = screen.getAllByTestId("tab-item");
+            expect(tabs.length).toEqual(totalTabsInWindowCount*totalWindowsCount);
+        });
     })
     
 });
