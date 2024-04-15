@@ -20,7 +20,7 @@ import iPluginSettings from "../../../interfaces/states/plugin_settings_state";
 import { setUpFolder, updateFolder } from "../../../redux-toolkit/slices/folder_management_slice";
 import { changeShowFolderChangeWarning } from "../../../redux-toolkit/slices/plugin_settings_slice";
 import { setIsEditingTab } from "../../../redux-toolkit/slices/misc_slice";
-import { createNewFolder } from "../../../redux-toolkit/slices/folder_slice";
+import { createNewFolder, saveFolder } from "../../../redux-toolkit/slices/folder_slice";
 /*
     A popup providing oversight of a folder's settings and available windows/tabs.
     The settings may be changed by the user, which then gets saved to redux storage
@@ -87,7 +87,7 @@ const FolderManager = (props: iPopup): JSX.Element => {
     useEffect(() => {
         const inEditWindows: string = folderManagementState?.windows;
         const listChanged: boolean = windowListChanged(originWindows, inEditWindows);
-        console.log("CHANGES", listChanged);
+
         if(listChanged === true){
             setModified(true);
         }
@@ -169,7 +169,7 @@ const FolderManager = (props: iPopup): JSX.Element => {
                 if(targetIndex === -1){
                     dispatch(createNewFolder(folderManagementState));
                 } else {
-                    dispatch(updateFolder(folderManagementState));
+                    dispatch(saveFolder(folderManagementState));
                 }
                 
             } else {
@@ -200,7 +200,7 @@ const FolderManager = (props: iPopup): JSX.Element => {
 
     return (
         <>
-            {pluginSettingsState?.showFolderChangeWarning === true && 
+            {modified === true && pluginSettingsState?.showFolderChangeWarning === true && 
                 <PopupMessage
                     title="Warning" 
                     text="You have made changes to this form. Closing it will result in all changes being lost. Do you want to proceed?"

@@ -78,17 +78,18 @@ describe("Test <Dropdown />", () => {
         );
         const dropdown = screen.getByRole("menu");
         let selectedLabel = within(dropdown).getByText(mockPreset.label);
-
+        
         fireEvent.click(selectedLabel);
 
         let optionsList: any = within(dropdown).getByRole("list");
-        
+    
         mockOptions.forEach((option) => {
-            optionsList = within(dropdown).queryByRole("list");
-            const target = within(optionsList).getByText(option.label, { selector: "button" });
+            optionsList = within(dropdown).getByRole("list");
+            let target = within(optionsList).getByText(option.label, { selector: "button" });
+
             fireEvent.click(target);
 
-            
+            optionsList = within(dropdown).queryByRole("list");
             expect(optionsList).not.toBeInTheDocument();
             expect(mockCallback).toHaveBeenCalledWith(
                 {

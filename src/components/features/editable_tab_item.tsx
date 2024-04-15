@@ -8,6 +8,7 @@ import { iTabItem } from "../../interfaces/tab_item";
 import { useDispatch } from "react-redux";
 import { updateWindowManager } from "../../redux/actions/in_edit_folder_actions";
 import verifyValue from "../../tools/verify_value";
+import { updateWindowList } from "../../redux-toolkit/slices/folder_management_slice";
 
 
 /*
@@ -25,7 +26,6 @@ const EditableTabItem = (props: iEditableTabItem): JSX.Element => {
     // Show error message, and prevent saving if field is invalid.
     const saveToStore = (e: any): void => {
         const tabId = id ? id : randomNumber();
-
         if(!verifyValue(e.target.value)){
             setErrorMessage("A tab needs to have a valid URL, e.g. https://google.com/...");
         } else {
@@ -36,8 +36,8 @@ const EditableTabItem = (props: iEditableTabItem): JSX.Element => {
                 url: e.target.value,
                 marked: e.target.marked
             };
-            
-            dispatch(updateWindowManager(windowId, tab)); 
+           
+            dispatch(updateWindowList({ windowId, targetTab: tab })); 
             onStop();
         }
     }

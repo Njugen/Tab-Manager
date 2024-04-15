@@ -24,6 +24,7 @@ const Dropdown = (props: iDropdown): JSX.Element => {
     // Show or hide sub menu based on state by sliding down the menu.
     // The sliding effect is delayed to allow certain states to take effect
     const handleShowSubMenu = (): void => {
+
         if(showSubMenuContainer === false){
             setShowSubMenuContainer(true);
         } else {
@@ -36,7 +37,7 @@ const Dropdown = (props: iDropdown): JSX.Element => {
     const handleSelect = (id: number): void => {
         setSelected(id);
         onCallback({ selected: id });
-        handleShowSubMenu();
+        //handleShowSubMenu();
     }
 
     const handleWindowClick = (e: any): void => {

@@ -89,11 +89,13 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
                         newTabCollection.push(tab);                    
                     }
                 });
-            
-                folderManagementState.windows[targetWindowIndex].tabs = [...newTabCollection];
+                
+                const tempState = JSON.parse(JSON.stringify(folderManagementState));
+
+                tempState.windows[targetWindowIndex].tabs = [...newTabCollection];
 
                 setMarkedTabs([]);
-                dispatch(updateFolder(["windows", folderManagementState.windows]));
+                dispatch(updateFolder(["windows", tempState.windows]));
                 dispatch(setIsEditingTab(false));
             }
         } else {

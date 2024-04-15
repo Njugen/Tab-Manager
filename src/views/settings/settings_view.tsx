@@ -104,7 +104,7 @@ const SettingsView = (props: iView): JSX.Element => {
                 {Object.entries(pluginSettingsState).length > 0 && <div className="w-10/12 2xl:w-7/12">
                     <FormField label="Performance notification" description="Warn me if the total amount of tabs exceeds a certain threshold when launching multiple tabs">
                         <Dropdown 
-                            onCallback={(e) => saveSelectedOption("performanceWarningValue", e.selected)} 
+                            onCallback={(e) => { saveSelectedOption("performanceWarningValue", e.selected)}} 
                             tag="performance-dropdown" 
                             preset={getPresetPerformanceNotification()} 
                             options={performanceNotificationOptions} 

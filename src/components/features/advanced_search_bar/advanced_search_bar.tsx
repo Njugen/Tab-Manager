@@ -108,7 +108,6 @@ const AdvancedSearchBar = (props: iAdvancedSearchBar): JSX.Element => {
 
     // Prepare the windows in a folder for launch, and Instruct the component on how to launch the folder
     const handlePrepareLaunchFolder = (windows: Array<iWindowItem>, type: string): void => {
-        console.log("TYPE", type);
         setWindowsPayload(windows);
         evaluatePerformanceWarning(type, windows);
     }

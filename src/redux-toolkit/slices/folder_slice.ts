@@ -31,7 +31,7 @@ const folderSlice = createSlice({
 
             return state.filter((folder) => folder.id === payload)
         },
-        updateFolder: (state, action: PayloadAction<iFolderItem>) => {
+        saveFolder: (state, action: PayloadAction<iFolderItem>) => {
             const { payload } = action;
 
             const updatedFolders: Array<iFolderItem> = state.map((folder) => {
@@ -65,7 +65,7 @@ export const {
     readAllStorageFolders,
     createNewFolder,
     readFolder,
-    updateFolder,
+    saveFolder,
     deleteFolder
 } = folderSlice.actions;
 
