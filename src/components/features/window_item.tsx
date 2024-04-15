@@ -8,7 +8,7 @@ import EditableTabItem from "./editable_tab_item";
 import { iTabItem } from "../../interfaces/tab_item";
 import { useDispatch, useSelector } from "react-redux";
 import { updateInEditFolder } from "../../redux/actions/in_edit_folder_actions";
-import { setCurrentlyEditingTab, setTabInEdits } from "../../redux/actions/misc_actions";
+//import { setcurrentlyEditingTab, setTabInEdits } from "../../redux/actions/misc_actions";
 import TrashIcon from "../icons/trash_icon";
 import CollapseIcon from "../icons/collapse_icon";
 import ExpandIcon from "../icons/expand_icon";
@@ -105,18 +105,18 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
     }
 
     const handleTabEdit = (id: number): void => {
-        const { isEditingTabs, currentlyEditingTab } = miscState;
+        const { toBeingEdited, currentlyEditingTab } = miscState;
 
         if(currentlyEditingTab === true) return;
 
-        dispatch(setCurrentTabEdits(isEditingTabs + 1));
+        dispatch(setCurrentTabEdits(toBeingEdited + 1));
         dispatch(setIsEditingTab(true));
         setEditTab(id);
     }
 
     const handleEditTabStop = (): void => {
-        const { isEditingTabs } = miscState;
-        dispatch(setCurrentTabEdits(isEditingTabs > 0 ? isEditingTabs - 1 : 0)); 
+        const { toBeingEdited } = miscState;
+        dispatch(setCurrentTabEdits(toBeingEdited > 0 ? toBeingEdited - 1 : 0)); 
         dispatch(setIsEditingTab(false));
         setEditTab(null);
         setNewTab(false);

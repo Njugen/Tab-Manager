@@ -180,7 +180,7 @@ const FolderManager = (props: iPopup): JSX.Element => {
             handleClose(true);
         });
        
-    }
+    }           
 
     // Close error/warning messages, but remain in the popup
     const handleKeepEditing = (): void => {
