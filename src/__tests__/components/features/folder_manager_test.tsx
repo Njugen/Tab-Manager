@@ -13,6 +13,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { combinedReducers } from "../../../redux/reducers";
 import { iWindowItem } from "../../../interfaces/window_item";
 import { iFolderItem } from "../../../interfaces/folder_item";
+import { iTabItem } from "../../../interfaces/tab_item";
 
 const mockId = randomNumber().toString();
 const mockChildren = <p data-testid="mock-component"></p>
@@ -487,19 +488,9 @@ describe("Test <FolderManager>", () => {
 });
 
 
-describe("Test <FolderManager> with prefilled values and redux defined values", () => {
+describe("Edit folder: Test <FolderManager> with prefilled values", () => {
     const totalWindowsCount = 20;
     const totalTabsInWindowCount = 15;
-
-    const emptyFolder: iFolderItem = {
-        id: randomNumber(),
-        name: randomNumber().toString(),
-        desc: randomNumber().toString(),
-        marked: false,
-        type: "collapsed",
-        viewMode: "list",
-        windows: []
-    };
 
     const mockFolder: iFolderItem = {
         id: randomNumber(),
@@ -514,7 +505,9 @@ describe("Test <FolderManager> with prefilled values and redux defined values", 
     for(let winCount = 0; winCount < totalWindowsCount; winCount++){
         let window: iWindowItem = {
             id: randomNumber(),
-            tabs: []
+            tabs: [],
+            disableEditTab: false,
+            disableDeleteTab: false,
         }
 
         for(let tabCount = 0; tabCount < totalTabsInWindowCount; tabCount++){
@@ -531,29 +524,6 @@ describe("Test <FolderManager> with prefilled values and redux defined values", 
         ...mockProps,
         folder: mockFolder
     }
-
-    /*
-        const mockStore = configureStore({
-            reducer: reducers,
-            preloadedState: {
-                "folderManagement": emptyFolder,
-                "misc": {
-                    tabBeingEdited: 0,
-                    currentlyEditingTab: false
-                },
-                "pluginSettings": {
-                    performanceWarningValue: 0,
-                    duplicationWarningValue: 0,
-                    closeSessionAtFolderLaunch: false,
-                    showFolderChangeWarning: false,
-                    folderRemovalWarning: false,
-                    allowErrorLog: false
-                },
-                "folder": []
-            }
-
-        })
-    */
     
     describe("Test prefilled fields (props data)", () => {
         test(`There are ${totalWindowsCount} windows in total`, () => {
@@ -607,6 +577,263 @@ describe("Test <FolderManager> with prefilled values and redux defined values", 
             const tabs = screen.getAllByTestId("tab-item");
             expect(tabs.length).toEqual(totalTabsInWindowCount*totalWindowsCount);
         });
+
+        test(`Clicking delete tabs button will delete the marked tabs from the manager`, () => {
+            // @ts-expect-error
+            chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
+                callback({ showFolderChangeWarning: false })
+            })
+
+            render(
+                <Provider store={store}>
+                    <FolderManager {...mockPresetProps} />
+                </Provider>
+            )
+
+            // Get a random window id
+            const randomWindowIndex: number = Math.floor(Math.random() * totalWindowsCount)
+
+            // Get the window element
+            let windowItems = screen.getAllByTestId("window-item");
+            let targetWindow = windowItems[randomWindowIndex];
+            let tabItems = within(targetWindow).getAllByTestId("tab-item");
+
+            // Get 4 random tab id
+            let randomTabs: Array<HTMLElement> = [];
+            let lastSelectedId = -1;
+
+
+            for(let i = 0; i < 4; i++){
+                const randomTabIndex = Math.floor(Math.random() * totalTabsInWindowCount);
+                const target = tabItems.splice(randomTabIndex, 1);
+                randomTabs = randomTabs.concat(target);
+            }
+
+            // Loop through these 4 tabs and mark them
+            randomTabs.forEach((tab) => {
+                const checkbox = within(tab).getByTestId("checkbox");
+                fireEvent.click(checkbox);
+            })
+
+            const deleteButton = screen.getByText("Delete tabs", { selector: "button" });
+            fireEvent.click(deleteButton);
+
+            windowItems = screen.getAllByTestId("window-item");
+            targetWindow = windowItems[randomWindowIndex];
+            
+            // Loop through the same tabs and make sure they are not in the manager anymore
+            randomTabs.forEach((tab) => {
+                expect(tab).not.toBeInTheDocument();
+            })
+        })
+        
+        
+
+        describe("Test cancellation warning popup", () => {
+            
+            test(`Attempt at cancelling after deleting tabs will trigger a warning, if set in the plugin settings`, () => {
+                // @ts-expect-error
+                chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
+                    callback({ showFolderChangeWarning: true })
+                })
+
+                render(
+                    <Provider store={store}>
+                        <FolderManager {...mockPresetProps} />
+                    </Provider>
+                )
+
+                // Get a random window id
+                const randomWindowIndex: number = Math.floor(Math.random() * totalWindowsCount)
+
+                // Get the window element
+                let windowItems = screen.getAllByTestId("window-item");
+                let targetWindow = windowItems[randomWindowIndex];
+                let tabItems = within(targetWindow).getAllByTestId("tab-item");
+
+                // Get 4 random tab id
+                let randomTabs: Array<HTMLElement> = [];
+                let lastSelectedId = -1;
+
+
+                for(let i = 0; i < 4; i++){
+                    const randomTabIndex = Math.floor(Math.random() * totalTabsInWindowCount);
+                    const target = tabItems.splice(randomTabIndex, 1);
+                    randomTabs = randomTabs.concat(target);
+                }
+
+                // Loop through these 4 tabs and mark them
+                randomTabs.forEach((tab) => {
+                    const checkbox = within(tab).getByTestId("checkbox");
+                    fireEvent.click(checkbox);
+                })
+
+                const deleteButton = screen.getByText("Delete tabs", { selector: "button" });
+                fireEvent.click(deleteButton);
+
+                const cancelButton = screen.getByText("Cancel", { selector: "button" });
+                fireEvent.click(cancelButton);
+                
+                const alert = screen.getByRole("alert");
+                expect(alert).toBeInTheDocument()
+            })
+
+            test(`Attempt at cancelling after editing tab will trigger a warning, if set in the plugin settings`, () => {
+                // @ts-expect-error
+                chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
+                    callback({ showFolderChangeWarning: true })
+                })
+    
+                render(
+                    <Provider store={store}>
+                        <FolderManager {...mockPresetProps} />
+                    </Provider>
+                )
+    
+                // Get a random window id
+                const randomWindowIndex: number = Math.floor(Math.random() * totalWindowsCount)
+                const targetWindowTabs = mockFolder.windows[randomWindowIndex].tabs;
+    
+                const randomTabIndex: number = Math.floor(Math.random() * targetWindowTabs.length);
+    
+                // Get all windows
+                let windowItems = screen.getAllByTestId("window-item");
+    
+                // Select a specific window
+                let targetWindowItem = windowItems[randomWindowIndex];
+                let targetWindowTabItems = within(targetWindowItem).getAllByTestId("tab-item");
+    
+                let tabSpecs = mockFolder.windows[randomWindowIndex].tabs[randomTabIndex];
+    
+                let targetTab = targetWindowTabItems[randomTabIndex];
+                let targetTabLabel = within(targetTab).getByText(tabSpecs.label);
+                
+                // now, target the pen and change the field
+                const newRandomValue = `http://${randomNumber()}.com`;
+                
+                const penIcon = within(targetTab).getByTestId("pen-icon");
+                fireEvent.click(penIcon, { bubbles: true })
+    
+                // Now, target the input field
+                const textfield = screen.getByTestId("editable-tab");
+                fireEvent.change(textfield, { target: {value: newRandomValue} });
+                fireEvent.blur(textfield);
+    
+                const cancelButton = screen.getByText("Cancel", { selector: "button" });
+                fireEvent.click(cancelButton);
+                
+                const alert = screen.getByRole("alert");
+                expect(alert).toBeInTheDocument()
+            })
+
+            test("Attempt at cancelling when name field has changed will trigger a warning", () => {
+                // Mock the chrome storage getter
+
+                // @ts-expect-error
+                chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
+                    callback({ showFolderChangeWarning: true })
+                })
+                
+
+                render(
+                    <Provider store={store}>
+                        <FolderManager {...mockPresetProps} />
+                    </Provider>
+                )
+                
+                let managerPopup = screen.getByRole("dialog");
+                
+                // Change the name field value
+                const nameField = within(managerPopup).getByTestId("name-field");
+                fireEvent.focus(nameField);
+                fireEvent.change(nameField, { target: { value: randomNumber().toString() } } )
+                fireEvent.blur(nameField);
+
+
+                // Try save it. It should pass
+                const cancelButton = within(managerPopup).getByText("Cancel", { selector: "button" });
+                fireEvent.click(cancelButton, { bubbles: true });
+
+                // Get the popup
+                let warningMessage = screen.getByRole("alert");
+                expect(warningMessage).toBeInTheDocument();
+
+                const keepEditingButton = within(warningMessage).getByText("No, keep editing", { selector: "button" })
+                fireEvent.click(keepEditingButton);
+                
+                
+                // Trigger popup again and hit close
+                fireEvent.click(cancelButton, { bubbles: true });
+
+                warningMessage = screen.getByRole("alert");
+                expect(warningMessage).toBeInTheDocument();
+                
+                const closeButton = within(warningMessage).getByText("Yes, close this form", { selector: "button" })
+                fireEvent.click(closeButton);
+
+                act(() => {
+                    jest.runAllTimers();
+                });
+
+                expect(mockPresetProps.onClose).toHaveBeenCalled();
+    
+                
+            })
+
+            test("Attempt at cancelling when description field has changed will trigger a warning", () => {
+                // Mock the chrome storage getter
+
+                // @ts-expect-error
+                chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
+                    callback({ showFolderChangeWarning: true })
+                })
+                
+    
+                render(
+                    <Provider store={store}>
+                        <FolderManager {...mockPresetProps} />
+                    </Provider>
+                )
+                
+                let managerPopup = screen.getByRole("dialog");
+                
+                // Change the description field value
+                const desc = within(managerPopup).getByTestId("desc-field");
+                fireEvent.focus(desc);
+                fireEvent.change(desc, { target: { value: randomNumber().toString() } } )
+                fireEvent.blur(desc);
+
+
+                // Try save it. It should pass
+                const cancelButton = within(managerPopup).getByText("Cancel", { selector: "button" });
+                fireEvent.click(cancelButton, { bubbles: true });
+
+                // Get the popup
+                let warningMessage = screen.getByRole("alert");
+                expect(warningMessage).toBeInTheDocument();
+
+                const keepEditingButton = within(warningMessage).getByText("No, keep editing", { selector: "button" })
+                fireEvent.click(keepEditingButton);
+                
+                
+                // Trigger popup again and hit close
+                fireEvent.click(cancelButton, { bubbles: true });
+
+                warningMessage = screen.getByRole("alert");
+                expect(warningMessage).toBeInTheDocument();
+                
+                const closeButton = within(warningMessage).getByText("Yes, close this form", { selector: "button" })
+                fireEvent.click(closeButton);
+
+                act(() => {
+                    jest.runAllTimers();
+                });
+
+                expect(mockPresetProps.onClose).toHaveBeenCalled();
+    
+                
+            })
+        })
     })
     
 });
