@@ -20,7 +20,6 @@ const mockChildren = <p data-testid="mock-component"></p>
 const mockFn = jest.fn();
 
 
-
 beforeEach(() => {
     // Mock the managerwrapperref
     jest.spyOn(React , "useRef").mockReturnValue({
@@ -161,6 +160,46 @@ describe("Test <FolderManager>", () => {
             });
 
             expect(mockProps.onClose).toHaveBeenCalled();
+            
+        })
+
+        test("No warning message when launching the folder manager", () => {
+            // Mock the chrome storage getter
+
+            // @ts-expect-error
+            chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
+                callback({ showFolderChangeWarning: false })
+            })
+
+            render(
+                <Provider store={store}>
+                    <FolderManager {...mockProps} />
+                </Provider>
+            )
+            
+            let alert = screen.queryByRole("alert");
+            expect(alert).not.toBeInTheDocument();
+
+            
+        })
+
+        test("No warning message when launching the folder manager (even when cancellation warning is turned on)", () => {
+            // Mock the chrome storage getter
+
+            // @ts-expect-error
+            chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
+                callback({ showFolderChangeWarning: true })
+            })
+
+            render(
+                <Provider store={store}>
+                    <FolderManager {...mockProps} />
+                </Provider>
+            )
+            
+            let alert = screen.queryByRole("alert");
+            expect(alert).not.toBeInTheDocument();
+
             
         })
     })
@@ -318,7 +357,7 @@ describe("Test <FolderManager>", () => {
         })
 
         describe("Test cancellation warning popup", () => {
-            test("Attempt at cancelling when name field has changed will trigger a warning", () => {
+            test("Attempt at cancelling when name field has changed will trigger a warning if set in plugin settings", () => {
                 // Mock the chrome storage getter
 
                 // @ts-expect-error
@@ -372,7 +411,7 @@ describe("Test <FolderManager>", () => {
                 
             })
 
-            test("Attempt at cancelling when description field has changed will trigger a warning", () => {
+            test("Attempt at cancelling when description field has changed will trigger a warning if set in plugin settings", () => {
                 // Mock the chrome storage getter
 
                 // @ts-expect-error
@@ -426,7 +465,7 @@ describe("Test <FolderManager>", () => {
                 
             })
 
-            test("Attempt at cancelling once a window/tab has been added will  trigger a warning", () => {
+            test("Attempt at cancelling once a window/tab has been added will trigger a warning if set in plugin settings", () => {
                 // Mock the chrome storage getter
 
                 // @ts-expect-error
@@ -726,7 +765,7 @@ describe("Edit folder: Test <FolderManager> with prefilled values", () => {
                 expect(alert).toBeInTheDocument()
             })
 
-            test("Attempt at cancelling when name field has changed will trigger a warning", () => {
+            test("Attempt at cancelling when name field has changed will trigger a warning if set in plugin settings", () => {
                 // Mock the chrome storage getter
 
                 // @ts-expect-error
@@ -780,7 +819,7 @@ describe("Edit folder: Test <FolderManager> with prefilled values", () => {
                 
             })
 
-            test("Attempt at cancelling when description field has changed will trigger a warning", () => {
+            test("Attempt at cancelling when description field has changed will trigger a warning if set in plugin settings", () => {
                 // Mock the chrome storage getter
 
                 // @ts-expect-error
