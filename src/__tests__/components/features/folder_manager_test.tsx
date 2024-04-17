@@ -42,6 +42,25 @@ const mockProps: iFolderManager = {
 
 describe("Test <FolderManager>", () => {
     describe("Start with empty plate (e.g. add new folder)", () => {
+        test("There are no warning messages when launching an empty plate", () => {
+            // Mock the chrome storage getter
+
+            // @ts-expect-error
+            chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
+                callback({ showFolderChangeWarning: false })
+            })
+
+            render(
+                <Provider store={store}>
+                    <FolderManager {...mockProps} />
+                </Provider>
+            )
+            
+            const warningMessage = screen.queryByRole("alert");
+            expect(warningMessage).not.toBeInTheDocument();
+            
+        })
+
         test("All text fields are empty", () => {
             // Mock the chrome storage getter
 
@@ -273,6 +292,35 @@ describe("Test <FolderManager>", () => {
             
         })
 
+        test("Blurring any textfield without making changes won't trigger warning messages", () => {
+            // Mock the chrome storage getter
+
+            // @ts-expect-error
+            chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
+                callback({ showFolderChangeWarning: false })
+            })
+
+
+            render(
+                <Provider store={store}>
+                    <FolderManager {...mockProps} />
+                </Provider>
+            )
+            
+            let managerPopup = screen.getByRole("dialog");
+            
+            // Change the name field value
+            const textfields = within(managerPopup).getAllByRole("textbox");;
+            textfields.forEach((field) => {
+                fireEvent.click(field);
+                fireEvent.blur(field);
+
+                const warningMessage = screen.getByRole("alert");
+                expect(warningMessage).not.toBeInTheDocument();
+            })
+            
+        })
+
         test("Clicking Create/Save won't trigger 'onClose' when only window list has been changed", () => {
             // Mock the chrome storage getter
 
@@ -355,6 +403,7 @@ describe("Test <FolderManager>", () => {
 
             expect(mockProps.onClose).toHaveBeenCalled();
         })
+
 
         describe("Test cancellation warning popup", () => {
             test("Attempt at cancelling when name field has changed will trigger a warning if set in plugin settings", () => {
@@ -565,6 +614,54 @@ describe("Edit folder: Test <FolderManager> with prefilled values", () => {
     }
     
     describe("Test prefilled fields (props data)", () => {
+        test("There are no warning messages when launching prefilled plate", () => {
+            // Mock the chrome storage getter
+
+            // @ts-expect-error
+            chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
+                callback({ showFolderChangeWarning: false })
+            })
+
+            render(
+                <Provider store={store}>
+                    <FolderManager {...mockPresetProps} />
+                </Provider>
+            )
+            
+            const warningMessage = screen.queryByRole("alert");
+            expect(warningMessage).not.toBeInTheDocument();
+            
+        })
+
+        test("Blurring any textfield without making changes won't trigger warning messages", () => {
+            // Mock the chrome storage getter
+
+            // @ts-expect-error
+            chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
+                callback({ showFolderChangeWarning: false })
+            })
+
+
+            render(
+                <Provider store={store}>
+                    <FolderManager {...mockPresetProps} />
+                </Provider>
+            )
+            
+            let managerPopup = screen.getByRole("dialog");
+            
+            // Change the name field value
+            const textfields = within(managerPopup).getAllByRole("textbox");;
+            textfields.forEach((field) => {
+                fireEvent.click(field);
+                fireEvent.blur(field);
+
+                const warningMessage = screen.getByRole("alert");
+                expect(warningMessage).not.toBeInTheDocument();
+            })
+            
+        })
+
         test(`There are ${totalWindowsCount} windows in total`, () => {
             // @ts-expect-error
             chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {

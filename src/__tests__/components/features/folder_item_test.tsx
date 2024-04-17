@@ -146,7 +146,23 @@ describe("Test <FolderItem>", () => {
                 expect(checkbox).not.toBeInTheDocument();
             })
 
-            test("Collapsing folder hides the windows and description", () => {
+            test("Collapsing folder hides the windows list", () => {
+                render(
+                    <Provider store={store}>
+                        <FolderItem {...mockFolderItem} />
+                    </Provider>
+                )
+                
+                const folderItem = screen.getByTestId("folder-item");
+
+                const collapseButton = within(folderItem).getAllByTestId("collapse-icon");
+                fireEvent.click(collapseButton[0], { bubbles: true });
+
+                let windowListItem = within(folderItem).queryAllByTestId("window-item");
+                expect(windowListItem.length).toEqual(0);
+            })
+
+            test("Collapsing folder hides the description", () => {
                 render(
                     <Provider store={store}>
                         <FolderItem {...mockFolderItem} />
@@ -160,12 +176,26 @@ describe("Test <FolderItem>", () => {
 
                 let paragraph = within(folderItem).queryByText(desc, {selector: "p"});
                 expect(paragraph).not.toBeInTheDocument();
-
-                let windowListItem = within(folderItem).queryAllByTestId("window-item");
-                expect(windowListItem.length).toEqual(0);
             })
 
-            test("Expanding folder hides the windows and description", () => {
+            test("Expanding folder shows the windows list", () => {
+                render(
+                    <Provider store={store}>
+                        <FolderItem {...mockFolderItem} type="collapsed" />
+                    </Provider>
+                )
+                
+                const folderItem = screen.getByTestId("folder-item");
+
+                const expandButton = within(folderItem).getAllByTestId("collapse-icon");
+                fireEvent.click(expandButton[0], { bubbles: true });
+
+                let windowListItem = within(folderItem).queryAllByTestId("window-item");
+                expect(windowListItem.length).toEqual(mockFolderItem.windows.length);
+                
+            })
+
+            test("Expanding folder shows the description", () => {
                 render(
                     <Provider store={store}>
                         <FolderItem {...mockFolderItem} type="collapsed" />
@@ -179,9 +209,6 @@ describe("Test <FolderItem>", () => {
 
                 let paragraph = within(folderItem).queryByText(desc, {selector: "p"});
                 expect(paragraph).toBeInTheDocument();
-
-                let windowListItem = within(folderItem).queryAllByTestId("window-item");
-                expect(windowListItem.length).toEqual(mockFolderItem.windows.length);
                 
             })
 
