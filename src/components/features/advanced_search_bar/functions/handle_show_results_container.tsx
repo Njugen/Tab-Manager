@@ -5,12 +5,10 @@ const handleShowResultsContainer = (props: iHandleShowResultsContainerProps): vo
     const { searchResultsContainerRef, showResultsContainer, slideDown, handleSlideDown, setShowResultsContainer } = props;
 
     if(showResultsContainer === false){
-        console.log("AAA");
         setShowResultsContainer(true);
         handleSlideDown(slideDown === true ? false : true);
       
     } else {
-        console.log("BBB");
         if(searchResultsContainerRef.current){
             searchResultsContainerRef.current.classList.remove("mt-20");
             searchResultsContainerRef.current.classList.add("mt-10");

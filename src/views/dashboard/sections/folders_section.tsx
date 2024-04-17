@@ -165,9 +165,8 @@ const FoldersSection = (props: any): JSX.Element => {
     // Merge selected folders
     const handleMergeFolders = (): void => {
         const newId = randomNumber();
-        console.log("A");
         const { markedFoldersId } = foldersSectionState;
-        console.log("B");
+
         const folderSpecs: iFolderItem = {
             id: newId,
             name: "",
@@ -177,25 +176,21 @@ const FoldersSection = (props: any): JSX.Element => {
             marked: false,
             windows: [],
         }
-        console.log("C");
+
         let purified = purify(folderState);
         if(purified && markedFoldersId){
-            console.log("C-1");
             const mergedWindows: Array<iWindowItem> = [];
-            console.log("C-2");
+
             markedFoldersId.forEach((targetId: number) => {
-                console.log("C-3");
                 const markedFolderIndex = purified.findIndex((folder: iFolderItem) => targetId === folder.id);
-                console.log("C-4");
+
                 if(markedFolderIndex > -1){
-                    console.log("C-5");
                     const queueWindows: Array<iWindowItem> = purified[markedFolderIndex].windows.map((window: iWindowItem) => { 
                         window.id = randomNumber();
                         return window;
                     })
-                    console.log("C-6");
+
                     mergedWindows.push(...queueWindows);
-                    console.log("C-7");
                 }
             });
 
@@ -204,7 +199,6 @@ const FoldersSection = (props: any): JSX.Element => {
             folderSpecs.windows = [...mergedWindows];
             setMergeProcess({...folderSpecs});
         }
-        console.log("D");
     }
 
     // Close the folder manager

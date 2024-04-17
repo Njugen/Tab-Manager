@@ -171,7 +171,7 @@ describe("Test <AdvancedSearchBar>", () => {
                 </Provider>
             )
 
-            const warningMessage = screen.getByRole("alert");
+            const warningMessage = screen.queryByRole("alert");
             expect(warningMessage).not.toBeInTheDocument();
         })
 

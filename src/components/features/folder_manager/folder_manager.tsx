@@ -17,6 +17,7 @@ import { setUpFolder, updateFolder } from "../../../redux-toolkit/slices/folder_
 import { changeShowFolderChangeWarning } from "../../../redux-toolkit/slices/plugin_settings_slice";
 import { setIsEditingTab } from "../../../redux-toolkit/slices/misc_slice";
 import { createNewFolder, saveFolder } from "../../../redux-toolkit/slices/folder_slice";
+import purify from "../../../tools/purify_object";
 /*
     A popup providing oversight of a folder's settings and available windows/tabs.
     The settings may be changed by the user, which then gets saved to redux storage
@@ -81,7 +82,7 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
     }, []);
 
     useEffect(() => {
-        const inEditWindows: string = folderManagementState?.windows;
+        const inEditWindows: string = purify(folderManagementState)?.windows;
         const listChanged: boolean = windowListChanged(originWindows, inEditWindows);
 
         if(listChanged === true){
