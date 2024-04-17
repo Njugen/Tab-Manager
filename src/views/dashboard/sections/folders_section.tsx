@@ -6,16 +6,11 @@ import { useEffect, useMemo, useState } from "react";
 import { iFolderItem } from '../../../interfaces/folder_item';
 import { iFieldOption } from '../../../interfaces/dropdown';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearInEditFolder  } from '../../../redux/actions/in_edit_folder_actions';
-import {  createFolderAction, readAllFoldersFromBrowserAction } from '../../../redux/actions/folder_collection_actions';
-import Paragraph from '../../../components/utils/paragraph';
-import { deleteFolderAction } from "../../../redux/actions/folder_collection_actions";
 import { saveToStorage, getFromStorage } from '../../../services/webex_api/storage';
 import PopupMessage from '../../../components/utils/popup_message';
 import TextIconButton from '../../../components/utils/text_icon_button';
 import randomNumber from '../../../tools/random_number';
 import { iWindowItem } from '../../../interfaces/window_item';
-import * as folderSettingsActions from '../../../redux/actions/folder_settings_actions';
 import Dropdown from '../../../components/utils/dropdown/dropdown';
 import SectionContainer from '../../../components/utils/section_container';
 import DeselectedCheckboxIcon from '../../../components/icons/deselected_checkbox_icon';
@@ -29,13 +24,6 @@ import iFolderState from '../../../interfaces/states/folder_state';
 import { createNewFolder, deleteFolder, readAllStorageFolders } from '../../../redux-toolkit/slices/folder_slice';
 import { changeSortOption, changeViewMode, markFolder, markMultipleFolders, unMarkAllFolders } from '../../../redux-toolkit/slices/folders_section_slice';
 
-const { 
-    changeFoldersViewMode, 
-    clearMarkedFoldersAction, 
-    setFoldersSortOrder, 
-    setMarkedFoldersAction, 
-    setMarkMultipleFoldersAction 
-} = folderSettingsActions;
 
 /*
     Folder management section listing all available folders/folders.
@@ -579,9 +567,9 @@ const FoldersSection = (props: any): JSX.Element => {
                 <>
                     {folderState.length === 0 && (
                         <div className="flex flex-col items-center justify-center h-[50%]">
-                            <Paragraph>
+                            <p className={`text-base"leading-7" text-tbfColor-darkergrey text-start`}>
                                 You currently have no folders available. Please, create a new folder
-                            </Paragraph>
+                            </p>
                             <div className="mt-8">
                                 <PrimaryButton disabled={false} text="Create folder" onClick={() => setCreateFolder(true)} />
                             </div>

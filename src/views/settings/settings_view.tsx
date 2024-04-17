@@ -6,7 +6,6 @@ import { iFieldOption } from "../../interfaces/dropdown";
 import { useEffect, useMemo, useState } from 'react';
 import { getFromStorage, saveToStorage } from "../../services/webex_api/storage";
 import SectionContainer from "../../components/utils/section_container";
-import iView from "../../interfaces/view";
 import { useDispatch, useSelector } from "react-redux";
 import { allowErrorLog, changeCloseSession, changeDuplicationWarningValue, changeFolderRemovalWarning, changePerformanceWarningValue, changeShowFolderChangeWarning, readAllPluginSettings } from "../../redux-toolkit/slices/plugin_settings_slice";
 import { RootState } from "../../redux-toolkit/store";
@@ -42,7 +41,7 @@ const duplicationWarningOptions: Array<iFieldOption> = [
     { id: -1, label: "Never" }
 ];
 
-const SettingsView = (props: iView): JSX.Element => {
+const SettingsView = (props: any): JSX.Element => {
     const pluginSettingsState: iPluginSettings = useSelector((state: RootState) => state.pluginSettings);
     const dispatch = useDispatch()
 

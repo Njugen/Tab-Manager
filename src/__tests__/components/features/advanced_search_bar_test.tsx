@@ -157,6 +157,24 @@ describe("Test <AdvancedSearchBar>", () => {
     })
 
     describe("Folder interactions", () => {
+        test("There are no warning messages at invocation", () => {
+            // @ts-expect-error
+            chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
+                callback({ performanceWarningValue: 5 })
+            })
+
+            jest.useFakeTimers();
+
+            render(
+                <Provider store={mockStore}>
+                    <AdvancedSearchBar />
+                </Provider>
+            )
+
+            const warningMessage = screen.getByRole("alert");
+            expect(warningMessage).not.toBeInTheDocument();
+        })
+
         test("Attempt at launching a folder where total number of tabs exceeds settings treshold, will trigger a warning", () => {
             // @ts-expect-error
             chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {

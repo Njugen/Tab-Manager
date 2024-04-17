@@ -6,7 +6,6 @@ import { iFolderItem } from '../../../interfaces/folder_item';
 import { iWindowItem } from '../../../interfaces/window_item';
 import iCurrentSessionState from "../../../interfaces/states/current_session_state";
 import iHistoryState from "../../../interfaces/states/history_state";
-import iAdvancedSearchBar from "../../../interfaces/advanced_search_bar";
 import { handleShowResultsContainer } from "./functions/handle_show_results_container";
 import { handleWindowClick } from "./functions/window_click_listener";
 import { handleLaunchFolder } from "./functions/handle_launch_folder";
@@ -22,7 +21,7 @@ import { RootState } from "../../../redux-toolkit/store";
     Filters current and history tabs by input string
 */
 
-const AdvancedSearchBar = (props: iAdvancedSearchBar): JSX.Element => {
+const AdvancedSearchBar = (props: any): JSX.Element => {
     const [showResultsContainer, setShowResultsContainer] = useState<boolean>(false);
     const [slideDown, setSlideDown] = useState<boolean>(false);
     const [keyword, setkeyword] = useState<string>("");

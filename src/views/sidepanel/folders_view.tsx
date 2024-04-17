@@ -10,14 +10,13 @@ import { clearInEditFolder } from "../../redux/actions/in_edit_folder_actions";
 import { clearMarkedFoldersAction, setFoldersSortOrder } from "../../redux/actions/folder_settings_actions";
 import PopupMessage from "../../components/utils/popup_message";
 import PrimaryButton from "../../components/utils/primary_button/primary_button";
-import iFoldersView from "../../interfaces/folders_view";
 import NewFolderIcon from "../../components/icons/new_folder_icon";
 import CircleButton from "../../components/utils/circle_button";
 import Dropdown from "../../components/utils/dropdown/dropdown";
 import { iFieldOption } from "../../interfaces/dropdown";
 import iFolderState from "../../interfaces/states/folder_state";
 
-const FoldersView = (props: iFoldersView): JSX.Element => {
+const FoldersView = (props: any): JSX.Element => {
     const [editFolderId, setEditFolderId] = useState<number | null>(null);
     const [windowsPayload, setWindowsPayload] = useState<Array<iWindowItem> | null>(null);
     const [totalTabsCount, setTotalTabsCount] = useState<number>(0);

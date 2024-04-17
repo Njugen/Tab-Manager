@@ -9,7 +9,6 @@ import { useEffect, useRef, useState } from 'react';
 import LeftIcon from '../../components/icons/left_icon';
 import RightIcon from '../../components/icons/right_icon';
 import AdvancedSearchBar from '../../components/features/advanced_search_bar/advanced_search_bar';
-import iOptionsPage from '../../interfaces/options_page';
 import { useDispatch } from 'react-redux';
 import { readAllFoldersFromBrowserAction } from '../../redux/actions/folder_collection_actions';
 import { setUpTabsAction } from '../../redux/actions/history_settings_actions';
@@ -30,7 +29,7 @@ import PageView from './components/page_view';
 
   OR by right clicking on the plugin's icon in the taskbar, and select "Options"
 */
-const OptionsPage = (props: iOptionsPage): JSX.Element => {
+const OptionsPage = (props: any): JSX.Element => {
   const [activeNavLink, setActiveNavLink] = useState<string>(presetActiveNavLink("main")); 
   const [sidebarExpanded, setSidebarExpanded] = useState<boolean>(localStorage["expanded_sidebar"] === "true" ? true : false);
   const [showScrollUpButton, setShowScrollUpButton] = useState<boolean>(false);

@@ -47,7 +47,7 @@ const folderSlice = createSlice({
                     return folder;
                 }
             });
-            saveToStorage("local", "folders", updatedFolders);
+            saveToStorage("local", "folders", JSON.parse(JSON.stringify(updatedFolders)));
 
             return [...updatedFolders];
         },

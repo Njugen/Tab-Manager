@@ -7,7 +7,6 @@ import MultipleFoldersIcon from '../../components/icons/multiple_folders_icon';
 import ConfigIcon from '../../components/icons/config_icon';
 import CircleButton from '../../components/utils/circle_button';
 import CollapseIcon from '../../components/icons/collapse_icon';
-import iSidePanel from '../../interfaces/sidepanel';
 import PanelView from './components/panel_view';
 
 /*
@@ -20,7 +19,7 @@ import PanelView from './components/panel_view';
   advanced features and extended overview are located in the Option Page 
 */
 
-function SidePanel(props: iSidePanel): JSX.Element {
+function SidePanel(props: any): JSX.Element {
     const [view, setView] = useState<string>("folders-view");
     const [keyword, setKeyword] = useState<string>("");
     const [showScrollUpButton, setShowScrollUpButton] = useState<boolean>(false);

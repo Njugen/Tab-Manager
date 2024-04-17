@@ -1,6 +1,5 @@
 import { useRef, useState, useEffect, useCallback, useMemo } from "react";
 import ClosedFolderIcon from "../../icons/closed_folder_icon";
-import Paragraph from "../../utils/paragraph";
 import OpenedFolderIcon from "../../icons/opened_folder_icon";
 import "../../../styles/global_utils.module.scss";
 import { iFolderItem } from "../../../interfaces/folder_item";
@@ -205,9 +204,9 @@ const FolderItem = (props: iFolderItem): JSX.Element => {
                 {expanded === true && (
                     <>{desc.length > 0 && <div className="px-5 mt-8 flex justify-between items-start">
                     <div data-testid={"description-section"} className="inline-block w-fit">
-                            <Paragraph>
+                        <p className={`text-base"leading-7" text-tbfColor-darkergrey text-start`}>
                                 {desc}
-                            </Paragraph>
+                        </p>
                         </div>
                     </div>}
                     
