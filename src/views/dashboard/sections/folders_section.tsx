@@ -23,6 +23,7 @@ import ListIcon from '../../../components/icons/list_icon';
 import iFolderState from '../../../interfaces/states/folder_state';
 import { createNewFolder, deleteFolder, readAllStorageFolders } from '../../../redux-toolkit/slices/folder_slice';
 import { changeSortOption, changeViewMode, markFolder, markMultipleFolders, unMarkAllFolders } from '../../../redux-toolkit/slices/folders_section_slice';
+import purify from '../../../tools/purify_object';
 
 
 /*
@@ -115,17 +116,16 @@ const FoldersSection = (props: any): JSX.Element => {
         if(folderState && markedFoldersId){
             markedFoldersId.forEach((targetId: number) => {
                 const markedFolderIndex = folderState.findIndex((folder: iFolderItem) => targetId === folder.id);
-
                 if(markedFolderIndex > -1){
-                    const newFolder: iFolderItem = {...folderState[markedFolderIndex]};
-
+                    const newFolder: iFolderItem = purify({...folderState[markedFolderIndex]});
                     newFolder.id = randomNumber();
+         
                     newFolder.windows.forEach((window) => {
                         window.id = randomNumber();
                         window.tabs.forEach((tab) => tab.id = randomNumber());
                     });
+            
                     newFolder.name = newFolder.name + " (duplicate)";
-
                     dispatch(createNewFolder({...newFolder}));
                 }
             });
@@ -158,14 +158,16 @@ const FoldersSection = (props: any): JSX.Element => {
 
     // Mark a specific folder
     const handleMarkFolder = (id: number): void => {
+
         dispatch(markFolder(id));
     }
 
     // Merge selected folders
     const handleMergeFolders = (): void => {
         const newId = randomNumber();
+        console.log("A");
         const { markedFoldersId } = foldersSectionState;
-
+        console.log("B");
         const folderSpecs: iFolderItem = {
             id: newId,
             name: "",
@@ -175,18 +177,25 @@ const FoldersSection = (props: any): JSX.Element => {
             marked: false,
             windows: [],
         }
-
-        if(folderState && markedFoldersId){
+        console.log("C");
+        let purified = purify(folderState);
+        if(purified && markedFoldersId){
+            console.log("C-1");
             const mergedWindows: Array<iWindowItem> = [];
+            console.log("C-2");
             markedFoldersId.forEach((targetId: number) => {
-                const markedFolderIndex = folderState.findIndex((folder: iFolderItem) => targetId === folder.id);
-
+                console.log("C-3");
+                const markedFolderIndex = purified.findIndex((folder: iFolderItem) => targetId === folder.id);
+                console.log("C-4");
                 if(markedFolderIndex > -1){
-                    const queueWindows: Array<iWindowItem> = folderState[markedFolderIndex].windows.map((window: iWindowItem) => { 
+                    console.log("C-5");
+                    const queueWindows: Array<iWindowItem> = purified[markedFolderIndex].windows.map((window: iWindowItem) => { 
                         window.id = randomNumber();
                         return window;
                     })
+                    console.log("C-6");
                     mergedWindows.push(...queueWindows);
+                    console.log("C-7");
                 }
             });
 
@@ -195,6 +204,7 @@ const FoldersSection = (props: any): JSX.Element => {
             folderSpecs.windows = [...mergedWindows];
             setMergeProcess({...folderSpecs});
         }
+        console.log("D");
     }
 
     // Close the folder manager

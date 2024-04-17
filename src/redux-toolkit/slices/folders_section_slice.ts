@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { iFolderItem } from "../../interfaces/folder_item"
 import iFolderState from "../../interfaces/states/folder_state"
+import purify from "../../tools/purify_object"
 
 const initialState: iFolderState = {
     markedFoldersId: [],
@@ -15,15 +16,14 @@ const foldersSectionSlice = createSlice({
         markFolder: (state, action: PayloadAction<number>): iFolderState => {
             const { payload } = action;
 
-            let currentlyMarkedIds: Array<number> = state.markedFoldersId;
-            
+            let currentlyMarkedIds: Array<number> = state.markedFoldersId || [];
+            const purified: Array<number> = purify(currentlyMarkedIds);
             // Find whether or not the requested folder id is marked or not
             const payloadIsMarked: number | undefined = currentlyMarkedIds.find((id) => id === payload);
-
             if(payloadIsMarked){
-                currentlyMarkedIds = currentlyMarkedIds.filter((id) => id !== payload);
+                currentlyMarkedIds = purified.filter((id) => id !== payload);
             } else {
-                currentlyMarkedIds.push(payload);
+                currentlyMarkedIds = [...purified, payload];
             }
 
             return {

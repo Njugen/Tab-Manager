@@ -18,6 +18,7 @@ import iFolderState from "../../interfaces/states/folder_state";
 import { RootState } from "../../redux-toolkit/store";
 import { setCurrentTabEdits, setIsEditingTab } from "../../redux-toolkit/slices/misc_slice";
 import { updateFolder } from "../../redux-toolkit/slices/folder_management_slice";
+import purify from "../../tools/purify_object";
 
 
 /*
@@ -90,7 +91,7 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
                     }
                 });
                 
-                const tempState = JSON.parse(JSON.stringify(folderManagementState));
+                const tempState = purify(folderManagementState);
 
                 tempState.windows[targetWindowIndex].tabs = [...newTabCollection];
 

@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { iFolderItem } from "../../interfaces/folder_item"
 import { saveToStorage } from "../../services/webex_api/storage";
+import purify from "../../tools/purify_object";
 
 const initialState: Array<iFolderItem> = [];
 
@@ -23,7 +24,7 @@ const folderSlice = createSlice({
 
             // For some reason, previous state values gets proxified, causing error next 
             // time user reloads the plugin. To circumvent that, we stringify and parse back the whole state. 
-            const cleanState = JSON.parse(JSON.stringify(state));
+            const cleanState = purify(state)
 
             const updatedFolders = [ ...cleanState, payload ];
             
@@ -47,7 +48,7 @@ const folderSlice = createSlice({
                     return folder;
                 }
             });
-            saveToStorage("local", "folders", JSON.parse(JSON.stringify(updatedFolders)));
+            saveToStorage("local", "folders", purify(updatedFolders));
 
             return [...updatedFolders];
         },
