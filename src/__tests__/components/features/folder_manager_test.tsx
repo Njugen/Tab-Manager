@@ -315,7 +315,7 @@ describe("Test <FolderManager>", () => {
                 fireEvent.click(field);
                 fireEvent.blur(field);
 
-                const warningMessage = screen.getByRole("alert");
+                const warningMessage = screen.queryByRole("alert");
                 expect(warningMessage).not.toBeInTheDocument();
             })
             
@@ -633,7 +633,7 @@ describe("Edit folder: Test <FolderManager> with prefilled values", () => {
             
         })
 
-        test("Blurring any textfield without making changes won't trigger warning messages", () => {
+        test("Blurring any preset textfield without making changes won't trigger warning messages", () => {
             // Mock the chrome storage getter
 
             // @ts-expect-error
@@ -656,7 +656,7 @@ describe("Edit folder: Test <FolderManager> with prefilled values", () => {
                 fireEvent.click(field);
                 fireEvent.blur(field);
 
-                const warningMessage = screen.getByRole("alert");
+                const warningMessage = screen.queryByRole("alert");
                 expect(warningMessage).not.toBeInTheDocument();
             })
             

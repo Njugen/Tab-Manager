@@ -24,7 +24,7 @@ const Switcher = (props: iSwitcher): JSX.Element => {
     }
 
     return (
-        <div className={`flex items-center ${label && "mx-5"}`}>
+        <div data-testid={"switcher"} className={`flex items-center ${label && "mx-5"}`}>
             {label && <span className={`inline-block mr-2 text-sm text-black`}>{label}</span>}
             <button 
                 onClick={handleSwitch} 
