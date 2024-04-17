@@ -10,7 +10,6 @@ import FolderManager from "../../../components/features/folder_manager/folder_ma
 import { act } from "react-dom/test-utils";
 import React from "react";
 import { configureStore } from "@reduxjs/toolkit";
-import { combinedReducers } from "../../../redux/reducers";
 import { iWindowItem } from "../../../interfaces/window_item";
 import { iFolderItem } from "../../../interfaces/folder_item";
 import { iTabItem } from "../../../interfaces/tab_item";
