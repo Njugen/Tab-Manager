@@ -4,10 +4,7 @@ import GenericButton from "../../../components/utils/generic_button";
 import WindowManager from "../../../components/features/window_manager/window_manager";
 import { Provider, useSelector } from "react-redux";
 import { store } from "../../../redux-toolkit/store";
-import { createStore, applyMiddleware } from "redux";
-import { combineReducers } from "redux";
-import thunk from "redux-thunk";
-import { folderManagerReducer } from "../../../redux/reducers/in_edit_folder_reducer";
+
 
 describe("Test <WindowManager>", () => {
     test("No window lists at invokation", () => {
@@ -36,17 +33,5 @@ describe("Test <WindowManager>", () => {
         let textfield = within(tabList[0]).getByRole("textbox");
 
         expect(textfield).toBeInTheDocument();
-    })
-
-    test("There are windows when invoked with preset redux state", () => {
-        const combinedReducers = combineReducers({
-            folderManagerReducer: folderManagerReducer,
-        });
-        const middleware = applyMiddleware(thunk);
-        const store = createStore(combinedReducers, middleware);
-        store.subscribe(()=>{});
-        const mockStore = {
-
-        }
     })
 });

@@ -3,9 +3,8 @@ import { iWindowItem } from "../../../../interfaces/window_item";
 import WindowItem from "../../window_item";
 import { INewWindow, NewWindow } from "./window_manager_new_window";
 import { useDispatch } from "react-redux";
-import { setCurrentTabsSortOrder } from "../../../../redux/actions/current_session_actions";
-import { setCurrentlyEditingTab } from "../../../../redux/actions/misc_actions";
-import { updateInEditFolder } from "../../../../redux/actions/in_edit_folder_actions";
+import { setIsEditingTab } from "../../../../redux-toolkit/slices/misc_slice";
+import { updateFolder } from "../../../../redux-toolkit/slices/folder_management_slice";
 
 interface IWindowList extends INewWindow {
     createWindow: boolean
@@ -23,11 +22,11 @@ const WindowList = (props: IWindowList): JSX.Element => {
     const handleDelete = (id: number) => {
         const windows = existingWindows.filter((target: iWindowItem) => target.id !== id);
 
-        dispatch(setCurrentlyEditingTab(false));
-        dispatch(updateInEditFolder("windows", windows));
-        dispatch(setCurrentlyEditingTab(false));
+        dispatch(setIsEditingTab(false));
+        dispatch(updateFolder(["windows", windows]));
+        dispatch(setIsEditingTab(false));
     }
-    
+
     const existingWindowsElements: Array<JSX.Element> = useMemo(() => existingWindows?.map((item: iWindowItem) => {
         return (
             <WindowItem 

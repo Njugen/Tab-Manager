@@ -4,10 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { iFolderItem } from '../../interfaces/folder_item';
 import FolderItem from "../../components/features/folder_item/folder_item";
 import { getFromStorage, saveToStorage } from '../../services/webex_api/storage';
-import { deleteFolderAction, readAllFoldersFromBrowserAction } from '../../redux/actions/folder_collection_actions';
 import FolderManager from "../../components/features/folder_manager/folder_manager";
-import { clearInEditFolder } from "../../redux/actions/in_edit_folder_actions";
-import { clearMarkedFoldersAction, setFoldersSortOrder } from "../../redux/actions/folder_settings_actions";
 import PopupMessage from "../../components/utils/popup_message";
 import PrimaryButton from "../../components/utils/primary_button/primary_button";
 import NewFolderIcon from "../../components/icons/new_folder_icon";
@@ -15,6 +12,8 @@ import CircleButton from "../../components/utils/circle_button";
 import Dropdown from "../../components/utils/dropdown/dropdown";
 import { iFieldOption } from "../../interfaces/dropdown";
 import iFolderState from "../../interfaces/states/folder_state";
+import { deleteFolder, readAllStorageFolders } from "../../redux-toolkit/slices/folder_slice";
+import { changeSortOption, unMarkAllFolders } from "../../redux-toolkit/slices/folders_section_slice";
 
 const FoldersView = (props: any): JSX.Element => {
     const [editFolderId, setEditFolderId] = useState<number | null>(null);
@@ -31,14 +30,14 @@ const FoldersView = (props: any): JSX.Element => {
     const storageListener = (changes: any, areaName: string): void => {
         if(areaName === "local"){
             if(changes.folders){
-              dispatch(readAllFoldersFromBrowserAction(changes.folders.newValue));
+              dispatch(readAllStorageFolders(changes.folders.newValue));
             }
         }
     };
 
     useEffect(() => {
         getFromStorage("local", "folders", (data) => {  
-            dispatch(readAllFoldersFromBrowserAction(data.folders));
+            dispatch(readAllStorageFolders(data.folders));
         })
 
         chrome.storage.onChanged.addListener(storageListener);
@@ -134,7 +133,8 @@ const FoldersView = (props: any): JSX.Element => {
         const newStatus = e.selected;
 
         saveToStorage("local", "folder_sort", newStatus);
-        dispatch(setFoldersSortOrder(newStatus));
+        
+        dispatch(changeSortOption(newStatus));
     }
 
     const folderSortCondition = (a: iFolderItem, b: iFolderItem): boolean => {
@@ -163,7 +163,7 @@ const FoldersView = (props: any): JSX.Element => {
                 if(data.folderRemovalWarning === true) {
                     setRemovalTarget(target);
                 } else {
-                    dispatch(deleteFolderAction(target.id)); 
+                    dispatch(deleteFolder(target.id)); 
                     setRemovalTarget(null);
                 }
             });
@@ -194,9 +194,10 @@ const FoldersView = (props: any): JSX.Element => {
     }, [folderCollectionState, folderSettingsState.folderSortOptionId]) 
 
     const handleCloseFolderManager = (): void => {
-        dispatch(clearMarkedFoldersAction());
-        dispatch(clearInEditFolder());
-        
+        //dispatch(clearMarkedFoldersAction());
+        //dispatch(clearInEditFolder());
+        dispatch(unMarkAllFolders());
+
         setEditFolderId(null);
         setCreateFolder(false);
     }   
@@ -228,7 +229,7 @@ const FoldersView = (props: any): JSX.Element => {
                     primaryButton={{ 
                         text: "Yes, remove this folder", 
                         callback: () => { 
-                            dispatch(deleteFolderAction(removalTarget.id)); 
+                            dispatch(deleteFolder(removalTarget.id)); 
                             setRemovalTarget(null)}
                         }}
                     secondaryButton={{ 

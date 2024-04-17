@@ -5,12 +5,9 @@ import FolderManager from '../../../components/features/folder_manager/folder_ma
 import { useEffect, useState, useRef, useMemo } from "react";
 import { iFolderItem } from '../../../interfaces/folder_item';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearInEditFolder  } from '../../../redux/actions/in_edit_folder_actions';
 import TextIconButton from '../../../components/utils/text_icon_button';
 import randomNumber from '../../../tools/random_number';
 import { iWindowItem } from '../../../interfaces/window_item';
-import { clearMarkedFoldersAction } from '../../../redux/actions/folder_settings_actions';
-import { changeTabsViewMode, clearMarkedTabsAction, setMarkMultipleTabsAction, setMarkedTabsAction, setTabsSortOrder, setUpTabsAction } from '../../../redux/actions/history_settings_actions';
 import { iTabItem } from '../../../interfaces/tab_item';
 import { iDropdownSelected, iFieldOption } from '../../../interfaces/dropdown';
 import AddToFolderPopup from '../../../components/features/add_to_folder_popup';

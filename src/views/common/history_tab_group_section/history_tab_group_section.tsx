@@ -2,7 +2,6 @@ import styles from "../../../styles/global_utils.module.scss";
 import Group from "../../../components/utils/group";
 import TabItem from "../../../components/features/tab_item";
 import { useDispatch, useSelector } from "react-redux";
-import { setMarkMultipleTabsAction, setMarkedTabsAction, setUpTabsAction, toggleExpansion } from "../../../redux/actions/history_settings_actions";
 import { iFolderItem } from "../../../interfaces/folder_item";
 import { forwardRef, useEffect, useState } from "react";
 import iHistoryState from "../../../interfaces/states/history_state";

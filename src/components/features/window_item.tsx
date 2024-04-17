@@ -7,8 +7,6 @@ import { iWindowItem} from "../../interfaces/window_item";
 import EditableTabItem from "./editable_tab_item";
 import { iTabItem } from "../../interfaces/tab_item";
 import { useDispatch, useSelector } from "react-redux";
-import { updateInEditFolder } from "../../redux/actions/in_edit_folder_actions";
-//import { setcurrentlyEditingTab, setTabInEdits } from "../../redux/actions/misc_actions";
 import TrashIcon from "../icons/trash_icon";
 import CollapseIcon from "../icons/collapse_icon";
 import ExpandIcon from "../icons/expand_icon";

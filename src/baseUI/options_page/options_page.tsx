@@ -10,14 +10,14 @@ import LeftIcon from '../../components/icons/left_icon';
 import RightIcon from '../../components/icons/right_icon';
 import AdvancedSearchBar from '../../components/features/advanced_search_bar/advanced_search_bar';
 import { useDispatch } from 'react-redux';
-import { readAllFoldersFromBrowserAction } from '../../redux/actions/folder_collection_actions';
-import { setUpTabsAction } from '../../redux/actions/history_settings_actions';
 import CircleButton from '../../components/utils/circle_button';
 import CollapseIcon from '../../components/icons/collapse_icon';
 import presetActiveNavLink from './functions/presetActiveNavLink';
 import ExpandedSidebarNav from './components/expanded_sidebar_nav';
 import CollapsedSidebarNav from './components/collapsed_sidebar_nav';
 import PageView from './components/page_view';
+import { readAllStorageFolders } from '../../redux-toolkit/slices/folder_slice';
+import { setUpTabs } from '../../redux-toolkit/slices/history_section_slice';
 
 /*
   Base template for the plugin's option page.
@@ -49,16 +49,16 @@ const OptionsPage = (props: any): JSX.Element => {
     const query = {
         text: "",
         maxResults: 25
-    }
+    } 
     chrome.history.search(query, (items: Array<chrome.history.HistoryItem>) => {
-        dispatch(setUpTabsAction(items));
+        dispatch(setUpTabs(items));
     });
   }
 
   const storageListener = (changes: any, areaName: string): void => {
     if(areaName === "local"){
         if(changes.folders){
-          dispatch(readAllFoldersFromBrowserAction(changes.folders.newValue));
+          dispatch(readAllStorageFolders(changes.folders.newValue));
         }
     }
   };
