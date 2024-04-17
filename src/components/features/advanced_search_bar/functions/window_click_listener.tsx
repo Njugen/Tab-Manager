@@ -16,6 +16,7 @@ const handleWindowClick = (props: iHandleWindowClickProps): void => {
     const searchResultsContainerId = "search-results-area";
 
     if(target.id.includes(searchFieldId) === false && target.id.includes(searchResultsContainerId) === true){
+        console.log("CLICK");
         handleShowResultsContainer(handleShowResultsProps);
     }
 }

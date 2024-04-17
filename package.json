@@ -84,6 +84,7 @@
       "./interfaces/",
       "./styles/",
       "^(.*?)components/(.*?)functions/",
+      "^(.*?)components/(.*?)functions/",
       "^(.*?)components/(.*?)components/",
       "^(.*?)baseUI/(.*?)components/",
       "^(.*?)baseUI/(.*?)functions/",

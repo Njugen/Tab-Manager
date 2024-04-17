@@ -42,7 +42,7 @@ const AdvancedSearchBar = (props: iAdvancedSearchBar): JSX.Element => {
 
     const handleSlideDown = (status: boolean) => {
         // Adjust the search field features based on the slideDown state
-
+      
         if(keyword.length === 0) {
             if(status === true){
                 searchFieldRef.current!.value = "";

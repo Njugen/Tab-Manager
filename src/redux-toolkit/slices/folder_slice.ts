@@ -21,7 +21,12 @@ const folderSlice = createSlice({
         createNewFolder: (state, action: PayloadAction<iFolderItem>): Array<iFolderItem> => {
             const { payload } = action;
 
-            const updatedFolders = [ ...state, payload ];
+            // For some reason, previous state values gets proxified, causing error next 
+            // time user reloads the plugin. To circumvent that, we stringify and parse back the whole state. 
+            const cleanState = JSON.parse(JSON.stringify(state));
+
+            const updatedFolders = [ ...cleanState, payload ];
+            
             saveToStorage("local", "folders", updatedFolders);
 
             return updatedFolders

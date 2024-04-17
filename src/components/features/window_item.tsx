@@ -72,7 +72,7 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
 
     // Delete marked tabs
     const handleDeleteTabs = (): void => {
-        console.log("ABC", folderManagementState);
+
         if(folderManagementState?.windows && folderManagementState.windows.length > 0){
         
             const windows = folderManagementState.windows.filter((target: iWindowItem) => target.id === id);

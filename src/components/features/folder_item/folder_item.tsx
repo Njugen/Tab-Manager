@@ -168,7 +168,7 @@ const FolderItem = (props: iFolderItem): JSX.Element => {
     // Render a list of all windows in the folder. The window components are adjusted to suit folder behaviour
     const folderWindowList = useMemo((): JSX.Element => {
         const decisiveCols: number = windowTabsCols(foldersSectionState.viewMode, viewMode);
-    
+        
         const result: Array<JSX.Element> = windows.map((window, index): JSX.Element => (
             <WindowItem 
                 tabsCol={decisiveCols} 

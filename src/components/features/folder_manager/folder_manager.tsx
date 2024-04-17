@@ -4,12 +4,8 @@ import * as predef from "../../../styles/predef";
 import { iFolderManager } from "../../../interfaces/iFolderManager";
 
 import randomNumber from "../../../tools/random_number";
-import { initInEditFolder, updateInEditFolder} from "../../../redux/actions/in_edit_folder_actions";
 import { iFolderItem } from "../../../interfaces/folder_item";
 import PopupMessage from '../../utils/popup_message';
-import { setShowFolderChangeWarning } from "../../../redux/actions/warning_actions";
-import { createFolderAction, updateFolderAction } from "../../../redux/actions/folder_collection_actions";
-import { setCurrentlyEditingTab } from "../../../redux/actions/misc_actions";
 import windowListChanged from "./functions/window_list_changed";
 import WindowManager from "../window_manager/window_manager";
 import GenericPopup from "../../utils/generic_popup";
@@ -175,6 +171,7 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
             } else {
                 dispatch(createNewFolder(folderManagementState));
             }   
+
             document.body.style.overflowY = "auto";
             document.body.style.overflowX = "auto";
             handleClose(true);
