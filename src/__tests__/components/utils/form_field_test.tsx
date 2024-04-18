@@ -1,44 +1,73 @@
-import { render, screen } from "@testing-library/react";
-import FormField from "../../../components/utils/form_field";
+import { render, screen, within, fireEvent } from "@testing-library/react";
 import '@testing-library/jest-dom'
+import CircleButton from '../../../components/utils/circle_button';
+import randomNumber from "../../../tools/random_number";
+import FormField from "../../../components/utils/form_field";
+import { iFormField } from "../../../interfaces/form_field";
 
-describe("test <FormField />", () => {
-    test("finds label and description, no error nor children", () => {
-        const labelText = "This is my field";
-        const descText = "This is the field's description";
-        render(<FormField label={labelText} description={descText}></FormField>);
+const mockLabel = randomNumber().toString();
+const mockDesc = randomNumber().toString();
+const mockTestId = randomNumber().toString();
+const mockChild = <p data-testid={mockTestId}></p>
 
-        const label = screen.getByText(labelText);
-        const desc = screen.getByText(descText);
-        const heading = screen.getByTestId("field-title-normal");
+const props: iFormField = {
+    label: mockLabel,
+    description: mockDesc
+}
 
-        expect(label).toBeInTheDocument();
+describe("Test <FormField>", () => {
+    test("Field has 'label' prop as heading", () => {
+        render(
+            <FormField {...props}>
+                {mockChild}
+            </FormField>
+        )
+
+        const label = screen.getByRole("heading");
+        expect(label).toHaveTextContent(mockLabel);
+    })
+
+    test("Field displays 'description' prop", () => {
+        render(
+            <FormField {...props}>
+                {mockChild}
+            </FormField>
+        )
+
+        const desc = screen.getByText(mockDesc);
         expect(desc).toBeInTheDocument();
+    })
 
-        expect(heading).toBeInTheDocument();
-    });
+    test("Field has child component", () => {
+        render(
+            <FormField {...props}>
+                {mockChild}
+            </FormField>
+        )
 
-    test("finds error and child props", () => {
-        const testId = "my-child";
-        const childElement = <div data-testid={testId}></div>;
-        render(<FormField label={"123456"} description={"456789"} error={true}>{childElement}</FormField>);
-
-        const child = screen.queryByTestId(testId);
-        const err = screen.getByTestId("field-title-error");
-
+        const child = screen.getByTestId(mockTestId);
         expect(child).toBeInTheDocument();
-        expect(err).toBeInTheDocument();
-    });
+    })
 
-    test("finds no error and child props", () => {
-        const testId = "my-child";
-        const childElement = <div data-testid={testId}></div>;
-        render(<FormField label={"123456"} description={"456789"} error={false}>{childElement}</FormField>);
+    test("Field indicates error when 'error' prop is set", () => {
+        render(
+            <FormField {...props} error={true}>
+                {mockChild}
+            </FormField>
+        )
 
-        const child = screen.queryByTestId(testId);
-        const err = screen.getByTestId("field-title-normal");
+        const label = screen.queryByTestId("error-true")
+        expect(label).toBeInTheDocument();
+    })
 
-        expect(child).toBeInTheDocument();
-        expect(err).toBeInTheDocument();
-    });
+    test("Field does not indicate error when 'error' prop is not set", () => {
+        render(
+            <FormField label={mockLabel} description={mockDesc}>
+                {mockChild}
+            </FormField>
+        )
+
+        const label = screen.queryByTestId("error-true")
+        expect(label).not.toBeInTheDocument();
+    })
 });

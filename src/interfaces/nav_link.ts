@@ -8,7 +8,7 @@ interface iNavlink {
     children: Array<JSX.Element> | JSX.Element,
     label?: string,
     url: string,
-    isActive: boolean,
+    isActive?: boolean,
     onClick: () => void,
 }
 

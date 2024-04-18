@@ -2,95 +2,53 @@ import { render, screen, within, fireEvent } from "@testing-library/react";
 import '@testing-library/jest-dom'
 import Checkbox from "../../../components/utils/checkbox";
 
-const mockFunction = jest.fn();
+const mockCallback = jest.fn();
 
-describe("test <Checkbox />", () => {
-    test("renders checked button", () => {
-        const labelText = "This is a label";
-        render(<Checkbox onCallback={mockFunction} checked={true} label={labelText} />);
+describe("Test <Checkbox />", () => {
+    test("Can be checked", () => {
+        render(<Checkbox checked={false} onCallback={mockCallback} />);
 
-        const button = screen.getByRole("button");
-        const checkMark = within(button).getByRole("img");
-        const text = screen.getByText(labelText);
-
-        expect(button).toBeInTheDocument();
-        expect(checkMark).toBeInTheDocument();
-        expect(text).toBeInTheDocument();
-    });
-
-    test("renders unchecked button", () => {
-        const labelText = "This is a label";
-        render(<Checkbox onCallback={mockFunction} checked={false} label={labelText} />);
-
-        const button = screen.getByRole("button");
-        const checkMark = within(button).queryByRole("img");
-        const text = screen.getByText(labelText);
-
-        expect(button).toBeInTheDocument();
-        expect(checkMark).toBeNull();
-        expect(text).toBeInTheDocument();
-    });
-
-    test("renders no label", () => {
-        const labelText = "This is a label";
-        render(<Checkbox onCallback={mockFunction} checked={false} />);
-
-        const button = screen.getByRole("button");
-        const checkMark = within(button).queryByRole("img");
-        const text = screen.queryByText(labelText);
-
-        expect(button).toBeInTheDocument();
-        expect(checkMark).toBeNull();
-        expect(text).not.toBeInTheDocument();
-    });
-
-    test("toggles when clicked (preset: false)", () => {
-        const labelText = "This is a label";
-        render(<Checkbox onCallback={mockFunction} checked={false} label={labelText} />);
-
-        const button = screen.getByRole("button");
-        let checkMark = within(button).queryByRole("img");
-
-        expect(checkMark).toBeNull();
-
+        // Button exists
+        let button = screen.getByRole("button");
+  
         fireEvent.click(button);
+        let icon = within(button).queryByRole("img");
+        expect(icon).toBeInTheDocument();
+    })
 
-        checkMark = within(button).queryByRole("img");
-        expect(checkMark).toBeInTheDocument();
+    test("Can be unchecked", () => {
+        render(<Checkbox checked={true} onCallback={mockCallback} />);
 
+        // Button exists
+        let button = screen.getByRole("button");
+        
         fireEvent.click(button);
+        let icon = within(button).queryByRole("img");
 
-        checkMark = within(button).queryByRole("img");
-        expect(checkMark).toBeNull();
+        expect(icon).not.toBeInTheDocument();
+    })
 
+    test("can be checked -> unchecked -> checked", () => {
+        render(<Checkbox checked={true} onCallback={mockCallback} />);
+        
+        // Button exists
+        let button = screen.getByRole("button");
         fireEvent.click(button);
-
-        checkMark = within(button).queryByRole("img");
-        expect(checkMark).toBeInTheDocument();
-    });
-
-    test("toggles when clicked (preset: true)", () => {
-        const labelText = "This is a label";
-        render(<Checkbox onCallback={mockFunction} checked={true} label={labelText} />);
-
-        const button = screen.getByRole("button");
-        let checkMark = within(button).queryByRole("img");
-
-        expect(checkMark).toBeInTheDocument();
-
         fireEvent.click(button);
+        
+        let icon = within(button).queryByRole("img");
+        expect(icon).toBeInTheDocument();
+    })
 
-        checkMark = within(button).queryByRole("img");
-        expect(checkMark).toBeNull();
-
+    test("can be unchecked -> checked -> unchecked", () => {
+        render(<Checkbox checked={false} onCallback={mockCallback} />);
+        
+        // Button exists
+        let button = screen.getByRole("button");
         fireEvent.click(button);
-
-        checkMark = within(button).queryByRole("img");
-        expect(checkMark).toBeInTheDocument();
-
         fireEvent.click(button);
-
-        checkMark = within(button).queryByRole("img");
-        expect(checkMark).toBeNull();
-    });
-});
+        
+        let icon = within(button).queryByRole("img");
+        expect(icon).not.toBeInTheDocument();
+    })
+})

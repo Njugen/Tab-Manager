@@ -1,5 +1,5 @@
 interface iTextContents {
-    text: String,
+    children: string,
     size?: String,
     lineheight?: String
 }

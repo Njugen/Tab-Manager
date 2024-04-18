@@ -1,52 +1,73 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, within, fireEvent } from "@testing-library/react";
 import '@testing-library/jest-dom'
-import PopupMessage from "../../../components/utils/popup_message";
 import randomNumber from "../../../tools/random_number";
+import PopupMessage from "../../../components/utils/popup_message";
+import iPopupMessage from "../../../interfaces/popup_message";
 
+
+const mockText = randomNumber().toString();
 const mockTitle = randomNumber().toString();
-const mockMessage = randomNumber().toString();
-
-const primaryButton = {
+const pButton = {
+    text: randomNumber().toString(),
+    callback: jest.fn()
+}
+const sButton = {
     text: randomNumber().toString(),
     callback: jest.fn()
 }
 
-const secondaryButton = {
-    text: randomNumber().toString(),
-    callback: jest.fn()
+const props: iPopupMessage = {
+    title: mockTitle,
+    text: mockText,
+    primaryButton: pButton,
+    secondaryButton: sButton 
 }
 
-describe("test <PopupMessage/> and its features", () => {
-    test("title and text in place", () => {
-        render(<PopupMessage title={mockTitle} text={mockMessage} primaryButton={primaryButton} secondaryButton={secondaryButton} />);
+describe("Test <PopupMessage>", () => {
+    test("heading shows 'title' prop", () => {
+        render(
+            <PopupMessage {...props} />
+        )
 
-        const title = screen.getByRole("heading", { level: 4 } );
-        const message = screen.getByText(mockMessage);
+        const container = screen.getByRole("alert");
 
-        expect(document.body.style.overflowY).toBe("hidden");
-        expect(title).toBeInTheDocument();
-        expect(message).toBeInTheDocument();
-    });
+        const heading = within(container).getByRole("heading");
+        expect(heading).toHaveTextContent(mockTitle);
+    })
 
-    test("primary button works", () => {
-        render(<PopupMessage title={mockTitle} text={mockMessage} primaryButton={primaryButton} secondaryButton={secondaryButton} />);
+    test("Shows text inserted through 'text' prop", () => {
+        render(
+            <PopupMessage {...props} />
+        )
 
-        const button = screen.getByText(primaryButton.text, { selector: "button" });
-        expect(button).toBeInTheDocument();
+        const container = screen.getByRole("alert");
+
+        const text = within(container).getByText(mockText);
+        expect(text).toBeInTheDocument();
+    })
+
+    test("Clicking primary button triggers its callback", () => {
+        render(
+            <PopupMessage {...props} />
+        )
+
+        const container = screen.getByRole("alert");
         
-        fireEvent.click(button);
-        expect(document.body.style.overflowY).toBe("scroll");
-        expect(primaryButton.callback).toHaveBeenCalled();
-    });
+        const primaryButton = within(container).getByText(pButton.text, { selector: "button" });
+        fireEvent.click(primaryButton);
+        expect(pButton.callback).toHaveBeenCalled();
+    })
 
-    test("secondary button works", () => {
-        render(<PopupMessage title={mockTitle} text={mockMessage} primaryButton={primaryButton} secondaryButton={secondaryButton} />);
+    test("Clicking secondary button triggers its callback", () => {
+        render(
+            <PopupMessage {...props} />
+        )
 
-        const button = screen.getByText(secondaryButton.text, { selector: "button" });
-        expect(button).toBeInTheDocument();
-        
-        fireEvent.click(button);
-        expect(document.body.style.overflowY).toBe("scroll");
-        expect(secondaryButton.callback).toHaveBeenCalled();
+        const container = screen.getByRole("alert");
+
+        const secondaryButton = within(container).getByText(sButton.text, { selector: "button" });
+        expect(secondaryButton).toBeVisible();
+        fireEvent.click(secondaryButton);
+        expect(sButton.callback).toHaveBeenCalled();
     })
 });

@@ -2,7 +2,8 @@ import { useRef, useState, useEffect } from "react";
 import CollapseIcon from "../../icons/collapse_icon";
 import { iDropdown } from "../../../interfaces/dropdown";
 import RotationEffect from "../../effects/rotation_effect";
-import { IGetSelectedOptionProps, getSelectedOption } from "./get_selected_option";
+import { getSelectedOption } from "./functions/get_selected_option";
+import { iGetSelectedOptionProps } from "../../../interfaces/dropdown";
 import DropdownMenu from "../dropdown_menu/dropdown_menu";
 
 /*
@@ -15,7 +16,6 @@ const Dropdown = (props: iDropdown): JSX.Element => {
 
     // State defining the visibility of the menu
     const [showSubMenuContainer, setShowSubMenuContainer] = useState<boolean>(false);
-    const [hack, setHack] = useState<boolean>(false);
     const { tag, preset, options, onCallback } = props;
 
     // Reference to dropdown selector container
@@ -24,11 +24,10 @@ const Dropdown = (props: iDropdown): JSX.Element => {
     // Show or hide sub menu based on state by sliding down the menu.
     // The sliding effect is delayed to allow certain states to take effect
     const handleShowSubMenu = (): void => {
+
         if(showSubMenuContainer === false){
             setShowSubMenuContainer(true);
-            setHack(false);
         } else {
-            setHack(true);
             setShowSubMenuContainer(false);
         }
     
@@ -37,7 +36,8 @@ const Dropdown = (props: iDropdown): JSX.Element => {
     // Trigger once an option has been selected
     const handleSelect = (id: number): void => {
         setSelected(id);
-        handleShowSubMenu();
+        onCallback({ selected: id });
+        //handleShowSubMenu();
     }
 
     const handleWindowClick = (e: any): void => {
@@ -46,21 +46,16 @@ const Dropdown = (props: iDropdown): JSX.Element => {
         const selectorTag = (tag + "-selector");
         const { id, parentElement, tagName } = e.target;
 
+       
         if(
             id !== selectorTag && 
             parentElement?.id !== selectorTag && 
             tagName !== "svg" && 
             tagName !== "path"
         ) {
-            setHack((prevState) => !prevState);
+            setShowSubMenuContainer((prevState) => !prevState);
         }
     }
-
-    useEffect(() => {
-        if(hack === true) {
-            setShowSubMenuContainer(false)
-        }
-    }, [hack])   
 
     useEffect(() => {
         // Listen for clicks at all time and determine whether or not the menu should be shown/hidden
@@ -73,20 +68,15 @@ const Dropdown = (props: iDropdown): JSX.Element => {
         }
     }, [showSubMenuContainer]);
 
-    useEffect(() => {
-        // Once the selected option id has been changed, send it back to the parent component
-        if(selected !== null) onCallback({ selected: selected });
-    }, [selected]);
-
     const dropdownBorderCSS = (showSubMenuContainer === true ? " border-tbfColor-lightpurple" : "border-tbfColor-middlegrey4");
-    const optionsProps: IGetSelectedOptionProps = { options, preset, selected };
+    const optionsProps: iGetSelectedOptionProps = { options, preset, selected };
 
     return (
-        <div ref={dropdownRef} className={`hover:cursor-pointer bg-white relative text-sm w-full text-tbfColor-darkergrey rounded-lg h-[2.75rem] border transition-all duration-75 ${dropdownBorderCSS}`}>
-            <div id={`${tag}-selector`} data-testid={`${tag}-selector`} className="flex items-center justify-between mx-3 h-full" onClick={handleShowSubMenu}>          
-                <span className="hover:cursor-pointer">
+        <div role="menu" ref={dropdownRef} className={`hover:cursor-pointer bg-white relative text-sm w-full text-tbfColor-darkergrey rounded-lg h-[2.75rem] border transition-all duration-75 ${dropdownBorderCSS}`}>
+            <div id={`${tag}-selector`} className="flex items-center justify-between mx-3 h-full" onClick={handleShowSubMenu}>          
+                <button className="hover:cursor-pointer">
                     { getSelectedOption(optionsProps) ? getSelectedOption(optionsProps).label : preset.label }
-                </span>
+                </button>
                 <RotationEffect rotated={showSubMenuContainer}>
                     <CollapseIcon size={28} fill={"#000"} />
                 </RotationEffect>

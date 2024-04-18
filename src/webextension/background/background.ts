@@ -7,12 +7,12 @@ chrome.runtime.onInstalled.addListener((details) => {
         // Set default settings to sync
 
         chrome.storage.local.set({
-            "performance_notification_value": 20,
-            "duplication_warning_value": 3,
-            "close_current_setting": false,
-            "cancellation_warning_setting": true,
-            "removal_warning_setting": true,
-            "error_log_setting": false,
+            "performanceWarningValue": 20,
+            "duplicationWarningValue": 3,
+            "closeSessionAtFolderLaunch": false,
+            "showFolderChangeWarning": true,
+            "folderRemovalWarning": true,
+            "allowErrorLog": false,
             "expanded_sidebar": false
         })
     }

@@ -53,6 +53,9 @@ The plugin code itself is placed in the ./src folder, which has the following tr
         - interfaces (typescript datatypes, applied to most features all over the plugin) 
         - redux (global states for certain features, to avoid prop drilling at certain scenarios)
         - views (plugin's pages, used by the baseUI to render page contents wrapped in the base UI)
+            - dashboard
+            - settings
+            - sidepanel
         ...
         App.tsx
         index.tsx
@@ -83,7 +86,7 @@ All folders and files follows the following format: __[my-file-name.tsx]__
                         - child_component_b.tsx
 ```
 
-Consider refactoring a component if it becomes too big or clumsy to work with.
+Consider refactoring components if they become too big or clumsy to work with.
 
 ### Commands
 

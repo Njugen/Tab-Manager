@@ -1,36 +1,41 @@
 import { render, screen, within, fireEvent } from "@testing-library/react";
 import '@testing-library/jest-dom'
+import randomNumber from "../../../tools/random_number";
 import PrimaryButton from "../../../components/utils/primary_button/primary_button";
 
-const mockFunction = jest.fn();
-const mockText = "hello mah boy";
+const mockText = randomNumber().toString();
+const mockFn = jest.fn();
 
-describe("test <PrimaryButton />", () => {
-    test("disabled button not calling function when clicked", () => {
-        render(<PrimaryButton text={mockText} disabled={true} onClick={mockFunction} />);
+describe("Test <PrimaryButton>", () => {
+    test("Button has text inserted through props", () => {
+        render(
+            <PrimaryButton text={mockText} disabled={false} onClick={mockFn} />
+        )
 
         const button = screen.getByRole("button");
         const text = within(button).getByText(mockText);
-
-        expect(button).toBeInTheDocument();
-        expect(button).toBeDisabled();
-        expect(text).toBeInTheDocument();
-
-        fireEvent.click(button);
-        expect(mockFunction).not.toHaveBeenCalled();
+        expect(text).toHaveTextContent(mockText);
     });
 
-    test("normal button calling function when clicked", () => {
-        render(<PrimaryButton text={mockText} disabled={false} onClick={mockFunction} />);
+    test("Clicking the button triggers callback", () => {
+        render(
+            <PrimaryButton text={mockText} disabled={false} onClick={mockFn} />
+        )
 
         const button = screen.getByRole("button");
-        const text = within(button).getByText(mockText);
-
-        expect(button).toBeInTheDocument();
-        expect(button).not.toBeDisabled();
-        expect(text).toBeInTheDocument();
 
         fireEvent.click(button);
-        expect(mockFunction).toHaveBeenCalled();
+        expect(mockFn).toHaveBeenCalled();
+    });
+
+    test("Clicking triggers nothing when disabled", () => {
+        render(
+            <PrimaryButton text={mockText} disabled={true} onClick={mockFn} />
+        )
+
+        const button = screen.getByRole("button");
+        fireEvent.click(button);
+        expect(mockFn).not.toHaveBeenCalled();
     })
+    
 });

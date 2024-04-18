@@ -6,12 +6,14 @@ import { iFolderItem } from '../../../interfaces/folder_item';
 import { iWindowItem } from '../../../interfaces/window_item';
 import iCurrentSessionState from "../../../interfaces/states/current_session_state";
 import iHistoryState from "../../../interfaces/states/history_state";
-import iAdvancedSearchBar from "../../../interfaces/advanced_search_bar";
-import { handleShowResultsContainer, IHandleShowResultsContainerProps } from "./handle_show_results_container";
-import { handleWindowClick } from "./window_click_listener";
-import { ILaunchFolderProps, handleLaunchFolder } from "./handle_launch_folder";
-import { SearchResults } from "./child_components/search_bar_results";
+import { handleShowResultsContainer } from "./functions/handle_show_results_container";
+import { handleWindowClick } from "./functions/window_click_listener";
+import { handleLaunchFolder } from "./functions/handle_launch_folder";
+import { SearchResults } from "./components/search_bar_results";
 import PopupMessage from "../../utils/popup_message";
+import iLaunchFolderProps from "../../../interfaces/launch_folder_props";
+import iHandleShowResultsContainerProps from "../../../interfaces/handle_show_results_container_props";
+import { RootState } from "../../../redux-toolkit/store";
 
 /*
     Search bar placed at the top of the viewport
@@ -19,7 +21,7 @@ import PopupMessage from "../../utils/popup_message";
     Filters current and history tabs by input string
 */
 
-const AdvancedSearchBar = (props: iAdvancedSearchBar): JSX.Element => {
+const AdvancedSearchBar = (props: any): JSX.Element => {
     const [showResultsContainer, setShowResultsContainer] = useState<boolean>(false);
     const [slideDown, setSlideDown] = useState<boolean>(false);
     const [keyword, setkeyword] = useState<string>("");
@@ -31,13 +33,36 @@ const AdvancedSearchBar = (props: iAdvancedSearchBar): JSX.Element => {
     const searchResultsContainerRef = useRef<HTMLDivElement>(null);
     const searchFieldRef = useRef<HTMLInputElement>(null);
 
-    const folderCollectionState: Array<iFolderItem> = useSelector((state: any) => state.folderCollectionReducer);
-    const sessionSectionState: iCurrentSessionState = useSelector((state: any) => state.sessionSectionReducer);
-    const historySectionState: iHistoryState = useSelector((state: any) => state.historySectionReducer);
+    const folderState: Array<iFolderItem> = useSelector((state: RootState) => state.folder);
+    const sessionSectionState: iCurrentSessionState = useSelector((state: RootState) => state.sessionSection);
+    const historySectionState: iHistoryState = useSelector((state: RootState) => state.historySection);
 
     const { popup_container_transparent_bg } = styles;
-    const handleShowResultsProps: IHandleShowResultsContainerProps = { searchResultsContainerRef , showResultsContainer, slideDown, setSlideDown, setShowResultsContainer }
-    const handleLaunchFolderProps: ILaunchFolderProps = { folderLaunchType, windowsPayload, setWindowsPayload, setFolderLaunchType, setShowPerformanceWarning }
+
+    const handleSlideDown = (status: boolean) => {
+        // Adjust the search field features based on the slideDown state
+      
+        if(keyword.length === 0) {
+            if(status === true){
+                searchFieldRef.current!.value = "";
+            }
+        }
+
+        if(status === true){
+            setTimeout(() => {
+                if(searchResultsContainerRef.current){
+                    searchResultsContainerRef.current.classList.remove("mt-10");
+                    searchResultsContainerRef.current.classList.add("mt-20");
+                }
+            }, 50);
+  
+            document.body.style.overflowX = "hidden";
+        }
+        setSlideDown(status);
+    } 
+
+    const handleShowResultsProps: iHandleShowResultsContainerProps = { searchResultsContainerRef , showResultsContainer, slideDown, handleSlideDown, setShowResultsContainer }
+    const handleLaunchFolderProps: iLaunchFolderProps = { folderLaunchType, windowsPayload, setWindowsPayload, setFolderLaunchType, setShowPerformanceWarning }
 
     const clickListener = (e: any): void => {
         handleWindowClick({ e, handleShowResultsProps });
@@ -55,76 +80,38 @@ const AdvancedSearchBar = (props: iAdvancedSearchBar): JSX.Element => {
         }
     }, [showResultsContainer]);
 
-    // Adjust the search field features based on the slideDown state
-    useEffect(() => {
-        if(keyword.length === 0) {
-            if(slideDown === false){
-                searchFieldRef.current!.value = "Search tabs...";
-            } else {
-                searchFieldRef.current!.value = "";
-            }
-        }
 
-        if(slideDown === true){
-            setTimeout(() => {
-                if(searchResultsContainerRef.current){
-                    searchResultsContainerRef.current.classList.remove("mt-10");
-                    searchResultsContainerRef.current.classList.add("mt-20");
-                }
-            }, 50);
-          //  document.body.style.overflowY = "hidden";
-            document.body.style.overflowX = "hidden";
-        }
-    }, [slideDown]);
-
-
-    // Decide whether or not to show performance warning, or launch a folder directly
-    useEffect(() => {
-        if(!windowsPayload || !folderLaunchType) return;
-
+    const evaluatePerformanceWarning = (type: string, windows: Array<iWindowItem>) => {
+        if(!windows) return;
         let tabsCount = 0;
-        windowsPayload.forEach((window: iWindowItem) => {
+        windows.forEach((window: iWindowItem) => {
             tabsCount += window.tabs.length;
         });
    
-        chrome.storage.local.get("performance_notification_value", (data) => {
-            const { performance_notification_value } = data;
-
-            setTotalTabsCount(performance_notification_value);
-            if(performance_notification_value !== -1 && performance_notification_value <= tabsCount) {
+        chrome.storage.local.get("performanceWarningValue", (data) => {
+            setTotalTabsCount(data.performanceWarningValue);
+            if(data.performanceWarningValue !== -1 && data.performanceWarningValue <= tabsCount) {
                 setShowPerformanceWarning(true);
             } else {
-                handleLaunchFolderProps.windowsPayload = windowsPayload;
+                handleLaunchFolderProps.windowsPayload = windows;
+                handleLaunchFolderProps.folderLaunchType = type;
                 handleLaunchFolder(handleLaunchFolderProps);
             }
         });
-    }, [folderLaunchType]);
+    }
 
     // Show search results area unless already shown
     const handleActivateSearch = (e: any): void => {
         if(slideDown === false) handleShowResultsContainer(handleShowResultsProps);
     }
 
+    // Prepare the windows in a folder for launch, and Instruct the component on how to launch the folder
     const handlePrepareLaunchFolder = (windows: Array<iWindowItem>, type: string): void => {
         setWindowsPayload(windows);
-        setFolderLaunchType(type);
+        evaluatePerformanceWarning(type, windows);
     }
 
-    // Run when user don't want to open folder.
-    const denyFolderLaunch = (): void => { 
-        setShowPerformanceWarning(false); setWindowsPayload(null);
-        setFolderLaunchType(null); setShowPerformanceWarning(false);
-    }
 
-    // Run when user wants to launch folder
-    const proceedFolderLaunch = (): void => {
-        if(windowsPayload){
-            const tempProps: ILaunchFolderProps = { folderLaunchType, windowsPayload, setWindowsPayload, setFolderLaunchType, setShowPerformanceWarning }
-
-            handleLaunchFolder(tempProps); 
-            setShowPerformanceWarning(false);
-        }
-    }
 
     return (
         <>
@@ -132,8 +119,21 @@ const AdvancedSearchBar = (props: iAdvancedSearchBar): JSX.Element => {
                 <PopupMessage
                     title="Warning" 
                     text={`You are about to open ${totalTabsCount} or more tabs at once. Opening this many may slow down your browser. Do you want to proceed?`}
-                    primaryButton={{ text: "Yes, open selected folders", callback: proceedFolderLaunch}}
-                    secondaryButton={{ text: "No, do not open", callback: denyFolderLaunch}}    
+                    primaryButton={{ 
+                        text: "Yes, open selected folders", 
+                        callback: () => { 
+                            if(windowsPayload) {
+                                handleLaunchFolderProps.windowsPayload = windowsPayload;
+                                handleLaunchFolder(handleLaunchFolderProps);
+                            }
+                            setShowPerformanceWarning(false)
+                        }
+                    }}
+                    secondaryButton={{ 
+                        text: "No, do not open", 
+                        callback: () => { 
+                            setShowPerformanceWarning(false); 
+                            setWindowsPayload(null)}}}     
                 />
             }
             <div className="mt-8 flex justify-center">
@@ -154,11 +154,11 @@ const AdvancedSearchBar = (props: iAdvancedSearchBar): JSX.Element => {
                 {   
                     slideDown === true && 
                     (
-                        <div data-testid="search-results-area" id="search-results-area" className={`${popup_container_transparent_bg} w-screen h-full top-0 bg-[rgba-] absolute z-500 left-0 flex justify-center`}>
+                        <section data-testid="search-results-area" id="search-results-area" className={`${popup_container_transparent_bg} w-screen h-full top-0 bg-[rgba-] absolute z-500 left-0 flex justify-center`}>
                             <div ref={searchResultsContainerRef} className={`bg-white absolute p-6 ml-16 mt-10 transition-all ease-in duration-75 overflow-hidden w-7/12 z-10 rounded-lg drop-shadow-[0_3px_2px_rgba(0,0,0,0.15)]`}>
-                                <SearchResults keyword={keyword} folders={folderCollectionState} session={sessionSectionState} history={historySectionState} launchFolder={handlePrepareLaunchFolder} />   
+                                <SearchResults keyword={keyword} folders={folderState} session={sessionSectionState} history={historySectionState} launchFolder={handlePrepareLaunchFolder} />   
                             </div>
-                        </div>
+                        </section>
                     ) 
                 }
             </div>

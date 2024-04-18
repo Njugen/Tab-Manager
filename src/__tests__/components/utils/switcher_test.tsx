@@ -1,66 +1,67 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, within, fireEvent } from "@testing-library/react";
 import '@testing-library/jest-dom'
+import randomNumber from "../../../tools/random_number";
+import PrimaryButton from "../../../components/utils/primary_button/primary_button";
 import Switcher from "../../../components/utils/switcher/switcher";
 
-const mockFunction = jest.fn((data: boolean | null) => data);
-const mockText = "hello mah boy";
-const mockSwitcherId = "my-switcher-setting";
+const mockLabel = randomNumber().toString();
+const mockFn = jest.fn((e: boolean | null) => e);
 
-describe("test <PrimaryButton />", () => {
-    test("clicking works (default value: true), callback works correctly", () => {
-        render(<Switcher id={mockSwitcherId} label={mockText} value={true} onCallback={mockFunction} />);
-
-        const button = screen.getByTestId(mockSwitcherId);
-        const text = screen.getByText(mockText);
-
-        expect(button).toBeInTheDocument();
-        expect(text).toBeInTheDocument();
-
-        fireEvent.click(button);
-        expect(mockFunction).toHaveBeenCalledWith(false);
-
-        fireEvent.click(button);
-        expect(mockFunction).toHaveBeenCalledWith(true);
-
-        fireEvent.click(button);
-        expect(mockFunction).toHaveBeenCalledWith(false);
-
-        fireEvent.click(button);
-        expect(mockFunction).toHaveBeenCalledWith(true);
+describe("Test <Switcher>", () => {
+    test("Label is visible", () => {
+        render(
+            <Switcher label={mockLabel} value={false} onCallback={mockFn} />
+        )
+        
+        const label = screen.getByText(mockLabel);
+        expect(label).toBeInTheDocument();
     });
 
-    test("clicking works (default value: false), callback works correctly", () => {
-        render(<Switcher id={mockSwitcherId} label={mockText} value={false} onCallback={mockFunction} />);
-
-        const button = screen.getByTestId(mockSwitcherId);
-        const text = screen.getByText(mockText);
-
-        expect(button).toBeInTheDocument();
-        expect(text).toBeInTheDocument();
-
-        fireEvent.click(button);
-        expect(mockFunction).toHaveBeenCalledWith(true);
-
-        fireEvent.click(button);
-        expect(mockFunction).toHaveBeenCalledWith(false);
-
-        fireEvent.click(button);
-        expect(mockFunction).toHaveBeenCalledWith(true);
-
-        fireEvent.click(button);
-        expect(mockFunction).toHaveBeenCalledWith(false);
+    test("Label is not visible without props", () => {
+        render(
+            <Switcher value={false} onCallback={mockFn} />
+        )
+        
+        const label = screen.queryByText(mockLabel);
+        expect(label).not.toBeInTheDocument();
     });
 
-    test.each([true, false])(
-        "renders correctly (default value: %p, no label)", (arg) => {
-            render(<Switcher id={mockSwitcherId} value={arg} onCallback={mockFunction} />);
+    test("Toggling on works", () => {
+        render(
+            <Switcher label={mockLabel} value={false} onCallback={mockFn} />
+        )
 
-            const button = screen.getByTestId(mockSwitcherId);
-            const text = screen.queryByText(mockText);
+        const button = screen.getByRole("button");
+        fireEvent.click(button);
 
-            expect(button).toBeInTheDocument();
-            expect(text).not.toBeInTheDocument();
-        }
-    )
- 
+        expect(mockFn).toHaveBeenCalledWith(true);
+    });
+
+    test("Toggline on->off works", () => {
+        render(
+            <Switcher label={mockLabel} value={false} onCallback={mockFn} />
+        )
+        
+        const label = screen.getByText(mockLabel);
+        expect(label).toBeInTheDocument();
+
+        const button = screen.getByRole("button");
+        fireEvent.click(button);
+        fireEvent.click(button);
+        expect(mockFn).toHaveBeenCalledWith(false)
+    });
+
+    test("Toggline off", () => {
+        render(
+            <Switcher label={mockLabel} value={true} onCallback={mockFn} />
+        )
+        
+        const label = screen.getByText(mockLabel);
+        expect(label).toBeInTheDocument();
+
+        const button = screen.getByRole("button");
+        fireEvent.click(button);
+        expect(mockFn).toHaveBeenCalledWith(false)
+    });
+
 });

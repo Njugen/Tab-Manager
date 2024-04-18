@@ -1,57 +1,69 @@
 import { render, screen, within, fireEvent } from "@testing-library/react";
 import '@testing-library/jest-dom'
-import Navlink from "../../../components/utils/navlink";
+import CircleButton from '../../../components/utils/circle_button';
 import randomNumber from "../../../tools/random_number";
-import { MemoryRouter } from "react-router-dom";
+import FormField from "../../../components/utils/form_field";
+import Group from "../../../components/utils/group";
+import Navlink from "../../../components/utils/navlink";
+import { iNavlink } from "../../../interfaces/nav_link";
 
-const mockFunction = jest.fn();
-const mockUrl = "/" + randomNumber();
+ 
+const mockChild = <img src="/favicon.ico" alt="test" data-testid="mock-child" />
+const mockUrl = "http://google.com";
+const mockFn = jest.fn();
 const mockLabel = randomNumber().toString();
-const mockText = randomNumber().toString();
 
-describe("test <NavLink />", () => {
-    test("link renders and works (not active)", () => {
+const props: iNavlink = {
+    url: mockUrl,
+    label: mockLabel,
+    onClick: mockFn,
+    children: mockChild
+}
 
-
+describe("Test <Navlink>", () => {
+    test("Link has 'label' prop as text", () => {
         render(
-            <MemoryRouter>
-                <Navlink label={mockLabel} isActive={false} url={mockUrl} onClick={mockFunction}>
-                    <p>{mockText}</p>
-                </Navlink>
-            </MemoryRouter>
-        );
-    
-        const link = screen.getByRole("link");
-        
-        expect(link).toHaveTextContent(mockText);
-        expect(link).toHaveTextContent(mockLabel);
-        expect(link).toHaveAttribute("href", mockUrl);
+            <Navlink {...props}>
+                {mockChild}
+            </Navlink>
+        )
 
-        fireEvent.click(link);
-        expect(mockFunction).toHaveBeenCalled();
+        const link = screen.getByRole("link");
+        expect(link).toHaveTextContent(mockLabel);
     });
 
-    test("link renders and works (active)", () => {
-        const mockLabel = randomNumber().toString();
-        const mockText = randomNumber().toString();
-
+    test("Link has 'url' prop as href attribute", () => {
         render(
-            <MemoryRouter>
-                <Navlink label={mockLabel} isActive={true} url={mockUrl} onClick={mockFunction}>
-                    <p>{mockText}</p>
-                </Navlink>
-            </MemoryRouter>
-        );
-    
-        const link = screen.getByRole("link");
-        
-        expect(link).toHaveTextContent(mockText);
-        expect(link).toHaveTextContent(mockLabel);
-        expect(link).toHaveAttribute("href", mockUrl);
+            <Navlink {...props}>
+                {mockChild}
+            </Navlink>
+        )
 
-        fireEvent.click(link);
-        expect(mockFunction).toHaveBeenCalled();
+        const link = screen.getByRole("link");  
+        expect(link).toHaveAttribute("href", mockUrl);
     });
 
-  
-})
+    test("Link has child component", () => {
+        render(
+            <Navlink {...props}>
+                {mockChild}
+            </Navlink>
+        )
+
+        const link = screen.getByRole("link");
+        const child = within(link).getByTestId("mock-child");
+        expect(child).toBeInTheDocument()
+    });
+
+    test("Clicking the link triggers 'onClick' callback", () => {
+        render(
+            <Navlink {...props}>
+                {mockChild}
+            </Navlink>
+        )
+
+        const link = screen.getByRole("link");
+        fireEvent.click(link);
+        expect(mockFn).toHaveBeenCalled();
+    });
+});

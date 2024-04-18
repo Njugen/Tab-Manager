@@ -1,50 +1,59 @@
-import '@testing-library/jest-dom';
+import { render, screen, within, fireEvent } from "@testing-library/react";
+import '@testing-library/jest-dom'
+import randomNumber from "../../../tools/random_number";
 import DropdownMenu from "../../../components/utils/dropdown_menu/dropdown_menu";
 import { iFieldOption } from "../../../interfaces/dropdown";
-import { render, screen, within, fireEvent, Matcher } from "../../../tools/css_enhanced_render";
+import iDropdownMenu from "../../../interfaces/dropdown_menu";
 
-const mockTag: string = "my-lovely-dropdown-menu";
-const mockOptions: Array<iFieldOption> = [
-    { 
-        id: 0,
-        label: "Test option"
-    },
-    { 
-        id: 1,
-        label: "Another test option"
-    },
-    { 
-        id: 2,
-        label: "blablabla"
-    }
-];
-const mockFunction = jest.fn();
+const mockPreset: iFieldOption = {
+    id: randomNumber(),
+    label: randomNumber().toString()
+}
 
+const mockOptions: Array<iFieldOption> = [];
+const mockCallback = jest.fn((e: any) => e);
+const mockTag = randomNumber().toString()
 
-describe("test <DropdownMenu />", () => {
-    test.each(mockOptions)("list works and its featurs works (no preset option)", async (arg) => {
-        render(<DropdownMenu tag={mockTag} options={mockOptions} selected={null} onSelect={mockFunction} />);
+for(let i = 0; i < 5; i++){
+    mockOptions.push(
+        {
+            id: randomNumber(),
+            label: randomNumber().toString()
+        }
+    )
+}
 
-        const list = screen.getByRole("list");
-        expect(list).toBeInTheDocument();
+const props: iDropdownMenu = {
+    options: mockOptions,
+    tag: mockTag,
+    onSelect: mockCallback,
+    selected: null
+}
 
-        const button = within(list).getByText(arg.label as Matcher, { selector: "button"});
-        expect(button).toBeInTheDocument();
+describe("Test <DropdownMenu>", () => {
+    test("Renders ok, each option props trigger 'onSelect' callback when clicked", () => {
+        render(<DropdownMenu { ...props } selected={null} />);
 
-        fireEvent.click(button);
-        expect(mockFunction).toHaveBeenCalled();
-    });
+        const menu = screen.getByRole("list");
+        
+        mockOptions.forEach((option) => {
+            const item = within(menu).getByText(option.label, { selector: "button" });
+            fireEvent.click(item);
 
-    test.each(mockOptions)("list is collapsed (preset option)", async (arg) => {
-        render(<DropdownMenu tag={mockTag} options={mockOptions} selected={mockOptions[0].id} onSelect={mockFunction} />);
+            expect(mockCallback).toHaveBeenCalledWith(option.id);
+        })
+    })
 
-        const list = screen.getByRole("list");
-        expect(list).toBeInTheDocument();
+    test("Renders and works ok with preset 'selected' prop", () => {
+        render(<DropdownMenu { ...props } selected={mockOptions[0].id} />);
 
-        const button = within(list).getByText(arg.label as Matcher, { selector: "button"});
-        expect(button).toBeInTheDocument();
+        const menu = screen.getByRole("list");
+        
+        mockOptions.forEach((option) => {
+            const item = within(menu).getByText(option.label, { selector: "button" });
+            fireEvent.click(item);
 
-        fireEvent.click(button);
-        expect(mockFunction).toHaveBeenCalled();
-    });
+            expect(mockCallback).toHaveBeenCalledWith(option.id);
+        })
+    })
 });

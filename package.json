@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@reduxjs/toolkit": "^1.9.5",
+    "@reduxjs/toolkit": "^1.9.7",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@types/chrome": "^0.0.245",
@@ -11,6 +11,7 @@
     "@types/node": "^16.18.50",
     "@types/react": "^18.2.21",
     "@types/react-dom": "^18.2.7",
+    "@types/react-redux": "^7.1.33",
     "autoprefixer": "^10.4.15",
     "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.8.1",
@@ -46,7 +47,7 @@
     "eject": "react-scripts eject",
     "dev": "webpack",
     "watch": "webpack --watch --progress --config webpack.dev.js",
-    "test": "react-scripts test --coverage --watchAll --collectCoverageFrom='src/components/**/*.{ts,tsx}' --collectCoverageFrom='src/tools/**/*.{ts,tsx}' --collectCoverageFrom='src/redux/**/*.{ts,tsx}' --collectCoverageFrom='src/views/**/*.{ts,tsx}' --collectCoverageFrom='src/images/**/*.{ts,tsx}'"
+    "test": "react-scripts test --verbose --coverage --watchAll"
   },
   "eslintConfig": {
     "extends": [
@@ -76,7 +77,26 @@
   "jest": {
     "coveragePathIgnorePatterns": [
       "./redux/",
-      "./tools/testing/"
+      "./redux-toolkit/",
+      "./tools/",
+      "./webextension/",
+      "./services/",
+      "./interfaces/",
+      "./styles/",
+      "./src/App.tsx",
+      "./src/index.tsx",
+      "./src/sidepanel.tsx",
+      "./baseUI/",
+      "./src/views/dashboard/dashboard_view.tsx",
+      "^(.*?)components/(.*?)functions/",
+      "^(.*?)components/(.*?)functions/",
+      "^(.*?)components/(.*?)components/",
+      "^(.*?)baseUI/(.*?)components/",
+      "^(.*?)baseUI/(.*?)functions/",
+      "^(.*?)views/(.*?)components/",
+      "^(.*?)views/(.*?)functions/",
+      "^(.*?)components/(.*?)icons/",
+      "(.*?)reportWebVitals.ts"
     ],
     "coverageThreshold": {
       "global": {

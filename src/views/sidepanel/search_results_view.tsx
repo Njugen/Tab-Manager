@@ -4,13 +4,14 @@ import { useSelector } from "react-redux";
 import { iFolderItem } from '../../interfaces/folder_item';
 import FolderItem from "../../components/features/folder_item/folder_item";
 import TabItem from "../../components/features/tab_item";
-import GenericIconButton from "../../components/utils/generic_icon_button";
+import GenericButton from "../../components/utils/generic_button";
 import { 
     filterSessionTabsByString, 
     filterHistoryTabsByString, 
     filterFoldersByString 
 } from "../../tools/tab_filters";
 import CloseIcon from "../../components/icons/close_icon";
+import iCurrentSessionState from "../../interfaces/states/current_session_state";
 
 function SearchResultsContainer(props:any): JSX.Element {
     const { keyword, onClose } = props;
@@ -18,7 +19,7 @@ function SearchResultsContainer(props:any): JSX.Element {
     const [folderLaunchType, setFolderLaunchType] = useState<string | null>(null); 
     const [totalTabsCount, setTotalTabsCount] = useState<number>(0);
     const [showPerformanceWarning, setShowPerformanceWarning] = useState<boolean>(false);
-
+    
     const handleClose = (): void => {
         onClose();
     }
@@ -54,8 +55,8 @@ function SearchResultsContainer(props:any): JSX.Element {
 
         // Close current session after launching the folder. Only applies when
         // set in the Pettings page
-        chrome.storage.local.get("close_current_setting", (data) => {
-            if(data.close_current_setting === true){
+        chrome.storage.local.get("closeSessionAtFolderLaunch", (data) => {
+            if(data.closeSessionAtFolderLaunch === true){
                 snapshot.forEach((window) => {
                     if(window.id) chrome.windows.remove(window.id);
                 });
@@ -66,45 +67,47 @@ function SearchResultsContainer(props:any): JSX.Element {
     useEffect(() => {
         
         if(!windowsPayload || !folderLaunchType) return;
+
         let tabsCount = 0;
+        
         windowsPayload.forEach((window: iWindowItem) => {
             tabsCount += window.tabs.length;
         });
    
-        chrome.storage.local.get("performance_notification_value", (data) => {
-            setTotalTabsCount(data.performance_notification_value);
-            if(data.performance_notification_value !== -1 && data.performance_notification_value <= tabsCount) {
+        chrome.storage.local.get("performanceWarningValue", (data) => {
+            setTotalTabsCount(data.performanceWarningValue);
+
+            if(data.performanceWarningValue !== -1 && data.performanceWarningValue <= tabsCount) {
                 setShowPerformanceWarning(true);
             } else {
                 handleLaunchFolder(windowsPayload);
             }
-            //handleLaunchFolder(windowsPayload);
         });
     }, [folderLaunchType]);
 
-    const folderCollectionState = useSelector((state: any) => state.folderCollectionReducer);
-    const sessionSectionState = useSelector((state: any) => state.sessionSectionReducer);
-    const historySectionState = useSelector((state: any) => state.historySectionReducer);
+    const folderState: Array<iFolderItem> = useSelector((state: any) => state.folderReducer);
+    const sessionSectionState: iCurrentSessionState = useSelector((state: any) => state.sessionSection);
+    const historySectionState = useSelector((state: any) => state.historySection);
 
     // Render all filtered folders
     const renderFolders = (): Array<JSX.Element> => {
-        const folders = filterFoldersByString(folderCollectionState, keyword);
+        const folders = filterFoldersByString(folderState, keyword);
 
-        return folders.map((folder: iFolderItem) => <FolderItem marked={false} id={folder.id!} name={folder.name} viewMode={"list"} type={"collapsed"} desc={folder.desc} windows={folder.windows} onOpen={handlePrepareLaunchFolder} />);
+        return folders.map((folder: iFolderItem) => <FolderItem key={`folder-id-${folder.id}`} marked={false} id={folder.id!} name={folder.name} viewMode={"list"} type={"collapsed"} desc={folder.desc} windows={folder.windows} onOpen={handlePrepareLaunchFolder} />);
     }
 
     // Render all filtered session tabs
     const renderSessionTabs = (): Array<JSX.Element> => {
         const tabs = filterSessionTabsByString(sessionSectionState, keyword);
 
-        return tabs.map((tab) => <TabItem key={tab.id} marked={false} id={tab.id!} label={tab.title!} url={tab.url!} disableEdit={true} disableMark={true} disableCloseButton={false} onClose={() => handleCloseTab(tab.id!)} />)
+        return tabs.map((tab) => <TabItem key={`session-tab-id-${tab.id}`} marked={false} id={tab.id!} label={tab.title!} url={tab.url!} onClose={() => handleCloseTab(tab.id!)} />)
     }
 
     // Render all filtered history tabs
     const renderHistoryTabs = (): Array<JSX.Element> => {
         const tabs = filterHistoryTabsByString(historySectionState, keyword);
 
-        return tabs.map((tab) => <TabItem key={tab.id} marked={false} id={parseInt(tab.id)} label={tab.title!} url={tab.url!} disableEdit={true} disableMark={true} disableCloseButton={true} onClose={() => {}} />);
+        return tabs.map((tab) => <TabItem key={`history-tab-id-${tab.id}`} marked={false} id={parseInt(tab.id)} label={tab.title!} url={tab.url!}  onClose={() => {}} />);
     }
 
     // Close a tab
@@ -116,25 +119,39 @@ function SearchResultsContainer(props:any): JSX.Element {
         <>
             <div className="bg-white absolute top-20 z-[200] px-4 w-full">
                 <div id="popup-header" className="pb-5 border-tbfColor-lgrey w-full flex justify-between">
-                    <h1 data-testid="manage-folder-title" className="text-3xl text-tbfColor-darkpurple font-light inline-block">
-                        Search Results
-                    </h1>
-                    <GenericIconButton icon="close" onClick={handleClose}>
+                    <header>
+                        <h1 data-testid="manage-folder-title" className="text-3xl text-tbfColor-darkpurple font-light inline-block">
+                            Search Results
+                        </h1>
+                    </header>
+                    <GenericButton onClick={handleClose}>
                         <CloseIcon size={34} fill="rgba(0,0,0,0.2)" />
-                    </GenericIconButton>
+                    </GenericButton>
                 </div>
-                <div className="mt-4">
+                <section className="mt-4">
                     <h3 className="uppercase font-bold text-md mb-4 text-tbfColor-darkergrey">Folders</h3>
-                    {renderFolders()}
-                </div>
-                <div className="mt-4">
+                    <ul className="list-none">
+                        {
+                            renderFolders()
+                        }
+                    </ul>
+                </section>
+                <section className="mt-4">
                     <h3 className="uppercase font-bold text-md mb-4 text-tbfColor-darkergrey">Currently opened</h3>
-                    {renderSessionTabs()}
-                </div>
-                <div className="mt-4">
+                    <ul className="list-none">
+                        {
+                            renderSessionTabs()
+                        }
+                    </ul>
+                </section>
+                <section className="mt-4">
                     <h3 className="uppercase font-bold text-md mb-4 text-tbfColor-darkergrey">History</h3>
-                    {renderHistoryTabs()}
-                </div>
+                    <ul className="list-none">
+                        {
+                            renderHistoryTabs()
+                        }
+                    </ul>
+                </section>
             </div>
         </>
     )

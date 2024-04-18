@@ -1,5 +1,10 @@
+body {
+    overflow-y: scroll;
+}
+
 body::-webkit-scrollbar {
     width: 12px;
+    background: rgb(249, 250, 251);
 }
 
 body::-webkit-scrollbar-track {

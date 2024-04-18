@@ -1,45 +1,74 @@
 import { render, screen, within, fireEvent } from "@testing-library/react";
 import '@testing-library/jest-dom'
 import randomNumber from "../../../tools/random_number";
+import PopupMessage from "../../../components/utils/popup_message";
+import PurpleBorderButton from "../../../components/utils/purple_border_button";
+import SimpleSearchBar from "../../../components/utils/simple_search_bar";
 import TextIconButton from "../../../components/utils/text_icon_button";
+import { iTextIconButton } from "../../../interfaces/text_icon_button";
 
-const mockFunction = jest.fn();
-const mockLabel = randomNumber().toString();
+const mockFn = jest.fn();
 const mockText = randomNumber().toString();
 const mockId = randomNumber().toString();
+const mockChild = <span data-testid="mock-span"></span>
 
-describe("test <TextIconButton />", () => {
-    test("Button renders ok and triggers a function when clicked", () => {
+const props: iTextIconButton = {
+    id: mockId,
+    text: mockText,
+    textSize: "h-2",
+    onClick: mockFn,
+    children: mockChild,
+    disabled: false
+}
+
+describe("Test <TextIconButton>", () => {
+    test("triggers 'onClick' callback when clicked", () => {
         render(
-            <TextIconButton id={mockId} text={mockLabel} disabled={false} textSize={"blabla"} onClick={mockFunction}>
-                <>{mockText}</>
+            <TextIconButton {...props}>
+                {mockChild}
             </TextIconButton>
-            );
+        )
 
         const button = screen.getByRole("button");
-        expect(button).toBeInTheDocument();
-        expect(button).toHaveTextContent(mockText);
-        expect(button).toHaveTextContent(mockLabel);
-        expect(button).not.toHaveTextContent(mockId);
 
         fireEvent.click(button);
-        expect(mockFunction).toHaveBeenCalled();
+        expect(mockFn).toHaveBeenCalled();
     });
 
-    test("Disabled button renders ok and does not trigger anything at click", () => {
+    test("Button has text", () => {
         render(
-            <TextIconButton id={mockId} text={mockLabel} disabled={true} textSize={"blabla"} onClick={mockFunction}>
-                <>{mockText}</>
+            <TextIconButton {...props}>
+                {mockChild}
             </TextIconButton>
-            );
+        )
 
         const button = screen.getByRole("button");
-        expect(button).toBeInTheDocument();
         expect(button).toHaveTextContent(mockText);
-        expect(button).toHaveTextContent(mockLabel);
-        expect(button).not.toHaveTextContent(mockId);
-
-        fireEvent.click(button);
-        expect(mockFunction).not.toHaveBeenCalled();
     });
+
+    test("Button has child component", () => {
+        render(
+            <TextIconButton {...props}>
+                {mockChild}
+            </TextIconButton>
+        )
+
+        const button = screen.getByRole("button");
+        
+        const child = within(button).getByTestId("mock-span");
+        expect(child).toBeInTheDocument();
+
+    });
+
+    test("'onClick' callback does not trigger at click when disabled", () => {
+        render(
+            <TextIconButton {...props} disabled={true}>
+                {mockChild}
+            </TextIconButton>
+        )
+
+        const button = screen.getByRole("button");
+        fireEvent.click(button);
+        expect(mockFn).not.toHaveBeenCalled();
+    })
 });

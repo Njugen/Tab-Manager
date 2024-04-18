@@ -1,12 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { iWindowItem } from '../../interfaces/window_item';
 import { useSelector, useDispatch } from "react-redux";
 import { iFolderItem } from '../../interfaces/folder_item';
 import FolderManager from "../../components/features/folder_manager/folder_manager";
-import { clearInEditFolder } from "../../redux/actions/in_edit_folder_actions";
-import { clearMarkedTabsAction } from '../../redux/actions/history_settings_actions';
-import { setUpWindowsAction } from '../../redux/actions/current_session_actions';
-import { clearMarkedFoldersAction } from '../../redux/actions/folder_settings_actions';
 import randomNumber from '../../tools/random_number';
 import AddToFolderPopup from "../../components/features/add_to_folder_popup";
 import { iTabItem } from '../../interfaces/tab_item';
@@ -14,23 +10,22 @@ import { iFieldOption } from '../../interfaces/dropdown';
 import SaveIcon from '../../components/icons/save_icon';
 import CircleButton from './../../components/utils/circle_button';
 import WindowItem from "../../components/features/window_item";
+import PopupMessage from './../../components/utils/popup_message';
+import { setUpWindows } from "../../redux-toolkit/slices/session_section_slice";
+import { unMarkAllFolders } from "../../redux-toolkit/slices/folders_section_slice";
+import { unMarkAllTabs } from "../../redux-toolkit/slices/history_section_slice";
+
 
 const CurrentSessionView = (props:any): JSX.Element => {
     const [addToWorkSpaceMessage, setAddToFolderMessage] = useState<boolean>(false);
     const [createFolder, setCreateFolder] = useState<boolean>(false);
     const [mergeProcess, setMergeProcess] = useState<iFolderItem | null>(null);
     const [editFolderId, setEditFolderId] = useState<number | null>(null);
+    const [windowIdWarning, setWindowIdWarning] = useState<number>(-1);
 
-    const folderCollectionState: Array<iFolderItem> = useSelector((state: any) => state.folderCollectionReducer);
-
+    const folderState: Array<iFolderItem> = useSelector((state: any) => state.folder);
     const dispatch = useDispatch();
-    const sessionSectionState = useSelector((state: any) => state.sessionSectionReducer);
-
-    useEffect(() => {        
-        if(folderCollectionState.length > 0){
-         //   saveToStorage("local", "folders", folderCollectionState);
-        } 
-    }, [folderCollectionState]);
+    const sessionSectionState: any = useSelector((state: any) => state.sessionSection);
 
     useEffect(() => {
         getAllWindows();
@@ -73,7 +68,7 @@ const CurrentSessionView = (props:any): JSX.Element => {
             windowTypes: ["normal", "popup"]
         };
         chrome.windows.getAll(queryOptions, (windows: Array<chrome.windows.Window>) => {
-            dispatch(setUpWindowsAction(windows));
+            dispatch(setUpWindows(windows));
         });
     };
 
@@ -82,17 +77,8 @@ const CurrentSessionView = (props:any): JSX.Element => {
         setCreateFolder(false);
         setMergeProcess(null);
 
-        dispatch(clearMarkedTabsAction());
-        dispatch(clearMarkedFoldersAction());
-        dispatch(clearInEditFolder());
-    }
-
-    const renderEmptyMessage = (): JSX.Element => {
-        return (
-            <div className={"flex justify-center items-center"}>
-                <p> Your browing history is empty.</p>
-            </div>
-        );
+        dispatch(unMarkAllTabs());
+        dispatch(unMarkAllFolders());
     }
 
     const handleAddToNewFolder = (): void => {
@@ -104,7 +90,7 @@ const CurrentSessionView = (props:any): JSX.Element => {
         if(e.selected === -1) return;
 
         const targetFolderId = e.selected;
-        const targetFolder: iFolderItem | undefined = folderCollectionState.find((folder: iFolderItem) => folder.id === targetFolderId);
+        const targetFolder: iFolderItem | undefined = folderState.find((folder: iFolderItem) => folder.id === targetFolderId);
      
         if(!targetFolder) return;
 
@@ -140,7 +126,7 @@ const CurrentSessionView = (props:any): JSX.Element => {
     }
 
     const renderAddTabsMessage = (): JSX.Element => {
-        const currentFolders: Array<iFolderItem> = folderCollectionState;
+        const currentFolders: Array<iFolderItem> = folderState;
 
         const options: Array<iFieldOption> = currentFolders.map((folder) => {
             return { id: folder.id, label: folder.name }
@@ -167,7 +153,8 @@ const CurrentSessionView = (props:any): JSX.Element => {
     }
 
     const renderFolderManager = (): JSX.Element => {
-        let render;
+        let render = <></>;
+
         if(createFolder === true){
             const presetWindows: Array<iWindowItem> = sessionSectionState.windows.map((window: chrome.windows.Window) => {
                 if(window.tabs){
@@ -202,42 +189,77 @@ const CurrentSessionView = (props:any): JSX.Element => {
         } else if(mergeProcess !== null) {
 
             render = <FolderManager type="popup" title={`Merge tabs to ${mergeProcess.name}`} folder={mergeProcess} onClose={handlePopupClose} />;
-        } else {
-            render = <></>;
         }
 
         return render;
     }
 
-    const renderWindows = (): Array<JSX.Element> => {
+    const proceedClose = (windowId: number) => {
+        setWindowIdWarning(-1);
+        chrome.windows.remove(windowId);
+    }
+
+    const handleCloseWindow = (id: number): void => {
+        chrome.windows.getAll({}, (windows: Array<chrome.windows.Window>): void => {
+            if(windows.length === 1) {
+                setWindowIdWarning(id);
+            } else {
+                proceedClose(id)
+            }
+        });
+    }   
+
+    const windowList = useMemo((): JSX.Element => {
         const existingWindows = sessionSectionState?.windows;
         const existingWindowsElements: Array<JSX.Element> = existingWindows?.map((item: iWindowItem, i: number) => {
             return (
                 <WindowItem
                     key={`window-item-${i}`} 
                     tabsCol={1}
-                    disableEdit={sessionSectionState.windows.length < 2 ? true : false} 
-                    disableTabMark={true} 
-                    disableTabEdit={true} 
+                    onDelete={handleCloseWindow}
+                    disableEdit={false} 
+                    disableMarkTab={true} 
+                    disableEditTab={true} 
+                    disableDeleteTab={false} 
                     id={item.id} 
                     tabs={item.tabs} 
-                    initExpand={true} 
                 />
             );
         })
         
         if (existingWindowsElements?.length > 0){
-            return [...existingWindowsElements];
+            return <ul className="list-none">{existingWindowsElements}</ul>;
         } else {
-            return [renderEmptyMessage()];
+            return (
+                <div className={"flex justify-center items-center"}>
+                    <p> Your browing history is empty.</p>
+                </div>
+            );
         }
-    }
+    }, [sessionSectionState.windows])
 
     return (
-        <>
+        <> 
+            {
+                windowIdWarning >= 0 && 
+                (
+                    <PopupMessage 
+                        title="Warning" 
+                        text={"This is the only window currently open. Closing it will close your browser, do you wish to proceed?"} 
+                        primaryButton={{
+                            text: "Yes, close the browser",
+                            callback: () => proceedClose(windowIdWarning)
+                        }}
+                        secondaryButton={{
+                            text: "Cancel",
+                            callback: () => setWindowIdWarning(-1)
+                        }}
+                    />
+                )
+            }
             {addToWorkSpaceMessage && renderAddTabsMessage()}
             {renderFolderManager()}
-            <div className="flex justify-end mx-2 mt-4 mb-6">
+            <div className="flex justify-end mt-4 mb-6">
                 <CircleButton 
                     disabled={false} 
                     bgCSSClass="bg-tbfColor-lightpurple" 
@@ -247,7 +269,7 @@ const CurrentSessionView = (props:any): JSX.Element => {
                 </CircleButton>
             </div>
             <div>
-                {renderWindows()}
+                {windowList}
             </div>
         </>
     )

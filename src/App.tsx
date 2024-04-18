@@ -1,8 +1,8 @@
 import './App.css';
 import "./styles/global_utils.module.scss";
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import RenderOptionsPage from './baseUI/options_page';
-import RenderSidePanel from './baseUI/sidepanel';
+import OptionsPage from './baseUI/options_page/options_page';
+import SidePanel from './baseUI/sidepanel/sidepanel';
 
 /*
   This file acts as the very foundation of this plugin's UI. This file
@@ -18,11 +18,11 @@ function App() {
   const router = createBrowserRouter([
     {
       path: "/options.html",
-      element: <RenderOptionsPage />
+      element: <OptionsPage />
     },
     {
       path: "/sidepanel.html",
-      element: <RenderSidePanel />
+      element: <SidePanel />
     },
   ]);
 

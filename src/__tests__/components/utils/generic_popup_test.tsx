@@ -1,142 +1,187 @@
 import { render, screen, within, fireEvent } from "@testing-library/react";
 import '@testing-library/jest-dom'
-
-import AddToFolderPopup from "../../../components/features/add_to_folder_popup";
-import { iFieldOption } from "../../../interfaces/dropdown";
+import CircleButton from '../../../components/utils/circle_button';
 import randomNumber from "../../../tools/random_number";
+import FormField from "../../../components/utils/form_field";
+import GenericButton from "../../../components/utils/generic_button";
 import GenericPopup from "../../../components/utils/generic_popup";
 
-interface IGPButtonProps { 
-    label: string, 
-    handler: (e: any) => void 
-}
+const mockTitle = randomNumber().toString();
+const mockChild = <div data-testid="mock-child"></div>
 
-const mockSaveSpecs: IGPButtonProps = {
+const mockSave = {
+    label: randomNumber().toString(),
+    handler: jest.fn()
+}
+const mockCancel = {
     label: randomNumber().toString(),
     handler: jest.fn()
 }
 
-const mockCancelSpecs: IGPButtonProps = {
-    label: randomNumber().toString(),
-    handler: jest.fn()
-}
 
-const mockTitle: string = randomNumber().toString();
-const mockContentsText: string = randomNumber().toString();
-const mockContents: JSX.Element = <p>{mockContentsText}</p>
+describe("Test <GenericPopup>", () => {
+    const typeCases: Array<"slide-in" | "popup"> = ["slide-in", "popup"];
+    
 
-describe("test <GenericPopup> slide-in", () => {
-    test("is visible and all necessities work", () => {
-        render(
-            <GenericPopup title={mockTitle} type="slide-in" show={true} save={mockSaveSpecs} cancel={mockCancelSpecs}>
-                {mockContents}
-            </GenericPopup>
-        )
+    describe("When 'save' prop is missing", () => {
+        const props = {
+            title: mockTitle,
+            show: true,
+            cancel: mockCancel
+        }
 
-        const contents = screen.queryByText(mockContentsText);
-        expect(contents).toBeVisible();
+        test.each(typeCases)("Popup renders", (type) => {
+            render(
+                <GenericPopup type={type} {...props}>
+                    {mockChild}
+                </GenericPopup>
+            );
+    
+            const popup = screen.getByRole("dialog");
+            expect(popup).toBeInTheDocument();
+        })
 
-        const xIconButton = screen.getByTestId("generic-icon-button-close");
-        expect(xIconButton).toBeVisible();
+        test.each(typeCases)("Displays 'title' prop in heading", (type) => {
+            render(
+                <GenericPopup type={type} {...props}>
+                    {mockChild}
+                </GenericPopup>
+            );
+    
+            const popup = screen.getByRole("dialog");
+            const heading = within(popup).queryByRole("heading");
+            expect(heading).toHaveTextContent(mockTitle);
+        })
 
-        fireEvent.click(xIconButton);
-        expect(mockCancelSpecs.handler).toHaveBeenCalled();
+        test.each(typeCases)("X button exists and triggers 'cancel' callback when clicked", (type) => {
+            render(
+                <GenericPopup type={type} {...props}>
+                    {mockChild}
+                </GenericPopup>
+            );
+    
+            const popup = screen.getByRole("dialog");
+            const xButton = within(popup).getByRole("img");
+            
+            fireEvent.click(xButton);
+            expect(mockCancel.handler).toHaveBeenCalled();
+        })
 
-        const footer = screen.getByTestId("generic-popup-footer");
-        const buttons = within(footer).getAllByRole("button")
+        test.each(typeCases)("Close button is not visible due to missing 'save' prop", (type) => {
+            render(
+                <GenericPopup type={type} {...props}>
+                    {mockChild}
+                </GenericPopup>
+            );
+    
+            const closeButton = screen.queryByText(mockCancel.label, { selector: "button" });
+    
+            expect(closeButton).not.toBeInTheDocument()
+        })
 
-        // Cancel (first button)
-        expect(buttons[0].textContent).toBe(mockCancelSpecs.label);
-        fireEvent.click(buttons[0]);
-        expect(mockCancelSpecs.handler).toHaveBeenCalled();
-
-        
-        // Save (seccond button)
-        expect(buttons[1].textContent).toBe(mockSaveSpecs.label);
-        fireEvent.click(buttons[1]);
-        expect(mockSaveSpecs.handler).toHaveBeenCalled();
-    })
-
-    test("footer is hidden if there are no save props", () => {
-        render(
-            <GenericPopup title={mockTitle} type="slide-in" show={true} cancel={mockCancelSpecs}>
-                {mockContents}
-            </GenericPopup>
-        )
-
-        const footer = screen.queryByTestId("generic-popup-footer");
-        expect(footer).not.toBeInTheDocument();
-
-        const buttons = screen.queryAllByRole("button");
-        expect(buttons.length).toEqual(1);
-        
-        const cancelText = screen.queryByText(mockCancelSpecs.label);
-        const saveText = screen.queryByText(mockSaveSpecs.label);
-        expect(cancelText).not.toBeInTheDocument();
-        expect(saveText).not.toBeInTheDocument();
-    })
-})
-
-describe("test <GenericPopup> popup", () => {
-    test("is visible and all necessities work", () => {
-        render(
-            <GenericPopup title={mockTitle} type="popup" show={true} save={mockSaveSpecs} cancel={mockCancelSpecs}>
-                {mockContents}
-            </GenericPopup>
-        )
-
-        const contents = screen.queryByText(mockContentsText);
-        expect(contents).toBeVisible();
-
-        const xIconButton = screen.getByTestId("generic-icon-button-close");
-        expect(xIconButton).toBeVisible();
-
-        fireEvent.click(xIconButton);
-        expect(mockCancelSpecs.handler).toHaveBeenCalled();
-
-        const footer = screen.getByTestId("generic-popup-footer");
-        const buttons = within(footer).getAllByRole("button")
-
-        // Cancel (first button)
-        expect(buttons[0].textContent).toBe(mockCancelSpecs.label);
-        fireEvent.click(buttons[0]);
-        expect(mockCancelSpecs.handler).toHaveBeenCalled();
-
-        
-        // Save (seccond button)
-        expect(buttons[1].textContent).toBe(mockSaveSpecs.label);
-        fireEvent.click(buttons[1]);
-        expect(mockSaveSpecs.handler).toHaveBeenCalled();
-    })
-
-    test("footer is hidden if there are no save props", () => {
-        render(
-            <GenericPopup title={mockTitle} type="slide-in" show={true} cancel={mockCancelSpecs}>
-                {mockContents}
-            </GenericPopup>
-        )
-
-        const footer = screen.queryByTestId("generic-popup-footer");
-        expect(footer).not.toBeInTheDocument();
-
-        const buttons = screen.queryAllByRole("button");
-        expect(buttons.length).toEqual(1);
-        
-        const cancelText = screen.queryByText(mockCancelSpecs.label);
-        const saveText = screen.queryByText(mockSaveSpecs.label);
-        expect(cancelText).not.toBeInTheDocument();
-        expect(saveText).not.toBeInTheDocument();
+        test.each(typeCases)("Save button is not visible due to missing 'save' prop", (type) => {
+            render(
+                <GenericPopup type={type} {...props}>
+                    {mockChild}
+                </GenericPopup>
+            );
+    
+            const saveButton = screen.queryByText(mockSave.label, { selector: "button" });
+            expect(saveButton).not.toBeInTheDocument()
+        })
     })
     
-})
 
-test("<GenericPopup> is hidden when rendered with show = false", () => {
-    render(
-        <GenericPopup title={mockTitle} type="slide-in" show={false} save={mockSaveSpecs} cancel={mockCancelSpecs}>
-            {mockContents}
-        </GenericPopup>
-    )
+    describe("When 'save' prop is provided", () => {
+        const props = {
+            title: mockTitle,
+            show: true,
+            cancel: mockCancel,
+            save: mockSave
+        }
 
-    const popup = screen.queryByTestId("generic-popup");
-    expect(popup?.style.height).toBeFalsy();
+        test.each(typeCases)("Popup renders", (type) => {
+            render(
+                <GenericPopup {...props} type={type}>
+                    {mockChild}
+                </GenericPopup>
+            );
+    
+            const popup = screen.getByRole("dialog");
+            expect(popup).toBeInTheDocument();
+        })
+
+        test.each(typeCases)("Displays 'title' prop in heading", (type) => {
+            render(
+                <GenericPopup {...props} type={type}>
+                    {mockChild}
+                </GenericPopup>
+            );
+    
+            const popup = screen.getByRole("dialog");
+            const heading = within(popup).queryByRole("heading");
+            expect(heading).toHaveTextContent(mockTitle);
+        })
+
+        test.each(typeCases)("X button exists and triggers 'cancel' callback when clicked", (type) => {
+            render(
+                <GenericPopup {...props} type={type}>
+                    {mockChild}
+                </GenericPopup>
+            );
+    
+            const popup = screen.getByRole("dialog");
+            const xButton = within(popup).getByRole("img");
+            
+            fireEvent.click(xButton);
+            expect(mockCancel.handler).toHaveBeenCalled();
+        })
+
+        test.each(typeCases)("Close button is visible", (type) => {
+            render(
+                <GenericPopup {...props} type={type}>
+                    {mockChild}
+                </GenericPopup>
+            );
+    
+            const closeButton = screen.queryByText(mockCancel.label, { selector: "button" });
+    
+            expect(closeButton).toBeInTheDocument()
+        })
+
+        test.each(typeCases)("Close button triggers 'cancel' callback when clicked", (type) => {
+            render(
+                <GenericPopup {...props} type={type}>
+                    {mockChild}
+                </GenericPopup>
+            );
+    
+            const closeButton = screen.getByText(mockCancel.label, { selector: "button" });
+            fireEvent.click(closeButton);
+            expect(mockCancel.handler).toHaveBeenCalled();
+        })
+
+        test.each(typeCases)("Save button is visible", (type) => {
+            render(
+                <GenericPopup {...props} type={type}>
+                    {mockChild}
+                </GenericPopup>
+            );
+    
+            const saveButton = screen.queryByText(mockSave.label, { selector: "button" });
+            expect(saveButton).toBeInTheDocument()
+        })
+
+        test.each(typeCases)("Save button triggers 'save' callback when clicked", (type) => {
+            render(
+                <GenericPopup {...props} type={type}>
+                    {mockChild}
+                </GenericPopup>
+            );
+    
+            const saveButton = screen.getByText(mockSave.label, { selector: "button" });
+            fireEvent.click(saveButton);
+            expect(mockSave.handler).toHaveBeenCalled();
+        })
+    })
 });

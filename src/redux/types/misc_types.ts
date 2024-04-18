@@ -1,8 +1,0 @@
-const IS_EDITING_TAB: string = "IS_EDITING_TAB";
-const CURRENTLY_EDITING_TAB: string = "CURRENTLY_EDITING_TAB";
-
-
-export {
-    IS_EDITING_TAB,
-    CURRENTLY_EDITING_TAB
-}
