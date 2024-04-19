@@ -15,15 +15,15 @@ import { iFolderActionBarProps } from "../../../../interfaces/folder_action_bar"
 // actions are performed accordingly.
 const launchOptions: Array<iFieldOption> = [
     {
-        id: 0,
+        value: 0,
         label: "Open"
     },
     {
-        id: 1,
+        value: 1,
         label: "Open as group"
     },
     {
-        id: 2,
+        value: 2,
         label: "Open in incognito"
     }
 ] 

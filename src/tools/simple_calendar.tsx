@@ -68,12 +68,12 @@ const SimpleCalendar = (props: any) => {
 
     for(let i = 0; i <= 8; i++){
         yearOptionsList.push({
-            id: (currentYear-i),
+            value: (currentYear-i),
             label: (currentYear-i).toString()
         })
     }
 
-    const presetYearOption: iFieldOption | null = yearOptionsList.find((option) => option.id === selectedYear) || yearOptionsList[0];
+    const presetYearOption: iFieldOption | null = yearOptionsList.find((option) => option.value === selectedYear) || yearOptionsList[0];
 
     /**********
      *  
@@ -97,10 +97,10 @@ const SimpleCalendar = (props: any) => {
     ]
 
     const monthOptionsList: Array<iFieldOption> = monthsAsString.map((target: string, i: number) => { 
-        return { id: i+1, label: target }
+        return { value: i+1, label: target }
     });
 
-    const presetMonthOption: iFieldOption | null = monthOptionsList.find((option) => option.id === selectedMonth) || monthOptionsList[0];
+    const presetMonthOption: iFieldOption | null = monthOptionsList.find((option) => option.value === selectedMonth) || monthOptionsList[0];
 
     return (
         /*

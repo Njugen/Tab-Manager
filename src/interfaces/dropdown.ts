@@ -1,5 +1,5 @@
 interface iFieldOption {
-    id: number,
+    value: number,
     label: string,
 }
 

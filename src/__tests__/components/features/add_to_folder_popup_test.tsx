@@ -10,15 +10,15 @@ const mockProps: iAddToFolderPopup = {
     type: "slide-in",
     dropdownOptions: [
         {
-            id: randomNumber(),
+            value: randomNumber(),
             label: randomNumber().toString()
         },
         {
-            id: randomNumber(),
+            value: randomNumber(),
             label: randomNumber().toString()
         },
         {
-            id: randomNumber(),
+            value: randomNumber(),
             label: randomNumber().toString()
         }
     ],
@@ -76,7 +76,7 @@ describe("Test <AddToFolderPopup>", () => {
         let targetButton = within(options[1]).getByRole("button");
         fireEvent.click(targetButton);
 
-        expect(mockProps.onExistingFolder).toHaveBeenCalledWith({ selected: mockProps.dropdownOptions[1].id });
+        expect(mockProps.onExistingFolder).toHaveBeenCalledWith({ selected: mockProps.dropdownOptions[1].value });
     })
 
     test("triggers' onCancel' prop when selecting an existing folder", () => {

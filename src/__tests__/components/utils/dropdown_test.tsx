@@ -6,7 +6,7 @@ import Dropdown from "../../../components/utils/dropdown/dropdown";
 import { iDropdown, iFieldOption } from "../../../interfaces/dropdown";
 
 const mockPreset: iFieldOption = {
-    id: randomNumber(),
+    value: randomNumber(),
     label: randomNumber().toString()
 }
 
@@ -17,7 +17,7 @@ const mockTag = randomNumber().toString()
 for(let i = 0; i < 5; i++){
     mockOptions.push(
         {
-            id: randomNumber(),
+            value: randomNumber(),
             label: randomNumber().toString()
         }
     )
@@ -93,7 +93,7 @@ describe("Test <Dropdown />", () => {
             expect(optionsList).not.toBeInTheDocument();
             expect(mockCallback).toHaveBeenCalledWith(
                 {
-                    selected: option.id
+                    selected: option.value
                 }
             );
 

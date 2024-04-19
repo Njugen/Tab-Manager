@@ -1,6 +1,6 @@
 import iDropdownMenu from "../../../interfaces/dropdown_menu";
 import applyStateClasses from "./functions/apply_state_classes";
-import applyStateId from "./functions/apply_state_id";
+import applyStateValue from "./functions/apply_state_id";
 
 /*
     Dropdown menu, containing a set of options.
@@ -16,8 +16,8 @@ const DropdownMenu = (props: iDropdownMenu): JSX.Element => {
             {
                 options.map((option, i) => {
                     return (
-                        <li id={applyStateId(tag, option.id, selected)} key={applyStateId(tag, option.id, selected)}>
-                            <button key={option.id} onClick={() => onSelect(option.id)} className={applyStateClasses(option.id, selected)}>
+                        <li id={applyStateValue(tag, option.value, selected)} key={applyStateValue(tag, option.value, selected)}>
+                            <button key={option.value} onClick={() => onSelect(option.value)} className={applyStateClasses(option.value, selected)}>
                                 {option.label}
                             </button>
                         </li>

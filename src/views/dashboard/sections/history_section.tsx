@@ -276,12 +276,12 @@ const HistorySection = (props: any): JSX.Element => {
         const currentFolders: Array<iFolderItem> = folderState;
 
         const options: Array<iFieldOption> = currentFolders.map((folder) => {
-            return { id: folder.id, label: folder.name }
+            return { value: folder.id, label: folder.name }
         });
 
         const dropdownOptions: Array<iFieldOption> = [
             {
-                id: -1,
+                value: -1,
                 label: "Select a folder"
             },
             ...options

@@ -148,11 +148,11 @@ const FoldersView = (props: any): JSX.Element => {
 
     const renderSortOptionsDropdown = (): JSX.Element => {
         const optionsList: Array<iFieldOption> = [
-            {id: 0, label: "Ascending"},
-            {id: 1, label: "Descending"},
+            {value: 0, label: "Ascending"},
+            {value: 1, label: "Descending"},
         ];
 
-        const presetOption = optionsList.filter((option: iFieldOption) => option.id === folderSettingsState.folderSortOptionId);
+        const presetOption = optionsList.filter((option: iFieldOption) => option.value === folderSettingsState.folderSortOptionId);
 
         return <Dropdown tag="sort-folders" preset={presetOption[0] || optionsList[0]} options={optionsList} onCallback={handleSortFolders} />
     }
