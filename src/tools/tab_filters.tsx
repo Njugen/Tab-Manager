@@ -19,8 +19,6 @@ const filterHistoryTabsByString = (arr: iHistoryState, keyword: string): Array<c
 }
 
 const filterFoldersByString = (arr: Array<iFolderItem>, keyword: string): Array<iFolderItem> => {
-    console.log("FILTER FOLDER", arr);
-    console.log("KEYWORD", keyword);
     const result =  arr.filter((folder: iFolderItem) => folder.name.toLowerCase().includes(keyword.toLowerCase()));
     return result.slice(0,5);
 }

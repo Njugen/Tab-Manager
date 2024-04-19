@@ -126,4 +126,5 @@ const mockStore = configureStore({
     }
 })
 
+export { mockFolders }
 export default mockStore;

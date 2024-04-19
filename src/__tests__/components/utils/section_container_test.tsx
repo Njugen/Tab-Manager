@@ -3,6 +3,8 @@ import '@testing-library/jest-dom'
 import randomNumber from "../../../tools/random_number";
 import SectionContainer from "../../../components/utils/section_container";
 import iSectionContainer from "../../../interfaces/section_container";
+import { Provider } from "react-redux";
+import { store } from "../../../redux-toolkit/store";
 
 const mockExpandFn = jest.fn((val: boolean) => val);
 const mockId = randomNumber().toString();
@@ -24,9 +26,11 @@ describe("Test <SectionContainer>", () => {
         
         test("Full screen is turned off", () => {
             render(
-                <SectionContainer {...props}>
-                    {mockChildren}
-                </SectionContainer>
+                <Provider store={store}>
+                    <SectionContainer {...props}>
+                        {mockChildren}
+                    </SectionContainer>
+                </Provider>
             )
     
             let section = screen.getByTestId("section-container");
@@ -36,9 +40,11 @@ describe("Test <SectionContainer>", () => {
 
         test("'title' prop is displayed in the heading", () => {
             render(
-                <SectionContainer {...props}>
-                    {mockChildren}
-                </SectionContainer>
+                <Provider store={store}>
+                    <SectionContainer {...props}>
+                        {mockChildren}
+                    </SectionContainer>
+                </Provider>
             )
     
             let section = screen.getByTestId("section-container");
@@ -48,9 +54,11 @@ describe("Test <SectionContainer>", () => {
 
         test("Options are provided by 'option' prop", () => {
             render(
-                <SectionContainer {...props}>
-                    {mockChildren}
-                </SectionContainer>
+                <Provider store={store}>
+                    <SectionContainer {...props}>
+                        {mockChildren}
+                    </SectionContainer>
+                </Provider>
             )
     
             let section = screen.getByTestId("section-container");
@@ -60,9 +68,11 @@ describe("Test <SectionContainer>", () => {
         
         test("There are child components in options area", () => {
             render(
-                <SectionContainer {...props}>
-                    {mockChildren}
-                </SectionContainer>
+                <Provider store={store}>
+                    <SectionContainer {...props}>
+                        {mockChildren}
+                    </SectionContainer>
+                </Provider>
             )
     
             let section = screen.getByTestId("section-container");
@@ -73,9 +83,11 @@ describe("Test <SectionContainer>", () => {
 
         test("Clicking the expand button triggers 'onExpand' callback", () => {
             render(
-                <SectionContainer {...props}>
-                    {mockChildren}
-                </SectionContainer>
+                <Provider store={store}>
+                    <SectionContainer {...props}>
+                        {mockChildren}
+                    </SectionContainer>
+                </Provider>
             )
     
             let section = screen.getByTestId("section-container");
@@ -88,9 +100,11 @@ describe("Test <SectionContainer>", () => {
 
         test("Clicking the expand button hides ordinary section area", () => {
             render(
-                <SectionContainer {...props}>
-                    {mockChildren}
-                </SectionContainer>
+                <Provider store={store}>
+                    <SectionContainer {...props}>
+                        {mockChildren}
+                    </SectionContainer>
+                </Provider>
             )
     
             let section = screen.getByTestId("section-container");
@@ -104,9 +118,11 @@ describe("Test <SectionContainer>", () => {
 
         test("Clicking the expand button triggers the component's fullscreen layer", () => {
             render(
-                <SectionContainer {...props}>
-                    {mockChildren}
-                </SectionContainer>
+                <Provider store={store}>
+                    <SectionContainer {...props}>
+                        {mockChildren}
+                    </SectionContainer>
+                </Provider>
             )
     
             let section = screen.getByTestId("section-container");
@@ -121,9 +137,11 @@ describe("Test <SectionContainer>", () => {
 
         test("Full screen layer has heading", () => {
             render(
-                <SectionContainer {...props} initFullscreen={true}>
-                    {mockChildren}
-                </SectionContainer>
+                <Provider store={store}>
+                    <SectionContainer {...props} initFullscreen={true}>
+                        {mockChildren}
+                    </SectionContainer>
+                </Provider>
             )
     
             let fullscreen = screen.getByTestId("section-container-fullscreen");
@@ -133,9 +151,11 @@ describe("Test <SectionContainer>", () => {
 
         test("Fullscreen has options area", () => {
             render(
-                <SectionContainer {...props} initFullscreen={true}>
-                    {mockChildren}
-                </SectionContainer>
+                <Provider store={store}>
+                    <SectionContainer {...props} initFullscreen={true}>
+                        {mockChildren}
+                    </SectionContainer>
+                </Provider>
             )
     
             let fullscreen = screen.getByTestId("section-container-fullscreen");
@@ -145,9 +165,11 @@ describe("Test <SectionContainer>", () => {
 
         test("Fullscreen has child components", () => {
             render(
-                <SectionContainer {...props} initFullscreen={true}>
-                    {mockChildren}
-                </SectionContainer>
+                <Provider store={store}>
+                    <SectionContainer {...props} initFullscreen={true}>
+                        {mockChildren}
+                    </SectionContainer>
+                </Provider>
             )
     
             let fullscreen = screen.getByTestId("section-container-fullscreen");
@@ -157,9 +179,11 @@ describe("Test <SectionContainer>", () => {
         
         test("Section returns to normal once expand button is clicked", () => {
             render(
-                <SectionContainer {...props} initFullscreen={true}>
-                    {mockChildren}
-                </SectionContainer>
+                <Provider store={store}>
+                    <SectionContainer {...props} initFullscreen={true}>
+                        {mockChildren}
+                    </SectionContainer>
+                </Provider>
             )
 
             let fullscreen: any = screen.getByTestId("section-container-fullscreen");
@@ -177,9 +201,11 @@ describe("Test <SectionContainer>", () => {
 
         test("Renders without options area", () => {
             render(
-                <SectionContainer id={mockId} title={mockTitle} onExpand={mockExpandFn}>
-                    {mockChildren}
-                </SectionContainer>
+                <Provider store={store}>
+                    <SectionContainer id={mockId} title={mockTitle} onExpand={mockExpandFn}>
+                        {mockChildren}
+                    </SectionContainer>
+                </Provider>
             )
     
             let section = screen.getByTestId("section-container");
@@ -191,9 +217,11 @@ describe("Test <SectionContainer>", () => {
     
         test("Renders without options area in full screen", () => {
             render(
-                <SectionContainer id={mockId} title={mockTitle} onExpand={mockExpandFn} initFullscreen={true}>
-                    {mockChildren}
-                </SectionContainer>
+                <Provider store={store}>
+                    <SectionContainer id={mockId} title={mockTitle} onExpand={mockExpandFn} initFullscreen={true}>
+                        {mockChildren}
+                    </SectionContainer>
+                </Provider>
             )
     
             let fullscreen = screen.getByTestId("section-container-fullscreen");

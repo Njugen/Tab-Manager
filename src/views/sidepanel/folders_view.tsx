@@ -154,7 +154,6 @@ const FoldersView = (props: any): JSX.Element => {
         ];
 
         const presetOption = optionsList.filter((option: iFieldOption) => option.value === foldersSectionState.folderSortOptionValue);
-        console.log("PRESET", presetOption);
         return <Dropdown tag="sort-folders" preset={presetOption[0] || optionsList[0]} options={optionsList} onCallback={handleSortFolders} />
     }
 
