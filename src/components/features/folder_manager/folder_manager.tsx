@@ -124,7 +124,7 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
             callback();
         } else {
             setInValidFields({...updatedFieldState});
-            if(managerWrapperRef.current) managerWrapperRef.current.scrollTo({ top: 0, behavior: "smooth" })
+            if(managerWrapperRef.current && managerWrapperRef.current.scrollTo === "function") managerWrapperRef.current.scrollTo({ top: 0, behavior: "smooth" })
         }
     }
 

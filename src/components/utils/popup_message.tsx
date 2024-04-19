@@ -12,15 +12,10 @@ const PopupMessage = (props: iPopupMessage): JSX.Element => {
     const { title, text, primaryButton, secondaryButton } = props;
     const { popup_container_transparent_bg } = styles;
 
-    
-    // Hide body's scrollbar
-    document.body.style.overflowY = "hidden";
 
     // Handle a button click. Perform actions based on the button's purposes
     // ... this should be rewritten/refactored at a later time...
     const handleButtonClick = (option: "primary" | "secondary"): void => {
-        // Restore body's scrollbar
-        document.body.style.overflowY = "scroll";
 
         if(option === "primary"){
             primaryButton.callback();

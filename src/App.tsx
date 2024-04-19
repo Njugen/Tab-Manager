@@ -19,7 +19,6 @@ function App() {
   const miscState = useSelector((state: RootState) => state.misc)
 
   useEffect(() => {
-    console.log("ABC");
     if(appRef.current) appRef.current.scrollTo({ top: 0, left: 0, behavior: "smooth" })
   }, [miscState.scrollTrigger])
 
