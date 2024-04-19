@@ -3,6 +3,7 @@ import "./styles/global_utils.module.scss";
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import OptionsPage from './baseUI/options_page/options_page';
 import SidePanel from './baseUI/sidepanel/sidepanel';
+import { useEffect } from 'react';
 
 /*
   This file acts as the very foundation of this plugin's UI. This file
@@ -12,8 +13,10 @@ import SidePanel from './baseUI/sidepanel/sidepanel';
   This file also controls the navigation routes using React-Dom.
 */
 function App() {
-  
-  
+
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+  }, [])
   
   const router = createBrowserRouter([
     {
@@ -27,7 +30,7 @@ function App() {
   ]);
 
   return (
-    <div className="App">
+    <div className="App overflow-y-auto h-screen">
         <div id="root" className={`w-full pb`}>
           <RouterProvider router={router} />
       </div>

@@ -6,7 +6,7 @@ import { iFieldOption } from "../../../interfaces/dropdown";
 import iDropdownMenu from "../../../interfaces/dropdown_menu";
 
 const mockPreset: iFieldOption = {
-    id: randomNumber(),
+    value: randomNumber(),
     label: randomNumber().toString()
 }
 
@@ -17,7 +17,7 @@ const mockTag = randomNumber().toString()
 for(let i = 0; i < 5; i++){
     mockOptions.push(
         {
-            id: randomNumber(),
+            value: randomNumber(),
             label: randomNumber().toString()
         }
     )
@@ -40,12 +40,12 @@ describe("Test <DropdownMenu>", () => {
             const item = within(menu).getByText(option.label, { selector: "button" });
             fireEvent.click(item);
 
-            expect(mockCallback).toHaveBeenCalledWith(option.id);
+            expect(mockCallback).toHaveBeenCalledWith(option.value);
         })
     })
 
     test("Renders and works ok with preset 'selected' prop", () => {
-        render(<DropdownMenu { ...props } selected={mockOptions[0].id} />);
+        render(<DropdownMenu { ...props } selected={mockOptions[0].value} />);
 
         const menu = screen.getByRole("list");
         
@@ -53,7 +53,7 @@ describe("Test <DropdownMenu>", () => {
             const item = within(menu).getByText(option.label, { selector: "button" });
             fireEvent.click(item);
 
-            expect(mockCallback).toHaveBeenCalledWith(option.id);
+            expect(mockCallback).toHaveBeenCalledWith(option.value);
         })
     })
 });

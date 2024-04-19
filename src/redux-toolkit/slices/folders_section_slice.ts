@@ -5,7 +5,7 @@ import purify from "../../tools/purify_object"
 
 const initialState: iFolderState = {
     markedFoldersId: [],
-    folderSortOptionId: 0,
+    folderSortOptionValue: 0,
     viewMode: "grid"
 }
 
@@ -50,7 +50,7 @@ const foldersSectionSlice = createSlice({
 
             return {
                 ...state,
-                folderSortOptionId: payload
+                folderSortOptionValue: payload
             }
         },
         changeViewMode: (state, action: PayloadAction<"grid" | "list">): iFolderState => {

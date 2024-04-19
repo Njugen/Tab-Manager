@@ -85,7 +85,7 @@ function SearchResultsContainer(props:any): JSX.Element {
         });
     }, [folderLaunchType]);
 
-    const folderState: Array<iFolderItem> = useSelector((state: any) => state.folderReducer);
+    const folderState: Array<iFolderItem> = useSelector((state: any) => state.folder);
     const sessionSectionState: iCurrentSessionState = useSelector((state: any) => state.sessionSection);
     const historySectionState = useSelector((state: any) => state.historySection);
 

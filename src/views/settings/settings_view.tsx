@@ -23,22 +23,22 @@ import iPluginSettings from "../../interfaces/states/plugin_settings_state";
 
 // Options for performance warnings
 const performanceNotificationOptions: Array<iFieldOption> = [
-    { id: 5, label: "5" }, 
-    { id: 10, label: "10" }, 
-    { id: 15, label: "15" }, 
-    { id: 20, label: "20" }, 
-    { id: 30, label: "30" },
-    { id: 40, label: "40" }, 
-    { id: -1, label: "Don't warn me" } 
+    { value: 5, label: "5" }, 
+    { value: 10, label: "10" }, 
+    { value: 15, label: "15" }, 
+    { value: 20, label: "20" }, 
+    { value: 30, label: "30" },
+    { value: 40, label: "40" }, 
+    { value: -1, label: "Don't warn me" } 
 ];
 
 // Options for duplication warnings
 const duplicationWarningOptions: Array<iFieldOption> = [
-    { id: 2, label: "2 folders" }, 
-    { id: 3, label: "3 folders" }, 
-    { id: 4, label: "4 folders" }, 
-    { id: 5, label: "5 folders" }, 
-    { id: -1, label: "Never" }
+    { value: 2, label: "2 folders" }, 
+    { value: 3, label: "3 folders" }, 
+    { value: 4, label: "4 folders" }, 
+    { value: 5, label: "5 folders" }, 
+    { value: -1, label: "Never" }
 ];
 
 const SettingsView = (props: any): JSX.Element => {
@@ -54,12 +54,12 @@ const SettingsView = (props: any): JSX.Element => {
     }, []);
 
     const getPresetPerformanceNotification = (): any => {
-        const result = performanceNotificationOptions.filter((target) => target.id === pluginSettingsState.performanceWarningValue);
+        const result = performanceNotificationOptions.filter((target) => target.value === pluginSettingsState.performanceWarningValue);
         return result[0] || performanceNotificationOptions[0];
     }
 
     const getPresetDuplicationWarning = (): any => {
-        const result = duplicationWarningOptions.filter((target) => target.id === pluginSettingsState.duplicationWarningValue);
+        const result = duplicationWarningOptions.filter((target) => target.value === pluginSettingsState.duplicationWarningValue);
         return result[0] || duplicationWarningOptions[0];
     }
 

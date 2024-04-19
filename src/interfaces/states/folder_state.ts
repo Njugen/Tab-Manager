@@ -1,6 +1,6 @@
 interface iFolderState {
     markedFoldersId: Array<number>
-    folderSortOptionId: number,
+    folderSortOptionValue: number,
     viewMode: "list" | "grid",
 }
 

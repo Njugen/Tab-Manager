@@ -49,9 +49,6 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
     const folderManagementState: any = useSelector((state: RootState) => state.folderManagement);
 
     useEffect(() => {
-        // Hide the sidebar of the body. A sidebar of this component is used instead.
-        document.body.style.overflowY = "hidden";
-
         // Information about the folder. If undefined, there are no preset information
         let folderSpecs: iFolderItem | undefined = folder;
         
@@ -144,7 +141,6 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
                 setModified(false)
                 setOriginWindows("");
                 setIsCreate(false);
-                document.body.style.overflowY = "scroll";
 
                 setTimeout(() => {
                     dispatch(setIsEditingTab(false));
