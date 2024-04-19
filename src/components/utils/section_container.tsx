@@ -4,6 +4,9 @@ import GenericButton from './generic_button';
 import CloseIcon from '../icons/close_icon';
 
 import FullscreenIcon from './../icons/fullscreen_icon';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../redux-toolkit/store';
+import { smoothScrollUp } from '../../redux-toolkit/slices/misc_slice';
 
 /*
     A white wrapper serving as either main section (contents page wrapper), or part section
@@ -16,7 +19,10 @@ const SectionContainer = (props: iSectionContainer): JSX.Element => {
     const [fullscreen, setFullscreen] = useState<boolean>(props.initFullscreen === true ? true : false);
     const { id, title, options, onExpand, children } = props;
     const sectionRef = useRef<HTMLDivElement>(null);
-    
+
+    const miscState = useSelector((state: RootState) => state.misc)
+    const dispatch = useDispatch();
+
     return (
         <>
             {
@@ -31,6 +37,7 @@ const SectionContainer = (props: iSectionContainer): JSX.Element => {
                             </header>
                             <GenericButton onClick={() => {
                                 setFullscreen(false);
+                                
                                 if(onExpand) onExpand(false);
                             }}>
                                 <CloseIcon size={38} fill="rgba(0,0,0,0.2)" />
@@ -54,7 +61,7 @@ const SectionContainer = (props: iSectionContainer): JSX.Element => {
                 <section data-testid="section-container">
                     <div className="text-right">
                         <GenericButton onClick={() => {
-                            window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+                            dispatch(smoothScrollUp(null));
                             setFullscreen(true);
                             if(onExpand) onExpand(true);
                         }}>

@@ -9,7 +9,8 @@ import { iWindowItem } from "../../interfaces/window_item"
 
 const initialState: any = {
     tabBeingEdited: 0,
-    currentlyEditingTab: false
+    currentlyEditingTab: false,
+    scrollTrigger: 0
 }
 
 const miscSlice = createSlice({
@@ -32,11 +33,18 @@ const miscSlice = createSlice({
                 currentlyEditingTab: payload
             }
         },
+        smoothScrollUp: (state, action: PayloadAction<null>): any => {
+            return {
+                ...state,
+                scrollTrigger: state.scrollTrigger + 1
+            }
+        },
     },
 })
 
 export const { 
     setCurrentTabEdits,
-    setIsEditingTab
+    setIsEditingTab,
+    smoothScrollUp
 } = miscSlice.actions;
 export default miscSlice.reducer;
