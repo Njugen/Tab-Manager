@@ -246,12 +246,12 @@ const FoldersSection = (props: any): JSX.Element => {
     }
 
     const folderSortCondition = (a: iFolderItem, b: iFolderItem): boolean => {
-        const { folderSortOptionId } = foldersSectionState
+        const { folderSortOptionValue } = foldersSectionState
         
         const aNameLowerCase = a.name.toLowerCase();
         const bNameToLowerCase = b.name.toLowerCase();
 
-        return folderSortOptionId === 0 ? (aNameLowerCase > bNameToLowerCase) : (bNameToLowerCase > aNameLowerCase);
+        return folderSortOptionValue === 0 ? (aNameLowerCase > bNameToLowerCase) : (bNameToLowerCase > aNameLowerCase);
     }
 
     const handleFolderDelete = (target: iFolderItem): void => {
@@ -322,7 +322,7 @@ const FoldersSection = (props: any): JSX.Element => {
             {value: 1, label: "Descending"},
         ];
 
-        const presetOption = optionsList.filter((option: iFieldOption) => option.value === foldersSectionState.folderSortOptionId);
+        const presetOption = optionsList.filter((option: iFieldOption) => option.value === foldersSectionState.folderSortOptionValue);
 
         return <Dropdown tag="sort-folders" preset={presetOption[0] || optionsList[0]} options={optionsList} onCallback={handleSortFolders} />
     }

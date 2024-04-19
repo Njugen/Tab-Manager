@@ -24,8 +24,9 @@ const FoldersView = (props: any): JSX.Element => {
     const [createFolder, setCreateFolder] = useState<boolean>(false);
 
     const dispatch = useDispatch();
-    const folderCollectionState: Array<iFolderItem> = useSelector((state: any) => state.folderCollectionReducer);
-    const folderSettingsState: iFolderState = useSelector((state: any) => state.folderSettingsReducer);
+
+    const folderState: Array<iFolderItem> = useSelector((state: any) => state.folder);
+    const foldersSectionState: iFolderState = useSelector((state: any) => state.foldersSection);
 
     const storageListener = (changes: any, areaName: string): void => {
         if(areaName === "local"){
@@ -115,7 +116,7 @@ const FoldersView = (props: any): JSX.Element => {
         if(createFolder === true){
             render = <FolderManager type="popup" title="Create folder" onClose={handleCloseFolderManager} />;
         } else {
-            const targetFolder: Array<iFolderItem> = folderCollectionState.filter((item: iFolderItem) => editFolderId === item.id);
+            const targetFolder: Array<iFolderItem> = folderState.filter((item: iFolderItem) => editFolderId === item.id);
             const input: iFolderItem = {...targetFolder[0]};
 
             if(targetFolder.length > 0){
@@ -138,12 +139,12 @@ const FoldersView = (props: any): JSX.Element => {
     }
 
     const folderSortCondition = (a: iFolderItem, b: iFolderItem): boolean => {
-        const { folderSortOptionId } = folderSettingsState
+        const { folderSortOptionValue } = foldersSectionState
         
         const aNameLowerCase = a.name.toLowerCase();
         const bNameToLowerCase = b.name.toLowerCase();
-
-        return folderSortOptionId === 0 ? (aNameLowerCase > bNameToLowerCase) : (bNameToLowerCase > aNameLowerCase);
+        
+        return folderSortOptionValue === 0 ? (aNameLowerCase > bNameToLowerCase) : (bNameToLowerCase > aNameLowerCase);
     }
 
     const renderSortOptionsDropdown = (): JSX.Element => {
@@ -152,8 +153,8 @@ const FoldersView = (props: any): JSX.Element => {
             {value: 1, label: "Descending"},
         ];
 
-        const presetOption = optionsList.filter((option: iFieldOption) => option.value === folderSettingsState.folderSortOptionId);
-
+        const presetOption = optionsList.filter((option: iFieldOption) => option.value === foldersSectionState.folderSortOptionValue);
+        console.log("PRESET", presetOption);
         return <Dropdown tag="sort-folders" preset={presetOption[0] || optionsList[0]} options={optionsList} onCallback={handleSortFolders} />
     }
 
@@ -169,7 +170,7 @@ const FoldersView = (props: any): JSX.Element => {
             });
         }
 
-        const sortedFolders = folderCollectionState.sort((a: any, b: any) => folderSortCondition(a, b) ? 1 : -1);
+        const sortedFolders = [...folderState].sort((a: any, b: any) => folderSortCondition(a, b) ? 1 : -1);
 
         const result = sortedFolders.map((folder: iFolderItem, i: number) => {
             return (
@@ -178,7 +179,7 @@ const FoldersView = (props: any): JSX.Element => {
                     marked={false} 
                     //onMark={handleMarkFolder} 
                     onEdit={() => setEditFolderId(folder.id)} 
-                    index={folderCollectionState.length-i}
+                    index={folderState.length-i}
                     key={`folder-id-${folder.id}`} 
                     type={folder.type} 
                     id={folder.id} 
@@ -191,7 +192,7 @@ const FoldersView = (props: any): JSX.Element => {
             );
         })
         return result.length > 0 ? <ul className="list-none">{result}</ul> : <p className="text-center">There are no folders at the moment.</p>
-    }, [folderCollectionState, folderSettingsState.folderSortOptionId]) 
+    }, [folderState, foldersSectionState.folderSortOptionValue]) 
 
     const handleCloseFolderManager = (): void => {
         //dispatch(clearMarkedFoldersAction());
