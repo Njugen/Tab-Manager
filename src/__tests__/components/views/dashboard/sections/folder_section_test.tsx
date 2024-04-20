@@ -8,6 +8,7 @@ import { get } from "http";
 import { changeDuplicationWarningValue } from "../../../../../redux-toolkit/slices/plugin_settings_slice";
 import randomNumber from "../../../../../tools/random_number";
 import { act } from "react-dom/test-utils";
+import { iFolderItem } from "../../../../../interfaces/folder_item";
 
 
 beforeEach(() => {
@@ -395,6 +396,68 @@ describe("Test <FoldersSection>", () => {
                 const mergeButton = screen.getByTestId("text-icon-button-merge");
             
                 expect(mergeButton).toBeDisabled()
+            })
+
+            test("Marking folders transfers their windows to folder manager for creation", () => {
+                // @ts-expect-error
+                chrome.storage.local.get = jest.fn((data, callback: (e: any) => {}): void => {
+                    callback({
+                        ...mockBrowserStorage,
+                    })
+                });
+
+                render(
+                    <Provider store={mockStore}>
+                        <FoldersSection />
+                    </Provider>
+                );
+
+                const folders = screen.getAllByTestId("folder-item");
+
+                // Mark folders
+                folders.forEach((folder) => {
+                    const checkbox = within(folder).getByTestId("checkbox");
+                    fireEvent.click(checkbox);
+                });
+
+                // Click and bubble merge icon
+                const mergeIcon = screen.getByTestId("merge-icon");
+                fireEvent.click(mergeIcon, { bubbles: true });
+
+                // Dialog (folder manager)
+                const folderManager = screen.getByRole("dialog");
+
+                // Fill name
+                const mockName = randomNumber().toString();
+                const nameField = within(folderManager).getByTestId("name-field");
+                fireEvent.focus(nameField);
+                fireEvent.change(nameField, { target: { value: mockName } });
+                fireEvent.blur(nameField);
+
+                const texts = [];
+                const tabItems = within(folderManager).getAllByTestId("tab-item");
+                
+                const createButton = within(folderManager).getByText("Save", { selector: "button" });
+                fireEvent.click(createButton);
+
+                act(() => {
+                    jest.runAllTimers();
+                });
+
+                // The mock folder should be available in folder list
+                const currentFolders = screen.getAllByTestId("folder-item");
+                let isInFolder = false;
+
+                currentFolders.forEach((folder) => {
+                    try {
+                        within(folder).getByText(mockName, { selector: "h2" });
+                        isInFolder = true;
+                    } catch(e){
+
+                    }
+                })
+
+                expect(isInFolder).toBeTruthy()
             })
         })
     })
