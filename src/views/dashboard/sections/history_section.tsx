@@ -2,7 +2,7 @@ import styles from "../../../styles/global_utils.module.scss";
 import * as predef from "../../../styles/predef";
 import PrimaryButton from '../../../components/utils/primary_button/primary_button';
 import FolderManager from '../../../components/features/folder_manager/folder_manager';
-import { useEffect, useState, useRef, useMemo } from "react";
+import { useEffect, useState, useRef, useMemo, useCallback } from "react";
 import { iFolderItem } from '../../../interfaces/folder_item';
 import { useDispatch, useSelector } from 'react-redux';
 import TextIconButton from '../../../components/utils/text_icon_button';
@@ -31,7 +31,7 @@ const HistorySection = (props: any): JSX.Element => {
     const [snapshot, setSnapshot] = useState<string>("");
     const [expanded, setExpanded] = useState<boolean>(false);
     const [searchString, setSearchString] = useState<string>("");
-    const [loadTabs, setLoadTabs] = useState<number>(40);
+    const [loadTabs, setLoadTabs] = useState<number>(10);
     
     const defaultLoadTabs = 10;
 
@@ -41,23 +41,63 @@ const HistorySection = (props: any): JSX.Element => {
 
     const dispatch = useDispatch();
 
-    const loadHistory = (query: chrome.history.HistoryQuery = { text: "", maxResults: 20 }): void => {
+    const loadHistory = (query: chrome.history.HistoryQuery = { text: "", maxResults: 10 }): void => {
+        //console.log(loadTabs);
+        console.log("ABC", query);
+
         chrome.history.search(query, (items: Array<chrome.history.HistoryItem>) => {
+            
             if(items.length === 0) return;
+           
             const sorted = items.sort((a,b)=> (a.lastVisitTime && b.lastVisitTime && (b.lastVisitTime - a.lastVisitTime)) || 0);
             const newSnapshot = JSON.stringify(sorted[sorted.length-1].lastVisitTime);
             
             if(items.length > 0 && snapshot !== newSnapshot) { 
+
+                //setLoadTabs(loadTabs+20)
                 dispatch(setUpTabs(sorted));
                 setSnapshot(newSnapshot);
+
+           //    setLoadTabs((prev) => prev+20);
             }
         });
     }
 
+    useEffect(() => {
+        console.log("BBBBBBBBB", loadTabs);
+        let query: any = {
+            text: searchString,
+            endTime: undefined,
+            startTime: undefined,
+            maxResults: loadTabs
+        }
+        loadHistory(query);
+
+    }, [loadTabs]);
+
+
+    const scrollListener = useCallback((): void => {
+      //  console.log("ABC", loadTabs);
+       /// let updatedTAbs 
+        if(sectionRef.current){
+           // const { offsetHeight } = sectionRef.current;
+            const { scrollY, outerHeight } = window;
+            const windowYScrollSpace = outerHeight + scrollY;
+          //  console.log(BBB")
+            if(sectionRef.current && (windowYScrollSpace >= sectionRef.current.clientHeight)){
+                //const updatedTabs = loadTabs + 40;
+                setLoadTabs((prev) => prev+20);
+            }
+        }
+    }, [])
+    
     const handleLoadHistory = (fullscreen: boolean, count: number): void => {
         let toFetch = defaultLoadTabs;
 
-        if(fullscreen === true) toFetch = count
+        if(fullscreen === true) {
+
+           // setLoadTabs(next);
+        }
 
         let query: any = {
             text: searchString,
@@ -66,23 +106,17 @@ const HistorySection = (props: any): JSX.Element => {
             maxResults: toFetch
         }
 
-        loadHistory(query)
-    }
+        //loadHistory(query)
 
-    const scrollListener = (): void => {
-        if(sectionRef.current){
-           // const { offsetHeight } = sectionRef.current;
-            const { scrollY, outerHeight } = window;
-            const windowYScrollSpace = outerHeight + scrollY;
-
-            if(sectionRef.current && (windowYScrollSpace >= sectionRef.current.clientHeight-1000)){
-                const updatedTabs = loadTabs + 40;
-                setLoadTabs(updatedTabs);
-                handleLoadHistory(true, updatedTabs)
-            }
+        if(fullscreen === true){
+            window.addEventListener("scroll", scrollListener);
+        } else {
+            setLoadTabs(10);
+            window.removeEventListener("scroll", scrollListener);
         }
     }
     
+
     useEffect(() => {
         
         getFromStorage("local", "history_sort", (data) => {  
@@ -95,23 +129,6 @@ const HistorySection = (props: any): JSX.Element => {
 
       //  handleLoadHistory(false, defaultLoadTabs)
     }, []);
-
-    
-    useEffect(() => {
-  
-        if(expanded === true){
-            handleLoadHistory(true, loadTabs)
-            setTimeout(() => {
-                window.addEventListener("scroll", scrollListener);
-            }, 1000)
-            
-        } else {
-            setLoadTabs(defaultLoadTabs)
-            handleLoadHistory(false, defaultLoadTabs)
-        }
-
-        return () => window.removeEventListener("scroll", scrollListener);
-    }, [expanded, loadTabs])
 
 
     // Change tab listing from grid to list, and vice versa
@@ -311,7 +328,7 @@ const HistorySection = (props: any): JSX.Element => {
 
     const handleSearch = (e: any): void => {
         setSearchString(e.target.value);
-        handleLoadHistory(expanded, loadTabs)
+     //   handleLoadHistory(expanded, loadTabs)
     } 
 
     const renderFolderManager = (): JSX.Element => {

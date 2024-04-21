@@ -26,7 +26,7 @@ const HistoryTabGroupsSection = forwardRef(function HistoryTabGroupsSection(prop
             text: "",
             endTime: undefined,
             startTime: undefined,
-            maxResults: viewMode === "grid" ? 15 : undefined
+            maxResults: viewMode === "grid" ? 10 : undefined
         }
 
         loadHistory(query);
@@ -53,7 +53,7 @@ const HistoryTabGroupsSection = forwardRef(function HistoryTabGroupsSection(prop
         return comparison;
     }
 
-    const loadHistory = (query: chrome.history.HistoryQuery = { text: "", maxResults: 20 }): void => {
+    const loadHistory = (query: chrome.history.HistoryQuery = { text: "", maxResults: 10 }): void => {
         chrome.history.search(query, (items: Array<chrome.history.HistoryItem>) => {
             if(items.length === 0) return;
 
@@ -79,7 +79,7 @@ const HistoryTabGroupsSection = forwardRef(function HistoryTabGroupsSection(prop
     const searchHistory = () => {
         const query = {
             text: "",
-            maxResults: 25
+            maxResults: 10
         }
         chrome.history.search(query, (items: Array<chrome.history.HistoryItem>) => {
             dispatch(setUpTabs(items));
