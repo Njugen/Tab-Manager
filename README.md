@@ -1,4 +1,4 @@
-# Tab Management Browser Plugin (Release Candidate 3)
+# Tab Management Browser Plugin (In development)
 
 <p align="center" style="padding-top: 10px; padding-bottom: 10px">
     <img src="./img/brand/brand.png" width="15%" />
@@ -39,38 +39,14 @@ HTML5, CSS3/SASS, Javascript/Typescript, React, Redux, JEST, Tailwind, Webextens
 
 ## Development
 
-### File structure
-
-The plugin code itself is placed in the ./src folder, which has the following tree:
-```
-    ./src
-        - __tests__
-        - baseUI (the app's user interface for options page and sidepanel)
-        - components
-            - effects (contains components that brings simpler effects to other components (e.g. rotation))
-            - icons (various reusable svg icons used in any other components for styling)
-            - utils (various components used all over the plugin. Each component file contains info on whether or not they are reusable)
-        - interfaces (typescript datatypes, applied to most features all over the plugin) 
-        - redux (global states for certain features, to avoid prop drilling at certain scenarios)
-        - views (plugin's pages, used by the baseUI to render page contents wrapped in the base UI)
-            - dashboard
-            - settings
-            - sidepanel
-        ...
-        App.tsx
-        index.tsx
-```
-
-#### File and folder name formats
-
 All folders and files follows the following format: __[my-file-name.tsx]__
 
-#### Component guidelines
+### Component guidelines
 
 - In this project, all functions returning the type __JSX.Element__ is considered a component. These should always be placed in their own files.
 - A component should NOT declare other components. Preferably, no functions should be declared inside a component unless it is motivated to do so (e.g. when the function sets states at some point).
 - Each variable and function should be declared with appropriate datatype. Create a new interface or extend a current one, when creating a new feature
-- Refactored components should be placed in their own folder and follow a specific naming convention:
+- Refactored/sub components should be placed in their own folders and follow a specific naming convention:
 
 ```
     ./src
@@ -97,14 +73,14 @@ commands depend on this.
 __Build__
 
 ```
-npm run build
+npm run build-dev
 ```
 
 The build will be available in the ./dist folder. This folder can be loaded
 as a unpacked webextension into the browser. This folder is also used when packaging the extension
 for distribution.
 
-NOTE: There is no bundling as of now. That will be added later.
+NOTE: There is no bundling as of now, nor production build at the moment. Those will be added at a later time
 
 __Test__
 
@@ -115,7 +91,6 @@ npm run test
 Run unit and integration tests (JEST). The tests are available in /src/__tests__. The coverage is presented in ./coverage/Icov-report/index.html
 
 Run this command after changing existing components, to check if anything related to user interaction gets broken. Add new tests when adding new components or features. 
-The tests are written to test user interaction with the components.
 
 ### Install unpacked dev version in Chrome or Edge
 
