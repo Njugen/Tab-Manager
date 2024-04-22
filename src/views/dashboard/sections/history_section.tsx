@@ -2,7 +2,7 @@ import styles from "../../../styles/global_utils.module.scss";
 import * as predef from "../../../styles/predef";
 import PrimaryButton from '../../../components/utils/primary_button/primary_button';
 import FolderManager from '../../../components/features/folder_manager/folder_manager';
-import { useEffect, useState, useRef, useMemo } from "react";
+import { useEffect, useState, useRef, useMemo, useCallback } from "react";
 import { iFolderItem } from '../../../interfaces/folder_item';
 import { useDispatch, useSelector } from 'react-redux';
 import TextIconButton from '../../../components/utils/text_icon_button';
@@ -19,31 +19,36 @@ import GridIcon from "../../../components/icons/grid_icon";
 import ListIcon from "../../../components/icons/list_icon";
 import DeselectedCheckboxIcon from "../../../components/icons/deselected_checkbox_icon";
 import HistoryTabGroupsSection from "../../common/history_tab_group_section/history_tab_group_section";
-import iHistoryState from "../../../interfaces/states/history_state";
 import { changeSortOption, changeViewMode, markMultipleTabs, setUpTabs, unMarkAllTabs } from "../../../redux-toolkit/slices/history_section_slice";
 import { unMarkAllFolders } from "../../../redux-toolkit/slices/folders_section_slice";
-// MOHAHAHA. THIS FILE IS A MESS AS OF NOW
+
 
 const HistorySection = (props: any): JSX.Element => {
     const [addToWorkSpaceMessage, setAddToFolderMessage] = useState<boolean>(false);
     const [mergeProcessFolder, setMergeProcessFolder] = useState<iFolderItem | null>(null);
     const [createFolder, setCreateFolder] = useState<boolean>(false);
     const [snapshot, setSnapshot] = useState<string>("");
-    const [expanded, setExpanded] = useState<boolean>(false);
     const [searchString, setSearchString] = useState<string>("");
-    const [loadTabs, setLoadTabs] = useState<number>(40);
+    const [tabsCount, setTabsCount] = useState<number>(10);
     
-    const defaultLoadTabs = 10;
-
     const historySectionState = useSelector((state: any) => state.historySection);
     const folderState: Array<iFolderItem> = useSelector((state: any) => state.folder);
     const sectionRef = useRef<HTMLDivElement>(null);
 
     const dispatch = useDispatch();
 
-    const loadHistory = (query: chrome.history.HistoryQuery = { text: "", maxResults: 20 }): void => {
+    // Load and dispatch tabs from history API whenever laodTabs changes
+    useEffect(() => {
+        const query: any = {
+            text: searchString,
+            endTime: undefined,
+            startTime: undefined,
+            maxResults: tabsCount
+        }
+        
         chrome.history.search(query, (items: Array<chrome.history.HistoryItem>) => {
             if(items.length === 0) return;
+           
             const sorted = items.sort((a,b)=> (a.lastVisitTime && b.lastVisitTime && (b.lastVisitTime - a.lastVisitTime)) || 0);
             const newSnapshot = JSON.stringify(sorted[sorted.length-1].lastVisitTime);
             
@@ -52,39 +57,34 @@ const HistorySection = (props: any): JSX.Element => {
                 setSnapshot(newSnapshot);
             }
         });
-    }
 
-    const handleLoadHistory = (fullscreen: boolean, count: number): void => {
-        let toFetch = defaultLoadTabs;
+    }, [tabsCount]);
 
-        if(fullscreen === true) toFetch = count
 
-        let query: any = {
-            text: searchString,
-            endTime: undefined,
-            startTime: undefined,
-            maxResults: toFetch
-        }
-
-        loadHistory(query)
-    }
-
-    const scrollListener = (): void => {
+    // Increase the number of tabs once the user scrolls far down enough. UseCallback
+    // ensures the listener stays the same after re-render -> listener can be removed
+    const scrollListener = useCallback((): void => {
         if(sectionRef.current){
-           // const { offsetHeight } = sectionRef.current;
             const { scrollY, outerHeight } = window;
             const windowYScrollSpace = outerHeight + scrollY;
-
-            if(sectionRef.current && (windowYScrollSpace >= sectionRef.current.clientHeight-1000)){
-                const updatedTabs = loadTabs + 40;
-                setLoadTabs(updatedTabs);
-                handleLoadHistory(true, updatedTabs)
+            if(sectionRef.current && (windowYScrollSpace >= sectionRef.current.clientHeight)){
+                setTabsCount((prev) => prev+20);
             }
         }
-    }
+    }, [])
     
+    // Sets event listener once fullscreen expansion takes place, and removes it when exiting fullscreen
+    const handleLoadHistory = (fullscreen: boolean, count: number): void => {
+        if(fullscreen === true){
+            window.addEventListener("scroll", scrollListener);
+        } else {
+            setTabsCount(10);
+            window.removeEventListener("scroll", scrollListener);
+        }
+    }
+
+    // Set up sorting and view mode in redux based on storage info
     useEffect(() => {
-        
         getFromStorage("local", "history_sort", (data) => {  
             dispatch(changeSortOption(data.history_sort));
         })
@@ -92,26 +92,7 @@ const HistorySection = (props: any): JSX.Element => {
         getFromStorage("local", "history_viewmode", (data) => {  
             dispatch(changeViewMode(data.history_viewmode));
         })
-
-      //  handleLoadHistory(false, defaultLoadTabs)
     }, []);
-
-    
-    useEffect(() => {
-  
-        if(expanded === true){
-            handleLoadHistory(true, loadTabs)
-            setTimeout(() => {
-                window.addEventListener("scroll", scrollListener);
-            }, 1000)
-            
-        } else {
-            setLoadTabs(defaultLoadTabs)
-            handleLoadHistory(false, defaultLoadTabs)
-        }
-
-        return () => window.removeEventListener("scroll", scrollListener);
-    }, [expanded, loadTabs])
 
 
     // Change tab listing from grid to list, and vice versa
@@ -132,6 +113,7 @@ const HistorySection = (props: any): JSX.Element => {
         dispatch(unMarkAllTabs());
     }
 
+    // Delete tabs from browser history and update redux store accordingly
     const handleDeleteFromHistory = (): void => {
         let updatedMarks = historySectionState.tabs;
 
@@ -139,6 +121,7 @@ const HistorySection = (props: any): JSX.Element => {
             chrome.history.deleteUrl({ url: tab.url! });
             updatedMarks = updatedMarks.filter((target: chrome.history.HistoryItem) => target.url !== tab.url);
         });
+
         dispatch(setUpTabs(updatedMarks));
         dispatch(unMarkAllTabs());
     }
@@ -216,9 +199,7 @@ const HistorySection = (props: any): JSX.Element => {
                                 <ListIcon size={20} fill={"#6D00C2"} />
                             }
                         </TextIconButton>
-                        {/*<div className="relative w-[175px] mr-4 flex items-center">
-                            {renderSortOptionsDropdown()}
-                        </div>*/}
+
                         <input 
                             data-testid="history-search-field" 
                             id="history-search-field" 
@@ -301,7 +282,7 @@ const HistorySection = (props: any): JSX.Element => {
     }
 
 
-    const handlePopupClose = (): void => {
+    const handleCloseFolderManager = (): void => {
         setCreateFolder(false);
         setMergeProcessFolder(null);
 
@@ -311,7 +292,6 @@ const HistorySection = (props: any): JSX.Element => {
 
     const handleSearch = (e: any): void => {
         setSearchString(e.target.value);
-        handleLoadHistory(expanded, loadTabs)
     } 
 
     const renderFolderManager = (): JSX.Element => {
@@ -342,9 +322,9 @@ const HistorySection = (props: any): JSX.Element => {
                 marked: false,
                 windows: [presetWindow],
             }
-            render = <FolderManager type="slide-in" title="Create folder" folder={folderSpecs} onClose={handlePopupClose} />;
+            render = <FolderManager type="slide-in" title="Create folder" folder={folderSpecs} onClose={handleCloseFolderManager} />;
         } else if(mergeProcessFolder !== null) {
-            render = <FolderManager type="slide-in" title={`Merge tabs to ${mergeProcessFolder.name}`} folder={mergeProcessFolder} onClose={handlePopupClose} />;
+            render = <FolderManager type="slide-in" title={`Merge tabs to ${mergeProcessFolder.name}`} folder={mergeProcessFolder} onClose={handleCloseFolderManager} />;
         }
 
         return render;
@@ -354,7 +334,7 @@ const HistorySection = (props: any): JSX.Element => {
         <>
             {addToWorkSpaceMessage && renderAddTabsMessage()}
             {renderFolderManager()}
-            <SectionContainer id="history-view" title="History" options={renderOptionsMenu} onExpand={(value: boolean) => handleLoadHistory(value, loadTabs)}>
+            <SectionContainer id="history-view" title="History" options={renderOptionsMenu} onExpand={(value: boolean) => handleLoadHistory(value, tabsCount)}>
                 <HistoryTabGroupsSection ref={sectionRef} viewMode={historySectionState.viewMode} tabs={historySectionState.tabs} />
             </SectionContainer>
         </>

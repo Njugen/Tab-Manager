@@ -22,24 +22,9 @@ import PanelView from './components/panel_view';
 function SidePanel(props: any): JSX.Element {
     const [view, setView] = useState<string>("folders-view");
     const [keyword, setKeyword] = useState<string>("");
-    const [showScrollUpButton, setShowScrollUpButton] = useState<boolean>(false);
     
     let activeNavButtonCSS = "text-tbfColor-lightpurple font-semibold";
     let inactiveNavButtonCSS = "text-gray-400 hover:text-tbfColor-lighterpurple transition ease-in-out duration-300 font-semibold";
-
-    const handleSetShowScrollUpButton = (e: any): void => {
-        if(window.scrollY === 0){
-          setShowScrollUpButton(false);
-        } else {
-          if(showScrollUpButton === false) setShowScrollUpButton(true);
-        }
-    }
-
-    useEffect(() => {
-        window.addEventListener("scroll", handleSetShowScrollUpButton);
-
-        return () => window.removeEventListener("scroll", handleSetShowScrollUpButton);
-    }, [])
 
     const handleSearchBarChange = (e: any): void => {
         setKeyword(e.target.value);
@@ -47,9 +32,6 @@ function SidePanel(props: any): JSX.Element {
 
     return (
         <>
-            <CircleButton disabled={false} bgCSSClass={`${showScrollUpButton === true ? "block" : "hidden"} transition-all bg-tbfColor-lightpurple shadow-lg fixed bottom-24 right-4 z-[10000]`} onClick={() => window.scrollTo({ top: 0, left: 0, behavior: "smooth" })}>
-                <CollapseIcon size={32} fill="#fff" />  
-            </CircleButton>
             {keyword && <SearchResultsContainer keyword={keyword} onClose={() => setKeyword("")} />}
             <div className={"p-4 border-b border-gray-100 sticky top-0 z-50 bg-white"}>
                 <section>

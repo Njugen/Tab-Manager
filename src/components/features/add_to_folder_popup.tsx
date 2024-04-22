@@ -3,7 +3,7 @@ import Dropdown from "../utils/dropdown/dropdown";
 import iAddToFolderPopup from '../../interfaces/add_to_folder_popup';
 import GenericPopup from '../utils/generic_popup';
 import { iDropdownSelected } from '../../interfaces/dropdown';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 /*
     Popup where the user may choose where to add
@@ -11,7 +11,7 @@ import { useState } from 'react';
 */
 
 const AddToFolderPopup = (props: iAddToFolderPopup): JSX.Element => {
-    const [show, setShow] = useState<boolean>(true);
+    const [show, setShow] = useState<boolean>(false);
     const { type, title } = props;
 
     const { 
@@ -37,6 +37,10 @@ const AddToFolderPopup = (props: iAddToFolderPopup): JSX.Element => {
         label: "Close",
         handler: onCancel
     }
+
+    useEffect(() => {
+        setShow(true);
+    }, [])
 
     return (
         <GenericPopup title={title} type={type} show={show} cancel={closeButtonSpecs}>

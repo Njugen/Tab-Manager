@@ -15,13 +15,6 @@ import { RootState } from './redux-toolkit/store';
   This file also controls the navigation routes using React-Dom.
 */
 function App() {
-  const appRef = useRef<HTMLDivElement>(null);
-  const miscState = useSelector((state: RootState) => state.misc)
-
-  useEffect(() => {
-    if(appRef.current) appRef.current.scrollTo({ top: 0, left: 0, behavior: "smooth" })
-  }, [miscState.scrollTrigger])
-
   const router = createBrowserRouter([
     {
       path: "/options.html",
@@ -34,7 +27,7 @@ function App() {
   ]);
 
   return (
-    <div ref={appRef} className="App overflow-y-auto h-screen">
+    <div className="App">
         <div id="root" className={`w-full pb`}>
           
           <RouterProvider router={router} />

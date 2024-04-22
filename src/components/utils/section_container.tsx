@@ -62,7 +62,9 @@ const SectionContainer = (props: iSectionContainer): JSX.Element => {
                     <div className="text-right">
                         <GenericButton onClick={() => {
                             dispatch(smoothScrollUp(null));
+                            window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
                             setFullscreen(true);
+                            
                             if(onExpand) onExpand(true);
                         }}>
                             <FullscreenIcon size={16} fill="rgba(0,0,0,0.4)" />
