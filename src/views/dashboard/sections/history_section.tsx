@@ -38,12 +38,12 @@ const HistorySection = (props: any): JSX.Element => {
     const dispatch = useDispatch();
 
     // Load and dispatch tabs from history API whenever laodTabs changes
-    useEffect(() => {
+    const loadHistory = (keyword: string, count: number): void => {
         const query: any = {
-            text: searchString,
+            text: keyword,
             endTime: undefined,
             startTime: undefined,
-            maxResults: tabsCount
+            maxResults: count
         }
         
         chrome.history.search(query, (items: Array<chrome.history.HistoryItem>) => {
@@ -57,7 +57,11 @@ const HistorySection = (props: any): JSX.Element => {
                 setSnapshot(newSnapshot);
             }
         });
+    }
 
+
+    useEffect(() => {
+        loadHistory(searchString, tabsCount);
     }, [tabsCount]);
 
 
@@ -292,6 +296,7 @@ const HistorySection = (props: any): JSX.Element => {
 
     const handleSearch = (e: any): void => {
         setSearchString(e.target.value);
+        loadHistory(searchString, tabsCount);
     } 
 
     const renderFolderManager = (): JSX.Element => {
