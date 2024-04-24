@@ -204,14 +204,14 @@ const HistorySection = (props: any): JSX.Element => {
                             }
                         </TextIconButton>
 
-                        <input 
+                     {/*   <input 
                             data-testid="history-search-field" 
                             id="history-search-field" 
                             type="text" 
                             placeholder={"Search history..."} 
                             className={`${predef.textfield} w-[250px] p-2.5 mx-4`} 
                             onChange={handleSearch}
-                        />
+                        />*/}
                         <PrimaryButton disabled={markedTabs.length > 0 ? false : true} text="Open selected" onClick={handleOpenSelected} />
                         <PrimaryButton disabled={markedTabs.length > 0 ? false : true} text="Add to folder" onClick={() => setAddToFolderMessage(true)} />
                     </div>
@@ -242,15 +242,16 @@ const HistorySection = (props: any): JSX.Element => {
                 disableMark: false,
             }
         });
-
+      
         const presetWindow: iWindowItem = {
             id: randomNumber(),
             tabs: markedTabs
         };
 
         const updatedFolder: iFolderItem = {...targetFolder};
-        updatedFolder.windows = [...updatedFolder.windows, presetWindow];
 
+        updatedFolder.windows = [...updatedFolder.windows, presetWindow];
+        console.log("UPDATED 1",updatedFolder.windows);
         if(targetFolder){
             setAddToFolderMessage(false);
             setMergeProcessFolder(updatedFolder);

@@ -117,14 +117,15 @@ const mockHistory: iHistoryState = {
     expanded: false
 }
 
+
 const mockStore = configureStore({
     reducer: reducers,
     preloadedState: {
         folder: mockFolders,
         sessionSection: mockSession,
-        historySection: mockHistory
+        historySection: mockHistory,
     }
 })
 
-export { mockFolders }
+export { mockFolders, mockHistory, mockSession }
 export default mockStore;

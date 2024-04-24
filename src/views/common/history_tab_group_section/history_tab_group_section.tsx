@@ -6,7 +6,7 @@ import { iFolderItem } from "../../../interfaces/folder_item";
 import { forwardRef, useEffect, useState } from "react";
 import iHistoryState from "../../../interfaces/states/history_state";
 import iHistoryTabGroupsSection from '../../../interfaces/history_tab_groups_section';
-import { markMultipleTabs, setUpTabs } from "../../../redux-toolkit/slices/history_section_slice";
+import { markMultipleTabs, markTab, setUpTabs } from "../../../redux-toolkit/slices/history_section_slice";
 
 /*
     Component which displays browsing history pulled straight from the browser api.
@@ -107,10 +107,10 @@ const HistoryTabGroupsSection = forwardRef(function HistoryTabGroupsSection(prop
             if(isMarked){
                 const updatedMarkedTabCollection: Array<chrome.history.HistoryItem> = markedTabs.filter((tab) => parseInt(tab.id) !== id);
 
-                dispatch(markMultipleTabs(updatedMarkedTabCollection));
+                dispatch(markTab(isMarked));
             } else {
                 const newTab = tabCollection[index];
-                dispatch(markMultipleTabs([newTab]));
+                dispatch(markTab(newTab));
             }  
         }
     }

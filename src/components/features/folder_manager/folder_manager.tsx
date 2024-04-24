@@ -141,7 +141,7 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
                 setModified(false)
                 setOriginWindows("");
                 setIsCreate(false);
-
+                
                 setTimeout(() => {
                     dispatch(setIsEditingTab(false));
                     onClose()

@@ -8,7 +8,7 @@ const Group = (props: iGroup): JSX.Element => {
     const { desc, children } = props;
 
     return (
-        <div className="py-3">
+        <div data-testid="tab-group" className="py-3">
             <p className="text-xs text-right font-semibold">
                 {desc}
             </p>

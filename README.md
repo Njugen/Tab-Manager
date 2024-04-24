@@ -5,7 +5,7 @@
 </p>
 
 This plugin gives you a better overview and improved tab management experience not provided
-by default browser features. Mark, arrange, and open tabs in any way you like, e.g. new session, categorized session, or incognito.
+by default browser features.
 
 ## Issue and purpose
 

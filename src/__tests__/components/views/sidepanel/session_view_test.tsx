@@ -1,19 +1,28 @@
 import { render, screen, within, fireEvent } from "@testing-library/react";
 import '@testing-library/jest-dom'
-import CurrentSessionSection from "../../../../../views/dashboard/sections/current_session_section";
-import randomNumber from "../../../../../tools/random_number";
-import mockStore from "../../../../../tools/testing/mock_store";
+import randomNumber from "../../../../tools/random_number";
+import mockStore from "../../../../tools/testing/mock_store";
 import { Provider } from "react-redux";
-import mockBrowserStorage from "../../../../../tools/testing/mock_browser_storage";
-import mockWindows from './../../../../../tools/testing/mock_windows';
+import mockBrowserStorage from "../../../../tools/testing/mock_browser_storage";
+import mockWindows from './../../../../tools/testing/mock_windows';
 import { Windows } from "jest-chrome/types/jest-chrome";
 import { act } from "react-dom/test-utils";
+import CurrentSessionView from "../../../../views/sidepanel/current_session_view";
 
 const mockCallback = jest.fn();
 const mockTestId = randomNumber();
 const mockChild = <p data-testid={mockTestId}></p>
 
 beforeEach(() => {
+    // @ts-expect-error
+    chrome.storage.local.get = jest.fn((query, callback: (e: any) => {}): void => {
+        callback(mockBrowserStorage)
+    })
+
+    // @ts-expect-error
+    chrome.windows.getAll = jest.fn((query, callback: (e: any) => {}): void => {
+        callback([...mockWindows])
+    })
     jest.useFakeTimers();
 })
 
@@ -22,16 +31,10 @@ afterEach(() => {
 })
 
 describe("Test <CurrentSessionSection>", () => {
-
-    test("There are no warnin/alerts when rendered", () => {
-        // @ts-expect-error
-        chrome.windows.getAll = jest.fn((query, callback: (e: any) => {}): void => {
-            callback([mockWindows[0]])
-        })
-
+    test("There are no warning/alerts when rendered", () => {
         render(
             <Provider store={mockStore}>
-                <CurrentSessionSection />
+                <CurrentSessionView />
             </Provider>
         );
         const alert = screen.queryByRole("alert");
@@ -39,14 +42,10 @@ describe("Test <CurrentSessionSection>", () => {
     });
 
     test("There are at least one window listed if those exist in browser storage", () => {
-        // @ts-expect-error
-        chrome.windows.getAll = jest.fn((query, callback: (e: any) => {}): void => {
-            callback(mockWindows)
-        })
 
         render(
             <Provider store={mockStore}>
-                <CurrentSessionSection />
+                <CurrentSessionView />
             </Provider>
         );
 
@@ -63,7 +62,7 @@ describe("Test <CurrentSessionSection>", () => {
 
         render(
             <Provider store={mockStore}>
-                <CurrentSessionSection />
+                <CurrentSessionView />
             </Provider>
         );
 
@@ -83,7 +82,7 @@ describe("Test <CurrentSessionSection>", () => {
 
         render(
             <Provider store={mockStore}>
-                <CurrentSessionSection />
+                <CurrentSessionView />
             </Provider>
         );
 
@@ -100,7 +99,7 @@ describe("Test <CurrentSessionSection>", () => {
 
         render(
             <Provider store={mockStore}>
-                <CurrentSessionSection />
+                <CurrentSessionView />
             </Provider>
         );
 
@@ -122,7 +121,7 @@ describe("Test <CurrentSessionSection>", () => {
 
         render(
             <Provider store={mockStore}>
-                <CurrentSessionSection />
+                <CurrentSessionView />
             </Provider>
         );
 
@@ -144,7 +143,7 @@ describe("Test <CurrentSessionSection>", () => {
 
         render(
             <Provider store={mockStore}>
-                <CurrentSessionSection />
+                <CurrentSessionView />
             </Provider>
         );
 
@@ -171,7 +170,7 @@ describe("Test <CurrentSessionSection>", () => {
 
         render(
             <Provider store={mockStore}>
-                <CurrentSessionSection />
+                <CurrentSessionView />
             </Provider>
         );
 
@@ -196,11 +195,11 @@ describe("Test <CurrentSessionSection>", () => {
 
         render(
             <Provider store={mockStore}>
-                <CurrentSessionSection />
+                <CurrentSessionView />
             </Provider>
         );
 
-        const addToFolderButton = screen.getByText("Add to folder", { selector: "button" });
+        const addToFolderButton = screen.getByTestId("save-icon");
         fireEvent.click(addToFolderButton, { bubbles: true });
 
         let dialog = screen.getByRole("dialog");
@@ -233,11 +232,11 @@ describe("Test <CurrentSessionSection>", () => {
 
         render(
             <Provider store={mockStore}>
-                <CurrentSessionSection />
+                <CurrentSessionView />
             </Provider>
         );
 
-        const addToFolderButton = screen.getByText("Add to folder", { selector: "button" });
+        const addToFolderButton = screen.getByTestId("save-icon");
         fireEvent.click(addToFolderButton, { bubbles: true });
 
         let dialog: any = screen.getByRole("dialog");
@@ -269,14 +268,14 @@ describe("Test <CurrentSessionSection>", () => {
 
         render(
             <Provider store={mockStore}>
-                <CurrentSessionSection />
+                <CurrentSessionView />
             </Provider>
         );
 
         const sessionWindows = screen.getAllByTestId("window-item");
         const sessionWindowsCount = sessionWindows.length;
 
-        const addToFolderButton = screen.getByText("Add to folder", { selector: "button" });
+        const addToFolderButton = screen.getByTestId("save-icon");
         fireEvent.click(addToFolderButton, { bubbles: true });
 
         let dialog = screen.getByRole("dialog");
