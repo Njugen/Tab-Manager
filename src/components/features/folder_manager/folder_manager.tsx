@@ -93,7 +93,9 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
     const handleChangeField = (key: string, value: string): void => {
         if(!folderManagementState) {
             return;
-        } else if(modified === false && JSON.stringify(folderManagementState[key]) !== JSON.stringify(value)) setModified(true);
+        } else if(modified === false && folderManagementState[key] !== value){
+            setModified(true);
+        } 
 
         // Inform redux about the field change
         dispatch(updateFolder([key, value]));

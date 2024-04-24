@@ -33,8 +33,8 @@ const GenericPopup = forwardRef(function GenericPopup(props: iGenericPopup, ref:
 
     return (
         <section role="dialog" ref={ref} className={`${styles.scroll_style} ${outerStyleDirection(type, show)}`}>
-            <div className="overflow-y-auto w-full h-full">   
-                <div className="relative top-0 md:bottom-12 w-[992px] mx-auto">
+            <div className="w-full h-full">   
+                <div className="relative top-0 md:bottom-12 max-w-[992px] mx-auto">
                     <div className={innerStyleDirection(type, show)}>
                         <header id="generic-popup-header" className={`pl-8 pr-5 pb-5 pt-6 border-b border-tbfColor-lgrey w-full flex items-center justify-between`}>
                             <h1 data-testid="generic-popup-title" className="text-3xl text-tbfColor-darkpurple font-light inline-block">

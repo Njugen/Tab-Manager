@@ -7,9 +7,9 @@ const outerStyleDirection = (type: string, show: boolean): string => {
     let cssClasses = "";
 
     if(type === "slide-in"){
-        cssClasses = `${popup_container_transparent_bg} scroll-smooth overflow-x-hidden overflow-y-hidden flex fixed top-0 left-0 justify-center items-center w-screen z-[100000] ${show === false ? "h-0" : "h-screen"}`;
+        cssClasses = `${popup_container_transparent_bg} w-full scroll-smooth overflow-x-hidden overflow-y-scroll flex fixed top-0 left-0 justify-center items-center w-screen z-[100000] ${show === false ? "h-0" : "h-screen"}`;
     } else if(type === "popup") {
-        cssClasses = `${popup_container_default} overflow-y-scroll overflow-x-hidden flex fixed top-0 left-0 justify-center items-center w-screen z-[100000] ${show === false ? "h-0" : "h-screen"}`;
+        cssClasses = `${popup_container_default} overflow-y-auto overflow-x-auto flex absolute auto top-0 left-0 justify-center items-center w-screen z-[100000] ${show === false ? "h-0" : "h-screen"}`;
     }
 
     return cssClasses;

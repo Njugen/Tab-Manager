@@ -320,6 +320,37 @@ describe("Test <FolderManager>", () => {
             
         })
 
+        test("Cancelling/closing after blurring any textfield won't trigger warning message (without writing anything)", () => {
+            // Mock the chrome storage getter
+
+            // @ts-expect-error
+            chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
+                callback({ showFolderChangeWarning: false })
+            })
+
+
+            render(
+                <Provider store={store}>
+                    <FolderManager {...mockProps} />
+                </Provider>
+            )
+            
+            let managerPopup = screen.getByRole("dialog");
+            
+            // Change the name field value
+            const textfields = within(managerPopup).getAllByRole("textbox");;
+            textfields.forEach((field) => {
+                fireEvent.click(field);
+                fireEvent.blur(field);
+            })
+
+            const xButton = within(managerPopup).getByTestId("close-icon");
+            fireEvent.click(xButton, { bubbles: true });
+
+            const warningMessage = screen.queryByTestId("alert");
+            expect(warningMessage).not.toBeInTheDocument();
+        })
+
         test("Clicking Create/Save won't trigger 'onClose' when only window list has been changed", () => {
             // Mock the chrome storage getter
 
