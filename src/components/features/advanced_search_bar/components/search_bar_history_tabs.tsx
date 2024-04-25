@@ -1,6 +1,11 @@
 import TabItem from '../../tab_item';
 import { filterHistoryTabsByString } from '../../../../tools/tab_filters';
-import iSearchBarHistoryTabsProps from './../../../../interfaces/search_bar_history_tabs_props';
+import iHistoryState from '../../../../interfaces/states/history_state';
+
+interface iSearchBarHistoryTabsProps {
+    items: iHistoryState,
+    keyword: string
+}
 
 // Render all filtered history tabs
 const SearchBarHistoryTabs = (props: iSearchBarHistoryTabsProps): JSX.Element => {

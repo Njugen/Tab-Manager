@@ -23,7 +23,8 @@ const WindowManager = (props: iWindowManager): JSX.Element => {
         setCreateWindow(false);
     }, [folderManagementState]);
 
-    // Add a new window with a random id
+    // Set states which indicates a window is being created
+    // If not, then there are no window being created and the window list acts as normal
     const handleCreateWindow = (): void => {
         setIncreationId(randomNumber());
         setCreateWindow(true);

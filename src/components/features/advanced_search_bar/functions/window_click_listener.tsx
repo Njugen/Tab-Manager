@@ -1,10 +1,14 @@
-import iHandleWindowClickProps from "../../../../interfaces/handle_window_click_props";
-import { handleShowResultsContainer } from "./handle_show_results_container";
+import { handleShowResultsContainer, iHandleShowResultsContainerArgs } from "./handle_show_results_container";
+
+interface iHandleWindowClickArgs {
+    e: any,
+    handleShowResultsArgs: iHandleShowResultsContainerArgs
+}
 
  // Identify clicked viewport area and hide/show search results accordingly.
-const handleWindowClick = (props: iHandleWindowClickProps): void => {
-    const { e, handleShowResultsProps } = props;
-    const { showResultsContainer } = handleShowResultsProps;
+const handleWindowClick = (args: iHandleWindowClickArgs): void => {
+    const { e, handleShowResultsArgs } = args;
+    const { showResultsContainer } = handleShowResultsArgs;
 
     e.stopPropagation();
 
@@ -16,7 +20,7 @@ const handleWindowClick = (props: iHandleWindowClickProps): void => {
     const searchResultsContainerId = "search-results-area";
 
     if(target.id.includes(searchFieldId) === false && target.id.includes(searchResultsContainerId) === true){
-        handleShowResultsContainer(handleShowResultsProps);
+        handleShowResultsContainer(handleShowResultsArgs);
     }
 }
 

@@ -1,8 +1,6 @@
 import iRotationEffect from "../../interfaces/rotation_effect";
 
-
-// Render a child component up or down
-
+// Rotate an encapsulated component
 const RotationEffect = (props: iRotationEffect): JSX.Element => {
     const { children, rotated, display } = props;
     

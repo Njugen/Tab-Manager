@@ -1,6 +1,11 @@
 import TabItem from '../../tab_item';
 import { filterSessionTabsByString } from '../../../../tools/tab_filters';
-import iSearchBarSessionTabsProps from '../../../../interfaces/search_bar_session_tabs_props';
+import iCurrentSessionState from './../../../../interfaces/states/current_session_state';
+
+interface iSearchBarSessionTabsProps {
+    items: iCurrentSessionState,
+    keyword: string
+}
 
 // Render all filtered session tabs
 const SearchBarSessionTabs = (props: iSearchBarSessionTabsProps): JSX.Element => {

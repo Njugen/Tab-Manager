@@ -3,6 +3,7 @@ import styles from "../../../../styles/global_utils.module.scss";
 const { popup_container_transparent_bg, popup_container_default } = styles;
 
 // Style the outer layer of this component (this layer handles e.g. the slide in behaviour)
+// The outer layer also represents the wrapper as a whole (transparent black background etc)
 const outerStyleDirection = (type: string, show: boolean): string => {
     let cssClasses = "";
 

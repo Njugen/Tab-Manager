@@ -34,7 +34,7 @@ const FolderActionBar = (props: iFolderActionBarProps): JSX.Element => {
     const { expanded, showLaunchOptions, marked, id } = states;
     const {
         handleExpandClick,
-        handleOpen,
+        handlePrepareOpen,
         handleEdit,
         handleDelete,
         handleLaunch,
@@ -56,9 +56,10 @@ const FolderActionBar = (props: iFolderActionBarProps): JSX.Element => {
         </FolderControlButton>
     );
 
+    // Show certain options depending on whether or not the folder permits those features
     if(onOpen){
         openButton = (
-            <FolderControlButton id="open_browser" disabled={false} onClick={handleOpen}>
+            <FolderControlButton id="open_browser" disabled={false} onClick={handlePrepareOpen}>
                 <OpenBrowserIcon size={17} fill={"#000"} />
             </FolderControlButton>
         );

@@ -6,7 +6,6 @@ import { iFolderManager } from "../../../interfaces/iFolderManager";
 import randomNumber from "../../../tools/random_number";
 import { iFolderItem } from "../../../interfaces/folder_item";
 import PopupMessage from '../../utils/popup_message';
-import windowListChanged from "./functions/window_list_changed";
 import WindowManager from "../window_manager/window_manager";
 import GenericPopup from "../../utils/generic_popup";
 import { useDispatch, useSelector } from "react-redux";
@@ -77,6 +76,19 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
         // Tell redux this popup is active and a create/edit process is ongoing.
         dispatch(setUpFolder(folderSpecs));
     }, []);
+
+    const windowListChanged = (origin: string, modified: string): boolean => {
+        const presetWindows: string = origin;
+        const modifiedWindows: string = modified;
+    
+        if(!modifiedWindows || !presetWindows) return false;
+        if(origin !== modifiedWindows){
+            return true;
+        }
+    
+        return false;
+    }
+    
 
     useEffect(() => {
         const inEditWindows: string = purify(folderManagementState)?.windows;

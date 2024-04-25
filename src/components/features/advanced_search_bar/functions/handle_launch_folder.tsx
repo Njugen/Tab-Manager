@@ -1,16 +1,23 @@
 import React from "react";
 import { iWindowItem } from "../../../../interfaces/window_item";
-import iLaunchFolderProps from "../../../../interfaces/launch_folder_props";
+
+interface iLaunchFolderArgs {
+    folderLaunchType?: string | null,
+    windowsPayload: Array<iWindowItem> | null,
+    setWindowsPayload: React.Dispatch<React.SetStateAction<iWindowItem[] | null>>,
+    setFolderLaunchType: React.Dispatch<React.SetStateAction<string | null>>,
+    setShowPerformanceWarning: React.Dispatch<React.SetStateAction<boolean>>
+}
 
 // Event handler showing all the launching options of a folder
-const handleLaunchFolder = (props: iLaunchFolderProps): void => {
+const handleLaunchFolder = (args: iLaunchFolderArgs): void => {
     const { 
         folderLaunchType, 
         windowsPayload, 
         setWindowsPayload, 
         setFolderLaunchType, 
         setShowPerformanceWarning 
-    } = props;
+    } = args;
 
     if(!windowsPayload) return;
 
@@ -53,4 +60,4 @@ const handleLaunchFolder = (props: iLaunchFolderProps): void => {
     setShowPerformanceWarning(false);
 }
 
-export { handleLaunchFolder };
+export { handleLaunchFolder, iLaunchFolderArgs };
