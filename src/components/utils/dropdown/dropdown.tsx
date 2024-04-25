@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import CollapseIcon from "../../icons/collapse_icon";
 import { iDropdown } from "../../../interfaces/dropdown";
 import RotationEffect from "../../effects/rotation_effect";
@@ -24,7 +24,6 @@ const Dropdown = (props: iDropdown): JSX.Element => {
     // Show or hide sub menu based on state by sliding down the menu.
     // The sliding effect is delayed to allow certain states to take effect
     const handleShowSubMenu = (): void => {
-
         if(showSubMenuContainer === false){
             setShowSubMenuContainer(true);
         } else {
@@ -37,15 +36,13 @@ const Dropdown = (props: iDropdown): JSX.Element => {
     const handleSelect = (id: number): void => {
         setSelected(id);
         onCallback({ selected: id });
-        //handleShowSubMenu();
     }
 
-    const handleWindowClick = (e: any): void => {
+    const handleWindowClick = useCallback((e: any): void => {
         e.stopPropagation();
 
         const selectorTag = (tag + "-selector");
         const { id, parentElement, tagName } = e.target;
-
        
         if(
             id !== selectorTag && 
@@ -55,10 +52,10 @@ const Dropdown = (props: iDropdown): JSX.Element => {
         ) {
             setShowSubMenuContainer((prevState) => !prevState);
         }
-    }
+    }, [showSubMenuContainer])
 
     useEffect(() => {
-        // Listen for clicks at all time and determine whether or not the menu should be shown/hidden
+        // Listen for clicks at all time and determine whether or not the dropdown menu should be shown/hidden
         if(showSubMenuContainer === true) {
             window.addEventListener("click", handleWindowClick);
         }
@@ -68,6 +65,7 @@ const Dropdown = (props: iDropdown): JSX.Element => {
         }
     }, [showSubMenuContainer]);
 
+    
     const dropdownBorderCSS = (showSubMenuContainer === true ? " border-tbfColor-lightpurple" : "border-tbfColor-middlegrey4");
     const optionsProps: iGetSelectedOptionProps = { options, preset, selected };
 

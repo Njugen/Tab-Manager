@@ -2,7 +2,7 @@ import { render, screen, within, fireEvent } from "@testing-library/react";
 import '@testing-library/jest-dom'
 import randomNumber from "../../../tools/random_number";
 import PopupMessage from "../../../components/utils/popup_message";
-import PurpleBorderButton from "../../../components/utils/purple_border_button";
+import SecondaryButton from "../../../components/utils/secondary_button";
 import SimpleSearchBar from "../../../components/utils/simple_search_bar";
 import TextIconButton from "../../../components/utils/text_icon_button";
 import { iTextIconButton } from "../../../interfaces/text_icon_button";

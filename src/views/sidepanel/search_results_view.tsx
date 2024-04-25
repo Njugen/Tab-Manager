@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import { iFolderItem } from '../../interfaces/folder_item';
 import FolderItem from "../../components/features/folder_item/folder_item";
 import TabItem from "../../components/features/tab_item";
-import GenericButton from "../../components/utils/generic_button";
 import { 
     filterSessionTabsByString, 
     filterHistoryTabsByString, 
@@ -12,6 +11,7 @@ import {
 } from "../../tools/tab_filters";
 import CloseIcon from "../../components/icons/close_icon";
 import iCurrentSessionState from "../../interfaces/states/current_session_state";
+import styles from "../../styles/global_utils.module.scss";
 
 function SearchResultsContainer(props:any): JSX.Element {
     const { keyword, onClose } = props;
@@ -124,9 +124,9 @@ function SearchResultsContainer(props:any): JSX.Element {
                             Search Results
                         </h1>
                     </header>
-                    <GenericButton onClick={handleClose}>
+                    <button className={`${styles.opacity_hover_effect} m-1`} onClick={handleClose}>
                         <CloseIcon size={34} fill="rgba(0,0,0,0.2)" />
-                    </GenericButton>
+                    </button>
                 </div>
                 <section className="mt-4">
                     <h3 className="uppercase font-bold text-md mb-4 text-tbfColor-darkergrey">Folders</h3>

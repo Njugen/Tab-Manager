@@ -1,14 +1,11 @@
 import { render, screen, within, fireEvent, waitFor } from "@testing-library/react";
 import '@testing-library/jest-dom'
-import GenericButton from "../../../components/utils/generic_button";
-import WindowManager from "../../../components/features/window_manager/window_manager";
 import { Provider, useSelector } from "react-redux";
 import { store } from "../../../redux-toolkit/store";
 import randomNumber from "../../../tools/random_number";
 import { iWindowItem } from "../../../interfaces/window_item";
 import { iFolderItem } from "../../../interfaces/folder_item";
 import FolderItem from "../../../components/features/folder_item/folder_item";
-import { act } from "react-dom/test-utils";
 
 const createMockWindows = (mocks: number): Array<iWindowItem> => {
     const result: Array<iWindowItem> = [];

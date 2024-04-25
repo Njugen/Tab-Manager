@@ -9,7 +9,7 @@ import divStateCSS from "./functions/div_state_css";
 */
 
 const Switcher = (props: iSwitcher): JSX.Element => {
-    const [switchOn, setSwitchOn] = useState<boolean | null>(null);
+    const [switchOn, setSwitchOn] = useState<boolean | null>(props.value);
     const { onCallback, label, value } = props;
 
     // Set the props.value to component's state once identified such exists

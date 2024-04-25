@@ -1,7 +1,6 @@
 import { useState,  useId } from "react";
-import GenericButton from "../utils/generic_button";
 import PrimaryButton from "../utils/primary_button/primary_button";
-import PurpleBorderButton from "../utils/purple_border_button";
+import SecondaryButton from "../utils/secondary_button";
 import TabItem from "./tab_item";
 import { iWindowItem} from "../../interfaces/window_item";
 import EditableTabItem from "./editable_tab_item";
@@ -17,6 +16,7 @@ import { RootState } from "../../redux-toolkit/store";
 import { setCurrentTabEdits, setIsEditingTab } from "../../redux-toolkit/slices/misc_slice";
 import { updateFolder } from "../../redux-toolkit/slices/folder_management_slice";
 import purify from "../../tools/purify_object";
+import styles from "../../styles/global_utils.module.scss";
 
 
 /*
@@ -41,9 +41,6 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
     const handleExpand = (): void => {
         setExpanded(expanded === true ? false : true);
     }
-
-    // Delete this window from redux
-    
 
     // Activate add new tab feature by setting state
     const handleAddNewTab = (): void => {
@@ -173,9 +170,9 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
         }
 
         return (
-            <GenericButton onClick={handleExpand}>
+            <button className={`${styles.opacity_hover_effect} m-1`} onClick={handleExpand}>
                 {icon}
-            </GenericButton>
+            </button>
         );
     }
 
@@ -187,9 +184,9 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
                 </h3>
                 <div className={`tab-settings`}>
                     {disableEdit === false && (
-                        <GenericButton onClick={(e: any) => onDelete && onDelete(id)}>
+                        <button className={`${styles.opacity_hover_effect} m-1`} onClick={(e: any) => onDelete && onDelete(id)}>
                             <TrashIcon fill="#000" size={20} />
-                        </GenericButton>
+                        </button>
                     )}
                     {expandCollapseButton()}
                 </div>
@@ -202,7 +199,7 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
                     {tabs.length > 0 ? [...evaluateNewTabRender()] : <EditableTabItem windowId={id} onStop={handleEditTabStop} />}
                 </ul>
                 {tabs.length > 0 && disableEdit === false && <div className="mt-10 mb-8 flex justify-end">
-                    {markedTabs.length > 0 && <PurpleBorderButton disabled={false} text="Delete tabs" onClick={handleDeleteTabs} />}
+                    {markedTabs.length > 0 && <SecondaryButton disabled={false} text="Delete tabs" onClick={handleDeleteTabs} />}
                     {disableAddTab === false && <PrimaryButton disabled={false} text="New tab" onClick={handleAddNewTab} />}
                 </div>}
             </div>

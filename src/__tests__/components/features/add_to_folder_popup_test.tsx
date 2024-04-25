@@ -1,6 +1,5 @@
 import { render, screen, within, fireEvent } from "@testing-library/react";
 import '@testing-library/jest-dom'
-import GenericButton from "../../../components/utils/generic_button";
 import iAddToFolderPopup from "../../../interfaces/add_to_folder_popup";
 import randomNumber from './../../../tools/random_number';
 import AddToFolderPopup from "../../../components/features/add_to_folder_popup";

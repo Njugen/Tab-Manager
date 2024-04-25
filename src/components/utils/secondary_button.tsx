@@ -7,7 +7,7 @@ import { iTextButton } from "../../interfaces/text_button";
     In the future, this button should be made into a generic button, offering various colors instead
     of just being a button intended for one purpose.
 */
-const PurpleBorderButton = (props: iTextButton): JSX.Element => {
+const SecondaryButton = (props: iTextButton): JSX.Element => {
     const { text, onClick, disabled } = props;
     const { opacity_hover_effect } = styles;
     
@@ -18,4 +18,4 @@ const PurpleBorderButton = (props: iTextButton): JSX.Element => {
     ); 
 }
 
-export default PurpleBorderButton;
+export default SecondaryButton;

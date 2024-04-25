@@ -11,12 +11,6 @@ interface iSearchBarHistoryTabsProps {
 const SearchBarHistoryTabs = (props: iSearchBarHistoryTabsProps): JSX.Element => {
     const { items, keyword } = props;
     const tabs: Array<chrome.history.HistoryItem> = filterHistoryTabsByString(items, keyword);
-
-    const handleClose = (url: string): void => {
-        chrome.history.deleteUrl({
-            url: url
-        })
-    }
     
     if(tabs.length > 0){
         const list: Array<JSX.Element> = tabs.map((tab) => {

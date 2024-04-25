@@ -2,7 +2,6 @@
 import "./../../styles/global_utils.module.scss";
 import Checkbox from "../utils/checkbox";
 import { iTabItem } from "../../interfaces/tab_item";
-import GenericButton from "../utils/generic_button";
 import PenIcon from "../icons/pen_icon";
 import CloseLightIcon from "../icons/close_light_icon";
 import styles from "../../styles/global_utils.module.scss";
@@ -47,9 +46,9 @@ const TabItem = (props: iTabItem): JSX.Element => {
                 <div className="tab-item-settings px-2 py-2 flex flex-row">
                     {
                         onEdit && (
-                            <GenericButton onClick={() => onEdit(id)}>
+                            <button className={`${styles.opacity_hover_effect} m-1`} onClick={() => onEdit(id)}>
                                 <PenIcon size={24} fill={"#000"} />
-                            </GenericButton>
+                            </button>
                         )
                     }
                     {onMark && marked !== undefined && <Checkbox checked={marked} onCallback={(e) => onMark(id, e.state)} />}

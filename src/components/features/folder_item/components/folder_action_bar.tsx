@@ -1,6 +1,5 @@
 import CollapseIcon from "../../../icons/collapse_icon"
 import RotationEffect from "../../../effects/rotation_effect"
-import FolderControlButton from "../../../utils/icon_button/icon_button"
 import OpenBrowserIcon from "../../../icons/open_browser_icon"
 import TrashIcon from "../../../icons/trash_icon"
 import SettingsIcon from "../../../icons/settings_icon"
@@ -8,7 +7,7 @@ import Checkbox from "../../../utils/checkbox"
 import DropdownMenu from "../../../utils/dropdown_menu/dropdown_menu"
 import { iFieldOption } from "../../../../interfaces/dropdown"
 import { iFolderActionBarProps } from "../../../../interfaces/folder_action_bar"
-
+import styles from "../../../../styles/global_utils.module.scss";
 
 
 // List of all options on how to launch this folder. The id identifies the option, and
@@ -32,6 +31,9 @@ const launchOptions: Array<iFieldOption> = [
 const FolderActionBar = (props: iFolderActionBarProps): JSX.Element => {
     const { states, handlers } = props;
     const { expanded, showLaunchOptions, marked, id } = states;
+
+    const { opacity_hover_effect } = styles;
+
     const {
         handleExpandClick,
         handlePrepareOpen,
@@ -49,33 +51,33 @@ const FolderActionBar = (props: iFolderActionBarProps): JSX.Element => {
     let deleteButton: JSX.Element | null = null
     let checkbox: JSX.Element | null = null
     let expand_collapse_button: JSX.Element | null = (
-        <FolderControlButton id={expanded ? "collapse" : "expand"} disabled={false} onClick={handleExpandClick}>
+        <button id={expanded ? "collapse" : "expand"} className={`mx-2 ${opacity_hover_effect}`} disabled={false} onClick={handleExpandClick}>
             <RotationEffect rotated={expanded}>
                 <CollapseIcon size={28} fill={"#000"} />
             </RotationEffect>
-        </FolderControlButton>
+        </button>
     );
 
     // Show certain options depending on whether or not the folder permits those features
     if(onOpen){
         openButton = (
-            <FolderControlButton id="open_browser" disabled={false} onClick={handlePrepareOpen}>
+            <button id="open_browser" disabled={false} className={`mx-2 ${opacity_hover_effect}`} onClick={handlePrepareOpen}>
                 <OpenBrowserIcon size={17} fill={"#000"} />
-            </FolderControlButton>
+            </button>
         );
     }
     if(onEdit){
         editButton = (
-            <FolderControlButton id="settings" disabled={false} onClick={handleEdit}>
+            <button id="settings" disabled={false} className={`mx-2 ${opacity_hover_effect}`}  onClick={handleEdit}>
                 <SettingsIcon size={17} fill={"#000"} />
-            </FolderControlButton>
+            </button>
         );
     }
     if(onDelete){
         deleteButton = (
-            <FolderControlButton id="trash" disabled={false} onClick={handleDelete}>
+            <button id="trash" disabled={false} className={`mx-2 ${opacity_hover_effect}`}  onClick={handleDelete}>
                 <TrashIcon size={17} fill={"#000"} />
-            </FolderControlButton>
+            </button>
         );
     }
     if(onMark){

@@ -1,6 +1,10 @@
 import iCircleButton from "../../interfaces/circle_button";
 import styles from "./../../styles/global_utils.module.scss";
 
+/*
+    Basically a button, styled to be a circle.
+*/
+
 const CircleButton = (props: iCircleButton) => {
     const { children, disabled, bgCSSClass, onClick } = props;
 

@@ -1,9 +1,6 @@
 import { render, screen, within, fireEvent } from "@testing-library/react";
 import '@testing-library/jest-dom'
-import CircleButton from '../../../components/utils/circle_button';
 import randomNumber from "../../../tools/random_number";
-import FormField from "../../../components/utils/form_field";
-import GenericButton from "../../../components/utils/generic_button";
 import GenericPopup from "../../../components/utils/generic_popup";
 
 const mockTitle = randomNumber().toString();
