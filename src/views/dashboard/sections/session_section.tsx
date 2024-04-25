@@ -17,7 +17,7 @@ import { unMarkAllTabs } from "../../../redux-toolkit/slices/history_section_sli
 import { unMarkAllFolders } from "../../../redux-toolkit/slices/folders_section_slice";
 
 
-const CurrentSessionSection = (props: any): JSX.Element => {
+const SessionSection = (props: any): JSX.Element => {
     const [addToWorkSpaceMessage, setAddToFolderMessage] = useState<boolean>(false);
     const [mergeProcess, setMergeProcess] = useState<iFolderItem | null>(null);
     const [createFolder, setCreateFolder] = useState<boolean>(false);
@@ -193,7 +193,7 @@ const CurrentSessionSection = (props: any): JSX.Element => {
         
     }
 
-    const renderAddTabsMessage = (): JSX.Element => {
+    const showSelector = (): JSX.Element => {
         const currentFolders: Array<iFolderItem> = folderState;
 
         const options: Array<iFieldOption> = currentFolders.map((folder) => {
@@ -220,7 +220,7 @@ const CurrentSessionSection = (props: any): JSX.Element => {
         );
     }
     
-    const renderFolderManager = (): JSX.Element => {
+    const showFolderManager = (): JSX.Element => {
         let render = <></>;
 
         if(createFolder === true){
@@ -280,8 +280,8 @@ const CurrentSessionSection = (props: any): JSX.Element => {
                     />
                 )
             }
-            {addToWorkSpaceMessage && renderAddTabsMessage()}
-            {renderFolderManager()}
+            {addToWorkSpaceMessage && showSelector()}
+            {showFolderManager()}
             <SectionContainer id="currentSession-view" title="Current session" options={renderOptionsMenu}>
                 {windowList}
             </SectionContainer>
@@ -290,4 +290,4 @@ const CurrentSessionSection = (props: any): JSX.Element => {
 
 }
 
-export default CurrentSessionSection
+export default SessionSection

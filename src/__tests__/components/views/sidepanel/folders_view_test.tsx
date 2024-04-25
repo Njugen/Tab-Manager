@@ -7,7 +7,7 @@ import mockBrowserStorage from "../../../../tools/testing/mock_browser_storage";
 import mockWindows from '../../../../tools/testing/mock_windows';
 import { Windows } from "jest-chrome/types/jest-chrome";
 import { act } from "react-dom/test-utils";
-import CurrentSessionView from "../../../../views/sidepanel/current_session_view";
+import SessionView from "../../../../views/sidepanel/session_view";
 import FoldersView from '../../../../views/sidepanel/folders_view';
 
 const mockCallback = jest.fn();

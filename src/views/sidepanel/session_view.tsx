@@ -8,15 +8,15 @@ import AddToFolderPopup from "../../components/features/add_to_folder_popup";
 import { iTabItem } from '../../interfaces/tab_item';
 import { iFieldOption } from '../../interfaces/dropdown';
 import SaveIcon from '../../components/icons/save_icon';
-import CircleButton from './../../components/utils/circle_button';
+import CircleButton from '../../components/utils/circle_button';
 import WindowItem from "../../components/features/window_item";
-import PopupMessage from './../../components/utils/popup_message';
+import PopupMessage from '../../components/utils/popup_message';
 import { setUpWindows } from "../../redux-toolkit/slices/session_section_slice";
 import { unMarkAllFolders } from "../../redux-toolkit/slices/folders_section_slice";
 import { unMarkAllTabs } from "../../redux-toolkit/slices/history_section_slice";
 
 
-const CurrentSessionView = (props:any): JSX.Element => {
+const SessionView = (props:any): JSX.Element => {
     const [addToWorkSpaceMessage, setAddToFolderMessage] = useState<boolean>(false);
     const [createFolder, setCreateFolder] = useState<boolean>(false);
     const [mergeProcess, setMergeProcess] = useState<iFolderItem | null>(null);
@@ -275,4 +275,4 @@ const CurrentSessionView = (props:any): JSX.Element => {
     )
 }
 
-export default CurrentSessionView;
+export default SessionView;

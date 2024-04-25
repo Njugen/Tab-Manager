@@ -7,7 +7,7 @@ import mockBrowserStorage from "../../../../tools/testing/mock_browser_storage";
 import mockWindows from './../../../../tools/testing/mock_windows';
 import { Windows } from "jest-chrome/types/jest-chrome";
 import { act } from "react-dom/test-utils";
-import CurrentSessionView from "../../../../views/sidepanel/current_session_view";
+import SessionView from "../../../../views/sidepanel/session_view";
 
 const mockCallback = jest.fn();
 const mockTestId = randomNumber();
@@ -30,11 +30,11 @@ afterEach(() => {
     jest.useRealTimers();
 })
 
-describe("Test <CurrentSessionSection>", () => {
+describe("Test <SessionSection>", () => {
     test("There are no warning/alerts when rendered", () => {
         render(
             <Provider store={mockStore}>
-                <CurrentSessionView />
+                <SessionView />
             </Provider>
         );
         const alert = screen.queryByRole("alert");
@@ -45,7 +45,7 @@ describe("Test <CurrentSessionSection>", () => {
 
         render(
             <Provider store={mockStore}>
-                <CurrentSessionView />
+                <SessionView />
             </Provider>
         );
 
@@ -62,7 +62,7 @@ describe("Test <CurrentSessionSection>", () => {
 
         render(
             <Provider store={mockStore}>
-                <CurrentSessionView />
+                <SessionView />
             </Provider>
         );
 
@@ -82,7 +82,7 @@ describe("Test <CurrentSessionSection>", () => {
 
         render(
             <Provider store={mockStore}>
-                <CurrentSessionView />
+                <SessionView />
             </Provider>
         );
 
@@ -99,7 +99,7 @@ describe("Test <CurrentSessionSection>", () => {
 
         render(
             <Provider store={mockStore}>
-                <CurrentSessionView />
+                <SessionView />
             </Provider>
         );
 
@@ -121,7 +121,7 @@ describe("Test <CurrentSessionSection>", () => {
 
         render(
             <Provider store={mockStore}>
-                <CurrentSessionView />
+                <SessionView />
             </Provider>
         );
 
@@ -143,7 +143,7 @@ describe("Test <CurrentSessionSection>", () => {
 
         render(
             <Provider store={mockStore}>
-                <CurrentSessionView />
+                <SessionView />
             </Provider>
         );
 
@@ -170,7 +170,7 @@ describe("Test <CurrentSessionSection>", () => {
 
         render(
             <Provider store={mockStore}>
-                <CurrentSessionView />
+                <SessionView />
             </Provider>
         );
 
@@ -195,7 +195,7 @@ describe("Test <CurrentSessionSection>", () => {
 
         render(
             <Provider store={mockStore}>
-                <CurrentSessionView />
+                <SessionView />
             </Provider>
         );
 
@@ -232,7 +232,7 @@ describe("Test <CurrentSessionSection>", () => {
 
         render(
             <Provider store={mockStore}>
-                <CurrentSessionView />
+                <SessionView />
             </Provider>
         );
 
@@ -268,7 +268,7 @@ describe("Test <CurrentSessionSection>", () => {
 
         render(
             <Provider store={mockStore}>
-                <CurrentSessionView />
+                <SessionView />
             </Provider>
         );
 

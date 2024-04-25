@@ -27,9 +27,10 @@ import purify from '../../../tools/purify_object';
 
 
 /*
-    Folder management section listing all available folders/folders.
+    Folder management section, listing all available folders/folders.
 */
 
+// Decide the number of folder columns based on screen width
 const colsCount = (): number => {
     if(window.innerWidth > 1920){
         return 4;
@@ -58,7 +59,7 @@ const FoldersSection = (props: any): JSX.Element => {
     const folderState: Array<iFolderItem> = useSelector((state: any) => state.folder);
     const foldersSectionState: iFolderState = useSelector((state: any) => state.foldersSection);
 
-    // Get from browser storage and store into redux 
+    // Get folders from browser storage and store into redux for further use while this section is still on the screen 
     useEffect(() => {
         getFromStorage("local", "folders", (data) => {  
             dispatch(readAllStorageFolders(data.folders));
@@ -75,6 +76,7 @@ const FoldersSection = (props: any): JSX.Element => {
     }, []);
 
 
+    // Decide whether or not to show a warning if the user is about to open too many tabs (set in plugin settings)
     const evaluatePerformanceWarning = (type: string, windows: Array<iWindowItem>) => {
         if(!windows) return;
         let tabsCount = 0;
@@ -135,7 +137,7 @@ const FoldersSection = (props: any): JSX.Element => {
     } 
 
     // Open a specific folder
-    const renderFolderManagerPopup = (): JSX.Element => {
+    const showFolderManager = (): JSX.Element => {
         let render;
      
         if(createFolder === true){
@@ -158,11 +160,10 @@ const FoldersSection = (props: any): JSX.Element => {
 
     // Mark a specific folder
     const handleMarkFolder = (id: number): void => {
-
         dispatch(markFolder(id));
     }
 
-    // Merge selected folders
+    // Merge marked folders
     const handleMergeFolders = (): void => {
         const newId = randomNumber();
         const { markedFoldersId } = foldersSectionState;
@@ -208,7 +209,6 @@ const FoldersSection = (props: any): JSX.Element => {
         setMergeProcess(null);
 
         dispatch(unMarkAllFolders());
-      //  dispatch(clearInEditFolder());
     }
 
     // Unmark all listed folders
@@ -245,7 +245,8 @@ const FoldersSection = (props: any): JSX.Element => {
         dispatch(changeSortOption(newStatus));
     }
 
-    const folderSortCondition = (a: iFolderItem, b: iFolderItem): boolean => {
+    // Decide on how to sort a folder by comparing a folder's name with another 
+    const sortCondition = (a: iFolderItem, b: iFolderItem): boolean => {
         const { folderSortOptionValue } = foldersSectionState
         
         const aNameLowerCase = a.name.toLowerCase();
@@ -254,6 +255,7 @@ const FoldersSection = (props: any): JSX.Element => {
         return folderSortOptionValue === 0 ? (aNameLowerCase > bNameToLowerCase) : (bNameToLowerCase > aNameLowerCase);
     }
 
+    // Delete a folder. Trigger a confirmation warning before execution if set in plugin's settings
     const handleFolderDelete = (target: iFolderItem): void => {
         chrome.storage.local.get("folderRemovalWarning", (data) => {
             if(data.folderRemovalWarning === true) {
@@ -271,10 +273,9 @@ const FoldersSection = (props: any): JSX.Element => {
         evaluatePerformanceWarning(type, windows);
     }
 
-
     // Render the folder list
     const folderList = useMemo(() => {        
-        const sortedFolders = [...folderState].sort((a: any, b: any) => folderSortCondition(a, b) ? 1 : -1);
+        const sortedFolders = [...folderState].sort((a: any, b: any) => sortCondition(a, b) ? 1 : -1);
 
         // Determine the number of columns to be rendered, based on colsCount
         let colsList: Array<Array<JSX.Element>> = [];
@@ -314,9 +315,9 @@ const FoldersSection = (props: any): JSX.Element => {
         const columnsRender: Array<JSX.Element> = colsList.map((col, i: number) => <div key={`column-key-${i}`}>{col}</div>);
 
         return columnsRender;
-    }, [folderState, folderSortCondition, foldersSectionState.markedFoldersId])
+    }, [folderState, sortCondition, foldersSectionState.markedFoldersId])
 
-    const renderSortOptionsDropdown = (): JSX.Element => {
+    const showSortOptionsDropdown = (): JSX.Element => {
         const optionsList: Array<iFieldOption> = [
             {value: 0, label: "Ascending"},
             {value: 1, label: "Descending"},
@@ -328,7 +329,7 @@ const FoldersSection = (props: any): JSX.Element => {
     }
 
     // Render the action buttons for folder area
-    const renderOptionsMenu = (): JSX.Element => {
+    const showOptionsMenu = (): JSX.Element => {
         const { markedFoldersId } = foldersSectionState;
         let markSpecs: any;
 
@@ -409,7 +410,7 @@ const FoldersSection = (props: any): JSX.Element => {
                                 }
                             </TextIconButton>
                             <div className="relative w-[175px] mr-4 flex items-center">
-                                {renderSortOptionsDropdown()}
+                                {showSortOptionsDropdown()}
                             </div>
                             <PrimaryButton disabled={false} text="Create folder" onClick={() => setCreateFolder(true)} />
                         </div>
@@ -421,7 +422,7 @@ const FoldersSection = (props: any): JSX.Element => {
         return <></>
     }
 
-    // Prepare to remove multiple folders. Warn the user if set in Settings page
+    // Prepare to remove marked folders. Warn the user if set in plugin settings
     const handlePrepareMultipleRemovals = (): void => {
         const { markedFoldersId } = foldersSectionState;
         
@@ -436,7 +437,7 @@ const FoldersSection = (props: any): JSX.Element => {
         }
     }
 
-    // Prepare to duplicate multiple folders. Warn the user if set in Settings page
+    // Prepare to duplicate marked folders. Warn the user if set in plugin settings
     const handlePrepareDuplication = (): void => {
         const { markedFoldersId } = foldersSectionState;
         
@@ -480,7 +481,7 @@ const FoldersSection = (props: any): JSX.Element => {
         });
 
         // Close current session after launching the folder. Only applies when
-        // set in the Pettings page
+        // set in the plugin's settings
         chrome.storage.local.get("closeSessionAtFolderLaunch", (data) => {
             if(data.closeSessionAtFolderLaunch === true){
                 snapshot.forEach((window) => {
@@ -491,7 +492,6 @@ const FoldersSection = (props: any): JSX.Element => {
 
         // Unset all relevant states to prevent interferance with other features once the folder has been launched
         setWindowsPayload(null);
-        //evaluatePerformanceWarning(null);
         setShowPerformanceWarning(false);
     }
     
@@ -559,9 +559,9 @@ const FoldersSection = (props: any): JSX.Element => {
                     secondaryButton={{ text: "No, don't remove", callback: () => setShowDeleteWarning(false)}}    
                 />
             }
-            {renderFolderManagerPopup()}
+            {showFolderManager()}
         
-            <SectionContainer id="folder-section" title="Folders" options={renderOptionsMenu}>
+            <SectionContainer id="folder-section" title="Folders" options={showOptionsMenu}>
                 <>
                     {folderState.length === 0 && (
                         <div className="flex flex-col items-center justify-center h-[50%]">

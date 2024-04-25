@@ -46,24 +46,24 @@ const SettingsView = (props: any): JSX.Element => {
     const dispatch = useDispatch()
 
    
-    // Set default values of all fields
+    // Read all saved settings from browser and store it in redux for further use in the plugin
     useEffect(() => {
         getFromStorage("local", null, (data) => {
             dispatch(readAllPluginSettings(data));
         })
     }, []);
 
-    const getPresetPerformanceNotification = (): any => {
+    const getPresetPerformanceNotification = (): iFieldOption => {
         const result = performanceNotificationOptions.filter((target) => target.value === pluginSettingsState.performanceWarningValue);
         return result[0] || performanceNotificationOptions[0];
     }
 
-    const getPresetDuplicationWarning = (): any => {
+    const getPresetDuplicationWarning = (): iFieldOption => {
         const result = duplicationWarningOptions.filter((target) => target.value === pluginSettingsState.duplicationWarningValue);
         return result[0] || duplicationWarningOptions[0];
     }
 
-    // Save data selected in dropdown menu
+    // Save dropdown selection data to browser, and update redux store for UI usage
     const saveSelectedOption = (key: string, value: number | null): void => {
         if(value !== null){
             saveToStorage("local", key, value);
@@ -77,7 +77,7 @@ const SettingsView = (props: any): JSX.Element => {
         }
     }
 
-    // Save switcher data
+    // Save switcher data to browser, and update redux store for UI usage
     const saveSwitchSetting = (key: string, value: boolean | null): void => {
         if(value === null) return;
 
@@ -94,8 +94,6 @@ const SettingsView = (props: any): JSX.Element => {
            
         }
     }
-
-
 
     return (
         <SectionContainer id="settings-view" title="Settings">
@@ -135,12 +133,12 @@ const SettingsView = (props: any): JSX.Element => {
                             onCallback={(e) => saveSwitchSetting("folderRemovalWarning", e)} 
                         />
                     </FormField>
-                    <FormField label="Log errors" description="Automatically send error reports to the developer">
+                   {/* <FormField label="Log errors" description="Automatically send error reports to the developer">
                         <Switcher 
                             value={pluginSettingsState.allowErrorLog} 
                             onCallback={(e) => saveSwitchSetting("allowErrorLog", e)} 
                         />
-                    </FormField>
+                    </FormField> */}
                 </div>}
             </div>
         </SectionContainer>

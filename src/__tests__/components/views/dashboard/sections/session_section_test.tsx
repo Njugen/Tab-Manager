@@ -1,6 +1,6 @@
 import { render, screen, within, fireEvent } from "@testing-library/react";
 import '@testing-library/jest-dom'
-import CurrentSessionSection from "../../../../../views/dashboard/sections/current_session_section";
+import SessionSection from "../../../../../views/dashboard/sections/session_section";
 import randomNumber from "../../../../../tools/random_number";
 import mockStore from "../../../../../tools/testing/mock_store";
 import { Provider } from "react-redux";
@@ -21,7 +21,7 @@ afterEach(() => {
     jest.useRealTimers();
 })
 
-describe("Test <CurrentSessionSection>", () => {
+describe("Test <SessionSection>", () => {
 
     test("There are no warnin/alerts when rendered", () => {
         // @ts-expect-error
@@ -31,7 +31,7 @@ describe("Test <CurrentSessionSection>", () => {
 
         render(
             <Provider store={mockStore}>
-                <CurrentSessionSection />
+                <SessionSection />
             </Provider>
         );
         const alert = screen.queryByRole("alert");
@@ -46,7 +46,7 @@ describe("Test <CurrentSessionSection>", () => {
 
         render(
             <Provider store={mockStore}>
-                <CurrentSessionSection />
+                <SessionSection />
             </Provider>
         );
 
@@ -63,7 +63,7 @@ describe("Test <CurrentSessionSection>", () => {
 
         render(
             <Provider store={mockStore}>
-                <CurrentSessionSection />
+                <SessionSection />
             </Provider>
         );
 
@@ -83,7 +83,7 @@ describe("Test <CurrentSessionSection>", () => {
 
         render(
             <Provider store={mockStore}>
-                <CurrentSessionSection />
+                <SessionSection />
             </Provider>
         );
 
@@ -100,7 +100,7 @@ describe("Test <CurrentSessionSection>", () => {
 
         render(
             <Provider store={mockStore}>
-                <CurrentSessionSection />
+                <SessionSection />
             </Provider>
         );
 
@@ -122,7 +122,7 @@ describe("Test <CurrentSessionSection>", () => {
 
         render(
             <Provider store={mockStore}>
-                <CurrentSessionSection />
+                <SessionSection />
             </Provider>
         );
 
@@ -144,7 +144,7 @@ describe("Test <CurrentSessionSection>", () => {
 
         render(
             <Provider store={mockStore}>
-                <CurrentSessionSection />
+                <SessionSection />
             </Provider>
         );
 
@@ -171,7 +171,7 @@ describe("Test <CurrentSessionSection>", () => {
 
         render(
             <Provider store={mockStore}>
-                <CurrentSessionSection />
+                <SessionSection />
             </Provider>
         );
 
@@ -196,7 +196,7 @@ describe("Test <CurrentSessionSection>", () => {
 
         render(
             <Provider store={mockStore}>
-                <CurrentSessionSection />
+                <SessionSection />
             </Provider>
         );
 
@@ -233,7 +233,7 @@ describe("Test <CurrentSessionSection>", () => {
 
         render(
             <Provider store={mockStore}>
-                <CurrentSessionSection />
+                <SessionSection />
             </Provider>
         );
 
@@ -269,7 +269,7 @@ describe("Test <CurrentSessionSection>", () => {
 
         render(
             <Provider store={mockStore}>
-                <CurrentSessionSection />
+                <SessionSection />
             </Provider>
         );
 
