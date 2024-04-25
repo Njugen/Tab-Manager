@@ -11,7 +11,7 @@ import { updateWindowList } from "../../redux-toolkit/slices/folder_management_s
 
 
 /*
-    A textfield, which lets the user set/update a url for a tab.
+    A textfield, which lets the user set/update a url of a tab.
 */
 
 const EditableTabItem = (props: iEditableTabItem): JSX.Element => {
@@ -21,14 +21,16 @@ const EditableTabItem = (props: iEditableTabItem): JSX.Element => {
 
     const dispatch = useDispatch();
     
-    // Save the changes to redux once verified.
     // Show error message, and prevent saving if field is invalid.
+    // Save to redux store if valid.
     const saveToStore = (e: any): void => {
         const tabId = id ? id : randomNumber();
+
         if(!verifyValue(e.target.value)){
             setErrorMessage("A tab needs to have a valid URL, e.g. https://google.com/...");
         } else {
             setErrorMessage(null);
+            
             const tab: iTabItem = {
                 id: tabId,
                 label: e.target.value,
@@ -41,7 +43,7 @@ const EditableTabItem = (props: iEditableTabItem): JSX.Element => {
         }
     }
 
-    // Once the user clicks outside the field, then save it.
+    // Save the field once the user clicks outside of it.
     const handleBlur = (e: any): void => {
         saveToStore(e);
     }

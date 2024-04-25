@@ -9,6 +9,10 @@ import styles from "../../styles/global_utils.module.scss";
 
 /* 
     Tab component with clickable url and options (close tab, edit tab, mark tab)
+
+    - onEdit: if function present, then show an icon triggering it once clicked
+    - onMark: if function present, show a checkbox, permitting the tab to be marked.
+    - onClose: if function present, then show an icon triggering it once clicked
 */
 
 const TabItem = (props: iTabItem): JSX.Element => {

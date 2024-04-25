@@ -17,17 +17,25 @@ const WindowManager = (props: iWindowManager): JSX.Element => {
 
     const folderManagementState: iFolderItem | null = useSelector((state: any) => state.folderManagement);
 
-    // Once the inEdit reducer changes, stop creating window
+    
+    const windowCreationProcess = (on: boolean): void => {
+        // on = true: Tell the component that a window is being created
+        // on = false: Tell the component no windows are created. Component behaves like normal
+        if(on){
+            setIncreationId(randomNumber());
+            setCreateWindow(true);
+        } else {
+            setIncreationId(-1);
+            setCreateWindow(false);
+        }
+    }
+
     useEffect(() => {
-        setIncreationId(-1);
-        setCreateWindow(false);
+        windowCreationProcess(false)
     }, [folderManagementState]);
 
-    // Set states which indicates a window is being created
-    // If not, then there are no window being created and the window list acts as normal
     const handleCreateWindow = (): void => {
-        setIncreationId(randomNumber());
-        setCreateWindow(true);
+        windowCreationProcess(true)
     }
 
     return (

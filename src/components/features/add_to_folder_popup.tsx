@@ -6,7 +6,7 @@ import { iDropdownSelected } from '../../interfaces/dropdown';
 import { useEffect, useState } from 'react';
 
 /*
-    Popup where the user may choose where to add
+    Popup where the user chooses where to add
     selected tabs (either to a new or existing folder)
 */
 
@@ -21,12 +21,13 @@ const AddToFolderPopup = (props: iAddToFolderPopup): JSX.Element => {
         onCancel,
     } = props;
 
-
+    // Open an empty folder manager, preset with the selected tabs
     const handleToNewFolder = (): void => {
         onCancel();
         onNewFolder();
     }
 
+    // Open an existing folder in a manager, and add selected tabs into it.
     const handleAddToExistingFolder = (folder: iDropdownSelected): void => {
         onCancel();
         setShow(false);

@@ -33,9 +33,7 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
     
     const dispatch = useDispatch();
 
-    // Get information about the folder 
-    //const folder_state: iFolderItem | null = useSelector((state: any) => state.folderManagerReducer);
-    //const miscState: any = useSelector((state: any) => state.miscReducer);
+    // Get information about the folder from redux store
     const folderManagementState: iFolderItem | null = useSelector((state: RootState) => state.folderManagement);
     const miscState: any = useSelector((state: RootState) => state.misc);
 
