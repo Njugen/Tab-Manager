@@ -56,7 +56,7 @@ const EditableTabItem = (props: iEditableTabItem): JSX.Element => {
     }
 
     return (
-        <li className="mt-1 list-none">
+        <li key={`window-${windowId}-tab-${id}`} className="mt-1 list-none">
             <input 
                 data-testid="editable-tab"
                 autoFocus 

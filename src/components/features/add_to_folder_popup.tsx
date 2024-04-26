@@ -21,22 +21,28 @@ const AddToFolderPopup = (props: iAddToFolderPopup): JSX.Element => {
         onCancel,
     } = props;
 
+    const handleClose = (): void => {
+        onCancel();
+        document.body.style.overflowY = "auto";
+        document.body.style.overflowX = "auto";
+    }
+
     // Open an empty folder manager, preset with the selected tabs
     const handleToNewFolder = (): void => {
-        onCancel();
+        handleClose();
         onNewFolder();
     }
 
     // Open an existing folder in a manager, and add selected tabs into it.
     const handleAddToExistingFolder = (folder: iDropdownSelected): void => {
-        onCancel();
+        handleClose();
         setShow(false);
         onExistingFolder(folder);
     }
 
     const closeButtonSpecs: any = {
         label: "Close",
-        handler: onCancel
+        handler: handleClose
     }
 
     useEffect(() => {

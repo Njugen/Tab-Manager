@@ -20,6 +20,7 @@ const TabItem = (props: iTabItem): JSX.Element => {
         label, 
         url, 
         marked, 
+        windowId,
         onMark, 
         onEdit, 
         onClose, 
@@ -37,7 +38,7 @@ const TabItem = (props: iTabItem): JSX.Element => {
 
     return (
         <>
-            <li data-testid={"tab-item"} className="bg-gray-100 border h-12 px-2 border-gray-100 hover:border-tbfColor-lightpurple hover:bg-tbfColor-lighterpurple hover:text-tbf-middlegrey2 transition-all ease-in duration-100 tab-item my-1 flex items-center justify-between">
+            <li key={`window-${windowId}-tab-${id}`} data-testid={"tab-item"} className="bg-gray-100 border h-12 px-2 border-gray-100 hover:border-tbfColor-lightpurple hover:bg-tbfColor-lighterpurple hover:text-tbf-middlegrey2 transition-all ease-in duration-100 tab-item my-1 flex items-center justify-between">
                 <a href={url} rel="noreferrer" className="w-full py-3 text-sm flex hover:no-underline items-center truncate px-2 tab-item-info" target="_blank">
                     {address && <img src={`${chrome.runtime.getURL("/_favicon/")}?pageUrl=${address.origin}&size=18`} alt={""} />}
                     <span className="mx-3">{label || url}</span>

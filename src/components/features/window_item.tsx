@@ -128,7 +128,7 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
        
         result = tabs.map((tab) => {
             if(editTab === tab.id){
-                return <EditableTabItem key={`window-${id}-tab-${tab.id}`} windowId={id} id={editTab} preset={tab.url} onStop={handleEditTabStop} />
+                return <EditableTabItem key={`window-${id}-tab-${tab.id}-editable-tab`} windowId={id} id={editTab} preset={tab.url} onStop={handleEditTabStop} />
             } else {
                 return (
                     <TabItem 
@@ -153,7 +153,7 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
         if(newTab === true){
             return [
                 ...renderTabs, 
-                <EditableTabItem windowId={id} onStop={handleEditTabStop} />
+                <EditableTabItem key={`window-${id}-new-tab`} windowId={id} onStop={handleEditTabStop} />
             ];
         } else {
             return renderTabs;
@@ -177,7 +177,7 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
     }
 
     return (
-        <li data-testid="window-item" className="window-item w-full py-1 rounded-md mb-3" id={`window-${id}`}>
+        <li data-testid="window-item" className="window-item w-full py-1 rounded-md mb-3 list-none" key={`window-${id}`} id={`window-${id}`}>
             <div className="flex justify-between items-center w-full border-b border-tbfColor-darkgrey">
                 <h3 className="text-sm font-semibold ">
                     {`Window`}
@@ -196,7 +196,7 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
                 className={`tabs-list mt-3 overflow-hidden ${expanded === true ? "max-h-[2000px] ease-out visible" : "max-h-0 ease-in invisible"} duration-200 transition-all`}
             >
                 <ul className={`list-none grid ${tabsCol && tabsCol > 1 && window.innerWidth >= 640 ? `grid-cols-${tabsCol ? tabsCol : 2} gap-x-3 gap-y-1` : "gap-y-1 grid-cols-1"}`}>
-                    {tabs.length > 0 ? [...evaluateNewTabRender()] : <EditableTabItem windowId={id} onStop={handleEditTabStop} />}
+                    {tabs.length > 0 ? [...evaluateNewTabRender()] : <EditableTabItem key={`window-${id}-editable-tab`} windowId={id} onStop={handleEditTabStop} />}
                 </ul>
                 {tabs.length > 0 && disableEdit === false && <div className="mt-10 mb-8 flex justify-end">
                     {markedTabs.length > 0 && <SecondaryButton disabled={false} text="Delete tabs" onClick={handleDeleteTabs} />}

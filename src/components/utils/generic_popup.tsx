@@ -17,13 +17,13 @@ const GenericPopup = forwardRef(function GenericPopup(props: iGenericPopup, ref:
 
     const handleClose = (): void => {
         cancel.handler();
-        document.body.style.overflowY = "auto";
+       // document.body.style.overflowY = "auto";
     }
 
     const handleSave = (): void => {
         if(!save) return;
         save?.handler();
-        document.body.style.overflowY = "auto";
+       // document.body.style.overflowY = "auto";
     }
 
     useEffect(() => {

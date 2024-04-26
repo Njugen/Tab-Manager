@@ -63,7 +63,7 @@ const SectionContainer = (props: iSectionContainer): JSX.Element => {
                     <div className="text-right">
                     <button className={`${styles.opacity_hover_effect} m-1`} onClick={() => {
                             dispatch(smoothScrollUp(null));
-                            window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
+                            //window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
                             setFullscreen(true);
                             
                             if(onExpand) onExpand(true);

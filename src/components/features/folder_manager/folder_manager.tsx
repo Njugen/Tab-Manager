@@ -110,7 +110,7 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
         } 
 
         // Inform redux about the field change
-        dispatch(updateFolder([key, value]));
+        if(folderManagementState[key] !== value) dispatch(updateFolder([key, value]));
     }
 
 
@@ -138,7 +138,7 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
             callback();
         } else {
             setInValidFields({...updatedFieldState});
-            if(managerWrapperRef.current && managerWrapperRef.current.scrollTo === "function") managerWrapperRef.current.scrollTo({ top: 0, behavior: "smooth" })
+            if(managerWrapperRef.current) managerWrapperRef.current.scrollTo({ top: 0, behavior: "smooth" })
         }
     }
 
@@ -156,6 +156,9 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
                 setOriginWindows("");
                 setIsCreate(false);
                 
+                document.body.style.overflowY = "auto";
+                document.body.style.overflowX = "auto";
+
                 setTimeout(() => {
                     dispatch(setIsEditingTab(false));
                     onClose()
@@ -183,8 +186,7 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
                 dispatch(createNewFolder(folderManagementState));
             }   
 
-            document.body.style.overflowY = "auto";
-            document.body.style.overflowX = "auto";
+            
             handleClose(true);
         });
        
