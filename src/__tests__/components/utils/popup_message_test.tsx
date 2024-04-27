@@ -30,7 +30,6 @@ describe("Test <PopupMessage>", () => {
         )
 
         const container = screen.getByRole("alert");
-
         const heading = within(container).getByRole("heading");
         expect(heading).toHaveTextContent(mockTitle);
     })
@@ -41,33 +40,19 @@ describe("Test <PopupMessage>", () => {
         )
 
         const container = screen.getByRole("alert");
-
         const text = within(container).getByText(mockText);
         expect(text).toBeInTheDocument();
     })
 
-    test("Clicking primary button triggers its callback", () => {
-        render(
-            <PopupMessage {...props} />
-        )
+    test.each([
+        ["primary", pButton], 
+        ["secondary", sButton]
+    ])("Clicking %j button triggers its callback", (def, button) =>{
+        render(<PopupMessage {...props} />)
 
         const container = screen.getByRole("alert");
-        
-        const primaryButton = within(container).getByText(pButton.text, { selector: "button" });
-        fireEvent.click(primaryButton);
-        expect(pButton.callback).toHaveBeenCalled();
-    })
-
-    test("Clicking secondary button triggers its callback", () => {
-        render(
-            <PopupMessage {...props} />
-        )
-
-        const container = screen.getByRole("alert");
-
-        const secondaryButton = within(container).getByText(sButton.text, { selector: "button" });
-        expect(secondaryButton).toBeVisible();
-        fireEvent.click(secondaryButton);
-        expect(sButton.callback).toHaveBeenCalled();
+        const target = within(container).getByText(button.text, { selector: "button" });
+        fireEvent.click(target);
+        expect(button.callback).toHaveBeenCalled();
     })
 });

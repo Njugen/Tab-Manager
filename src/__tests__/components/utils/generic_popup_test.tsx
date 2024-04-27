@@ -19,7 +19,6 @@ const mockCancel = {
 describe("Test <GenericPopup>", () => {
     const typeCases: Array<"slide-in" | "popup"> = ["slide-in", "popup"];
     
-
     describe("When 'save' prop is missing", () => {
         const props = {
             title: mockTitle,
