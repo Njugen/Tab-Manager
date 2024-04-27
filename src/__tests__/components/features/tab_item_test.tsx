@@ -100,7 +100,7 @@ describe("Test <TabItem>", () => {
         render(
             <TabItem {...mockProps} url="Tervehuolto" onEdit={mockEditFn} />
         );
-        expect(mockEditFn ).toHaveBeenCalledWith(mockProps.id);
+        expect(mockEditFn).toHaveBeenCalledWith(mockProps.id);
     });
 
     test("mockEditFn does not trigger automatically if url is invalid and mockEditFn is missing", () => {

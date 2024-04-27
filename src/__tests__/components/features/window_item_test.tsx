@@ -157,7 +157,11 @@ describe("Test <WindowItem>", () => {
             expect(mockCloseWindowFn).toHaveBeenCalledWith(mockWindow.id);
         })
 
-        test("Edit button is hidden when disabled through props", () => {
+        test.each([
+            ["Edit", "pen-icon"],
+            ["Checkbox", "checkbox"],
+            ["Close", "close-light-icon"]
+        ])("%j is hidden when disabled through props", (label, testId) => {
             render(
                 <Provider store={store}>
                     <WindowItem {...mockWindow} />
@@ -168,40 +172,8 @@ describe("Test <WindowItem>", () => {
             const listItems = within(tablist).getAllByRole("listitem");
 
             listItems.forEach((tab, i) => {
-                const editButton = within(tab).queryByTestId("pen-icon");
-                expect(editButton).not.toBeInTheDocument();
-            })
-        })
-
-        test("Checkbox is hidden when disabled through props", () => {
-            render(
-                <Provider store={store}>
-                    <WindowItem {...mockWindow} />
-                </Provider>
-            )
-
-            const tablist = screen.getByRole("list");
-            const listItems = within(tablist).getAllByRole("listitem");
-
-            listItems.forEach((tab, i) => {
-                const checkbox = within(tab).queryByTestId("checkbox");
-                expect(checkbox).not.toBeInTheDocument();
-            })
-        })
-
-        test("Close button is hidden when disabled through props", () => {
-            render(
-                <Provider store={store}>
-                    <WindowItem {...mockWindow} />
-                </Provider>
-            )
-
-            const tablist = screen.getByRole("list");
-            const listItems = within(tablist).getAllByRole("listitem");
-
-            listItems.forEach((tab, i) => {
-                const closeButton = within(tab).queryByTestId("close-light-icon");
-                expect(closeButton).not.toBeInTheDocument();
+                const button = within(tab).queryByTestId(testId);
+                expect(button).not.toBeInTheDocument();
             })
         })
 
