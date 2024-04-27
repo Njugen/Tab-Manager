@@ -4,11 +4,8 @@ import { Provider, useSelector } from "react-redux";
 import FoldersSection from "../../../../../views/dashboard/sections/folders_section";
 import mockStore, { mockFolders } from "../../../../../tools/testing/mock_store";
 import mockBrowserStorage from "../../../../../tools/testing/mock_browser_storage";
-import { get } from "http";
-import { changeDuplicationWarningValue } from "../../../../../redux-toolkit/slices/plugin_settings_slice";
 import randomNumber from "../../../../../tools/random_number";
 import { act } from "react-dom/test-utils";
-import { iFolderItem } from "../../../../../interfaces/folder_item";
 import { iWindowItem } from "../../../../../interfaces/window_item";
 
 

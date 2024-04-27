@@ -6,7 +6,6 @@ import mockStore from "../../../../../tools/testing/mock_store";
 import { Provider } from "react-redux";
 import mockBrowserStorage from "../../../../../tools/testing/mock_browser_storage";
 import mockWindows from './../../../../../tools/testing/mock_windows';
-import { Windows } from "jest-chrome/types/jest-chrome";
 import { act } from "react-dom/test-utils";
 
 const mockCallback = jest.fn();
