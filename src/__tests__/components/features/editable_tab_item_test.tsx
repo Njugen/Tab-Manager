@@ -13,24 +13,24 @@ const mockPreset = `https://${randomNumber().toString()}.com`;
 const mockNewValue = `https://${randomNumber().toString()}.com`;
 
 describe("Test <EditableTabItem>", () => {
+    const commonRender = () => {
+        render(
+            <Provider store={store}>
+                <EditableTabItem windowId={mockWindowId} onStop={mockFn} />
+            </Provider>
+        )  
+    }
+
     describe("When initial value is 'https://'", () => {
         test("Initial value is 'https://'", async () => {
-            render(
-                <Provider store={store}>
-                    <EditableTabItem windowId={mockWindowId} onStop={mockFn} />
-                </Provider>
-            )   
+            commonRender()
             
             let textfield = screen.getByRole("textbox");
             expect(textfield).toHaveValue("https://");
         });
 
         test("Bluring does not trigger 'onStop' callback", async () => {
-            render(
-                <Provider store={store}>
-                    <EditableTabItem windowId={mockWindowId} onStop={mockFn} />
-                </Provider>
-            )   
+            commonRender()
             
             let textfield = screen.getByRole("textbox");
             await waitFor(() => expect(textfield).toHaveFocus(), { timeout: 1000 })
@@ -41,11 +41,7 @@ describe("Test <EditableTabItem>", () => {
         });
 
         test("Pressing Enter does not trigger 'onStop' callback", async () => {
-            render(
-                <Provider store={store}>
-                    <EditableTabItem windowId={mockWindowId} onStop={mockFn} />
-                </Provider>
-            )   
+            commonRender()
             
             let textfield = screen.getByRole("textbox");
             await waitFor(() => expect(textfield).toHaveFocus(), { timeout: 1000 })
@@ -56,11 +52,7 @@ describe("Test <EditableTabItem>", () => {
         });
 
         test("Value remains 'https://' after bluring", async () => {
-            render(
-                <Provider store={store}>
-                    <EditableTabItem windowId={mockWindowId} onStop={mockFn} />
-                </Provider>
-            )   
+            commonRender()
             
             let textfield = screen.getByRole("textbox");
             await waitFor(() => expect(textfield).toHaveFocus(), { timeout: 1000 })
@@ -74,11 +66,7 @@ describe("Test <EditableTabItem>", () => {
         });
 
         test("Value remains 'https://' when pressing Enter", async () => {
-            render(
-                <Provider store={store}>
-                    <EditableTabItem windowId={mockWindowId} onStop={mockFn} />
-                </Provider>
-            )   
+            commonRender()
             
             let textfield = screen.getByRole("textbox");
             await waitFor(() => expect(textfield).toHaveFocus(), { timeout: 1000 })
@@ -92,11 +80,7 @@ describe("Test <EditableTabItem>", () => {
         });
 
         test("Error message shows up when field is blurred", async () => {
-            render(
-                <Provider store={store}>
-                    <EditableTabItem windowId={mockWindowId} onStop={mockFn} />
-                </Provider>
-            )   
+            commonRender()
             
             let textfield = screen.getByRole("textbox");
             await waitFor(() => expect(textfield).toHaveFocus(), { timeout: 1000 })
@@ -109,11 +93,7 @@ describe("Test <EditableTabItem>", () => {
         });
 
         test("Error message shows up when pressing enter", async () => {
-            render(
-                <Provider store={store}>
-                    <EditableTabItem windowId={mockWindowId} onStop={mockFn} />
-                </Provider>
-            )   
+            commonRender()
             
             let textfield = screen.getByRole("textbox");
             await waitFor(() => expect(textfield).toHaveFocus(), { timeout: 1000 })
@@ -126,11 +106,7 @@ describe("Test <EditableTabItem>", () => {
         });
 
         test("Trigger 'onStop' callback and hides error message when blurred with valid url", async () => {
-            render(
-                <Provider store={store}>
-                    <EditableTabItem windowId={mockWindowId} onStop={mockFn} />
-                </Provider>
-            )   
+            commonRender()
             
             let textfield = screen.getByRole("textbox");
             await waitFor(() => expect(textfield).toHaveFocus(), { timeout: 1000 })
@@ -146,11 +122,7 @@ describe("Test <EditableTabItem>", () => {
         });
 
         test("Trigger 'onStop' callback and hides error message when hitting enter with valid url", async () => {
-            render(
-                <Provider store={store}>
-                    <EditableTabItem windowId={mockWindowId} onStop={mockFn} />
-                </Provider>
-            )   
+            commonRender()
             
             let textfield = screen.getByRole("textbox");
             await waitFor(() => expect(textfield).toHaveFocus(), { timeout: 1000 })
@@ -166,11 +138,7 @@ describe("Test <EditableTabItem>", () => {
         });
 
         test("Does not trigger 'onStop' callback and show error when blurring with invalid url", async () => {
-            render(
-                <Provider store={store}>
-                    <EditableTabItem windowId={mockWindowId} onStop={mockFn} />
-                </Provider>
-            )   
+            commonRender()
             
             let textfield = screen.getByRole("textbox");
             await waitFor(() => expect(textfield).toHaveFocus(), { timeout: 1000 })
@@ -183,11 +151,7 @@ describe("Test <EditableTabItem>", () => {
         });
 
         test("Does not trigger 'onStop' callback and show error when hitting enter with invalid url", async () => {
-            render(
-                <Provider store={store}>
-                    <EditableTabItem windowId={mockWindowId} onStop={mockFn} />
-                </Provider>
-            )   
+            commonRender()
             
             let textfield = screen.getByRole("textbox");
             await waitFor(() => expect(textfield).toHaveFocus(), { timeout: 1000 })
