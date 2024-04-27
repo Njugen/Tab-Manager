@@ -18,15 +18,7 @@ const reducers: any = {
 }
 
 export const store = configureStore({
-    reducer: {
-        folderManagement: folderManagementReducer,
-        folder: folderReducer,
-        foldersSection: foldersSectionReducer,
-        sessionSection: sessionSectionReducer,
-        historySection: historySectionReducer,
-        misc: miscReducer,
-        pluginSettings: pluginSettingsReducer
-    }
+    reducer: reducers
 });
 
 export { reducers };
