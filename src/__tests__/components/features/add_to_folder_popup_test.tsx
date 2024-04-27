@@ -74,7 +74,6 @@ describe("Test <AddToFolderPopup>", () => {
         })
 
     })
-    
 
     test("Triggers 'onCancel' prop when 'X' button is clicked", () => {
         render(
