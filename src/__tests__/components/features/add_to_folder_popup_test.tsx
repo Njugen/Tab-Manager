@@ -4,7 +4,7 @@ import iAddToFolderPopup from "../../../interfaces/add_to_folder_popup";
 import randomNumber from './../../../tools/random_number';
 import AddToFolderPopup from "../../../components/features/add_to_folder_popup";
 
-const mockProps: iAddToFolderPopup = {
+let mockProps: iAddToFolderPopup = {
     title: randomNumber().toString(),
     type: "slide-in",
     dropdownOptions: [
@@ -26,7 +26,10 @@ const mockProps: iAddToFolderPopup = {
     onCancel: jest.fn((): void => {}),
 }
 
-afterEach(() => cleanup())
+afterEach(() => {
+    jest.clearAllMocks();
+    cleanup();
+})
 
 describe("Test <AddToFolderPopup>", () => {
     const { onNewFolder, onCancel, onExistingFolder, dropdownOptions } = mockProps;

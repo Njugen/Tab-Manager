@@ -6,6 +6,10 @@ import PrimaryButton from "../../../components/utils/primary_button/primary_butt
 const mockText = randomNumber().toString();
 const mockFn = jest.fn();
 
+afterEach(() => {
+    jest.clearAllMocks();
+})
+
 describe("Test <PrimaryButton>", () => {
     test("Button has text inserted through props", () => {
         render(

@@ -6,7 +6,10 @@ import mockStore from "../../../tools/testing/mock_store";
 import { act } from "react-dom/test-utils";
 import mockBrowserStorage from "../../../tools/testing/mock_browser_storage";
 
-afterEach(() => cleanup())
+afterEach(() => {
+    jest.clearAllMocks();
+});
+cleanup()
 
 const commonRender = () => {
     render(

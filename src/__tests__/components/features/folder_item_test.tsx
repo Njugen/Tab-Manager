@@ -1,4 +1,4 @@
-import { render, screen, within, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, within, fireEvent, waitFor, cleanup } from "@testing-library/react";
 import '@testing-library/jest-dom'
 import { Provider, useSelector } from "react-redux";
 import { store } from "../../../redux-toolkit/store";
@@ -32,6 +32,10 @@ const createMockWindows = (mocks: number): Array<iWindowItem> => {
     return result;
 }
 
+afterEach(() => {
+    jest.clearAllMocks();
+    cleanup();
+})
 
 describe("Test <FolderItem>", () => {
     describe("When folder is initially expanded ('type' prop set to 'expanded')", () => {

@@ -23,6 +23,10 @@ const props: iPopupMessage = {
     secondaryButton: sButton 
 }
 
+afterEach(() => {
+    jest.clearAllMocks();
+})
+
 describe("Test <PopupMessage>", () => {
     test("heading shows 'title' prop", () => {
         render(

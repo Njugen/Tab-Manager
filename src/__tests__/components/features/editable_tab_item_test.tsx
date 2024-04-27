@@ -1,18 +1,21 @@
 import { render, screen, within, fireEvent, waitFor, cleanup } from "@testing-library/react";
 import '@testing-library/jest-dom'
 import randomNumber from "../../../tools/random_number";
-import TextIconButton from "../../../components/utils/text_icon_button";
 import EditableTabItem from "../../../components/features/editable_tab_item";
 import { store } from "../../../redux-toolkit/store";
 import { Provider } from "react-redux";
 
-const mockFn = jest.fn();
+let mockFn = jest.fn();
+
+afterEach(() => {
+    jest.clearAllMocks();
+    cleanup()
+ });
+
 const mockTabId = randomNumber();
 const mockWindowId = randomNumber();
 const mockPreset = `https://${randomNumber().toString()}.com`;
 const mockNewValue = `https://${randomNumber().toString()}.com`;
-
-afterEach(() => cleanup())
 
 describe("Test <EditableTabItem>", () => {
     const commonRender = () => {

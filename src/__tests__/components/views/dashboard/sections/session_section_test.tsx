@@ -1,4 +1,4 @@
-import { render, screen, within, fireEvent } from "@testing-library/react";
+import { render, screen, within, fireEvent, cleanup } from "@testing-library/react";
 import '@testing-library/jest-dom'
 import SessionSection from "../../../../../views/dashboard/sections/session_section";
 import randomNumber from "../../../../../tools/random_number";
@@ -17,7 +17,9 @@ beforeEach(() => {
 })
 
 afterEach(() => {
+    jest.clearAllMocks();
     jest.useRealTimers();
+    cleanup();
 })
 
 describe("Test <SessionSection>", () => {

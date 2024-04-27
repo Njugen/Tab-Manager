@@ -1,4 +1,4 @@
-import { render, screen, within, fireEvent } from "@testing-library/react";
+import { render, screen, within, fireEvent, cleanup } from "@testing-library/react";
 import '@testing-library/jest-dom'
 import CircleButton from '../../../components/utils/circle_button';
 import randomNumber from "../../../tools/random_number";
@@ -12,7 +12,12 @@ const mockProps = {
 
 const mockMarkFn = jest.fn((tabId: number, checked: boolean): void | undefined => {});
 const mockEditFn = jest.fn((tabId: number): void | undefined => {});
-const mockOnCloseFn = jest.fn((tabId: number): any | undefined => {})
+const mockOnCloseFn = jest.fn((tabId: number): any | undefined => {});
+
+afterEach(() => {
+    jest.clearAllMocks();
+    cleanup();
+})
 
 describe("Test <TabItem>", () => {
     test("The tab itself renders", () => {

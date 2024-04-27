@@ -21,6 +21,10 @@ const props: iTextIconButton = {
     disabled: false
 }
 
+afterEach(() => {
+    jest.clearAllMocks();
+})
+
 describe("Test <TextIconButton>", () => {
     test("triggers 'onClick' callback when clicked", () => {
         render(

@@ -14,6 +14,10 @@ const mockChildren = <div data-testid="mock-child-section"></div>
 
 window.scrollTo = jest.fn((e: any) => e)
 
+afterEach(() => {
+    jest.clearAllMocks();
+})
+
 describe("Test <SectionContainer>", () => {
     describe("When rendering with options area", () => {
         const props: iSectionContainer = {

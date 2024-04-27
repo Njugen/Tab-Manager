@@ -20,6 +20,10 @@ const props: iNavlink = {
     children: mockChild
 }
 
+afterEach(() => {
+    jest.clearAllMocks();
+})
+
 describe("Test <Navlink>", () => {
     test("Link has 'label' prop as text", () => {
         render(

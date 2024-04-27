@@ -5,7 +5,15 @@ import mockStore from '../../../tools/testing/mock_store';
 import AdvancedSearchBar from "../../../components/features/advanced_search_bar/advanced_search_bar";
 import { act } from "react-dom/test-utils";
 
-afterEach(() => cleanup())
+beforeEach(() => {
+    jest.useFakeTimers();
+});
+
+afterEach(() => {
+    jest.useRealTimers();
+    jest.clearAllMocks();
+    cleanup();
+})
 
 describe("Test <AdvancedSearchBar>", () => {
     describe("Test search results", () => {

@@ -15,6 +15,12 @@ import { iTabItem } from "../../../interfaces/tab_item";
 
 const mockFn = jest.fn();
 
+const mockProps: iFolderManager = {
+    title: randomNumber().toString(),
+    type: "slide-in",
+    onClose: mockFn
+}
+
 beforeEach(() => {
     // Mock the managerwrapperref
     jest.spyOn(React , "useRef").mockReturnValue({
@@ -26,15 +32,10 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+    jest.clearAllMocks();
     jest.useRealTimers();
     cleanup();
 })
-
-const mockProps: iFolderManager = {
-    title: randomNumber().toString(),
-    type: "slide-in",
-    onClose: mockFn
-}
 
 describe("Test <FolderManager>", () => {
     const commonRender = () => {
@@ -287,7 +288,6 @@ describe("Test <FolderManager>", () => {
             chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
                 callback({ showFolderChangeWarning: false })
             })
-
 
             commonRender();
             
@@ -634,7 +634,6 @@ describe("Edit folder: Test <FolderManager> with prefilled values", () => {
             let randomTabs: Array<HTMLElement> = [];
             let lastSelectedId = -1;
 
-
             for(let i = 0; i < 4; i++){
                 const randomTabIndex = Math.floor(Math.random() * totalTabsInWindowCount);
                 const target = tabItems.splice(randomTabIndex, 1);
@@ -681,7 +680,6 @@ describe("Edit folder: Test <FolderManager> with prefilled values", () => {
                 // Get 4 random tab id
                 let randomTabs: Array<HTMLElement> = [];
                 let lastSelectedId = -1;
-
 
                 for(let i = 0; i < 4; i++){
                     const randomTabIndex = Math.floor(Math.random() * totalTabsInWindowCount);

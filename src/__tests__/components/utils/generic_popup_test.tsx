@@ -15,6 +15,9 @@ const mockCancel = {
     handler: jest.fn()
 }
 
+afterEach(() => {
+    jest.clearAllMocks();
+})
 
 describe("Test <GenericPopup>", () => {
     const typeCases: Array<"slide-in" | "popup"> = ["slide-in", "popup"];

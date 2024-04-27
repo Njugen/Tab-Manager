@@ -1,4 +1,4 @@
-import { render, screen, within, fireEvent } from "@testing-library/react";
+import { render, screen, within, fireEvent, cleanup } from "@testing-library/react";
 import '@testing-library/jest-dom'
 import randomNumber from "../../../tools/random_number";
 import TextIconButton from "../../../components/utils/text_icon_button";
@@ -21,7 +21,6 @@ const mockWindow: iWindowItem = {
     tabsCol: 2
 }
 
-
 const mockMarkTabFn = jest.fn((tabId: number, checked: boolean): void | undefined => {});
 const mockEditTabFn = jest.fn((tabId: number): void | undefined => {})
 const mockOnCloseFn = jest.fn((tabId: number): void | undefined => {})
@@ -41,6 +40,11 @@ for(let i = 0; i < 10; i++){
 
 const mockCloseWindowFn = jest.fn((id: number | number[]): void => {})
 chrome.tabs.remove = jest.fn((tabId: number|number[]): Promise<void> => new Promise((res, rej) => {}));
+
+afterEach(() => {
+    jest.clearAllMocks();
+    cleanup();
+})
 
 describe("Test <WindowItem>", () => {
     test("Only editable tab is shown when no preset tabs", () => {
