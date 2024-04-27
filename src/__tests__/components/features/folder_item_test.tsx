@@ -46,7 +46,7 @@ describe("Test <FolderItem>", () => {
                 windows: createMockWindows(5)
             }
 
-            const { id, name, desc, marked, type, viewMode, windows } = mockFolderItem;
+            const { name, desc } = mockFolderItem;
     
             test("Folder shows 'name' prop in the heading", () => {
                 render(
@@ -343,7 +343,7 @@ describe("Test <FolderItem>", () => {
                 windows: createMockWindows(5)
             }
 
-            const { id, name, desc, marked, type, viewMode, windows } = mockFolderItem;
+            const { name, desc } = mockFolderItem;
     
             test("Folder shows 'name' prop in the heading", () => {
                 render(

@@ -57,7 +57,7 @@ describe("Test <AdvancedSearchBar>", () => {
         })
 
         describe("Test folder launch attempts", () => {
-            const common = () => {
+            const commonRender = () => {
                 render(
                     <Provider store={mockStore}>
                         <AdvancedSearchBar />
@@ -93,7 +93,7 @@ describe("Test <AdvancedSearchBar>", () => {
     
                 jest.useFakeTimers();
     
-                common();
+                commonRender();
     
                 const warningMessage = screen.getByRole("alert");
                 expect(warningMessage).toBeInTheDocument();
@@ -107,7 +107,7 @@ describe("Test <AdvancedSearchBar>", () => {
     
                 jest.useFakeTimers();
     
-                common()
+                commonRender()
     
                 const warningMessage = screen.queryByRole("alert");
                 expect(warningMessage).not.toBeInTheDocument();
@@ -115,7 +115,7 @@ describe("Test <AdvancedSearchBar>", () => {
         })
 
         describe("Test window opening sequence", () => {
-            const common = () => {
+            const commonRender = () => {
                 render(
                     <Provider store={mockStore}>
                         <AdvancedSearchBar />
@@ -150,7 +150,7 @@ describe("Test <AdvancedSearchBar>", () => {
                     callback({ performanceWarningValue: 5 })
                 })
 
-                common();
+                commonRender();
     
                 const warningMessage = screen.getByRole("alert");
                 const cancelButton = within(warningMessage).getByTestId("alert-cancel-button");
@@ -169,7 +169,7 @@ describe("Test <AdvancedSearchBar>", () => {
                     callback({ performanceWarningValue: 5 })
                 })
     
-                common();
+                commonRender();
                 
                 const warningMessage = screen.getByRole("alert");
                 const proceedButton = within(warningMessage).getByTestId("alert-proceed-button");
@@ -185,7 +185,7 @@ describe("Test <AdvancedSearchBar>", () => {
                     callback({ performanceWarningValue: 5 })
                 })
     
-                common();
+                commonRender();
     
                 const warningMessage = screen.getByRole("alert");
                 const proceedButton = within(warningMessage).getByTestId("alert-proceed-button");

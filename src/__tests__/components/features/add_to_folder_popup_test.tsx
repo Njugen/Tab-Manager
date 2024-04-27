@@ -48,7 +48,7 @@ describe("Test <AddToFolderPopup>", () => {
     })
 
     describe("Test folder selection", () => {
-        const common = () => {
+        const commonRender = () => {
             render(
                 <AddToFolderPopup {...mockProps} />
             );
@@ -64,12 +64,12 @@ describe("Test <AddToFolderPopup>", () => {
         }
 
         test("triggers 'onExistingFolder' prop when selecting an existing folder", () => {
-            common();
+            commonRender();
             expect(onExistingFolder).toHaveBeenCalledWith({ selected: dropdownOptions[1].value });
         })
     
         test("triggers' onCancel' prop when selecting an existing folder", () => {
-            common()
+            commonRender()
             expect(onCancel).toHaveBeenCalled()
         })
 

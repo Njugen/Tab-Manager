@@ -1,4 +1,4 @@
-import { render, screen, within, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, within, fireEvent, waitFor, cleanup } from "@testing-library/react";
 import '@testing-library/jest-dom'
 import randomNumber from "../../../tools/random_number";
 import TextIconButton from "../../../components/utils/text_icon_button";
@@ -11,6 +11,8 @@ const mockTabId = randomNumber();
 const mockWindowId = randomNumber();
 const mockPreset = `https://${randomNumber().toString()}.com`;
 const mockNewValue = `https://${randomNumber().toString()}.com`;
+
+afterEach(() => cleanup())
 
 describe("Test <EditableTabItem>", () => {
     const commonRender = () => {
