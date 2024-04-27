@@ -22,7 +22,6 @@ afterEach(() => {
 })
 
 describe("Test <SessionSection>", () => {
-
     test("There are no warnin/alerts when rendered", () => {
         // @ts-expect-error
         chrome.windows.getAll = jest.fn((query, callback: (e: any) => {}): void => {

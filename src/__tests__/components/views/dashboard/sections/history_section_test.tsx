@@ -1,4 +1,4 @@
-import { render, screen, within, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, within, fireEvent, waitFor, cleanup } from "@testing-library/react";
 import '@testing-library/jest-dom'
 import { Provider, useSelector } from "react-redux";
 import FoldersSection from "../../../../../views/dashboard/sections/folders_section";
@@ -28,6 +28,7 @@ beforeEach(() => {
 
 afterEach(() => {
     jest.useRealTimers();
+    cleanup();
 })
 
 // Number of tabs to mark
@@ -93,89 +94,172 @@ describe("Test <HistorySection>", () => {
     })
 
     describe("Test marking and interaction with Folder Manager", () => {
+        describe("Adding marked tabs to folder manager", () => {
+            const addToFolderSequenceRender = () => {
+                render(
+                    <Provider store={mockStore}>
+                        <HistorySection />
+                    </Provider>
+                )
     
-        test("Folder manager contains marked history tabs if user choose to add them to a new folder", () => {
-            render(
-                <Provider store={mockStore}>
-                    <HistorySection />
-                </Provider>
-            )
-
-            const tabs = screen.getAllByTestId("tab-item");
-
-            for(let i = 0; i < markCount; i++){
-                const checkbox = within(tabs[i]).getByTestId("checkbox");
-                fireEvent.click(checkbox);
+                const tabs = screen.getAllByTestId("tab-item");
+    
+                for(let i = 0; i < markCount; i++){
+                    const checkbox = within(tabs[i]).getByTestId("checkbox");
+                    fireEvent.click(checkbox);
+                }
+    
+                const addToFolderButton = screen.getByText("Add to folder", { selector: "button" });
+                fireEvent.click(addToFolderButton);
             }
-
-            const addToFolderButton = screen.getByText("Add to folder", { selector: "button" });
-            fireEvent.click(addToFolderButton);
-
-            // Open dialog, where user selects how he wants to add the tabs
-            let dialog = screen.getByRole("dialog");
-            const newFolderButton = within(dialog).getByText("To a new folder", { selector: "button" });
-
-            fireEvent.click(newFolderButton);
-            
-            // Folder manager
-            dialog = screen.getByRole("dialog");
-
-            // Number of rendered tabs in folder manager should equal the numbers marked
-            const renderedTabs = within(dialog).getAllByTestId("tab-item");
-
-            expect(markCount).toEqual(renderedTabs.length);
-            const cancelButton = within(dialog).getByText("Cancel", { selector: "button" });
-
-            fireEvent.click(cancelButton, { bubbles: true });
-            act(() => {
-                jest.runAllTimers();
+    
+            test("Folder manager contains marked history tabs if user choose to add them to a new folder", () => {
+                addToFolderSequenceRender();
+    
+                // Open dialog, where user selects how he wants to add the tabs
+                let dialog = screen.getByRole("dialog");
+                const newFolderButton = within(dialog).getByText("To a new folder", { selector: "button" });
+    
+                fireEvent.click(newFolderButton);
+                
+                // Folder manager
+                dialog = screen.getByRole("dialog");
+    
+                // Number of rendered tabs in folder manager should equal the numbers marked
+                const renderedTabs = within(dialog).getAllByTestId("tab-item");
+    
+                expect(markCount).toEqual(renderedTabs.length);
+                const cancelButton = within(dialog).getByText("Cancel", { selector: "button" });
+    
+                fireEvent.click(cancelButton, { bubbles: true });
+                act(() => {
+                    jest.runAllTimers();
+                });
             });
-        });
+    
+            test("Folder manager contains marked history tabs if user choose to add them to an existing folder", () => {
+                addToFolderSequenceRender();
+    
+                // Open dialog, where user selects how he wants to add the tabs
+                let dialog = screen.getByRole("dialog");
+                const dropdown = screen.getByText("Select a folder", { selector: "button" });
+                fireEvent.click(dropdown);
+    
+                const options = screen.getAllByRole("listitem")
+                const targetOptionButton = within(options[1]).getByRole("button");
+                fireEvent.click(targetOptionButton);
+                
+                // Folder manager
+                dialog = screen.getByRole("dialog");
+    
+                const renderedTabs = within(dialog).getAllByTestId("tab-item");
+    
+                let totalFolderMockTabs = 0;
+                mockFolders[0].windows.forEach((window) => {
+                    totalFolderMockTabs += window.tabs.length;
+                })
+    
+                expect(markCount + totalFolderMockTabs).toEqual(renderedTabs.length);
+                const cancelButton = within(dialog).getByText("Cancel", { selector: "button" });
+    
+                fireEvent.click(cancelButton, { bubbles: true });
+                act(() => {
+                    jest.runAllTimers();
+                });
+            });
+        })
 
-        test("Folder manager contains marked history tabs if user choose to add them to an existing folder", () => {
-            render(
-                <Provider store={mockStore}>
-                    <HistorySection />
-                </Provider>
-            )
-
-            const tabs = screen.getAllByTestId("tab-item");
-
-            for(let i = 0; i < markCount; i++){
-                const checkbox = within(tabs[i]).getByTestId("checkbox");
-                fireEvent.click(checkbox);
+        describe("Test mark/unmark all tabs sequences", () => {
+            const markUnmarkAllSequenceRender = () => {
+                render(
+                    <Provider store={mockStore}>
+                        <HistorySection />
+                    </Provider>
+                )
+    
+                const markAllButton = screen.getByTestId("text-icon-button-deselected_checkbox");
+                fireEvent.click(markAllButton); 
+    
+                const unMarkAllButton = screen.getByTestId("text-icon-button-selected_checkbox");
+                fireEvent.click(unMarkAllButton); 
             }
-
-            const addToFolderButton = screen.getByText("Add to folder", { selector: "button" });
-            fireEvent.click(addToFolderButton);
-
-            // Open dialog, where user selects how he wants to add the tabs
-            let dialog = screen.getByRole("dialog");
-            const dropdown = screen.getByText("Select a folder", { selector: "button" });
-            fireEvent.click(dropdown);
-
-            const options = screen.getAllByRole("listitem")
-            const targetOptionButton = within(options[1]).getByRole("button");
-            fireEvent.click(targetOptionButton);
             
-            // Folder manager
-            dialog = screen.getByRole("dialog");
-
-            const renderedTabs = within(dialog).getAllByTestId("tab-item");
-
-            let totalFolderMockTabs = 0;
-            mockFolders[0].windows.forEach((window) => {
-                totalFolderMockTabs += window.tabs.length;
-            })
-
-            expect(markCount + totalFolderMockTabs).toEqual(renderedTabs.length);
-            const cancelButton = within(dialog).getByText("Cancel", { selector: "button" });
-
-            fireEvent.click(cancelButton, { bubbles: true });
-            act(() => {
-                jest.runAllTimers();
+    
+            test("Clicking unmark all will leave no checkbox checked", () => {
+                markUnmarkAllSequenceRender()
+    
+                const markCount = screen.queryAllByTestId("checked-icon").length;
+    
+                expect(markCount).toEqual(0);
             });
-        });
+    
+            test("Clicking unmark all will disable the 'Open selected' button", () => {
+                markUnmarkAllSequenceRender()
+    
+                const button = screen.getByText("Open selected", { selector: "button" });
+                expect(button).toBeDisabled();
+            });
+    
+            test("Clicking unmark all will disable the 'Add to folder' button", () => {
+                markUnmarkAllSequenceRender()
+    
+                const button = screen.getByText("Add to folder", { selector: "button" });
+                expect(button).toBeDisabled();
+            });
+    
+            test("Clicking unmark all will disable the 'Delete from history' button", () => {
+                markUnmarkAllSequenceRender()
+    
+                const button = screen.getByTestId("text-icon-button-trash");
+                expect(button).toBeDisabled();
+            });
+        })
+
+        describe("Test mark/unmark single tab sequence", () => {
+            const markUnmarkTabSequenceRender = () => {
+                render(
+                    <Provider store={mockStore}>
+                        <HistorySection />
+                    </Provider>
+                )
+    
+                const tabs = screen.getAllByTestId("tab-item");
+                let checkbox = within(tabs[0]).getByTestId("checkbox");
+                fireEvent.click(checkbox);
+    
+                checkbox = within(tabs[0]).getByTestId("checkbox");
+                fireEvent.click(checkbox); 
+            }
+    
+            test("Clicking unmark a button will leave no checkbox checked", () => {
+                markUnmarkTabSequenceRender();
+    
+                const markCount = screen.queryAllByTestId("checked-icon").length;
+    
+                expect(markCount).toEqual(0);
+            });
+    
+            test("Mark and unmark a tab will disable the 'Open selected' button", () => {
+                markUnmarkTabSequenceRender();
+    
+                const button = screen.getByText("Open selected", { selector: "button" });
+                expect(button).toBeDisabled();
+            });
+    
+            test("Mark and unmark a tab will disable the 'Add to folder' button", () => {
+                markUnmarkTabSequenceRender();
+    
+                const button = screen.getByText("Add to folder", { selector: "button" });
+                expect(button).toBeDisabled();
+            });
+    
+            test("Mark and unmark a tab will disable the 'Delete from history' button", () => {
+                markUnmarkTabSequenceRender();
+    
+                const button = screen.getByTestId("text-icon-button-trash");
+                expect(button).toBeDisabled();
+            });
+        })
 
         test("Folder manager contains all tabs marked by the 'Mark all' feature", () => {
             render(
@@ -258,149 +342,6 @@ describe("Test <HistorySection>", () => {
             act(() => {
                 jest.runAllTimers();
             });
-        });
-
-        test("Clicking unmark all will leave no checkbox checked", () => {
-            render(
-                <Provider store={mockStore}>
-                    <HistorySection />
-                </Provider>
-            )
-
-            const markAllButton = screen.getByTestId("text-icon-button-deselected_checkbox");
-            fireEvent.click(markAllButton); 
-
-            const unMarkAllButton = screen.getByTestId("text-icon-button-selected_checkbox");
-            fireEvent.click(unMarkAllButton); 
-
-            const markCount = screen.queryAllByTestId("checked-icon").length;
-
-            expect(markCount).toEqual(0);
-        });
-
-        test("Clicking unmark all will disable the 'Open selected' button", () => {
-            render(
-                <Provider store={mockStore}>
-                    <HistorySection />
-                </Provider>
-            )
-
-            const markAllButton = screen.getByTestId("text-icon-button-deselected_checkbox");
-            fireEvent.click(markAllButton); 
-
-            const unMarkAllButton = screen.getByTestId("text-icon-button-selected_checkbox");
-            fireEvent.click(unMarkAllButton); 
-
-            const button = screen.getByText("Open selected", { selector: "button" });
-            expect(button).toBeDisabled();
-        });
-
-        test("Clicking unmark all will disable the 'Add to folder' button", () => {
-            render(
-                <Provider store={mockStore}>
-                    <HistorySection />
-                </Provider>
-            )
-
-            const markAllButton = screen.getByTestId("text-icon-button-deselected_checkbox");
-            fireEvent.click(markAllButton); 
-
-            const unMarkAllButton = screen.getByTestId("text-icon-button-selected_checkbox");
-            fireEvent.click(unMarkAllButton); 
-
-            const button = screen.getByText("Add to folder", { selector: "button" });
-            expect(button).toBeDisabled();
-        });
-
-        test("Clicking unmark all will disable the 'Delete from history' button", () => {
-            render(
-                <Provider store={mockStore}>
-                    <HistorySection />
-                </Provider>
-            )
-
-            const markAllButton = screen.getByTestId("text-icon-button-deselected_checkbox");
-            fireEvent.click(markAllButton); 
-
-            const unMarkAllButton = screen.getByTestId("text-icon-button-selected_checkbox");
-            fireEvent.click(unMarkAllButton); 
-
-            const button = screen.getByTestId("text-icon-button-trash");
-            expect(button).toBeDisabled();
-        });
-
-
-        test("Clicking unmark a button will leave no checkbox checked", () => {
-            render(
-                <Provider store={mockStore}>
-                    <HistorySection />
-                </Provider>
-            )
-
-            const tabs = screen.getAllByTestId("tab-item");
-            let checkbox = within(tabs[0]).getByTestId("checkbox");
-            fireEvent.click(checkbox);
-
-            checkbox = within(tabs[0]).getByTestId("checkbox");
-            fireEvent.click(checkbox);
-
-            const markCount = screen.queryAllByTestId("checked-icon").length;
-
-            expect(markCount).toEqual(0);
-        });
-
-        test("Mark and unmark a tab will disable the 'Open selected' button", () => {
-            render(
-                <Provider store={mockStore}>
-                    <HistorySection />
-                </Provider>
-            )
-
-            const tabs = screen.getAllByTestId("tab-item");
-            let checkbox = within(tabs[0]).getByTestId("checkbox");
-            fireEvent.click(checkbox);
-
-            checkbox = within(tabs[0]).getByTestId("checkbox");
-            fireEvent.click(checkbox);
-
-            const button = screen.getByText("Open selected", { selector: "button" });
-            expect(button).toBeDisabled();
-        });
-
-        test("Mark and unmark a tab will disable the 'Add to folder' button", () => {
-            render(
-                <Provider store={mockStore}>
-                    <HistorySection />
-                </Provider>
-            )
-
-            const tabs = screen.getAllByTestId("tab-item");
-            let checkbox = within(tabs[0]).getByTestId("checkbox");
-            fireEvent.click(checkbox);
-
-            checkbox = within(tabs[0]).getByTestId("checkbox");
-            fireEvent.click(checkbox);
-
-            const button = screen.getByText("Add to folder", { selector: "button" });
-            expect(button).toBeDisabled();
-        });
-
-        test("Mark and unmark a tab will disable the 'Delete from history' button", () => {
-            render(
-                <Provider store={mockStore}>
-                    <HistorySection />
-                </Provider>
-            )
-
-            const tabs = screen.getAllByTestId("tab-item");
-            let checkbox = within(tabs[0]).getByTestId("checkbox");
-            fireEvent.click(checkbox);
-
-            checkbox = within(tabs[0]).getByTestId("checkbox");
-            fireEvent.click(checkbox);
-
-            const button = screen.getByTestId("text-icon-button-trash");
-            expect(button).toBeDisabled();
         });
     });
 

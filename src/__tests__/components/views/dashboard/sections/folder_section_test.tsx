@@ -1,4 +1,4 @@
-import { render, screen, within, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, within, fireEvent, waitFor, cleanup } from "@testing-library/react";
 import '@testing-library/jest-dom'
 import { Provider, useSelector } from "react-redux";
 import FoldersSection from "../../../../../views/dashboard/sections/folders_section";
@@ -23,12 +23,11 @@ beforeEach(() => {
 
 afterEach(() => {
     jest.useRealTimers();
+    cleanup();
 })
 
 describe("Test <FoldersSection>", () => {
     test("When invoked, fetch data from storage", () => {
-
-
         render(
             <Provider store={mockStore}>
                 <FoldersSection />
@@ -39,8 +38,6 @@ describe("Test <FoldersSection>", () => {
     });
 
     test("No warning messages when first rendered (all warning settings turned off)", () => {
-
-
         render(
             <Provider store={mockStore}>
                 <FoldersSection />
@@ -52,7 +49,6 @@ describe("Test <FoldersSection>", () => {
     })
 
     test("No warning messages when first rendered (all warning settings turned on)", () => {
-
         render(
             <Provider store={mockStore}>
                 <FoldersSection />
@@ -302,9 +298,6 @@ describe("Test <FoldersSection>", () => {
 
                 folderManager = screen.queryByRole("dialog");
                 expect(folderManager).not.toBeInTheDocument();
-
-
-             
             });
 
             test("Saving the folder manager once correctly filled, will add the new folder to list", () => {
@@ -460,12 +453,15 @@ describe("Test <FoldersSection>", () => {
         })
 
         describe("Test folder removal", () => {
-            test("Folder is removed when clicking its trash icon", () => {
+            test.each([
+                ["Folder is removed when clicking its trash icon", false, true],
+                ["Folder is removed when proceeding through its warning message (if set in plugin's settings)", true, false]
+            ])("%j", (label, preset, expected) => {
                 // @ts-expect-error
                 chrome.storage.local.get = jest.fn((data, callback: (e: any) => {}): void => {
                     callback({
                         ...mockBrowserStorage,
-                        folderRemovalWarning: false
+                        folderRemovalWarning: preset
                     })
                 });
 
@@ -485,7 +481,7 @@ describe("Test <FoldersSection>", () => {
                 const trashIcon = within(target).getByTestId("trash-icon");
                 fireEvent.click(trashIcon, { bubbles: true })
 
-                let isNotInFolderList = true;
+                let isInFolderList = expected;
                 
                 const currentFolders = screen.getAllByTestId("folder-item");
 
@@ -493,59 +489,13 @@ describe("Test <FoldersSection>", () => {
                 currentFolders.forEach((folder) => {
                     try {
                         within(folder).getByText(headingText, { selector: "h2" });
-                        isNotInFolderList = false;
+                        isInFolderList = false;
                     } catch(e){
-
+                        isInFolderList = expected;
                     }
                 })
 
-                expect(isNotInFolderList).toBeTruthy();
-            })
-
-            test("Folder is removed when proceeding through its warning message (if set in plugin's settings)", () => {
-                // @ts-expect-error
-                chrome.storage.local.get = jest.fn((data, callback: (e: any) => {}): void => {
-                    callback({
-                        ...mockBrowserStorage,
-                        folderRemovalWarning: true
-                    })
-                });
-
-                render(
-                    <Provider store={mockStore}>
-                        <FoldersSection />
-                    </Provider>
-                );
-
-                const folders = screen.getAllByTestId("folder-item");
-                const target = folders[0];
-
-                const targetHeading = within(target).getByRole("heading", { level: 2 });
-                const headingText = targetHeading.innerHTML;
-
-                // Trashbutton;
-                const trashIcon = within(target).getByTestId("trash-icon");
-                fireEvent.click(trashIcon, { bubbles: true })
-
-                // Proceed button
-                const proceedButton = screen.getByTestId("alert-proceed-button");
-                fireEvent.click(proceedButton);
-            
-                let isInFolderList = false;
-                
-                const currentFolders = screen.getAllByTestId("folder-item");
-
-                // If still in list, set isInFolderList = true -> meaning the test fails because it is still in the list
-                currentFolders.forEach((folder) => {
-                    try {
-                        within(folder).getByText(headingText, { selector: "h2" });
-                        isInFolderList = true;
-                    } catch(e){
-
-                    }
-                })
-
-                expect(isInFolderList).toBeFalsy();
+                expect(isInFolderList).toEqual(expected);
             })
 
             test("Folder is not removed when cancelling through its warning message (if set in plugin's settings)", () => {
@@ -669,10 +619,6 @@ describe("Test <FoldersSection>", () => {
                 );
 
                 const folders = screen.getAllByTestId("folder-item");
-                let headingsText: string[] = [];
-
-                const heading = within(folders[0]).getByRole("heading", { level: 2 })
-                headingsText = [...headingsText, heading.innerHTML];
 
                 // Mark targt folder
                 const checkbox = within(folders[0]).getByTestId("checkbox");
@@ -694,17 +640,16 @@ describe("Test <FoldersSection>", () => {
 
                 currentFolders.forEach((folder, i) => {
                     try {
-                        const folderName = within(folder).getByText(headingsText[i], { selector: "h2" });
-                        isNotInFolderList = false;
-                    } catch(e){
                         isNotInFolderList = true;
+                    } catch(e){
+                        isNotInFolderList = false;
                     };
                 })
 
                 expect(isNotInFolderList).toBeTruthy();
             })
 
-            test("Removing marked folders through warning message via trash button in option bar, fails if user proceeds", () => {
+            test("Removing marked folders through warning message via trash button in option bar, fails if user cancel", () => {
                 // @ts-expect-error
                 chrome.storage.local.get = jest.fn((data, callback: (e: any) => {}): void => {
                     callback({
@@ -720,10 +665,6 @@ describe("Test <FoldersSection>", () => {
                 );
 
                 const folders = screen.getAllByTestId("folder-item");
-                let headingsText: string[] = [];
-
-                const heading = within(folders[0]).getByRole("heading", { level: 2 })
-                headingsText = [...headingsText, heading.innerHTML];
 
                 // Mark targt folder
                 const checkbox = within(folders[0]).getByTestId("checkbox");
@@ -745,7 +686,10 @@ describe("Test <FoldersSection>", () => {
         })
 
         describe("Test sort", () => {
-            test("Selecting descend option will change order of rendered folders", () => {
+            test.each([
+                ["Selecting descend option will change order of rendered folders", "Descending"],
+                ["Selecting ascend option will change order of rendered folders", "Ascending"]
+            ])("%j", (label, option) => {
                 // @ts-expect-error
                 chrome.storage.local.get = jest.fn((data, callback: (e: any) => {}): void => {
                     callback({
@@ -778,7 +722,7 @@ describe("Test <FoldersSection>", () => {
 
                 const optionsList = within(sortMenu).getByRole("list");
 
-                const targetOption = within(optionsList).getByText("Descending", { selector: "button" });
+                const targetOption = within(optionsList).getByText(option, { selector: "button" });
                 fireEvent.click(targetOption)
 
                 const currentFolders = screen.getAllByTestId("folder-item");
@@ -793,55 +737,7 @@ describe("Test <FoldersSection>", () => {
                 // Stringify both name arrays and compare them. If one is reverse of the other -> pass
                 expect(initialNameOrder.join()).not.toEqual(currentNameOrder.join());
             })
-            
-            test("Selecting ascent option will change order of rendered folders", () => {
-                // @ts-expect-error
-                chrome.storage.local.get = jest.fn((data, callback: (e: any) => {}): void => {
-                    callback({
-                        ...mockBrowserStorage,
-                        folder_sort: 0
-                    })
-                });
 
-                render(
-                    <Provider store={mockStore}>
-                        <FoldersSection />
-                    </Provider>
-                );
-
-                let initialNameOrder: Array<string> = [];
-                
-                const folders = screen.getAllByTestId("folder-item");
-
-                folders.forEach((folder) => {
-                    const name = within(folder).getByRole("heading", {level: 2})
-
-                    initialNameOrder = [...initialNameOrder, name.innerHTML];
-                })
-
-                initialNameOrder = initialNameOrder.sort()
-
-                const sortMenu= screen.getByRole("menu");
-                const initButton = within(sortMenu).getByRole("button");
-                fireEvent.click(initButton)
-
-                const optionsList = within(sortMenu).getByRole("list");
-
-                const targetOption = within(optionsList).getByText("Ascending", { selector: "button" });
-                fireEvent.click(targetOption)
-
-                const currentFolders = screen.getAllByTestId("folder-item");
-
-                let currentNameOrder: Array<string> = []
-                
-                currentFolders.forEach((folder) => {
-                    const name = within(folder).getByRole("heading", {level: 2})
-                    currentNameOrder = [...currentNameOrder, name.innerHTML]
-                })
-
-                // Stringify both name arrays and compare them. If one is reverse of the other -> pass
-                expect(initialNameOrder.join()).not.toEqual(currentNameOrder.join());
-            })
         })
 
         describe("Test folder edit", () => {
@@ -907,7 +803,11 @@ describe("Test <FoldersSection>", () => {
             chrome.windows.create = jest.fn((window: iWindowItem) => {})
 
             describe("No warning set in the plugin settings", () => {
-                test("Launching a folder triggers the window creation api", () => {
+                test.each([
+                    ["Launching a folder triggers the window creation api", "Open"],
+                    ["Launching a folder as a group triggers the window creation api", "Open as group"],
+                    ["Launching a folder in incognito triggers the window creation api", "Open in incognito"]
+                ])("%j", (label, optionText) => {
                     render(
                         <Provider store={mockStore}>
                             <FoldersSection />
@@ -921,49 +821,7 @@ describe("Test <FoldersSection>", () => {
                     fireEvent.click(browserIcon, { bubbles: true })
     
                     const optionsList = within(target).getByTestId("open-folder-options");
-                    const targetOption = within(optionsList).getByText("Open", { selector: "button" });
-    
-                    fireEvent.click(targetOption);
-    
-                    expect(chrome.windows.create).toHaveBeenCalled();
-                })
-    
-                test("Launching a folder as a group triggers the window creation api", () => {
-                    render(
-                        <Provider store={mockStore}>
-                            <FoldersSection />
-                        </Provider>
-                    );
-    
-                    const folders = screen.getAllByTestId("folder-item");
-                    const target = folders[0];
-    
-                    const browserIcon = within(target).getByTestId("open-browser-icon");
-                    fireEvent.click(browserIcon, { bubbles: true })
-    
-                    const optionsList = within(target).getByTestId("open-folder-options");
-                    const targetOption = within(optionsList).getByText("Open as group", { selector: "button" });
-    
-                    fireEvent.click(targetOption);
-    
-                    expect(chrome.windows.create).toHaveBeenCalled();
-                })
-    
-                test("Launching a folder in incognito triggers the window creation api", () => {
-                    render(
-                        <Provider store={mockStore}>
-                            <FoldersSection />
-                        </Provider>
-                    );
-    
-                    const folders = screen.getAllByTestId("folder-item");
-                    const target = folders[0];
-    
-                    const browserIcon = within(target).getByTestId("open-browser-icon");
-                    fireEvent.click(browserIcon, { bubbles: true })
-    
-                    const optionsList = within(target).getByTestId("open-folder-options");
-                    const targetOption = within(optionsList).getByText("Open as group", { selector: "button" });
+                    const targetOption = within(optionsList).getByText(optionText, { selector: "button" });
     
                     fireEvent.click(targetOption);
     
@@ -972,16 +830,7 @@ describe("Test <FoldersSection>", () => {
             })
             
             describe("Warning option set in the plugin settings", () => {
-                
-                test("Launching a folder through warning message triggers the window creation api", () => {
-                    // @ts-expect-error
-                    chrome.storage.local.get = jest.fn((data, callback: (e: any) => {}): void => {
-                        callback({
-                            ...mockBrowserStorage,
-                            performanceWarningValue: 5
-                        })
-                    });
-
+                const removalAPISequence = () => {
                     render(
                         <Provider store={mockStore}>
                             <FoldersSection />
@@ -998,50 +847,13 @@ describe("Test <FoldersSection>", () => {
                     const targetOption = within(optionsList).getByText("Open", { selector: "button" });
                     
                     fireEvent.click(targetOption);
-    
-                    // Target the warning box and click the proceed button
-                    const warningMessage = screen.getByRole("alert");
-                    const proceedButton = within(warningMessage).getByTestId("alert-proceed-button");
-                    fireEvent.click(proceedButton)
-
-                    expect(chrome.windows.create).toHaveBeenCalled();
-                })
-    
-                test("Launching a folder as a group through warning message triggers the window creation api", () => {
-                     // @ts-expect-error
-                    chrome.storage.local.get = jest.fn((data, callback: (e: any) => {}): void => {
-                        callback({
-                            ...mockBrowserStorage,
-                            performanceWarningValue: 5
-                        })
-                    });
-                    
-                    render(
-                        <Provider store={mockStore}>
-                            <FoldersSection />
-                        </Provider>
-                    );
-    
-                    const folders = screen.getAllByTestId("folder-item");
-                    const target = folders[0];
-    
-                    const browserIcon = within(target).getByTestId("open-browser-icon");
-                    fireEvent.click(browserIcon, { bubbles: true })
-    
-                    const optionsList = within(target).getByTestId("open-folder-options");
-                    const targetOption = within(optionsList).getByText("Open as group", { selector: "button" });
-    
-                    fireEvent.click(targetOption);
-
-                    // Target the warning box and click the proceed button
-                    const warningMessage = screen.getByRole("alert");
-                    const proceedButton = within(warningMessage).getByTestId("alert-proceed-button");
-                    fireEvent.click(proceedButton)
-    
-                    expect(chrome.windows.create).toHaveBeenCalled();
-                })
-    
-                test("Launching a folder in incognito through warning message triggers the window creation api", () => {
+                }
+                
+                test.each([
+                    ["Launching a folder through warning message triggers the window creation api", "Open"],
+                    ["Launching a folder as a group through warning message triggers the window creation api", "Open as group"],
+                    ["Launching a folder in incognito through warning message triggers the window creation api", "Open in incognito"]
+                ])("%j", (label, optionText) => {
                     // @ts-expect-error
                     chrome.storage.local.get = jest.fn((data, callback: (e: any) => {}): void => {
                         callback({
@@ -1049,7 +861,7 @@ describe("Test <FoldersSection>", () => {
                             performanceWarningValue: 5
                         })
                     });
-                    
+
                     render(
                         <Provider store={mockStore}>
                             <FoldersSection />
@@ -1063,15 +875,15 @@ describe("Test <FoldersSection>", () => {
                     fireEvent.click(browserIcon, { bubbles: true })
     
                     const optionsList = within(target).getByTestId("open-folder-options");
-                    const targetOption = within(optionsList).getByText("Open as group", { selector: "button" });
-    
+                    const targetOption = within(optionsList).getByText(optionText, { selector: "button" });
+                    
                     fireEvent.click(targetOption);
-
+    
                     // Target the warning box and click the proceed button
                     const warningMessage = screen.getByRole("alert");
                     const proceedButton = within(warningMessage).getByTestId("alert-proceed-button");
                     fireEvent.click(proceedButton)
-    
+
                     expect(chrome.windows.create).toHaveBeenCalled();
                 })
 
@@ -1108,7 +920,7 @@ describe("Test <FoldersSection>", () => {
 
                     expect(chrome.windows.create).not.toHaveBeenCalled();
                 })
-                
+
                 test("Opening a folder will trigger removal api (to close current session) if set in plugin settings", () => {
                     // @ts-expect-error
                     chrome.storage.local.get = jest.fn((data, callback: (e: any) => {}): void => {
@@ -1125,23 +937,7 @@ describe("Test <FoldersSection>", () => {
                     })
                     chrome.windows.remove = jest.fn();
 
-
-                    render(
-                        <Provider store={mockStore}>
-                            <FoldersSection />
-                        </Provider>
-                    );
-    
-                    const folders = screen.getAllByTestId("folder-item");
-                    const target = folders[0];
-    
-                    const browserIcon = within(target).getByTestId("open-browser-icon");
-                    fireEvent.click(browserIcon, { bubbles: true })
-    
-                    const optionsList = within(target).getByTestId("open-folder-options");
-                    const targetOption = within(optionsList).getByText("Open", { selector: "button" });
-                    
-                    fireEvent.click(targetOption);
+                    removalAPISequence();
 
                     expect(chrome.windows.remove).toHaveBeenCalled();
                 })
@@ -1161,23 +957,7 @@ describe("Test <FoldersSection>", () => {
                     })
                     chrome.windows.remove = jest.fn();
 
-
-                    render(
-                        <Provider store={mockStore}>
-                            <FoldersSection />
-                        </Provider>
-                    );
-    
-                    const folders = screen.getAllByTestId("folder-item");
-                    const target = folders[0];
-    
-                    const browserIcon = within(target).getByTestId("open-browser-icon");
-                    fireEvent.click(browserIcon, { bubbles: true })
-    
-                    const optionsList = within(target).getByTestId("open-folder-options");
-                    const targetOption = within(optionsList).getByText("Open", { selector: "button" });
-                    
-                    fireEvent.click(targetOption);
+                    removalAPISequence();
 
                     expect(chrome.windows.remove).not.toHaveBeenCalled();
                 })
@@ -1188,12 +968,15 @@ describe("Test <FoldersSection>", () => {
             // @ts-expect-error
             chrome.storage.local.set = jest.fn((data: any) => {});
 
-            test("Toggling from grid to list", () => {
+            test.each([
+                ["Toggling from grid to list", "grid", "list",],
+                ["Toggling from list to grid", "list", "grid"]
+            ])("%j", (label, initial, newSetting) => {
                 // @ts-expect-error
                 chrome.storage.local.get = jest.fn((data, callback: (e: any) => {}): void => {
                     callback({
                         ...mockBrowserStorage,
-                        folder_viewmode: "grid"
+                        folder_viewmode: initial
                     })
                 });
 
@@ -1203,31 +986,10 @@ describe("Test <FoldersSection>", () => {
                     </Provider>
                 );
 
-                const togglingButton = screen.getByTestId("text-icon-button-list");
+                const togglingButton = screen.getByTestId(`text-icon-button-${newSetting}`);
                 fireEvent.click(togglingButton);
 
-                expect(chrome.storage.local.set).toHaveBeenCalledWith({ "folder_viewmode": "list" })
-            })
-
-            test("Toggling from list to grid", () => {
-                // @ts-expect-error
-                chrome.storage.local.get = jest.fn((data, callback: (e: any) => {}): void => {
-                    callback({
-                        ...mockBrowserStorage,
-                        folder_viewmode: "list"
-                    })
-                });
-
-                render(
-                    <Provider store={mockStore}>
-                        <FoldersSection />
-                    </Provider>
-                );
-
-                const togglingButton = screen.getByTestId("text-icon-button-grid");
-                fireEvent.click(togglingButton);
-
-                expect(chrome.storage.local.set).toHaveBeenCalledWith({ "folder_viewmode": "grid" })
+                expect(chrome.storage.local.set).toHaveBeenCalledWith({ "folder_viewmode": newSetting })
             })
         })
     })
