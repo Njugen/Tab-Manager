@@ -7,13 +7,6 @@
 This plugin gives you a better overview and improved tab management experience not provided
 by default browser features.
 
-## Issue and purpose
-
-Add your windows and tabs to accessible folders. Launch sets of entertainment, or open your work related
-resources with just one click.
-
-Simple overview and basic features can be opened with one click. More advanced featuress and extended overview is also available through the option menu.
-
 ## Screenshots
 
 <img src="./img/main.jpg" width="33%" /> <img src="./img/settings.jpg" width="33%" /> <img src="./img/search.jpg" width="33%" /> <img src="./img/sidebar.jpg" width="33%%" />
@@ -43,9 +36,8 @@ All folders and files follows the following format: __[my-file-name.tsx]__
 
 ### Component guidelines
 
-- In this project, all functions returning the type __JSX.Element__ is considered a component. These should always be placed in their own files.
-- A component should NOT declare other components. Preferably, no functions should be declared inside a component unless it is motivated to do so (e.g. when the function sets states at some point).
-- Each variable and function should be declared with appropriate datatype. Create a new interface or extend a current one, when creating a new feature
+- Try to avoid declaring components inside another component (JSX.Element).
+- Consider refactoring components if they become too big or clumsy to work with (e.g. move large functions to their own files).
 - Refactored/sub components should be placed in their own folders and follow a specific naming convention:
 
 ```
@@ -55,14 +47,13 @@ All folders and files follows the following format: __[my-file-name.tsx]__
             - utils
                 - [my_component]
                     - [my_component].tsx
-                    - a_component_specific_function.tsx
-                    - a_event_handler.ts
-                    - child_components
+                    - functions
+                        - a_component_specific_function.tsx
+                        - a_event_handler.ts
+                    - components
                         - child_component_a.tsx
                         - child_component_b.tsx
 ```
-
-Consider refactoring components if they become too big or clumsy to work with.
 
 ### Commands
 
@@ -106,7 +97,6 @@ Run this command after changing existing components, to check if anything relate
 
 # Updates
 Minor updates and improvements will be provided from time to time. There is no definite roadmap or schedule.
-
 
 # Feedback
 I would appreciate feedback and suggestions on how to improve this plugin. Reports of possible bugs are also welcome. Please, post an issue or contact me per email: privat_thai_nguyen@hotmail.com

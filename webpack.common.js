@@ -5,12 +5,11 @@ const tailwindcss = require("tailwindcss");
 const autoprefixer = require("autoprefixer");
 
 module.exports = {
-    
     entry: {
-        sidepanel: path.resolve("./src/sidepanel.tsx"),
-        background: path.resolve("./src/webextension/background/background.ts"),
-        contentScript: path.resolve("./src/webextension/contentScript/contentScript.ts"),
-        options: path.resolve("./src/index.tsx"),
+        options: path.resolve(__dirname, "src/index.tsx"), // Top react component for option's page.
+        sidepanel: path.resolve(__dirname, "src/sidepanel.tsx"), // Top react component for sidepanel
+        background: path.resolve(__dirname, "src/webextension/background/background.ts"), // Script running in the browser's internal environment
+        contentScript: path.resolve(__dirname, "src/webextension/contentScript/contentScript.ts"), // Script running in the plugin's UI (option's page, sidepanels, controller)
     },
     module: {
         rules: [
@@ -34,12 +33,12 @@ module.exports = {
         new CopyPlugin({
             patterns: [
                 { 
-                    from: path.resolve("src/webextension/manifest.json"), 
+                    from: path.resolve(__dirname, "src/webextension/manifest.json"), 
                     to: path.resolve("dist")
                 },
                 { 
-                    from: path.resolve("brand"), 
-                    to: path.resolve("dist/brand")
+                    from: path.resolve(__dirname, "brand"), 
+                    to: path.resolve(__dirname, "dist/brand")
                 }
             ]
         }),
