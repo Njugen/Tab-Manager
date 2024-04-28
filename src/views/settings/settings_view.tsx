@@ -44,8 +44,6 @@ const duplicationWarningOptions: Array<iFieldOption> = [
 const SettingsView = (props: any): JSX.Element => {
     const pluginSettingsState: iPluginSettings = useSelector((state: RootState) => state.pluginSettings);
     const dispatch = useDispatch()
-
-   
     // Read all saved settings from browser and store it in redux for further use in the plugin
     useEffect(() => {
         getFromStorage("local", null, (data) => {

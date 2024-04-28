@@ -22,8 +22,10 @@ const pluginSettingsSlice = createSlice({
         readAllPluginSettings: (state, action: PayloadAction<iPluginSettings>): iPluginSettings => {
             const { payload } = action;
 
+            const updatedState = Object.entries(payload).length > 0 ? payload : state;
+
             return {
-                ...payload
+                ...updatedState
             }
         },
         changePerformanceWarningValue: (state, action: PayloadAction<number>): iPluginSettings => {

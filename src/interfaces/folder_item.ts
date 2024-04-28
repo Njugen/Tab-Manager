@@ -1,6 +1,5 @@
-import { iWindowItem
- } from "./window_item";
- 
+import { iWindowItem } from "./window_item";
+
 interface iFolderItem {
     id: number,
     name: string,
