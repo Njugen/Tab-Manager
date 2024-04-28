@@ -7,7 +7,15 @@
         "history",
         "tabs",
         "storage",
-        "sidePanel"
+        "sidePanel",
+        "favicon"
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": ["_favicon/*"],
+            "matches": ["<all_urls>"],
+            "extension_ids": ["*"]
+        }
     ],
     "action": {
         "default_title": "Tab Management Browser Plugin"
@@ -24,23 +32,7 @@
         "open_in_tab": true
     },
     "background": {
-        "service_worker": "background.js",
-        "scripts": ["background.js"]
+        "service_worker": "background.js"
     },
-    "sidebar_action": {
-        "default_icon": {
-            "16": "brand/icon-128.png",
-            "32": "brand/icon-48.png"
-        },
-        "default_title": "Tab Management Browser Plugin",
-        "default_panel": "sidepanel.html",
-        "open_at_install":false
-    },
-    "browser_specific_settings": {
-        "gecko": {
-            "id": "tabmanager@njugen",
-            "strict_min_version": "42.0"
-        }
-    },      
     "author": "Thai Nguyen"
 }
