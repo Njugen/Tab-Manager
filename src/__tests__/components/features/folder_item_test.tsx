@@ -38,8 +38,13 @@ beforeEach(() => {
         callback(true);
     })
 
-    chrome.tabs.create = jest.fn();
+    // @ts-expect-error
+    chrome.tabs.create = jest.fn((data, callback) => {
+        const str = JSON.parse('{"active":false,"audible":false,"autoDiscardable":true,"discarded":true,"favIconUrl":"https://cdn.sstatic.net/Sites/stackoverflow/Img/favicon.ico?v=ec617d715196","groupId":-1,"height":0,"highlighted":false,"id":892795750,"incognito":false,"index":0,"mutedInfo":{"muted":false},"pinned":false,"selected":false,"status":"unloaded","title":"git - gitignore does not ignore folder - Stack Overflow","url":"https://stackoverflow.com/questions/24410208/gitignore-does-not-ignore-folder","width":0,"windowId":892795610}');
+        callback(str);
+    });
     chrome.tabs.group = jest.fn();
+    chrome.windows.create = jest.fn()
 })
 
 

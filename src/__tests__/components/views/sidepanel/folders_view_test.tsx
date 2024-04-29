@@ -24,8 +24,13 @@ beforeEach(() => {
         callback(true);
     })
 
-    chrome.tabs.create = jest.fn();
+    // @ts-expect-error
+    chrome.tabs.create = jest.fn((data, callback) => {
+        const str = JSON.parse('{"active":false,"audible":false,"autoDiscardable":true,"discarded":true,"favIconUrl":"https://cdn.sstatic.net/Sites/stackoverflow/Img/favicon.ico?v=ec617d715196","groupId":-1,"height":0,"highlighted":false,"id":892795750,"incognito":false,"index":0,"mutedInfo":{"muted":false},"pinned":false,"selected":false,"status":"unloaded","title":"git - gitignore does not ignore folder - Stack Overflow","url":"https://stackoverflow.com/questions/24410208/gitignore-does-not-ignore-folder","width":0,"windowId":892795610}');
+        callback(str);
+    });
     chrome.tabs.group = jest.fn();
+    chrome.windows.create = jest.fn()
 
     jest.useFakeTimers();
 })
@@ -530,7 +535,7 @@ describe("Test <FolderView>", () => {
                 expect(chrome.windows.create).toHaveBeenCalled();
             })
 
-            test("Launching a folder as a group triggers the window creation api", () => {
+            test("Launching a folder as a group triggers the group creation api", () => {
                 render(
                     <Provider store={mockStore}>
                         <FoldersView />
@@ -548,7 +553,7 @@ describe("Test <FolderView>", () => {
 
                 fireEvent.click(targetOption);
 
-                expect(chrome.tabs.create).toHaveBeenCalled();
+                expect(chrome.tabs.group).toHaveBeenCalled();
             })
 
             test("Launching a folder in incognito triggers the window creation api", () => {
@@ -565,11 +570,11 @@ describe("Test <FolderView>", () => {
                 fireEvent.click(browserIcon, { bubbles: true })
 
                 const optionsList = within(target).getByTestId("open-folder-options");
-                const targetOption = within(optionsList).getByText("Open as group", { selector: "button" });
+                const targetOption = within(optionsList).getByText("Open in incognito", { selector: "button" });
 
                 fireEvent.click(targetOption);
 
-                expect(chrome.tabs.create).toHaveBeenCalled();
+                expect(chrome.windows.create).toHaveBeenCalled();
             })
         })
         
@@ -665,7 +670,7 @@ describe("Test <FolderView>", () => {
                 fireEvent.click(browserIcon, { bubbles: true })
 
                 const optionsList = within(target).getByTestId("open-folder-options");
-                const targetOption = within(optionsList).getByText("Open as group", { selector: "button" });
+                const targetOption = within(optionsList).getByText("Open in incognito", { selector: "button" });
 
                 fireEvent.click(targetOption);
 
@@ -674,7 +679,7 @@ describe("Test <FolderView>", () => {
                 const proceedButton = within(warningMessage).getByTestId("alert-proceed-button");
                 fireEvent.click(proceedButton)
 
-                expect(chrome.tabs.create).toHaveBeenCalled();
+                expect(chrome.windows.create).toHaveBeenCalled();
             })
 
             test("Cancelling folder launch through warning message won't trigger browser api", () => {

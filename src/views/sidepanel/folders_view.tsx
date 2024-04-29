@@ -23,7 +23,7 @@ const FoldersView = (props: any): JSX.Element => {
     const [removalTarget, setRemovalTarget] = useState<iFolderItem | null>(null);
     const [createFolder, setCreateFolder] = useState<boolean>(false);
     const [folderLaunchType, setFolderLaunchType] = useState<string | null>(null); 
-    
+
     const dispatch = useDispatch();
 
     const folderState: Array<iFolderItem> = useSelector((state: any) => state.folder);
@@ -110,19 +110,22 @@ const FoldersView = (props: any): JSX.Element => {
             });
         } else {
             let tabIds: Array<number> = [];
-
+            
             windows.forEach((window: iWindowItem, i) => {
-                window.tabs.forEach((tab) => {
-                    chrome.tabs.create({ url: tab.url}, (createdTab: chrome.tabs.Tab) => {
-                     
+                
+                window.tabs.forEach((tab, j) => {
+                    console.log("TABS", tab);
+                    chrome.tabs.create({ url: tab.url }, (createdTab: chrome.tabs.Tab) => {             
                         if(createdTab.id){
                             tabIds = [...tabIds, createdTab.id]
+                        }
+                        console.log("ABC", windows.length, window.tabs.length);
+                        if(windows.length-1 >= i && window.tabs.length-1 >= j){
+                            chrome.tabs.group({ tabIds: tabIds });
                         }
                     })
                 })
             });
-
-            setTimeout(() => chrome.tabs.group({ tabIds: tabIds }), 3000);
         }
 
         // Unset all relevant states to prevent interferance with other features once the folder has been launched
