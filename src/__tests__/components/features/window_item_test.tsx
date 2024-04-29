@@ -21,9 +21,9 @@ const mockWindow: iWindowItem = {
     tabsCol: 2
 }
 
-const mockMarkTabFn = jest.fn((tabId: number, checked: boolean): void | undefined => {});
-const mockEditTabFn = jest.fn((tabId: number): void | undefined => {})
-const mockOnCloseFn = jest.fn((tabId: number): void | undefined => {})
+const mockMarkTabFn = jest.fn((tabId: number | string, checked: boolean): void | undefined => {});
+const mockEditTabFn = jest.fn((tabId: number | string): void | undefined => {})
+const mockOnCloseFn = jest.fn((tabId: number | string): void | undefined => {})
 
 // Set up tabs
 for(let i = 0; i < 10; i++){
@@ -361,7 +361,7 @@ describe("Test <WindowItem>", () => {
         });
 
         test("Clicking delete button will trigger onDeleteT callback (when editing outside folder state context)", () => {
-            const tabDeleteFn = jest.fn(((ids: Array<number>) => {}));
+            const tabDeleteFn = jest.fn(((ids: Array<number | string>) => {}));
 
             render(
                 <Provider store={store}>

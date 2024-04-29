@@ -4,7 +4,7 @@ interface iWindowItem {
     id: number,
     tabs: Array<iTabItem>,
     onDelete?: (id: number) => void, 
-    onDeleteTabs?: (ids: Array<number>) => void,
+    onDeleteTabs?: (ids: Array<number | string>) => void,
     tabsCol?: number,
     disableMark?: boolean,
     disableEdit?: boolean,

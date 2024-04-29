@@ -27,8 +27,8 @@ import styles from "../../styles/global_utils.module.scss";
 const WindowItem = (props: iWindowItem): JSX.Element => {
     const [expanded, setExpanded] = useState<boolean>(true);
     const [newTab, setNewTab] = useState<boolean>(false);
-    const [editTab, setEditTab] = useState<number | null>(null);
-    const [markedTabs, setMarkedTabs] = useState<Array<number>>([]);
+    const [editTab, setEditTab] = useState<number | string | null>(null);
+    const [markedTabs, setMarkedTabs] = useState<Array<number | string>>([]);
     const { id, tabs, tabsCol, onDelete, onDeleteTabs, disableEdit, disableEditTab, disableMarkTab, disableDeleteTab, disableAddTab } = props;
     
     const dispatch = useDispatch();
@@ -51,7 +51,7 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
     }
 
     // Mark/unmark specific tab in this window
-    const handleMarkTab = (tabId: number, checked: boolean): void => {
+    const handleMarkTab = (tabId: number | string, checked: boolean): void => {
         if(checked === true){
             const findInState = markedTabs.findIndex((target) => target === tabId);
             if(findInState < 0){  
@@ -100,7 +100,7 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
         }
     }
 
-    const handleTabEdit = (id: number): void => {
+    const handleTabEdit = (id: number | string): void => {
         const { toBeingEdited, currentlyEditingTab } = miscState;
 
         if(currentlyEditingTab === true) return;

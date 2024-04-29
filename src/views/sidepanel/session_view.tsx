@@ -241,7 +241,7 @@ const SessionView = (props:any): JSX.Element => {
     return (
         <> 
             {
-                windowIdWarning >= 0 && 
+                windowIdWarning > 0 && 
                 (
                     <PopupMessage 
                         title="Warning" 

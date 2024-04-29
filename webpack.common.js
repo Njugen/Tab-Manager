@@ -86,7 +86,8 @@ module.exports = (env) => {
         },
         output: {
             filename: "[name].js",  // in /dist
-            path: path.join(__dirname, distFolder())
+            path: path.join(__dirname, distFolder()),
+            clean: true
         }
     }
     

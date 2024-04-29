@@ -10,9 +10,9 @@ const mockProps = {
     url: `https://${randomNumber()}.com`,
 }
 
-const mockMarkFn = jest.fn((tabId: number, checked: boolean): void | undefined => {});
-const mockEditFn = jest.fn((tabId: number): void | undefined => {});
-const mockOnCloseFn = jest.fn((tabId: number): any | undefined => {});
+const mockMarkFn = jest.fn((tabId: number | string, checked: boolean): void | undefined => {});
+const mockEditFn = jest.fn((tabId: number | string): void | undefined => {});
+const mockOnCloseFn = jest.fn((tabId: number | string): any | undefined => {});
 
 afterEach(() => {
     jest.clearAllMocks();
