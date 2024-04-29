@@ -32,6 +32,17 @@ const createMockWindows = (mocks: number): Array<iWindowItem> => {
     return result;
 }
 
+beforeEach(() => {
+    // @ts-expect-error
+    chrome.extension.isAllowedIncognitoAccess = jest.fn((callback: (data: boolean) => void) => {
+        callback(true);
+    })
+
+    chrome.tabs.create = jest.fn();
+    chrome.tabs.group = jest.fn();
+})
+
+
 afterEach(() => {
     jest.clearAllMocks();
     cleanup();

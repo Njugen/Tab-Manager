@@ -19,6 +19,13 @@ beforeEach(() => {
     chrome.storage.local.get = jest.fn((data, callback: (e: any) => {}): void => {
         callback(mockBrowserStorage)
     });
+    // @ts-expect-error
+    chrome.extension.isAllowedIncognitoAccess = jest.fn((callback: (data: boolean) => void) => {
+        callback(true);
+    })
+
+    chrome.tabs.create = jest.fn();
+    chrome.tabs.group = jest.fn();
 
     jest.useFakeTimers();
 })
@@ -541,7 +548,7 @@ describe("Test <FolderView>", () => {
 
                 fireEvent.click(targetOption);
 
-                expect(chrome.windows.create).toHaveBeenCalled();
+                expect(chrome.tabs.create).toHaveBeenCalled();
             })
 
             test("Launching a folder in incognito triggers the window creation api", () => {
@@ -562,7 +569,7 @@ describe("Test <FolderView>", () => {
 
                 fireEvent.click(targetOption);
 
-                expect(chrome.windows.create).toHaveBeenCalled();
+                expect(chrome.tabs.create).toHaveBeenCalled();
             })
         })
         
@@ -633,7 +640,7 @@ describe("Test <FolderView>", () => {
                 const proceedButton = within(warningMessage).getByTestId("alert-proceed-button");
                 fireEvent.click(proceedButton)
 
-                expect(chrome.windows.create).toHaveBeenCalled();
+                expect(chrome.tabs.create).toHaveBeenCalled();
             })
 
             test("Launching a folder in incognito through warning message triggers the window creation api", () => {
@@ -667,7 +674,7 @@ describe("Test <FolderView>", () => {
                 const proceedButton = within(warningMessage).getByTestId("alert-proceed-button");
                 fireEvent.click(proceedButton)
 
-                expect(chrome.windows.create).toHaveBeenCalled();
+                expect(chrome.tabs.create).toHaveBeenCalled();
             })
 
             test("Cancelling folder launch through warning message won't trigger browser api", () => {

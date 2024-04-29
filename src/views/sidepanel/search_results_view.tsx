@@ -78,7 +78,7 @@ function SearchResultsContainer(props:any): JSX.Element {
                     })
                 })
             });
-            console.log("ID", tabIds);
+
             setTimeout(() => chrome.tabs.group({ tabIds: tabIds }), 3000);
         }
 

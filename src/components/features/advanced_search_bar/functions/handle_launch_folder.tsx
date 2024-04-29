@@ -68,7 +68,7 @@ const handleLaunchFolder = (args: iLaunchFolderArgs): void => {
                 })
             })
         });
-        console.log("ID", tabIds);
+
         setTimeout(() => chrome.tabs.group({ tabIds: tabIds }), 3000);
     }
 

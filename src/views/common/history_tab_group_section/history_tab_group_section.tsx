@@ -97,18 +97,16 @@ const HistoryTabGroupsSection = forwardRef(function HistoryTabGroupsSection(prop
     const handleMarkTab = (id: number | string): void => {
         const tabCollection: Array<chrome.history.HistoryItem> = historySectionState.tabs;
         const markedTabs: Array<chrome.history.HistoryItem> = historySectionState.markedTabs;
-        console.log("ID", id);
-        console.log("COL", tabCollection);
-        console.log("MARKED", markedTabs);
+
         // Get an index of the affected tab
         const index = tabCollection.findIndex((tab: chrome.history.HistoryItem) => id === tab.id);
-        console.log("INDEX", index);
+
         if(index >= 0){
             const isMarked = markedTabs.find((tab: chrome.history.HistoryItem) => id === tab.id);
-            console.log("is", isMarked);
+
             if(isMarked){
                 const updatedMarkedTabCollection: Array<chrome.history.HistoryItem> = markedTabs.filter((tab) => parseInt(tab.id) !== id);
-                console.log("AAA", updatedMarkedTabCollection);
+
                 dispatch(markTab(updatedMarkedTabCollection[0]));
             } else {
                 const newTab = tabCollection[index];

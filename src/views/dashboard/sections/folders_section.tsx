@@ -90,6 +90,7 @@ const FoldersSection = (props: any): JSX.Element => {
             
             if(data.performanceWarningValue !== -1 && data.performanceWarningValue <= tabsCount) {
                 setShowPerformanceWarning(true);
+                setFolderLaunchType(type);
             } else {
                 handleLaunchFolder(windows, type);
             }
@@ -495,14 +496,16 @@ const FoldersSection = (props: any): JSX.Element => {
             });
         } else {
             let tabIds: Array<number> = [];
-
+            
             windows.forEach((window: iWindowItem, i) => {
+                
                 window.tabs.forEach((tab, j) => {
+                    console.log("TABS", tab);
                     chrome.tabs.create({ url: tab.url }, (createdTab: chrome.tabs.Tab) => {             
                         if(createdTab.id){
                             tabIds = [...tabIds, createdTab.id]
                         }
-
+                        console.log("ABC", windows.length, window.tabs.length);
                         if(windows.length-1 >= i && window.tabs.length-1 >= j){
                             chrome.tabs.group({ tabIds: tabIds });
                         }
@@ -510,10 +513,11 @@ const FoldersSection = (props: any): JSX.Element => {
                 })
             });
         }
-
+        
         // Unset all relevant states to prevent interferance with other features once the folder has been launched
         setWindowsPayload(null);
         setShowPerformanceWarning(false);
+        setFolderLaunchType(null);
     }
     
 
@@ -527,7 +531,7 @@ const FoldersSection = (props: any): JSX.Element => {
                     primaryButton={{ 
                         text: "Yes, open selected folders", 
                         callback: () => { 
-                            if(windowsPayload) handleLaunchFolder(windowsPayload); 
+                            if(windowsPayload) handleLaunchFolder(windowsPayload, folderLaunchType || undefined); 
                             setShowPerformanceWarning(false)
                         }
                     }}
@@ -548,11 +552,15 @@ const FoldersSection = (props: any): JSX.Element => {
                         callback: () => { 
                             handleDuplicateFolders(); 
                             setShowDuplicationWarning(false)
+                            setFolderLaunchType(null);
                         }}
                     }
                     secondaryButton={{ 
                         text: "No, do not duplicate", 
-                        callback: () => setShowDuplicationWarning(false)
+                        callback: () => {
+                            setShowDuplicationWarning(false)
+                            setFolderLaunchType(null);
+                        }
                     }}    
                 />
             }

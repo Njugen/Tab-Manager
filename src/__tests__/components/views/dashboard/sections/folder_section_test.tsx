@@ -15,6 +15,14 @@ beforeEach(() => {
         callback(mockBrowserStorage)
     });
 
+    // @ts-expect-error
+    chrome.extension.isAllowedIncognitoAccess = jest.fn((callback: (data: boolean) => void) => {
+        callback(true);
+    })
+
+    chrome.tabs.create = jest.fn();
+    chrome.tabs.group = jest.fn();
+
     jest.useFakeTimers();
 })
 
@@ -803,7 +811,6 @@ describe("Test <FoldersSection>", () => {
             describe("No warning set in the plugin settings", () => {
                 test.each([
                     ["Launching a folder triggers the window creation api", "Open"],
-                    ["Launching a folder as a group triggers the window creation api", "Open as group"],
                     ["Launching a folder in incognito triggers the window creation api", "Open in incognito"]
                 ])("%j", (label, optionText) => {
                     render(
@@ -824,6 +831,27 @@ describe("Test <FoldersSection>", () => {
                     fireEvent.click(targetOption);
     
                     expect(chrome.windows.create).toHaveBeenCalled();
+                })
+
+                test("Launching a folder as a group triggers the tabs creation api", () => {
+                    render(
+                        <Provider store={mockStore}>
+                            <FoldersSection />
+                        </Provider>
+                    );
+    
+                    const folders = screen.getAllByTestId("folder-item");
+                    const target = folders[0];
+    
+                    const browserIcon = within(target).getByTestId("open-browser-icon");
+                    fireEvent.click(browserIcon, { bubbles: true })
+    
+                    const optionsList = within(target).getByTestId("open-folder-options");
+                    const targetOption = within(optionsList).getByText("Open as group", { selector: "button" });
+    
+                    fireEvent.click(targetOption);
+    
+                    expect(chrome.tabs.create).toHaveBeenCalled();
                 })
             })
             
@@ -849,7 +877,6 @@ describe("Test <FoldersSection>", () => {
                 
                 test.each([
                     ["Launching a folder through warning message triggers the window creation api", "Open"],
-                    ["Launching a folder as a group through warning message triggers the window creation api", "Open as group"],
                     ["Launching a folder in incognito through warning message triggers the window creation api", "Open in incognito"]
                 ])("%j", (label, optionText) => {
                     // @ts-expect-error
@@ -883,6 +910,40 @@ describe("Test <FoldersSection>", () => {
                     fireEvent.click(proceedButton)
 
                     expect(chrome.windows.create).toHaveBeenCalled();
+                })
+
+                test("Launching a folder as a group through warning message triggers the tab creation api", () => {
+                    // @ts-expect-error
+                    chrome.storage.local.get = jest.fn((data, callback: (e: any) => {}): void => {
+                        callback({
+                            ...mockBrowserStorage,
+                            performanceWarningValue: 5
+                        })
+                    });
+
+                    render(
+                        <Provider store={mockStore}>
+                            <FoldersSection />
+                        </Provider>
+                    );
+    
+                    const folders = screen.getAllByTestId("folder-item");
+                    const target = folders[0];
+    
+                    const browserIcon = within(target).getByTestId("open-browser-icon");
+                    fireEvent.click(browserIcon, { bubbles: true })
+    
+                    const optionsList = within(target).getByTestId("open-folder-options");
+                    const targetOption = within(optionsList).getByText("Open as group", { selector: "button" });
+                    
+                    fireEvent.click(targetOption);
+    
+                    // Target the warning box and click the proceed button
+                    const warningMessage = screen.getByRole("alert");
+                    const proceedButton = within(warningMessage).getByTestId("alert-proceed-button");
+                    fireEvent.click(proceedButton)
+
+                    expect(chrome.tabs.create).toHaveBeenCalled();
                 })
 
                 test("Cancelling folder launch through warning message won't trigger browser api", () => {

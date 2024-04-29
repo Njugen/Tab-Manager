@@ -22,7 +22,8 @@ const FoldersView = (props: any): JSX.Element => {
     const [showPerformanceWarning, setShowPerformanceWarning] = useState<boolean>(false);
     const [removalTarget, setRemovalTarget] = useState<iFolderItem | null>(null);
     const [createFolder, setCreateFolder] = useState<boolean>(false);
-
+    const [folderLaunchType, setFolderLaunchType] = useState<string | null>(null); 
+    
     const dispatch = useDispatch();
 
     const folderState: Array<iFolderItem> = useSelector((state: any) => state.folder);
@@ -59,6 +60,7 @@ const FoldersView = (props: any): JSX.Element => {
             setTotalTabsCount(data.performanceWarningValue);
             if(data.performanceWarningValue !== -1 && data.performanceWarningValue <= tabsCount) {
                 setShowPerformanceWarning(true);
+                setFolderLaunchType(type);
             } else {
                 handleLaunchFolder(windows, type);
             }
@@ -119,13 +121,14 @@ const FoldersView = (props: any): JSX.Element => {
                     })
                 })
             });
-            console.log("ID", tabIds);
+
             setTimeout(() => chrome.tabs.group({ tabIds: tabIds }), 3000);
         }
 
         // Unset all relevant states to prevent interferance with other features once the folder has been launched
         setWindowsPayload(null);
         setShowPerformanceWarning(false);
+        setFolderLaunchType(null);
     }
     
     // Open a specific folder
@@ -230,7 +233,7 @@ const FoldersView = (props: any): JSX.Element => {
                     primaryButton={{ 
                         text: "Yes, open selected folders", 
                         callback: () => { 
-                            if(windowsPayload) handleLaunchFolder(windowsPayload); 
+                            if(windowsPayload) handleLaunchFolder(windowsPayload, folderLaunchType || undefined); 
                             setShowPerformanceWarning(false)}
                         }}
                     secondaryButton={{ 
