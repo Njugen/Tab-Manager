@@ -8,31 +8,43 @@ import DropdownMenu from "../../../utils/dropdown_menu/dropdown_menu"
 import { iFieldOption } from "../../../../interfaces/dropdown"
 import { iFolderActionBarProps } from "../../../../interfaces/folder_action_bar"
 import styles from "../../../../styles/global_utils.module.scss";
+import { useMemo, useState } from "react"
 
 
-// List of all options on how to launch this folder. The id identifies the option, and
-// actions are performed accordingly.
-const launchOptions: Array<iFieldOption> = [
-    {
-        value: 0,
-        label: "Open"
-    },
-    {
-        value: 1,
-        label: "Open as group"
-    },
-    {
-        value: 2,
-        label: "Open in incognito"
-    }
-] 
 
 // Renders an action bar containing various UI buttons for handling the behaviour of the folder.
 const FolderActionBar = (props: iFolderActionBarProps): JSX.Element => {
+    const [launchOptions, setLaunchOptions] = useState<Array<iFieldOption>>([]);
     const { states, handlers } = props;
     const { expanded, showLaunchOptions, marked, id } = states;
-
     const { opacity_hover_effect } = styles;
+
+    useMemo(() => {
+        const options: Array<iFieldOption> = [
+            {
+                value: 0,
+                label: "Open"
+            }
+        ]
+
+        if(chrome.tabs.group !== undefined){
+            options.push({
+                value: 1,
+                label: "Open as group"
+            });
+        } 
+        
+        chrome.extension.isAllowedIncognitoAccess((access: boolean) => {
+            if(access){
+                options.push({
+                    value: 2,
+                    label: "Open in incognito"
+                });
+            }
+        })
+        
+        setLaunchOptions(options);
+    }, [])
 
     const {
         handleExpandClick,

@@ -24,6 +24,7 @@ import iFolderState from '../../../interfaces/states/folder_state';
 import { createNewFolder, deleteFolder, readAllStorageFolders } from '../../../redux-toolkit/slices/folder_slice';
 import { changeSortOption, changeViewMode, markFolder, markMultipleFolders, unMarkAllFolders } from '../../../redux-toolkit/slices/folders_section_slice';
 import purify from '../../../tools/purify_object';
+import { Tabs } from 'jest-chrome/types/jest-chrome';
 
 
 /*
@@ -496,17 +497,18 @@ const FoldersSection = (props: any): JSX.Element => {
             let tabIds: Array<number> = [];
 
             windows.forEach((window: iWindowItem, i) => {
-                window.tabs.forEach((tab) => {
-                    chrome.tabs.create({ url: tab.url}, (createdTab: chrome.tabs.Tab) => {
-                     
+                window.tabs.forEach((tab, j) => {
+                    chrome.tabs.create({ url: tab.url }, (createdTab: chrome.tabs.Tab) => {             
                         if(createdTab.id){
                             tabIds = [...tabIds, createdTab.id]
+                        }
+
+                        if(windows.length-1 >= i && window.tabs.length-1 >= j){
+                            chrome.tabs.group({ tabIds: tabIds });
                         }
                     })
                 })
             });
-            console.log("ID", tabIds);
-            setTimeout(() => chrome.tabs.group({ tabIds: tabIds }), 3000);
         }
 
         // Unset all relevant states to prevent interferance with other features once the folder has been launched
