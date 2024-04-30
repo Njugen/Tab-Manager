@@ -92,13 +92,12 @@ function SearchResultsContainer(props:any): JSX.Element {
             
             windows.forEach((window: iWindowItem, i) => {
                 
-                window.tabs.forEach((tab, j) => {
-                    console.log("TABS", tab);
+                window.tabs.forEach((tab, j) => {  
                     chrome.tabs.create({ url: tab.url }, (createdTab: chrome.tabs.Tab) => {             
                         if(createdTab.id){
                             tabIds = [...tabIds, createdTab.id]
                         }
-                        console.log("ABC", windows.length, window.tabs.length);
+                    
                         if(windows.length-1 >= i && window.tabs.length-1 >= j){
                             chrome.tabs.group({ tabIds: tabIds });
                         }

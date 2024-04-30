@@ -100,7 +100,7 @@ const AdvancedSearchBar = (props: any): JSX.Element => {
         windows.forEach((window: iWindowItem) => {
             tabsCount += window.tabs.length;
         });
-        console.log("ABC", type);
+   
         chrome.storage.local.get("performanceWarningValue", (data) => {
             setTabsToLaunchCount(data.performanceWarningValue);
             if(data.performanceWarningValue !== -1 && data.performanceWarningValue <= tabsCount) {

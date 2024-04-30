@@ -1,4 +1,4 @@
-# Tab Management Browser Plugin (v1.0.0)
+# Tab Management Browser Plugin - v1.0.0
 
 <p align="center" style="padding-top: 10px; padding-bottom: 10px">
     <img src="./img/brand/brand.png" width="15%" />
@@ -33,12 +33,6 @@ who needs to launch different sessions for different purposes.
 ## Programming and tools
 
 HTML5, CSS3/SASS, Javascript/Typescript, React, Redux, JEST, Tailwind, Webextension API
-
-## Installation
-
-- Firefox: No releases as of now
-- Chrome: No releases as of now
-- Microsoft Edge: No releases as of now
 
 ## Usage
 
@@ -93,16 +87,21 @@ These builds are meant to be loaded into browser's dev environment for manual te
 **Firefox**
 ```
 npm run build-dev-firefox
+
 ```
 
-_Output folder_: ./dist-firefox
+_Output folder_:
+- ./dist-dev-firefox
+
+_Output packages_:
+- firefox-dev-package.zip
 
 _Load into browser_:
 
 1. Open Firefox
 2. Write _about:debugging_ into the address bar
 3. Click _This Firefox_ in the left bar menu
-4. Click _Load Temporary Add-on..._ button and head for the ./dist-firefox folder
+4. Click _Load Temporary Add-on..._ button and head for the ./dist-dev-firefox folder
 5. Click _manifest.json_ to load the unpackaged plugin into the browser
 
 
@@ -111,7 +110,11 @@ _Load into browser_:
 npm run build-dev-chrome
 ```
 
-_Output folder_: ./dist-chrome
+_Output folder_:
+- ./dist-dev-chrome
+
+_Output packages_:
+- chrome-dev-package.zip
 
 _Load into browser_:
 
@@ -119,7 +122,7 @@ _Load into browser_:
 2. Click the menu and head for _Extensions_ -> Manage Extensions_ 
 3. Enable developer mode
 4. Click _Load unpacked_
-5. Head for the ./dist-chrome folder and load it into the browser
+5. Head for the ./dist-dev-chrome folder and load it into the browser
 
 ### Production
 
@@ -128,14 +131,22 @@ _Load into browser_:
 npm run build-prod-firefox
 ```
 
+_Output folder_:
+- ./dist-prod-firefox
+
+_Output packages_:
+- firefox-prod-package.zip
+
 **Chrome**
 ```
 npm run build-prod-chrome
 ```
 
-Output folders:
-- ./dist-firefox
-- ./dist-chrome
+_Output folder_:
+- ./dist-prod-chrome
+
+_Output packages_:
+- chrome-prod-package.zip
 
 ## Test
 
@@ -147,11 +158,16 @@ Run unit and integration tests (JEST). The tests are available in /src/\_\_tests
 
 Run this command after changing existing components, to check if anything related to user interaction gets broken. Add new tests when adding new components or features. Each test should have clear description and have a relevant purpose (mere coverage hunting does not count...)
 
-# Feedback
-I would appreciate feedback and suggestions on how to improve this plugin. Reports of possible bugs are also welcome. Please, post an issue or contact me per email: privat_thai_nguyen@hotmail.com
+# QA
+
+### Why can I not find this plugin in Chrome Web Store/Firefox AMO?
+For the time being, this plugin is meant for my own personal use and is also part of my portfolio. I may publish it to the stores at a later time once I've figured out how to improve the plugin beyond what's already provided through the store. If you're still interested in using this plugin, I suggest you download a browser package from one of the releases.
+
+### Will there be any updates/new features?
+New features may be added as I get new ideas or feedback/suggestions that could be of value for significant improvement. Smaller bug fixes and enhancements may be published from time to time, with no set schedule nor roadmap at this point.
 
 # Contact information
 Email: privat_thai_nguyen@hotmail.com
 
 # Copyright &copy; Thai Nguyen
-See license for more information.
+See LICENSE.md for more information.

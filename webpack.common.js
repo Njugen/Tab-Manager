@@ -74,7 +74,7 @@ module.exports = (env) => {
                         to: path.resolve(`${distFolder()}/manifest.json`)
                     },
                     { 
-                        from: path.resolve(__dirname, "LICENSE"), 
+                        from: path.resolve(__dirname, "LICENSE.md"), 
                         to: path.resolve(`${distFolder()}/LICENSE.md`)
                     },
                     { 

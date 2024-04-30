@@ -34,7 +34,7 @@ const handleLaunchFolder = (args: iLaunchFolderArgs): void => {
     chrome.windows.getAll(queryOptions, (currentWindows: Array<chrome.windows.Window>) => {
         snapshot = currentWindows;
     });
-    console.log("TYPE", folderLaunchType);
+
     if(folderLaunchType !== "group"){
         // Open all windows in this folder
         windowsPayload.forEach((window: iWindowItem, i) => {
@@ -65,7 +65,7 @@ const handleLaunchFolder = (args: iLaunchFolderArgs): void => {
                     if(createdTab.id){
                         tabIds = [...tabIds, createdTab.id]
                     }
-                    console.log("ABC", windowsPayload.length, window.tabs.length);
+                   
                     if(windowsPayload.length-1 >= i && window.tabs.length-1 >= j){
                         chrome.tabs.group({ tabIds: tabIds });
                     }
