@@ -22,11 +22,11 @@ who needs to separate hobby sessions from work.
 
 ## Screenshots
 
-<img src="./img/screenshots/1.png" width="24.55%" /> <img src="./img/screenshots/2.png" width="24.55%" /> 
-<img src="./img/screenshots/3.png" width="24.55%" /> <img src="./img/screenshots/4.png" width="24.55%" /> 
-<img src="./img/screenshots/5.png" width="24.55%" /> <img src="./img/screenshots/6.png" width="24.55%" /> 
-<img src="./img/screenshots/7.png" width="24.55%" /> <img src="./img/screenshots/8.png" width="24.55%" /> 
-<img src="./img/screenshots/9.png" width="24.55%" /> 
+<img src="./img/screenshots/1.png" width="33%" /> <img src="./img/screenshots/2.png" width="33%" /> 
+<img src="./img/screenshots/3.png" width="33%" /> <img src="./img/screenshots/4.png" width="33%" /> 
+<img src="./img/screenshots/5.png" width="33%" /> <img src="./img/screenshots/6.png" width="33%" /> 
+<img src="./img/screenshots/7.png" width="33%" /> <img src="./img/screenshots/8.png" width="33%" /> 
+<img src="./img/screenshots/9.png" width="33%" /> 
 
 ## Programming and tools
 
@@ -43,15 +43,15 @@ HTML5, CSS3/SASS, Javascript/Typescript, React, Redux, JEST, Tailwind, Webextens
 Once installed, you can pin this plugin to your browser's navigation bar. Both Chrome and Firefox has 
 a pussle icon at the top right border, from where you can pin the plugin.
 
-<center>
+<p align="center">
     <img src="./img/pussle_pos.png" />
-</center>
+</p>
 
 Clicking the pinned icon will toggle sidepanel for quick use. Should you need more features or better overview, click the "Advanced" button at the bottom of the sidepanel.
 
-<center>
+<p align="center">
     <img src="./img/advanced_button_pos.png" />
-</center>
+</p>
 
 ## Development
 
