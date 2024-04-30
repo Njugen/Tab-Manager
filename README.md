@@ -7,7 +7,7 @@
 Tab manager plugin for Chromium browsers and Firefox. This release gives the user
 a larger overview over active and archived tabs, as well the possibility
 to arrange windows and tabs into folders - a convenient feature for those
-who needs to separate hobby sessions from work.
+who needs to launch different sessions for different purposes.
 
 ## Features
 
