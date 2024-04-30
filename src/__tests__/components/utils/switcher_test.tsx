@@ -7,6 +7,10 @@ import Switcher from "../../../components/utils/switcher/switcher";
 const mockLabel = randomNumber().toString();
 const mockFn = jest.fn((e: boolean | null) => e);
 
+afterEach(() => {
+    jest.clearAllMocks();
+})
+
 describe("Test <Switcher>", () => {
     test("Label is visible", () => {
         render(

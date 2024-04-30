@@ -1,9 +1,6 @@
 import { render, screen, within, fireEvent } from "@testing-library/react";
 import '@testing-library/jest-dom'
-import CircleButton from '../../../components/utils/circle_button';
 import randomNumber from "../../../tools/random_number";
-import FormField from "../../../components/utils/form_field";
-import GenericButton from "../../../components/utils/generic_button";
 import GenericPopup from "../../../components/utils/generic_popup";
 
 const mockTitle = randomNumber().toString();
@@ -18,11 +15,13 @@ const mockCancel = {
     handler: jest.fn()
 }
 
+afterEach(() => {
+    jest.clearAllMocks();
+})
 
 describe("Test <GenericPopup>", () => {
     const typeCases: Array<"slide-in" | "popup"> = ["slide-in", "popup"];
     
-
     describe("When 'save' prop is missing", () => {
         const props = {
             title: mockTitle,

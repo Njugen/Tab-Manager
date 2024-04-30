@@ -1,8 +1,7 @@
 
-import { render, screen, within, fireEvent } from "@testing-library/react";
+import { render, screen, within, fireEvent, cleanup } from "@testing-library/react";
 import '@testing-library/jest-dom'
 import randomNumber from "../../../tools/random_number";
-import FolderControlButton from "../../../components/utils/icon_button/icon_button";
 import { iFolderManager } from "../../../interfaces/iFolderManager";
 import { reducers, store } from "../../../redux-toolkit/store";
 import { Provider } from 'react-redux';
@@ -14,10 +13,13 @@ import { iWindowItem } from "../../../interfaces/window_item";
 import { iFolderItem } from "../../../interfaces/folder_item";
 import { iTabItem } from "../../../interfaces/tab_item";
 
-const mockId = randomNumber().toString();
-const mockChildren = <p data-testid="mock-component"></p>
 const mockFn = jest.fn();
 
+const mockProps: iFolderManager = {
+    title: randomNumber().toString(),
+    type: "slide-in",
+    onClose: mockFn
+}
 
 beforeEach(() => {
     // Mock the managerwrapperref
@@ -30,16 +32,20 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+    jest.clearAllMocks();
     jest.useRealTimers();
+    cleanup();
 })
 
-const mockProps: iFolderManager = {
-    title: randomNumber().toString(),
-    type: "slide-in",
-    onClose: mockFn
-}
-
 describe("Test <FolderManager>", () => {
+    const commonRender = () => {
+        render(
+            <Provider store={store}>
+                <FolderManager {...mockProps} />
+            </Provider>
+        )
+    }
+
     describe("Start with empty plate (e.g. add new folder)", () => {
         test("There are no warning messages when launching an empty plate", () => {
             // Mock the chrome storage getter
@@ -49,11 +55,7 @@ describe("Test <FolderManager>", () => {
                 callback({ showFolderChangeWarning: false })
             })
 
-            render(
-                <Provider store={store}>
-                    <FolderManager {...mockProps} />
-                </Provider>
-            )
+            commonRender();
             
             const warningMessage = screen.queryByRole("alert");
             expect(warningMessage).not.toBeInTheDocument();
@@ -68,11 +70,7 @@ describe("Test <FolderManager>", () => {
                 callback({ showFolderChangeWarning: false })
             })
 
-            render(
-                <Provider store={store}>
-                    <FolderManager {...mockProps} />
-                </Provider>
-            )
+            commonRender();
             
             let managerPopup = screen.getByRole("dialog");
             const fields = within(managerPopup).getAllByRole("textbox");
@@ -91,11 +89,7 @@ describe("Test <FolderManager>", () => {
                 callback({ showFolderChangeWarning: false })
             })
 
-            render(
-                <Provider store={store}>
-                    <FolderManager {...mockProps} />
-                </Provider>
-            )
+            commonRender();
             
             let managerPopup = screen.getByRole("dialog");
             const windows = within(managerPopup).queryAllByTestId("window-item");
@@ -111,11 +105,7 @@ describe("Test <FolderManager>", () => {
                 callback({ showFolderChangeWarning: false })
             })
 
-            render(
-                <Provider store={store}>
-                    <FolderManager {...mockProps} />
-                </Provider>
-            )
+            commonRender();
             
             let managerPopup = screen.getByRole("dialog");
 
@@ -133,11 +123,7 @@ describe("Test <FolderManager>", () => {
                 callback({ showFolderChangeWarning: false })
             })
 
-            render(
-                <Provider store={store}>
-                    <FolderManager {...mockProps} />
-                </Provider>
-            )
+            commonRender();
             
             let managerPopup = screen.getByRole("dialog");
 
@@ -161,11 +147,7 @@ describe("Test <FolderManager>", () => {
                 callback({ showFolderChangeWarning: false })
             })
 
-            render(
-                <Provider store={store}>
-                    <FolderManager {...mockProps} />
-                </Provider>
-            )
+            commonRender();
             
             let managerPopup = screen.getByRole("dialog");
 
@@ -189,11 +171,7 @@ describe("Test <FolderManager>", () => {
                 callback({ showFolderChangeWarning: false })
             })
 
-            render(
-                <Provider store={store}>
-                    <FolderManager {...mockProps} />
-                </Provider>
-            )
+            commonRender();
             
             let alert = screen.queryByRole("alert");
             expect(alert).not.toBeInTheDocument();
@@ -209,11 +187,7 @@ describe("Test <FolderManager>", () => {
                 callback({ showFolderChangeWarning: true })
             })
 
-            render(
-                <Provider store={store}>
-                    <FolderManager {...mockProps} />
-                </Provider>
-            )
+            commonRender();
             
             let alert = screen.queryByRole("alert");
             expect(alert).not.toBeInTheDocument();
@@ -231,11 +205,7 @@ describe("Test <FolderManager>", () => {
                 callback({ showFolderChangeWarning: false })
             })
 
-            render(
-                <Provider store={store}>
-                    <FolderManager {...mockProps} />
-                </Provider>
-            )
+            commonRender();
             
             let managerPopup = screen.getByRole("dialog");
             
@@ -264,12 +234,7 @@ describe("Test <FolderManager>", () => {
                 callback({ showFolderChangeWarning: false })
             })
 
-
-            render(
-                <Provider store={store}>
-                    <FolderManager {...mockProps} />
-                </Provider>
-            )
+            commonRender();
             
             let managerPopup = screen.getByRole("dialog");
             
@@ -300,11 +265,7 @@ describe("Test <FolderManager>", () => {
             })
 
 
-            render(
-                <Provider store={store}>
-                    <FolderManager {...mockProps} />
-                </Provider>
-            )
+            commonRender();
             
             let managerPopup = screen.getByRole("dialog");
             
@@ -320,6 +281,32 @@ describe("Test <FolderManager>", () => {
             
         })
 
+        test("Cancelling/closing after blurring any textfield won't trigger warning message (without writing anything)", () => {
+            // Mock the chrome storage getter
+
+            // @ts-expect-error
+            chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
+                callback({ showFolderChangeWarning: false })
+            })
+
+            commonRender();
+            
+            let managerPopup = screen.getByRole("dialog");
+            
+            // Change the name field value
+            const textfields = within(managerPopup).getAllByRole("textbox");;
+            textfields.forEach((field) => {
+                fireEvent.click(field);
+                fireEvent.blur(field);
+            })
+
+            const xButton = within(managerPopup).getByTestId("close-icon");
+            fireEvent.click(xButton, { bubbles: true });
+
+            const warningMessage = screen.queryByTestId("alert");
+            expect(warningMessage).not.toBeInTheDocument();
+        })
+
         test("Clicking Create/Save won't trigger 'onClose' when only window list has been changed", () => {
             // Mock the chrome storage getter
 
@@ -329,11 +316,7 @@ describe("Test <FolderManager>", () => {
             })
 
 
-            render(
-                <Provider store={store}>
-                    <FolderManager {...mockProps} />
-                </Provider>
-            )
+            commonRender();
             
             let managerPopup = screen.getByRole("dialog");
             
@@ -368,11 +351,7 @@ describe("Test <FolderManager>", () => {
                 callback({ showFolderChangeWarning: false })
             })
 
-            render(
-                <Provider store={store}>
-                    <FolderManager {...mockProps} />
-                </Provider>
-            )
+            commonRender();
     
             let managerPopup = screen.getByRole("dialog");        
 
@@ -405,83 +384,24 @@ describe("Test <FolderManager>", () => {
 
 
         describe("Test cancellation warning popup", () => {
-            test("Attempt at cancelling when name field has changed will trigger a warning if set in plugin settings", () => {
-                // Mock the chrome storage getter
-
+            test.each([
+                ["name", "name-field"],
+                ["description", "desc-field"]
+            ])("Attempt at cancelling when %j field has changed will trigger a warning if set in plugin settings", (label, testId) => {
                 // @ts-expect-error
                 chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
                     callback({ showFolderChangeWarning: true })
                 })
                 
-
-                render(
-                    <Provider store={store}>
-                        <FolderManager {...mockProps} />
-                    </Provider>
-                )
-                
-                let managerPopup = screen.getByRole("dialog");
-                
-                // Change the name field value
-                const nameField = within(managerPopup).getByTestId("name-field");
-                fireEvent.focus(nameField);
-                fireEvent.change(nameField, { target: { value: randomNumber().toString() } } )
-                fireEvent.blur(nameField);
-
-
-                // Try save it. It should pass
-                const cancelButton = within(managerPopup).getByText("Cancel", { selector: "button" });
-                fireEvent.click(cancelButton, { bubbles: true });
-
-                // Get the popup
-                let warningMessage = screen.getByRole("alert");
-                expect(warningMessage).toBeInTheDocument();
-
-                const keepEditingButton = within(warningMessage).getByText("No, keep editing", { selector: "button" })
-                fireEvent.click(keepEditingButton);
-                
-                
-                // Trigger popup again and hit close
-                fireEvent.click(cancelButton, { bubbles: true });
-
-                warningMessage = screen.getByRole("alert");
-                expect(warningMessage).toBeInTheDocument();
-                
-                const closeButton = within(warningMessage).getByText("Yes, close this form", { selector: "button" })
-                fireEvent.click(closeButton);
-
-                act(() => {
-                    jest.runAllTimers();
-                });
-
-                expect(mockProps.onClose).toHaveBeenCalled();
-    
-                
-            })
-
-            test("Attempt at cancelling when description field has changed will trigger a warning if set in plugin settings", () => {
-                // Mock the chrome storage getter
-
-                // @ts-expect-error
-                chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
-                    callback({ showFolderChangeWarning: true })
-                })
-                
-    
-                render(
-                    <Provider store={store}>
-                        <FolderManager {...mockProps} />
-                    </Provider>
-                )
+                commonRender();
                 
                 let managerPopup = screen.getByRole("dialog");
                 
                 // Change the description field value
-                const desc = within(managerPopup).getByTestId("desc-field");
+                const desc = within(managerPopup).getByTestId(testId);
                 fireEvent.focus(desc);
                 fireEvent.change(desc, { target: { value: randomNumber().toString() } } )
                 fireEvent.blur(desc);
-
 
                 // Try save it. It should pass
                 const cancelButton = within(managerPopup).getByText("Cancel", { selector: "button" });
@@ -509,8 +429,6 @@ describe("Test <FolderManager>", () => {
                 });
 
                 expect(mockProps.onClose).toHaveBeenCalled();
-    
-                
             })
 
             test("Attempt at cancelling once a window/tab has been added will trigger a warning if set in plugin settings", () => {
@@ -521,11 +439,7 @@ describe("Test <FolderManager>", () => {
                     callback({ showFolderChangeWarning: true })
                 })
     
-                render(
-                    <Provider store={store}>
-                        <FolderManager {...mockProps} />
-                    </Provider>
-                )
+                commonRender();
                 
                 let managerPopup = screen.getByRole("dialog");
                 
@@ -550,7 +464,6 @@ describe("Test <FolderManager>", () => {
 
                 const keepEditingButton = within(warningMessage).getByText("No, keep editing", { selector: "button" })
                 fireEvent.click(keepEditingButton);
-                
                 
                 // Trigger popup again and hit close
                 fireEvent.click(cancelButton, { bubbles: true });
@@ -611,6 +524,14 @@ describe("Edit folder: Test <FolderManager> with prefilled values", () => {
         ...mockProps,
         folder: mockFolder
     }
+
+    const commonRender = () => {
+        render(
+            <Provider store={store}>
+                <FolderManager {...mockPresetProps} />
+            </Provider>
+        )
+    }
     
     describe("Test prefilled fields (props data)", () => {
         test("There are no warning messages when launching prefilled plate", () => {
@@ -621,11 +542,7 @@ describe("Edit folder: Test <FolderManager> with prefilled values", () => {
                 callback({ showFolderChangeWarning: false })
             })
 
-            render(
-                <Provider store={store}>
-                    <FolderManager {...mockPresetProps} />
-                </Provider>
-            )
+            commonRender();
             
             const warningMessage = screen.queryByRole("alert");
             expect(warningMessage).not.toBeInTheDocument();
@@ -641,11 +558,7 @@ describe("Edit folder: Test <FolderManager> with prefilled values", () => {
             })
 
 
-            render(
-                <Provider store={store}>
-                    <FolderManager {...mockPresetProps} />
-                </Provider>
-            )
+            commonRender();
             
             let managerPopup = screen.getByRole("dialog");
             
@@ -667,11 +580,7 @@ describe("Edit folder: Test <FolderManager> with prefilled values", () => {
                 callback({ showFolderChangeWarning: false })
             })
 
-            render(
-                <Provider store={store}>
-                    <FolderManager {...mockPresetProps} />
-                </Provider>
-            )
+            commonRender();
 
             const tabItems = screen.queryAllByTestId("window-item");
             expect(tabItems.length).toEqual(totalWindowsCount)
@@ -683,11 +592,7 @@ describe("Edit folder: Test <FolderManager> with prefilled values", () => {
                 callback({ showFolderChangeWarning: false })
             })
 
-            render(
-                <Provider store={store}>
-                    <FolderManager {...mockPresetProps} />
-                </Provider>
-            )
+            commonRender();
 
             const windows = screen.queryAllByTestId("window-item");
 
@@ -703,11 +608,7 @@ describe("Edit folder: Test <FolderManager> with prefilled values", () => {
                 callback({ showFolderChangeWarning: false })
             })
 
-            render(
-                <Provider store={store}>
-                    <FolderManager {...mockPresetProps} />
-                </Provider>
-            )
+            commonRender();
 
             const tabs = screen.getAllByTestId("tab-item");
             expect(tabs.length).toEqual(totalTabsInWindowCount*totalWindowsCount);
@@ -719,11 +620,7 @@ describe("Edit folder: Test <FolderManager> with prefilled values", () => {
                 callback({ showFolderChangeWarning: false })
             })
 
-            render(
-                <Provider store={store}>
-                    <FolderManager {...mockPresetProps} />
-                </Provider>
-            )
+            commonRender();
 
             // Get a random window id
             const randomWindowIndex: number = Math.floor(Math.random() * totalWindowsCount)
@@ -736,7 +633,6 @@ describe("Edit folder: Test <FolderManager> with prefilled values", () => {
             // Get 4 random tab id
             let randomTabs: Array<HTMLElement> = [];
             let lastSelectedId = -1;
-
 
             for(let i = 0; i < 4; i++){
                 const randomTabIndex = Math.floor(Math.random() * totalTabsInWindowCount);
@@ -761,8 +657,7 @@ describe("Edit folder: Test <FolderManager> with prefilled values", () => {
                 expect(tab).not.toBeInTheDocument();
             })
         })
-        
-        
+             
 
         describe("Test cancellation warning popup", () => {
             
@@ -772,11 +667,7 @@ describe("Edit folder: Test <FolderManager> with prefilled values", () => {
                     callback({ showFolderChangeWarning: true })
                 })
 
-                render(
-                    <Provider store={store}>
-                        <FolderManager {...mockPresetProps} />
-                    </Provider>
-                )
+                commonRender();
 
                 // Get a random window id
                 const randomWindowIndex: number = Math.floor(Math.random() * totalWindowsCount)
@@ -789,7 +680,6 @@ describe("Edit folder: Test <FolderManager> with prefilled values", () => {
                 // Get 4 random tab id
                 let randomTabs: Array<HTMLElement> = [];
                 let lastSelectedId = -1;
-
 
                 for(let i = 0; i < 4; i++){
                     const randomTabIndex = Math.floor(Math.random() * totalTabsInWindowCount);
@@ -819,14 +709,12 @@ describe("Edit folder: Test <FolderManager> with prefilled values", () => {
                     callback({ showFolderChangeWarning: true })
                 })
     
-                render(
-                    <Provider store={store}>
-                        <FolderManager {...mockPresetProps} />
-                    </Provider>
-                )
+                commonRender();
     
                 // Get a random window id
                 const randomWindowIndex: number = Math.floor(Math.random() * totalWindowsCount)
+
+                
                 const targetWindowTabs = mockFolder.windows[randomWindowIndex].tabs;
     
                 const randomTabIndex: number = Math.floor(Math.random() * targetWindowTabs.length);
@@ -861,83 +749,24 @@ describe("Edit folder: Test <FolderManager> with prefilled values", () => {
                 expect(alert).toBeInTheDocument()
             })
 
-            test("Attempt at cancelling when name field has changed will trigger a warning if set in plugin settings", () => {
-                // Mock the chrome storage getter
-
+            test.each([
+                ["name", "name-field"],
+                ["description", "desc-field"]
+            ])("Attempt at cancelling when %j field has changed will trigger a warning if set in plugin settings", (label, testId) => {
                 // @ts-expect-error
                 chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
                     callback({ showFolderChangeWarning: true })
                 })
                 
-
-                render(
-                    <Provider store={store}>
-                        <FolderManager {...mockPresetProps} />
-                    </Provider>
-                )
-                
-                let managerPopup = screen.getByRole("dialog");
-                
-                // Change the name field value
-                const nameField = within(managerPopup).getByTestId("name-field");
-                fireEvent.focus(nameField);
-                fireEvent.change(nameField, { target: { value: randomNumber().toString() } } )
-                fireEvent.blur(nameField);
-
-
-                // Try save it. It should pass
-                const cancelButton = within(managerPopup).getByText("Cancel", { selector: "button" });
-                fireEvent.click(cancelButton, { bubbles: true });
-
-                // Get the popup
-                let warningMessage = screen.getByRole("alert");
-                expect(warningMessage).toBeInTheDocument();
-
-                const keepEditingButton = within(warningMessage).getByText("No, keep editing", { selector: "button" })
-                fireEvent.click(keepEditingButton);
-                
-                
-                // Trigger popup again and hit close
-                fireEvent.click(cancelButton, { bubbles: true });
-
-                warningMessage = screen.getByRole("alert");
-                expect(warningMessage).toBeInTheDocument();
-                
-                const closeButton = within(warningMessage).getByText("Yes, close this form", { selector: "button" })
-                fireEvent.click(closeButton);
-
-                act(() => {
-                    jest.runAllTimers();
-                });
-
-                expect(mockPresetProps.onClose).toHaveBeenCalled();
-    
-                
-            })
-
-            test("Attempt at cancelling when description field has changed will trigger a warning if set in plugin settings", () => {
-                // Mock the chrome storage getter
-
-                // @ts-expect-error
-                chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
-                    callback({ showFolderChangeWarning: true })
-                })
-                
-    
-                render(
-                    <Provider store={store}>
-                        <FolderManager {...mockPresetProps} />
-                    </Provider>
-                )
+                commonRender();
                 
                 let managerPopup = screen.getByRole("dialog");
                 
                 // Change the description field value
-                const desc = within(managerPopup).getByTestId("desc-field");
+                const desc = within(managerPopup).getByTestId(testId);
                 fireEvent.focus(desc);
                 fireEvent.change(desc, { target: { value: randomNumber().toString() } } )
                 fireEvent.blur(desc);
-
 
                 // Try save it. It should pass
                 const cancelButton = within(managerPopup).getByText("Cancel", { selector: "button" });
@@ -964,9 +793,7 @@ describe("Edit folder: Test <FolderManager> with prefilled values", () => {
                     jest.runAllTimers();
                 });
 
-                expect(mockPresetProps.onClose).toHaveBeenCalled();
-    
-                
+                expect(mockProps.onClose).toHaveBeenCalled();
             })
         })
     })

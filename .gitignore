@@ -1,16 +1,24 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# dependencies
 /node_modules
 /.pnp
 .pnp.js
 
-# testing
 /coverage
-
-# production
 /build
 /dist
+/dist-firefox
+/dist-chrome
+/public
+/package-lock.js
+/dist-dev-firefox
+/dist-dev-chrome
+/dist-dev-firefox-package.zip
+/dist-dev-chrome-package.zip
+/dist-prod-firefox
+/dist-prod-chrome
+/firefox-dev-package.zip
+/chrome-dev-package.zip
 
 # misc
 .DS_Store

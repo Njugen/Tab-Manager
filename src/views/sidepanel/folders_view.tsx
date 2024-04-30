@@ -22,6 +22,7 @@ const FoldersView = (props: any): JSX.Element => {
     const [showPerformanceWarning, setShowPerformanceWarning] = useState<boolean>(false);
     const [removalTarget, setRemovalTarget] = useState<iFolderItem | null>(null);
     const [createFolder, setCreateFolder] = useState<boolean>(false);
+    const [folderLaunchType, setFolderLaunchType] = useState<string | null>(null); 
 
     const dispatch = useDispatch();
 
@@ -59,6 +60,7 @@ const FoldersView = (props: any): JSX.Element => {
             setTotalTabsCount(data.performanceWarningValue);
             if(data.performanceWarningValue !== -1 && data.performanceWarningValue <= tabsCount) {
                 setShowPerformanceWarning(true);
+                setFolderLaunchType(type);
             } else {
                 handleLaunchFolder(windows, type);
             }
@@ -70,6 +72,7 @@ const FoldersView = (props: any): JSX.Element => {
         evaluatePerformanceWarning(type, windows);
     }
 
+    // Launch folder
     const handleLaunchFolder = (windows: Array<iWindowItem>, launchType?: string): void => {
         // Now, prepare a snapshot, where currently opened windows get stored
         let snapshot: Array<chrome.windows.Window> = [];
@@ -79,34 +82,56 @@ const FoldersView = (props: any): JSX.Element => {
             windowTypes: ["normal", "popup"]
         };
 
+
         // Store currently opened windows into the snapshot
         chrome.windows.getAll(queryOptions, (currentWindows: Array<chrome.windows.Window>) => {
             snapshot = currentWindows;
         });
 
-        // Open all windows in this folder
-        windows.forEach((window: iWindowItem, i) => {
-            const windowSettings = {
-                focused: i === 0 ? true : false,
-                url: window.tabs.map((tab) => tab.url),
-                incognito: launchType === "incognito" ? true : false
-            }
-            chrome.windows.create(windowSettings);
-        });
+        if(launchType !== "group"){
+            // Open all windows in this folder
+            windows.forEach((window: iWindowItem, i) => {
+                const windowSettings: chrome.windows.CreateData = {
+                    focused: i === 0 ? true : false,
+                    url: window.tabs.map((tab) => tab.url),
+                    incognito: launchType === "incognito" ? true : false,
+                    state: "maximized"
+                }
+                chrome.windows.create(windowSettings);
+            });
 
-        // Close current session after launching the folder. Only applies when
-        // set in the Pettings page
-        chrome.storage.local.get("closeSessionAtFolderLaunch", (data) => {
-            if(data.closeSessionAtFolderLaunch === true){
-                snapshot.forEach((window) => {
-                    if(window.id) chrome.windows.remove(window.id);
-                });
-            }
-        });
+            // Close current session after launching the folder. Only applies when
+            // set in the plugin's settings
+            chrome.storage.local.get("closeSessionAtFolderLaunch", (data) => {
+                if(data.closeSessionAtFolderLaunch === true){
+                    snapshot.forEach((window) => {
+                        if(window.id) chrome.windows.remove(window.id);
+                    });
+                }
+            });
+        } else {
+            let tabIds: Array<number> = [];
+            
+            windows.forEach((window: iWindowItem, i) => {
+                
+                window.tabs.forEach((tab, j) => {
+                    chrome.tabs.create({ url: tab.url }, (createdTab: chrome.tabs.Tab) => {             
+                        if(createdTab.id){
+                            tabIds = [...tabIds, createdTab.id]
+                        }
+                        
+                        if(windows.length-1 >= i && window.tabs.length-1 >= j){
+                            chrome.tabs.group({ tabIds: tabIds });
+                        }
+                    })
+                })
+            });
+        }
 
         // Unset all relevant states to prevent interferance with other features once the folder has been launched
         setWindowsPayload(null);
         setShowPerformanceWarning(false);
+        setFolderLaunchType(null);
     }
     
     // Open a specific folder
@@ -114,13 +139,13 @@ const FoldersView = (props: any): JSX.Element => {
         let render;
 
         if(createFolder === true){
-            render = <FolderManager type="popup" title="Create folder" onClose={handleCloseFolderManager} />;
+            render = <FolderManager type="slide-in" title="Create folder" onClose={handleCloseFolderManager} />;
         } else {
             const targetFolder: Array<iFolderItem> = folderState.filter((item: iFolderItem) => editFolderId === item.id);
             const input: iFolderItem = {...targetFolder[0]};
 
             if(targetFolder.length > 0){
-                render = <FolderManager type="popup" title={`Edit folder ${targetFolder[0].id}`} folder={input} onClose={handleCloseFolderManager} />;
+                render = <FolderManager type="slide-in" title={`Edit folder ${targetFolder[0].id}`} folder={input} onClose={handleCloseFolderManager} />;
             } else {
                 render = <></>;
             } 
@@ -209,9 +234,9 @@ const FoldersView = (props: any): JSX.Element => {
                     title="Warning" 
                     text={`You are about to open ${totalTabsCount} or more tabs at once. Opening this many may slow down your browser. Do you want to proceed?`}
                     primaryButton={{ 
-                        text: "Yes, open selected folders", 
+                        text: "Yes, open", 
                         callback: () => { 
-                            if(windowsPayload) handleLaunchFolder(windowsPayload); 
+                            if(windowsPayload) handleLaunchFolder(windowsPayload, folderLaunchType || undefined); 
                             setShowPerformanceWarning(false)}
                         }}
                     secondaryButton={{ 

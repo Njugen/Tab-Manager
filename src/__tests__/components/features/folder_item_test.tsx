@@ -1,14 +1,11 @@
-import { render, screen, within, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, within, fireEvent, waitFor, cleanup } from "@testing-library/react";
 import '@testing-library/jest-dom'
-import GenericButton from "../../../components/utils/generic_button";
-import WindowManager from "../../../components/features/window_manager/window_manager";
 import { Provider, useSelector } from "react-redux";
 import { store } from "../../../redux-toolkit/store";
 import randomNumber from "../../../tools/random_number";
 import { iWindowItem } from "../../../interfaces/window_item";
 import { iFolderItem } from "../../../interfaces/folder_item";
 import FolderItem from "../../../components/features/folder_item/folder_item";
-import { act } from "react-dom/test-utils";
 
 const createMockWindows = (mocks: number): Array<iWindowItem> => {
     const result: Array<iWindowItem> = [];
@@ -35,6 +32,26 @@ const createMockWindows = (mocks: number): Array<iWindowItem> => {
     return result;
 }
 
+beforeEach(() => {
+    // @ts-expect-error
+    chrome.extension.isAllowedIncognitoAccess = jest.fn((callback: (data: boolean) => void) => {
+        callback(true);
+    })
+
+    // @ts-expect-error
+    chrome.tabs.create = jest.fn((data, callback) => {
+        const str = JSON.parse('{"active":false,"audible":false,"autoDiscardable":true,"discarded":true,"favIconUrl":"https://cdn.sstatic.net/Sites/stackoverflow/Img/favicon.ico?v=ec617d715196","groupId":-1,"height":0,"highlighted":false,"id":892795750,"incognito":false,"index":0,"mutedInfo":{"muted":false},"pinned":false,"selected":false,"status":"unloaded","title":"git - gitignore does not ignore folder - Stack Overflow","url":"https://stackoverflow.com/questions/24410208/gitignore-does-not-ignore-folder","width":0,"windowId":892795610}');
+        callback(str);
+    });
+    chrome.tabs.group = jest.fn();
+    chrome.windows.create = jest.fn()
+})
+
+
+afterEach(() => {
+    jest.clearAllMocks();
+    cleanup();
+})
 
 describe("Test <FolderItem>", () => {
     describe("When folder is initially expanded ('type' prop set to 'expanded')", () => {
@@ -49,7 +66,7 @@ describe("Test <FolderItem>", () => {
                 windows: createMockWindows(5)
             }
 
-            const { id, name, desc, marked, type, viewMode, windows } = mockFolderItem;
+            const { name, desc } = mockFolderItem;
     
             test("Folder shows 'name' prop in the heading", () => {
                 render(
@@ -346,7 +363,7 @@ describe("Test <FolderItem>", () => {
                 windows: createMockWindows(5)
             }
 
-            const { id, name, desc, marked, type, viewMode, windows } = mockFolderItem;
+            const { name, desc } = mockFolderItem;
     
             test("Folder shows 'name' prop in the heading", () => {
                 render(

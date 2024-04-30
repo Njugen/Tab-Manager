@@ -1,11 +1,10 @@
-import { render, screen, within, fireEvent } from "@testing-library/react";
+import { render, screen, within, fireEvent, cleanup } from "@testing-library/react";
 import '@testing-library/jest-dom'
-import GenericButton from "../../../components/utils/generic_button";
 import iAddToFolderPopup from "../../../interfaces/add_to_folder_popup";
 import randomNumber from './../../../tools/random_number';
 import AddToFolderPopup from "../../../components/features/add_to_folder_popup";
 
-const mockProps: iAddToFolderPopup = {
+let mockProps: iAddToFolderPopup = {
     title: randomNumber().toString(),
     type: "slide-in",
     dropdownOptions: [
@@ -27,27 +26,56 @@ const mockProps: iAddToFolderPopup = {
     onCancel: jest.fn((): void => {}),
 }
 
+afterEach(() => {
+    jest.clearAllMocks();
+    cleanup();
+})
+
 describe("Test <AddToFolderPopup>", () => {
-    test("Triggers 'onNewFolder' prop when 'To a new folder' button is clicked", () => {
-        render(
-            <AddToFolderPopup {...mockProps} />
-        );
+    const { onNewFolder, onCancel, onExistingFolder, dropdownOptions } = mockProps;
 
-        const addToNewFolderButton = screen.getByText("To a new folder");
-        fireEvent.click(addToNewFolderButton);
+    describe("Test 'To a new folder' button", () => {
+        test.each([
+            ["onNewFolder", onNewFolder],
+            ["onCancel", onCancel]
+        ])("%j props triggers when button is clicked", (label: string, prop: any) => {
+            render(
+                <AddToFolderPopup {...mockProps} />
+            );
 
-        expect(mockProps.onNewFolder).toHaveBeenCalled();
+            const addToNewFolderButton = screen.getByText("To a new folder");
+            fireEvent.click(addToNewFolderButton);
+
+            expect(prop).toHaveBeenCalled();
+        })
     })
 
-    test("Triggers 'onCancel' prop when 'To a new folder' button is clicked", () => {
-        render(
-            <AddToFolderPopup {...mockProps} />
-        );
+    describe("Test folder selection", () => {
+        const commonRender = () => {
+            render(
+                <AddToFolderPopup {...mockProps} />
+            );
+            
+            const dropdown = screen.getByRole("menu");
+            let selectedLabel = within(dropdown).getByText(dropdownOptions[0].label);
+            fireEvent.click(selectedLabel);
+    
+            let menu = within(dropdown).getByRole("list");
+            let options = within(menu).getAllByRole("listitem");
+            let targetButton = within(options[1]).getByRole("button");
+            fireEvent.click(targetButton);
+        }
 
-        const addToNewFolderButton = screen.getByText("To a new folder");
-        fireEvent.click(addToNewFolderButton);
+        test("triggers 'onExistingFolder' prop when selecting an existing folder", () => {
+            commonRender();
+            expect(onExistingFolder).toHaveBeenCalledWith({ selected: dropdownOptions[1].value });
+        })
+    
+        test("triggers' onCancel' prop when selecting an existing folder", () => {
+            commonRender()
+            expect(onCancel).toHaveBeenCalled()
+        })
 
-        expect(mockProps.onCancel).toHaveBeenCalled();
     })
 
     test("Triggers 'onCancel' prop when 'X' button is clicked", () => {
@@ -58,44 +86,8 @@ describe("Test <AddToFolderPopup>", () => {
         const xButton = screen.getByTestId("close-icon");
         fireEvent.click(xButton);
 
-        expect(mockProps.onCancel).toHaveBeenCalled();
+        expect(onCancel).toHaveBeenCalled();
     });
-
-    test("triggers 'onExistingFolder' prop when selecting an existing folder", () => {
-        render(
-            <AddToFolderPopup {...mockProps} />
-        );
-
-        const dropdown = screen.getByRole("menu");
-        let selectedLabel = within(dropdown).getByText(mockProps.dropdownOptions[0].label);
-        fireEvent.click(selectedLabel);
-
-
-        let menu = within(dropdown).getByRole("list");
-        let options = within(menu).getAllByRole("listitem");
-        let targetButton = within(options[1]).getByRole("button");
-        fireEvent.click(targetButton);
-
-        expect(mockProps.onExistingFolder).toHaveBeenCalledWith({ selected: mockProps.dropdownOptions[1].value });
-    })
-
-    test("triggers' onCancel' prop when selecting an existing folder", () => {
-        render(
-            <AddToFolderPopup {...mockProps} />
-        );
-
-        const dropdown = screen.getByRole("menu");
-        let selectedLabel = within(dropdown).getByText(mockProps.dropdownOptions[0].label);
-        fireEvent.click(selectedLabel);
-
-
-        let menu = within(dropdown).getByRole("list");
-        let options = within(menu).getAllByRole("listitem");
-        let targetButton = within(options[1]).getByRole("button");
-        fireEvent.click(targetButton);
-
-        expect(mockProps.onCancel).toHaveBeenCalled()
-    })
 
     test("'title' prop is visible in the component", () => {
         render(

@@ -3,7 +3,7 @@ import { iTextButton } from "../../../interfaces/text_button";
 import buttonStateCSS from "./functions/button_state_css";
 
 /*
-    Button intended to use in positive direction ("continue", "proceed", "Okay", "Yes", etc). 
+    Button intended to be used in positive direction ("continue", "proceed", "Okay", "Yes", etc). 
 
     In the future, this button should be made into a generic button, offering various colors instead
     of just being a button intended for one purpose.

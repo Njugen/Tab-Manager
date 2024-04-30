@@ -2,7 +2,18 @@ import SearchBarFolderList from './search_bar_folder_list';
 import renderSessionTabs from './search_bar_session_tabs';
 import SearchBarHistoryTabs from './search_bar_history_tabs';
 import SearchBarSessionTabs from './search_bar_session_tabs';
-import iSearchResultsProps from '../../../../interfaces/search_results_props';
+import { iWindowItem } from '../../../../interfaces/window_item';
+import { iFolderItem } from '../../../../interfaces/folder_item';
+import iCurrentSessionState from '../../../../interfaces/states/current_session_state';
+import iHistoryState from '../../../../interfaces/states/history_state';
+
+interface iSearchResultsProps {
+    keyword: string,
+    launchFolder: (windows: Array<iWindowItem>, type: string) => void,
+    folders: Array<iFolderItem>, 
+    session: iCurrentSessionState, 
+    history: iHistoryState
+}
 
 // Show search results wrapper and list all results by keyword
 const SearchResults = (props: iSearchResultsProps): JSX.Element => {

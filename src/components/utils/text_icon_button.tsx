@@ -3,9 +3,6 @@ import styles from "./../../styles/global_utils.module.scss";
 
 /*
     An icon button with applied labels, used for all kind of things, 
-
-    To make use of a new icon, insert a new if-statement returning the requested icon and
-    check for the icon's prop name.
 */
 
 

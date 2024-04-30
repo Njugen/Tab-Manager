@@ -1,6 +1,5 @@
 import CollapseIcon from "../../../icons/collapse_icon"
 import RotationEffect from "../../../effects/rotation_effect"
-import FolderControlButton from "../../../utils/icon_button/icon_button"
 import OpenBrowserIcon from "../../../icons/open_browser_icon"
 import TrashIcon from "../../../icons/trash_icon"
 import SettingsIcon from "../../../icons/settings_icon"
@@ -8,33 +7,48 @@ import Checkbox from "../../../utils/checkbox"
 import DropdownMenu from "../../../utils/dropdown_menu/dropdown_menu"
 import { iFieldOption } from "../../../../interfaces/dropdown"
 import { iFolderActionBarProps } from "../../../../interfaces/folder_action_bar"
+import styles from "../../../../styles/global_utils.module.scss";
+import { useMemo, useState } from "react"
 
 
-
-// List of all options on how to launch this folder. The id identifies the option, and
-// actions are performed accordingly.
-const launchOptions: Array<iFieldOption> = [
-    {
-        value: 0,
-        label: "Open"
-    },
-    {
-        value: 1,
-        label: "Open as group"
-    },
-    {
-        value: 2,
-        label: "Open in incognito"
-    }
-] 
 
 // Renders an action bar containing various UI buttons for handling the behaviour of the folder.
 const FolderActionBar = (props: iFolderActionBarProps): JSX.Element => {
+    const [launchOptions, setLaunchOptions] = useState<Array<iFieldOption>>([]);
     const { states, handlers } = props;
     const { expanded, showLaunchOptions, marked, id } = states;
+    const { opacity_hover_effect } = styles;
+
+    useMemo(() => {
+        const options: Array<iFieldOption> = [
+            {
+                value: 0,
+                label: "Open"
+            }
+        ]
+
+        if(chrome.tabs.group !== undefined){
+            options.push({
+                value: 1,
+                label: "Open as group"
+            });
+        } 
+        
+        chrome.extension.isAllowedIncognitoAccess((access: boolean) => {
+            if(access){
+                options.push({
+                    value: 2,
+                    label: "Open in incognito"
+                });
+            }
+        })
+        
+        setLaunchOptions(options);
+    }, [])
+
     const {
         handleExpandClick,
-        handleOpen,
+        handlePrepareOpen,
         handleEdit,
         handleDelete,
         handleLaunch,
@@ -49,32 +63,33 @@ const FolderActionBar = (props: iFolderActionBarProps): JSX.Element => {
     let deleteButton: JSX.Element | null = null
     let checkbox: JSX.Element | null = null
     let expand_collapse_button: JSX.Element | null = (
-        <FolderControlButton id={expanded ? "collapse" : "expand"} disabled={false} onClick={handleExpandClick}>
+        <button id={expanded ? "collapse" : "expand"} className={`mx-2 ${opacity_hover_effect}`} disabled={false} onClick={handleExpandClick}>
             <RotationEffect rotated={expanded}>
                 <CollapseIcon size={28} fill={"#000"} />
             </RotationEffect>
-        </FolderControlButton>
+        </button>
     );
 
+    // Show certain options depending on whether or not the folder permits those features
     if(onOpen){
         openButton = (
-            <FolderControlButton id="open_browser" disabled={false} onClick={handleOpen}>
+            <button id="open_browser" disabled={false} className={`mx-2 ${opacity_hover_effect}`} onClick={handlePrepareOpen}>
                 <OpenBrowserIcon size={17} fill={"#000"} />
-            </FolderControlButton>
+            </button>
         );
     }
     if(onEdit){
         editButton = (
-            <FolderControlButton id="settings" disabled={false} onClick={handleEdit}>
+            <button id="settings" disabled={false} className={`mx-2 ${opacity_hover_effect}`}  onClick={handleEdit}>
                 <SettingsIcon size={17} fill={"#000"} />
-            </FolderControlButton>
+            </button>
         );
     }
     if(onDelete){
         deleteButton = (
-            <FolderControlButton id="trash" disabled={false} onClick={handleDelete}>
+            <button id="trash" disabled={false} className={`mx-2 ${opacity_hover_effect}`}  onClick={handleDelete}>
                 <TrashIcon size={17} fill={"#000"} />
-            </FolderControlButton>
+            </button>
         );
     }
     if(onMark){

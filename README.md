@@ -1,52 +1,63 @@
-# Tab Management Browser Plugin (In development)
+# Tab Management Browser Plugin - v1.0.0
 
 <p align="center" style="padding-top: 10px; padding-bottom: 10px">
     <img src="./img/brand/brand.png" width="15%" />
 </p>
 
-This plugin gives you a better overview and improved tab management experience not provided
-by default browser features. Mark, arrange, and open tabs in any way you like, e.g. new session, categorized session, or incognito.
-
-## Issue and purpose
-
-Add your windows and tabs to accessible folders. Launch sets of entertainment, or open your work related
-resources with just one click.
-
-Simple overview and basic features can be opened with one click. More advanced featuress and extended overview is also available through the option menu.
-
-## Screenshots
-
-<img src="./img/main.jpg" width="33%" /> <img src="./img/settings.jpg" width="33%" /> <img src="./img/search.jpg" width="33%" /> <img src="./img/sidebar.jpg" width="33%%" />
+Tab manager plugin for Chromium browsers and Firefox. This release gives the user
+a larger overview over active and archived tabs, as well the possibility
+to arrange windows and tabs into folders - a convenient feature for those
+who needs to launch different sessions for different purposes.
 
 ## Features
 
-- Create and edit folders
+- Create folders (either new, or by using history or session as presets)
 - Duplicate and merge folders
-- Launch folders in either incognito or as groups
-- Tab suspension (upcoming)
-- Simplistic sidepanel, for quick overview
-- Options page for expanded overview
+- Launch folders in incognito
+- Launch folders as a collection/group (Chrome/Edge only)
+- Search through folders, history and current session
+- Simple sidepanel for core features
+- Options page for expanded overview and more features
+
+
+## Screenshots
+
+<p align="center">
+    <img src="./img/screenshots/1.png" width="24%" /> <img src="./img/screenshots/2.png" width="24%" /> 
+    <img src="./img/screenshots/3.png" width="24%" /> <img src="./img/screenshots/4.png" width="24%" /> 
+    <img src="./img/screenshots/5.png" width="24%" /> <img src="./img/screenshots/6.png" width="24%" /> 
+    <img src="./img/screenshots/7.png" width="24%" /> <img src="./img/screenshots/8.png" width="24%" /> 
+    <img src="./img/screenshots/9.png" width="24%" /> 
+</p>
 
 ## Programming and tools
 
 HTML5, CSS3/SASS, Javascript/Typescript, React, Redux, JEST, Tailwind, Webextension API
 
-## Installation
+## Usage
 
-- Firefox: No releases as of now
-- Chrome: No releases as of now
-- Microsoft Edge: No releases as of now
+Once installed, you can pin this plugin to your browser's navigation bar. Both Chrome and Firefox has 
+a pussle icon at the top right border, from where you can pin the plugin.
+
+<p align="center">
+    <img src="./img/pussle_pos.png" />
+</p>
+
+Clicking the pinned icon will toggle sidepanel for quick use. Should you need more features or better overview, click the "Advanced" button at the bottom of the sidepanel.
+
+<p align="center">
+<img src="./img/advanced_button_pos.png" />
+</p>
 
 ## Development
 
-All folders and files follows the following format: __[my-file-name.tsx]__
+Although not necessary, sticking to the following would help keeping components clean and
+organized.
 
-### Component guidelines
-
-- In this project, all functions returning the type __JSX.Element__ is considered a component. These should always be placed in their own files.
-- A component should NOT declare other components. Preferably, no functions should be declared inside a component unless it is motivated to do so (e.g. when the function sets states at some point).
-- Each variable and function should be declared with appropriate datatype. Create a new interface or extend a current one, when creating a new feature
+- Try to avoid declaring components inside another component (JSX.Element).
+- Consider refactoring components if they become too big or clumsy to work with (e.g. move large functions to their own files).
 - Refactored/sub components should be placed in their own folders and follow a specific naming convention:
+
 
 ```
     ./src
@@ -55,64 +66,108 @@ All folders and files follows the following format: __[my-file-name.tsx]__
             - utils
                 - [my_component]
                     - [my_component].tsx
-                    - a_component_specific_function.tsx
-                    - a_event_handler.ts
-                    - child_components
+                    - functions
+                        - a_component_specific_function.tsx
+                        - a_event_handler.ts
+                    - components
                         - child_component_a.tsx
                         - child_component_b.tsx
 ```
 
-Consider refactoring components if they become too big or clumsy to work with.
+## Build
 
-### Commands
+npm is required for this project.
 
-Before you begin, make sure Node Package Manager (npm) is installed on your computer. The build and testing
-commands depend on this.
+Use the following commands to build:
 
+### Development
 
-__Build__
+These builds are meant to be loaded into browser's dev environment for manual testing. These builds aren't minified and retain all console.logs.
+
+**Firefox**
+```
+npm run build-dev-firefox
 
 ```
-npm run build-dev
+
+_Output folder_:
+- ./dist-dev-firefox
+
+_Output packages_:
+- firefox-dev-package.zip
+
+_Load into browser_:
+
+1. Open Firefox
+2. Write _about:debugging_ into the address bar
+3. Click _This Firefox_ in the left bar menu
+4. Click _Load Temporary Add-on..._ button and head for the ./dist-dev-firefox folder
+5. Click _manifest.json_ to load the unpackaged plugin into the browser
+
+
+**Chrome**
+```
+npm run build-dev-chrome
 ```
 
-The build will be available in the ./dist folder. This folder can be loaded
-as a unpacked webextension into the browser. This folder is also used when packaging the extension
-for distribution.
+_Output folder_:
+- ./dist-dev-chrome
 
-NOTE: There is no bundling as of now, nor production build at the moment. Those will be added at a later time
+_Output packages_:
+- chrome-dev-package.zip
 
-__Test__
+_Load into browser_:
+
+1. Open Chrome
+2. Click the menu and head for _Extensions_ -> Manage Extensions_ 
+3. Enable developer mode
+4. Click _Load unpacked_
+5. Head for the ./dist-dev-chrome folder and load it into the browser
+
+### Production
+
+**Firefox**
+```
+npm run build-prod-firefox
+```
+
+_Output folder_:
+- ./dist-prod-firefox
+
+_Output packages_:
+- firefox-prod-package.zip
+
+**Chrome**
+```
+npm run build-prod-chrome
+```
+
+_Output folder_:
+- ./dist-prod-chrome
+
+_Output packages_:
+- chrome-prod-package.zip
+
+## Test
 
 ```
 npm run test
 ```
 
-Run unit and integration tests (JEST). The tests are available in /src/__tests__. The coverage is presented in ./coverage/Icov-report/index.html
+Run unit and integration tests (JEST). The tests are available in /src/\_\_tests_\_/. The coverage is presented in ./coverage/Icov-report/index.html
 
-Run this command after changing existing components, to check if anything related to user interaction gets broken. Add new tests when adding new components or features. 
+Run this command after changing existing components, to check if anything related to user interaction gets broken. Add new tests when adding new components or features. Each test should have clear description and have a relevant purpose (mere coverage hunting does not count...)
 
-### Install unpacked dev version in Chrome or Edge
+# QA
 
-1. Clone this repository to a folder on your computer
-2. Open Google Chrome (preferably. Optimization for Firefox and Edge will be done at a later time)
-3. Build the project
-3. Go to Chrome's menu -> Extensions -> Manage Extension
-4. Turn on Developer mode and click "Load unpacked"
-5. Head for ***/tabfolders/dist/*** and select it
+### Why can I not find this plugin in Chrome Web Store/Firefox AMO?
+For the time being, this plugin is meant for my own personal use and is also part of my portfolio. I may publish it to the stores at a later time once I've figured out how to improve the plugin beyond what's already provided through the store. If you're still interested in using this plugin, I suggest you download a browser package from one of the releases.
 
-- __Open options page:__ Click "Details" in the extension's box. Scroll down and click "Extension options"
-- __Open the sidepanel:__ Click the <img src="./img/brand/brand.png" width="20" height="20" style="margin: 0 4px" /> icon in your browser's toolbar
-
-# Updates
-Minor updates and improvements will be provided from time to time. There is no definite roadmap or schedule.
-
-
-# Feedback
-I would appreciate feedback and suggestions on how to improve this plugin. Reports of possible bugs are also welcome. Please, post an issue or contact me per email: privat_thai_nguyen@hotmail.com
+### Will there be any updates/new features?
+New features may be added as I get new ideas or feedback/suggestions that could be of value for significant improvement. Smaller bug fixes and enhancements may be published from time to time, with no set schedule nor roadmap at this point.
 
 # Contact information
 Email: privat_thai_nguyen@hotmail.com
 
 # Copyright &copy; Thai Nguyen
-This plugin is free for private and professional use, with no limitations nor warranty. The plugin itself and code deriving from it may not be monetized, re-distributed, nor used as part of commercial products/services/brands.
+See LICENSE.md for more information.

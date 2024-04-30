@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import iHistoryState from "../../interfaces/states/history_state"
+import purify from "../../tools/purify_object";
 
 const initialState: iHistoryState = {
     tabs: [],
@@ -21,12 +22,21 @@ const historySlice = createSlice({
                 tabs: payload
             }
         },
-        markTabs: (state, action: PayloadAction<Array<chrome.history.HistoryItem>>): iHistoryState => {
+        markTab: (state, action: PayloadAction<chrome.history.HistoryItem>): iHistoryState => {
             const { payload } = action;
+
+            let currentlyMarkedTabs: Array<chrome.history.HistoryItem> = state.markedTabs || [];
+            // Find whether or not the requested folder id is marked or not
+            const payloadIsMarked = currentlyMarkedTabs.find((tab) => tab.id === payload.id);
+            if(payloadIsMarked){
+                currentlyMarkedTabs = currentlyMarkedTabs.filter((tab) => tab.id !== payload.id);
+            } else {
+                currentlyMarkedTabs = [...currentlyMarkedTabs, payload];
+            }
 
             return {
                 ...state,
-                markedTabs: [...payload]
+                markedTabs: [...currentlyMarkedTabs]
             }
         },
         markMultipleTabs: (state, action: PayloadAction<Array<chrome.history.HistoryItem>>): iHistoryState => {
@@ -34,7 +44,7 @@ const historySlice = createSlice({
 
             return {
                 ...state,
-                markedTabs: [...payload]
+                markedTabs: [...state.markedTabs, ...payload]
             }
         },
         unMarkAllTabs: (state): iHistoryState => {
@@ -64,7 +74,7 @@ const historySlice = createSlice({
 
 export const { 
     setUpTabs,
-    markTabs,
+    markTab,
     markMultipleTabs,
     unMarkAllTabs,
     changeSortOption,

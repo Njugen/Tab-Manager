@@ -22,6 +22,11 @@ import HistoryTabGroupsSection from "../../common/history_tab_group_section/hist
 import { changeSortOption, changeViewMode, markMultipleTabs, setUpTabs, unMarkAllTabs } from "../../../redux-toolkit/slices/history_section_slice";
 import { unMarkAllFolders } from "../../../redux-toolkit/slices/folders_section_slice";
 
+/*
+    History section, listing history tabs fetched from browser api. Lazyloads tabs at scroll only
+    when section is in fullscreen mode
+*/
+
 
 const HistorySection = (props: any): JSX.Element => {
     const [addToWorkSpaceMessage, setAddToFolderMessage] = useState<boolean>(false);
@@ -37,13 +42,13 @@ const HistorySection = (props: any): JSX.Element => {
 
     const dispatch = useDispatch();
 
-    // Load and dispatch tabs from history API whenever laodTabs changes
-    useEffect(() => {
+    // Load tabs from history api and store it in redux store for further use while this component is rendered
+    const loadHistory = (keyword: string, count: number): void => {
         const query: any = {
-            text: searchString,
+            text: keyword,
             endTime: undefined,
             startTime: undefined,
-            maxResults: tabsCount
+            maxResults: count
         }
         
         chrome.history.search(query, (items: Array<chrome.history.HistoryItem>) => {
@@ -57,12 +62,16 @@ const HistorySection = (props: any): JSX.Element => {
                 setSnapshot(newSnapshot);
             }
         });
+    }
 
+    // Reload history each time the number of tabs is changed
+    useEffect(() => {
+        loadHistory(searchString, tabsCount);
     }, [tabsCount]);
 
 
-    // Increase the number of tabs once the user scrolls far down enough. UseCallback
-    // ensures the listener stays the same after re-render -> listener can be removed
+    // Increase the number of tabs once the user scrolls down far enough. UseCallback
+    // ensures the listener stays the same after re-render -> listener can be removed from event handler
     const scrollListener = useCallback((): void => {
         if(sectionRef.current){
             const { scrollY, outerHeight } = window;
@@ -83,7 +92,7 @@ const HistorySection = (props: any): JSX.Element => {
         }
     }
 
-    // Set up sorting and view mode in redux based on storage info
+    // Set up sorting and view mode settings in redux based on storage info
     useEffect(() => {
         getFromStorage("local", "history_sort", (data) => {  
             dispatch(changeSortOption(data.history_sort));
@@ -126,6 +135,7 @@ const HistorySection = (props: any): JSX.Element => {
         dispatch(unMarkAllTabs());
     }
 
+    // Open marked folders
     const handleOpenSelected = (): void => {
         const markedTabs: Array<chrome.history.HistoryItem> = historySectionState.markedTabs as Array<chrome.history.HistoryItem>;
         
@@ -138,7 +148,7 @@ const HistorySection = (props: any): JSX.Element => {
         })
     }
 
-    const renderOptionsMenu = (): JSX.Element => {
+    const showOptionsMenu = (): JSX.Element => {
         const { markedTabs } = historySectionState;
         let specs: any;
 
@@ -200,14 +210,14 @@ const HistorySection = (props: any): JSX.Element => {
                             }
                         </TextIconButton>
 
-                        <input 
+                     {/*   <input 
                             data-testid="history-search-field" 
                             id="history-search-field" 
                             type="text" 
                             placeholder={"Search history..."} 
                             className={`${predef.textfield} w-[250px] p-2.5 mx-4`} 
                             onChange={handleSearch}
-                        />
+                        />*/}
                         <PrimaryButton disabled={markedTabs.length > 0 ? false : true} text="Open selected" onClick={handleOpenSelected} />
                         <PrimaryButton disabled={markedTabs.length > 0 ? false : true} text="Add to folder" onClick={() => setAddToFolderMessage(true)} />
                     </div>
@@ -216,11 +226,13 @@ const HistorySection = (props: any): JSX.Element => {
         )
     }
 
+    // Set necessary states to trigger an empty Folder Manager with preset tabs
     const handleAddToNewFolder = (): void => {
         setAddToFolderMessage(false);
         setCreateFolder(true);
     }
 
+    // Set necessary states to trigger a Folder Manager containing an existing folder + selected tabs
     const handleAddToExistingFolder = (e: any): void => {
         if(e.selected === -1) return;
 
@@ -238,13 +250,14 @@ const HistorySection = (props: any): JSX.Element => {
                 disableMark: false,
             }
         });
-
+      
         const presetWindow: iWindowItem = {
             id: randomNumber(),
             tabs: markedTabs
         };
 
         const updatedFolder: iFolderItem = {...targetFolder};
+
         updatedFolder.windows = [...updatedFolder.windows, presetWindow];
 
         if(targetFolder){
@@ -253,7 +266,8 @@ const HistorySection = (props: any): JSX.Element => {
         }
     }
 
-    const renderAddTabsMessage = (): JSX.Element => {
+    // Show a popup with options on how to add/merge selected tabs
+    const showSelector = (): JSX.Element => {
         const currentFolders: Array<iFolderItem> = folderState;
 
         const options: Array<iFieldOption> = currentFolders.map((folder) => {
@@ -281,7 +295,6 @@ const HistorySection = (props: any): JSX.Element => {
         );
     }
 
-
     const handleCloseFolderManager = (): void => {
         setCreateFolder(false);
         setMergeProcessFolder(null);
@@ -292,9 +305,10 @@ const HistorySection = (props: any): JSX.Element => {
 
     const handleSearch = (e: any): void => {
         setSearchString(e.target.value);
+        loadHistory(searchString, tabsCount);
     } 
 
-    const renderFolderManager = (): JSX.Element => {
+    const showFolderManager = (): JSX.Element => {
         let render = <></>;
 
         if(createFolder === true){
@@ -332,9 +346,9 @@ const HistorySection = (props: any): JSX.Element => {
 
     return (
         <>
-            {addToWorkSpaceMessage && renderAddTabsMessage()}
-            {renderFolderManager()}
-            <SectionContainer id="history-view" title="History" options={renderOptionsMenu} onExpand={(value: boolean) => handleLoadHistory(value, tabsCount)}>
+            {addToWorkSpaceMessage && showSelector()}
+            {showFolderManager()}
+            <SectionContainer id="history-view" title="History" options={showOptionsMenu} onExpand={(value: boolean) => handleLoadHistory(value, tabsCount)}>
                 <HistoryTabGroupsSection ref={sectionRef} viewMode={historySectionState.viewMode} tabs={historySectionState.tabs} />
             </SectionContainer>
         </>

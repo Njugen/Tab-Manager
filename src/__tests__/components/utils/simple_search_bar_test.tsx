@@ -1,13 +1,14 @@
 import { render, screen, within, fireEvent } from "@testing-library/react";
 import '@testing-library/jest-dom'
 import randomNumber from "../../../tools/random_number";
-import PopupMessage from "../../../components/utils/popup_message";
-import PurpleBorderButton from "../../../components/utils/purple_border_button";
 import SimpleSearchBar from "../../../components/utils/simple_search_bar";
-
 
 const mockFn = jest.fn((e: any) => e.target.value);
 const mockText = randomNumber().toString();
+
+afterEach(() => {
+    jest.clearAllMocks();
+})
 
 describe("Test <SimpleSearchBar>", () => {
     test("Renders field with icon", () => {

@@ -1,4 +1,4 @@
-import { render, screen, within, fireEvent } from "@testing-library/react";
+import { render, screen, within, fireEvent, cleanup } from "@testing-library/react";
 import '@testing-library/jest-dom'
 import randomNumber from "../../../tools/random_number";
 import TextIconButton from "../../../components/utils/text_icon_button";
@@ -21,10 +21,9 @@ const mockWindow: iWindowItem = {
     tabsCol: 2
 }
 
-
-const mockMarkTabFn = jest.fn((tabId: number, checked: boolean): void | undefined => {});
-const mockEditTabFn = jest.fn((tabId: number): void | undefined => {})
-const mockOnCloseFn = jest.fn((tabId: number): void | undefined => {})
+const mockMarkTabFn = jest.fn((tabId: number | string, checked: boolean): void | undefined => {});
+const mockEditTabFn = jest.fn((tabId: number | string): void | undefined => {})
+const mockOnCloseFn = jest.fn((tabId: number | string): void | undefined => {})
 
 // Set up tabs
 for(let i = 0; i < 10; i++){
@@ -41,6 +40,11 @@ for(let i = 0; i < 10; i++){
 
 const mockCloseWindowFn = jest.fn((id: number | number[]): void => {})
 chrome.tabs.remove = jest.fn((tabId: number|number[]): Promise<void> => new Promise((res, rej) => {}));
+
+afterEach(() => {
+    jest.clearAllMocks();
+    cleanup();
+})
 
 describe("Test <WindowItem>", () => {
     test("Only editable tab is shown when no preset tabs", () => {
@@ -157,7 +161,11 @@ describe("Test <WindowItem>", () => {
             expect(mockCloseWindowFn).toHaveBeenCalledWith(mockWindow.id);
         })
 
-        test("Edit button is hidden when disabled through props", () => {
+        test.each([
+            ["Edit", "pen-icon"],
+            ["Checkbox", "checkbox"],
+            ["Close", "close-light-icon"]
+        ])("%j is hidden when disabled through props", (label, testId) => {
             render(
                 <Provider store={store}>
                     <WindowItem {...mockWindow} />
@@ -168,40 +176,8 @@ describe("Test <WindowItem>", () => {
             const listItems = within(tablist).getAllByRole("listitem");
 
             listItems.forEach((tab, i) => {
-                const editButton = within(tab).queryByTestId("pen-icon");
-                expect(editButton).not.toBeInTheDocument();
-            })
-        })
-
-        test("Checkbox is hidden when disabled through props", () => {
-            render(
-                <Provider store={store}>
-                    <WindowItem {...mockWindow} />
-                </Provider>
-            )
-
-            const tablist = screen.getByRole("list");
-            const listItems = within(tablist).getAllByRole("listitem");
-
-            listItems.forEach((tab, i) => {
-                const checkbox = within(tab).queryByTestId("checkbox");
-                expect(checkbox).not.toBeInTheDocument();
-            })
-        })
-
-        test("Close button is hidden when disabled through props", () => {
-            render(
-                <Provider store={store}>
-                    <WindowItem {...mockWindow} />
-                </Provider>
-            )
-
-            const tablist = screen.getByRole("list");
-            const listItems = within(tablist).getAllByRole("listitem");
-
-            listItems.forEach((tab, i) => {
-                const closeButton = within(tab).queryByTestId("close-light-icon");
-                expect(closeButton).not.toBeInTheDocument();
+                const button = within(tab).queryByTestId(testId);
+                expect(button).not.toBeInTheDocument();
             })
         })
 
@@ -385,7 +361,7 @@ describe("Test <WindowItem>", () => {
         });
 
         test("Clicking delete button will trigger onDeleteT callback (when editing outside folder state context)", () => {
-            const tabDeleteFn = jest.fn(((ids: Array<number>) => {}));
+            const tabDeleteFn = jest.fn(((ids: Array<number | string>) => {}));
 
             render(
                 <Provider store={store}>

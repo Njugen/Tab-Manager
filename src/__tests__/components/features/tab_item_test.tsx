@@ -1,4 +1,4 @@
-import { render, screen, within, fireEvent } from "@testing-library/react";
+import { render, screen, within, fireEvent, cleanup } from "@testing-library/react";
 import '@testing-library/jest-dom'
 import CircleButton from '../../../components/utils/circle_button';
 import randomNumber from "../../../tools/random_number";
@@ -10,9 +10,14 @@ const mockProps = {
     url: `https://${randomNumber()}.com`,
 }
 
-const mockMarkFn = jest.fn((tabId: number, checked: boolean): void | undefined => {});
-const mockEditFn = jest.fn((tabId: number): void | undefined => {});
-const mockOnCloseFn = jest.fn((tabId: number): any | undefined => {})
+const mockMarkFn = jest.fn((tabId: number | string, checked: boolean): void | undefined => {});
+const mockEditFn = jest.fn((tabId: number | string): void | undefined => {});
+const mockOnCloseFn = jest.fn((tabId: number | string): any | undefined => {});
+
+afterEach(() => {
+    jest.clearAllMocks();
+    cleanup();
+})
 
 describe("Test <TabItem>", () => {
     test("The tab itself renders", () => {
@@ -100,7 +105,7 @@ describe("Test <TabItem>", () => {
         render(
             <TabItem {...mockProps} url="Tervehuolto" onEdit={mockEditFn} />
         );
-        expect(mockEditFn ).toHaveBeenCalledWith(mockProps.id);
+        expect(mockEditFn).toHaveBeenCalledWith(mockProps.id);
     });
 
     test("mockEditFn does not trigger automatically if url is invalid and mockEditFn is missing", () => {

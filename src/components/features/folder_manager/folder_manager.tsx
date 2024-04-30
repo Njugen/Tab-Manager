@@ -6,7 +6,6 @@ import { iFolderManager } from "../../../interfaces/iFolderManager";
 import randomNumber from "../../../tools/random_number";
 import { iFolderItem } from "../../../interfaces/folder_item";
 import PopupMessage from '../../utils/popup_message';
-import windowListChanged from "./functions/window_list_changed";
 import WindowManager from "../window_manager/window_manager";
 import GenericPopup from "../../utils/generic_popup";
 import { useDispatch, useSelector } from "react-redux";
@@ -78,6 +77,19 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
         dispatch(setUpFolder(folderSpecs));
     }, []);
 
+    const windowListChanged = (origin: string, modified: string): boolean => {
+        const presetWindows: string = origin;
+        const modifiedWindows: string = modified;
+    
+        if(!modifiedWindows || !presetWindows) return false;
+        if(origin !== modifiedWindows){
+            return true;
+        }
+    
+        return false;
+    }
+    
+
     useEffect(() => {
         const inEditWindows: string = purify(folderManagementState)?.windows;
         const listChanged: boolean = windowListChanged(originWindows, inEditWindows);
@@ -93,10 +105,12 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
     const handleChangeField = (key: string, value: string): void => {
         if(!folderManagementState) {
             return;
-        } else if(modified === false && JSON.stringify(folderManagementState[key]) !== JSON.stringify(value)) setModified(true);
+        } else if(modified === false && folderManagementState[key] !== value){
+            setModified(true);
+        } 
 
         // Inform redux about the field change
-        dispatch(updateFolder([key, value]));
+        if(folderManagementState[key] !== value) dispatch(updateFolder([key, value]));
     }
 
 
@@ -124,7 +138,7 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
             callback();
         } else {
             setInValidFields({...updatedFieldState});
-            if(managerWrapperRef.current && managerWrapperRef.current.scrollTo === "function") managerWrapperRef.current.scrollTo({ top: 0, behavior: "smooth" })
+            if(managerWrapperRef.current) managerWrapperRef.current.scrollTo({ top: 0, behavior: "smooth" })
         }
     }
 
@@ -141,11 +155,14 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
                 setModified(false)
                 setOriginWindows("");
                 setIsCreate(false);
+                
+                document.body.style.overflowY = "auto";
+                document.body.style.overflowX = "auto";
 
-                setTimeout(() => {
+                
                     dispatch(setIsEditingTab(false));
                     onClose()
-                }, 500);
+               
             }
         })
     }
@@ -169,8 +186,7 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
                 dispatch(createNewFolder(folderManagementState));
             }   
 
-            document.body.style.overflowY = "auto";
-            document.body.style.overflowX = "auto";
+            
             handleClose(true);
         });
        

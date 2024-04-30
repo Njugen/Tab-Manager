@@ -15,7 +15,6 @@ import { RootState } from "../../../redux-toolkit/store";
 /*
     Folder section containing description, windows and tabs, as well as various folder options
 */
-
 const FolderItem = (props: iFolderItem): JSX.Element => {
     const contentsRef = useRef<HTMLDivElement>(null);
     const headerRef = useRef<HTMLDivElement>(null);
@@ -69,13 +68,14 @@ const FolderItem = (props: iFolderItem): JSX.Element => {
         }
     }, [showLaunchOptions])
     
+
+    // Styling for situations where the folder is expanded or collapsed
     const expHeaderCSS: string = `relative border-b tbf-${type} bg-white px-4 h-10 py-6 flex items-center rounded-t-md`;
     const colHeaderCSS: string = `relative tbf-${type} bg-white px-4 h-10 py-6 flex items-center rounded-md`;
-
     const expContentsCSS: string = `overflow-hidden bg-white rounded-b-md border-t-0`;
     const colContentsCSS: string = `overflow-hidden rounded-b-md`;
 
-    // Update the storage state of folder view mode 
+    // Update the storage setting of folder view mode 
     const updateFolder = (newType: "expanded" | "collapsed") => {
         getFromStorage("local", "folders", (data: any) => {
             const tempCollection: Array<iFolderItem> = data.folders.map((folder: iFolderItem) => {
@@ -87,25 +87,19 @@ const FolderItem = (props: iFolderItem): JSX.Element => {
         })
     }
 
-    // Decide whether or not the folder shows its contents or not.
-    const toggleExpand = (): void => {
+    // Expand or collapse this folder
+    const handleExpandClick = (e: any): void => {
         if(expanded === false){
             updateFolder("expanded");
             setExpanded(true);
         } else {
-            //col()
             updateFolder("collapsed");
             setExpanded(false);
         }   
     }
 
-    // Expand or collapse this folder
-    const handleExpandClick = (e: any): void => {
-        toggleExpand();
-    }
-
     // Prepare to open a folder: show launch options -> open folder accordingly
-    const handleOpen = (): void => {
+    const handlePrepareOpen = (): void => {
         setShowLaunchOptions(true);
         handleShowLaunchOptionsMenu();
     }
@@ -130,7 +124,8 @@ const FolderItem = (props: iFolderItem): JSX.Element => {
         setSlideDown(false);
     }
 
-   const handleWindowClick = (e: any): void => {
+    // Hide the launch menu
+    const handleWindowClick = useCallback((e: any): void => {
         e.stopPropagation();
 
         if(showLaunchOptions === true){
@@ -138,20 +133,22 @@ const FolderItem = (props: iFolderItem): JSX.Element => {
             setSlideDown(false);
             handleShowLaunchOptionsMenu();
         }
-    }
+    }, [slideDown]);
 
+    // Delete the folder
     const handleDelete = (): void => {
         if(onDelete) onDelete(props);
     }
 
+    // Edit the folder
     function handleEdit(e: any): void {
         if(onEdit) onEdit(e);
     } 
 
-
-    const actionBarHandlers: iFolderActionBarHandlers = { handleExpandClick, handleOpen, handleEdit, handleDelete, handleLaunch, onOpen, onEdit, onDelete, onMark };
+    const actionBarHandlers: iFolderActionBarHandlers = { handleExpandClick, handlePrepareOpen, handleEdit, handleDelete, handleLaunch, onOpen, onEdit, onDelete, onMark };
     const actionBarStates: iFolderActionBarStates = { expanded, showLaunchOptions, marked, id };
     
+    // Define the number of window column to use depending on the folder's view mode (list or grid)
     const windowTabsCols = (folderViewMode: string, windowViewMode: string): number => {
         if(folderViewMode === "grid"){
             return 1;
@@ -170,7 +167,7 @@ const FolderItem = (props: iFolderItem): JSX.Element => {
         
         const result: Array<JSX.Element> = windows.map((window, index): JSX.Element => (
             <WindowItem 
-                tabsCol={decisiveCols} 
+                tabsCol={viewMode === "grid" ? 1 : decisiveCols} 
                 disableMarkTab={true} 
                 disableEditTab={true} 
                 key={"window-" + index} 

@@ -3,7 +3,7 @@ import { iFolderItem } from "./folder_item";
 
 interface iFolderActionBarHandlers {
     handleExpandClick: (e: any) => void,
-    handleOpen: (e: any) => void,
+    handlePrepareOpen: (e: any) => void,
     handleEdit: (e: any) => void,
     handleDelete: (e: any) => void,
     handleLaunch: (e: any) => void,

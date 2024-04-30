@@ -1,12 +1,13 @@
 import { useRef, useState } from 'react';
 import iSectionContainer from '../../interfaces/section_container';
-import GenericButton from './generic_button';
 import CloseIcon from '../icons/close_icon';
 
 import FullscreenIcon from './../icons/fullscreen_icon';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux-toolkit/store';
 import { smoothScrollUp } from '../../redux-toolkit/slices/misc_slice';
+import styles from "../../styles/global_utils.module.scss";
+
 
 /*
     A white wrapper serving as either main section (contents page wrapper), or part section
@@ -35,13 +36,13 @@ const SectionContainer = (props: iSectionContainer): JSX.Element => {
                                     {title}
                                 </h2>
                             </header>
-                            <GenericButton onClick={() => {
+                            <button className={`${styles.opacity_hover_effect} m-1`} onClick={() => {
                                 setFullscreen(false);
                                 
                                 if(onExpand) onExpand(false);
                             }}>
                                 <CloseIcon size={38} fill="rgba(0,0,0,0.2)" />
-                            </GenericButton>
+                            </button>
               
                         </div>
                         <div className="flex justify-between min-h-[350px]">
@@ -60,7 +61,7 @@ const SectionContainer = (props: iSectionContainer): JSX.Element => {
                 </section> : 
                 <section data-testid="section-container">
                     <div className="text-right">
-                        <GenericButton onClick={() => {
+                    <button className={`${styles.opacity_hover_effect} m-1`} onClick={() => {
                             dispatch(smoothScrollUp(null));
                             window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
                             setFullscreen(true);
@@ -68,7 +69,7 @@ const SectionContainer = (props: iSectionContainer): JSX.Element => {
                             if(onExpand) onExpand(true);
                         }}>
                             <FullscreenIcon size={16} fill="rgba(0,0,0,0.4)" />
-                        </GenericButton>
+                        </button>
                     </div>
                     <div ref={sectionRef} id={id} className={`mb-12 pt-10 bg-white shadow`}>
                         <div className="flex justify-between min-h-[350px]">

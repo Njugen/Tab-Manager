@@ -1,6 +1,5 @@
 import { render, screen, within, fireEvent } from "@testing-library/react";
 import '@testing-library/jest-dom'
-import GenericButton from "../../../components/utils/generic_button";
 import WindowManager from "../../../components/features/window_manager/window_manager";
 import { Provider, useSelector } from "react-redux";
 import { store } from "../../../redux-toolkit/store";

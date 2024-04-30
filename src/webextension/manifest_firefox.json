@@ -1,13 +1,12 @@
 {
     "manifest_version": 3,
     "name": "Tab Management Browser Plugin",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "description": "Providing great overview and simple tools for efficient tab management.",
     "permissions": [
         "history",
         "tabs",
-        "storage",
-        "sidePanel"
+        "storage"
     ],
     "action": {
         "default_title": "Tab Management Browser Plugin"
@@ -16,15 +15,11 @@
         "128": "brand/icon-128.png",
         "48": "brand/icon-48.png"
     },
-    "side_panel": {
-        "default_path": "sidepanel.html"
-    },
     "options_ui": {
         "page": "options.html",
         "open_in_tab": true
     },
     "background": {
-        "service_worker": "background.js",
         "scripts": ["background.js"]
     },
     "sidebar_action": {
@@ -34,11 +29,11 @@
         },
         "default_title": "Tab Management Browser Plugin",
         "default_panel": "sidepanel.html",
-        "open_at_install":false
+        "open_at_install": false
     },
     "browser_specific_settings": {
         "gecko": {
-            "id": "addon@example.com",
+            "id": "tabmanager@njugen",
             "strict_min_version": "42.0"
         }
     },      

@@ -30,6 +30,10 @@ const props: iDropdown = {
     onCallback: mockCallback
 }
 
+afterEach(() => {
+    jest.clearAllMocks();
+})
+
 describe("Test <Dropdown />", () => {
     test("Shows the 'preset' as label", () => {
         render(

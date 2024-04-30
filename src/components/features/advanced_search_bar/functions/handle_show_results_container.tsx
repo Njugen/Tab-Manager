@@ -1,8 +1,14 @@
-import iHandleShowResultsContainerProps from "../../../../interfaces/handle_show_results_container_props";
+interface iHandleShowResultsContainerArgs {
+    searchResultsContainerRef: React.RefObject<HTMLDivElement>,
+    showResultsContainer: boolean,
+    slideDown: boolean,
+    handleSlideDown: (e: boolean) => void,
+    setShowResultsContainer: React.Dispatch<React.SetStateAction<boolean>>
+}
 
- // Show search results by sliding in the results area
-const handleShowResultsContainer = (props: iHandleShowResultsContainerProps): void => {
-    const { searchResultsContainerRef, showResultsContainer, slideDown, handleSlideDown, setShowResultsContainer } = props;
+ // Mandles the mechanic of showing search results in the UI
+const handleShowResultsContainer = (args: iHandleShowResultsContainerArgs): void => {
+    const { searchResultsContainerRef, showResultsContainer, slideDown, handleSlideDown, setShowResultsContainer } = args;
 
     if(showResultsContainer === false){
         setShowResultsContainer(true);
@@ -19,4 +25,4 @@ const handleShowResultsContainer = (props: iHandleShowResultsContainerProps): vo
     }
 }
 
-export { handleShowResultsContainer };
+export { handleShowResultsContainer, iHandleShowResultsContainerArgs };

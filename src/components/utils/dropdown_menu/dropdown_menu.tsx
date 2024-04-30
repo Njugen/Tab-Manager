@@ -3,9 +3,7 @@ import applyStateClasses from "./functions/apply_state_classes";
 import applyStateValue from "./functions/apply_state_id";
 
 /*
-    Dropdown menu, containing a set of options.
-
-    Applies slide down effect when shown. Hidden by default.
+    Dropdown menu, displaying a set of options passed in through the props.
 */
 
 const DropdownMenu = (props: iDropdownMenu): JSX.Element => {

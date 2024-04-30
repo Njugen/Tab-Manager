@@ -30,6 +30,10 @@ const props: iDropdownMenu = {
     selected: null
 }
 
+afterEach(() => {
+    jest.clearAllMocks();
+})
+
 describe("Test <DropdownMenu>", () => {
     test("Renders ok, each option props trigger 'onSelect' callback when clicked", () => {
         render(<DropdownMenu { ...props } selected={null} />);
