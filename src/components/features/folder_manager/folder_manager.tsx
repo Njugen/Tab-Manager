@@ -159,10 +159,10 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
                 document.body.style.overflowY = "auto";
                 document.body.style.overflowX = "auto";
 
-                setTimeout(() => {
+                
                     dispatch(setIsEditingTab(false));
                     onClose()
-                }, 500);
+               
             }
         })
     }
