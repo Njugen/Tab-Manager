@@ -1,10 +1,12 @@
 import { render, screen, within, fireEvent, cleanup } from "@testing-library/react";
 import '@testing-library/jest-dom'
 import { Provider } from "react-redux";
-import mockStore from '../../../tools/testing/mock_store';
-import AdvancedSearchBar from "../../../components/features/advanced_search_bar/advanced_search_bar";
 import { act } from "react-dom/test-utils";
-import mockBrowserStorage from "../../../tools/testing/mock_browser_storage";
+import mockStore from "../../../../tools/testing/mock_store";
+import mockBrowserStorage from "../../../../tools/testing/mock_browser_storage";
+import PanelView from "../../../../baseUI/sidepanel/components/panel_view";
+import SidePanel from "../../../../baseUI/sidepanel/sidepanel";
+
 
 beforeEach(() => {
     // @ts-expect-error
@@ -34,33 +36,28 @@ afterEach(() => {
     cleanup();
 })
 
-describe("Test <AdvancedSearchBar>", () => {
+describe("Test <SidePanel>", () => {
     describe("Test search results", () => {
-        test.each([
-            ["folder-item", "folders-search-result"],
-            ["tab-item", "history-tabs-search-result"],
-            ["tab-item", "current-tabs-search-result"],
-        ])(`Writing "Tab Manager" will only show %j components in %j section with that label`, (itemType, section) => {
+
+        test("Clicking X when search results is visible will exit the results", () => {
             render(
                 <Provider store={mockStore}>
-                    <AdvancedSearchBar />
+                    <SidePanel />
                 </Provider>
             )
     
             const textfield = screen.getByRole("textbox");
             fireEvent.click(textfield);
-            fireEvent.change(textfield, { target: { value: "Tab Manager" } });
+            fireEvent.change(textfield, { target: { value: "Lucid Lynx" } });
     
-            const resultsBox = screen.getByTestId("search-results-area");
+            let resultsBox = screen.queryByTestId("sidepanel-search-results");
     
-            const results = within(resultsBox).getByTestId(section);
-            const list = within(results).getByRole("list");
-            const listItems = within(list).getAllByTestId(itemType);
-    
-            listItems.forEach((item) => {
-                const textContainer = (itemType === "folder-item" ? within(item).getByRole("heading") : item);
-                expect(textContainer).toHaveTextContent("Tab Manager");
-            });
+            const closeIcon = screen.getByTestId("close-icon");
+            fireEvent.click(closeIcon, { bubbles: true });
+
+            resultsBox = screen.queryByTestId("sidepanel-search-results");
+            
+            expect(resultsBox).not.toBeInTheDocument();
         })
     })
 
@@ -75,7 +72,7 @@ describe("Test <AdvancedSearchBar>", () => {
 
             render(
                 <Provider store={mockStore}>
-                    <AdvancedSearchBar />
+                    <SidePanel />
                 </Provider>
             )
 
@@ -87,15 +84,15 @@ describe("Test <AdvancedSearchBar>", () => {
             const commonRender = () => {
                 render(
                     <Provider store={mockStore}>
-                        <AdvancedSearchBar />
+                        <SidePanel />
                     </Provider>
                 )
     
                 const textfield = screen.getByRole("textbox");
                 fireEvent.click(textfield);
-                fireEvent.change(textfield, { target: { value: "Katter" } });
+                fireEvent.change(textfield, { target: { value: "Lucid Lynx" } });
     
-                const resultsBox = screen.getByTestId("search-results-area");
+                const resultsBox = screen.getByTestId("sidepanel-search-results");
     
                 const foldersResults = within(resultsBox).getByTestId("folders-search-result");
                 const list = within(foldersResults).getByRole("list");
@@ -152,13 +149,13 @@ describe("Test <AdvancedSearchBar>", () => {
                 ])("%j", (label, optionText) => {
                     render(
                         <Provider store={mockStore}>
-                            <AdvancedSearchBar />
+                            <SidePanel />
                         </Provider>
                     );
     
                     const textfield = screen.getByRole("textbox");
                     fireEvent.click(textfield);
-                    fireEvent.change(textfield, { target: { value: "Tab Manager" } });
+                    fireEvent.change(textfield, { target: { value: "Lucid Lynx" } });
 
                     const folders = screen.getAllByTestId("folder-item");
                     const target = folders[0];
@@ -177,13 +174,13 @@ describe("Test <AdvancedSearchBar>", () => {
                 test("Launching a folder as a group triggers the group creation api", () => {
                     render(
                         <Provider store={mockStore}>
-                            <AdvancedSearchBar />
+                            <SidePanel />
                         </Provider>
                     );
 
                     const textfield = screen.getByRole("textbox");
                     fireEvent.click(textfield);
-                    fireEvent.change(textfield, { target: { value: "Tab Manager" } });
+                    fireEvent.change(textfield, { target: { value: "Lucid Lynx" } });
     
                     const folders = screen.getAllByTestId("folder-item");
                     const target = folders[0];
@@ -204,13 +201,13 @@ describe("Test <AdvancedSearchBar>", () => {
                 const removalAPISequence = () => {
                     render(
                         <Provider store={mockStore}>
-                            <AdvancedSearchBar />
+                            <SidePanel />
                         </Provider>
                     );
 
                     const textfield = screen.getByRole("textbox");
                     fireEvent.click(textfield);
-                    fireEvent.change(textfield, { target: { value: "Tab Manager" } });
+                    fireEvent.change(textfield, { target: { value: "Lucid Lynx" } });
     
                     const folders = screen.getAllByTestId("folder-item");
                     const target = folders[0];
@@ -238,13 +235,13 @@ describe("Test <AdvancedSearchBar>", () => {
 
                     render(
                         <Provider store={mockStore}>
-                            <AdvancedSearchBar />
+                            <SidePanel />
                         </Provider>
                     );
 
                     const textfield = screen.getByRole("textbox");
                     fireEvent.click(textfield);
-                    fireEvent.change(textfield, { target: { value: "Katter" } });
+                    fireEvent.change(textfield, { target: { value: "Lucid Lynx" } });
     
                     const folders = screen.getAllByTestId("folder-item");
                     const target = folders[0];
@@ -276,13 +273,13 @@ describe("Test <AdvancedSearchBar>", () => {
 
                     render(
                         <Provider store={mockStore}>
-                            <AdvancedSearchBar />
+                            <SidePanel />
                         </Provider>
                     );
 
                     const textfield = screen.getByRole("textbox");
                     fireEvent.click(textfield);
-                    fireEvent.change(textfield, { target: { value: "Katter" } });
+                    fireEvent.change(textfield, { target: { value: "Lucid Lynx" } });
     
                     const folders = screen.getAllByTestId("folder-item");
                     const target = folders[0];
@@ -314,13 +311,13 @@ describe("Test <AdvancedSearchBar>", () => {
 
                     render(
                         <Provider store={mockStore}>
-                            <AdvancedSearchBar />
+                            <SidePanel />
                         </Provider>
                     );
     
                     const textfield = screen.getByRole("textbox");
                     fireEvent.click(textfield);
-                    fireEvent.change(textfield, { target: { value: "Katter" } });
+                    fireEvent.change(textfield, { target: { value: "Lucid Lynx" } });
 
                     const folders = screen.getAllByTestId("folder-item");
                     const target = folders[0];
@@ -388,15 +385,15 @@ describe("Test <AdvancedSearchBar>", () => {
             const commonRender = () => {
                 render(
                     <Provider store={mockStore}>
-                        <AdvancedSearchBar />
+                        <SidePanel />
                     </Provider>
                 )
 
                 const textfield = screen.getByRole("textbox");
                 fireEvent.click(textfield);
-                fireEvent.change(textfield, { target: { value: "Katter" } });
+                fireEvent.change(textfield, { target: { value: "Lucid Lynx" } });
     
-                const resultsBox = screen.getByTestId("search-results-area");
+                const resultsBox = screen.getByTestId("sidepanel-search-results");
     
                 const foldersResults = within(resultsBox).getByTestId("folders-search-result");
                 const list = within(foldersResults).getByRole("list");
@@ -471,65 +468,11 @@ describe("Test <AdvancedSearchBar>", () => {
     test("No results box visible at invocation", () => {
         render(
             <Provider store={mockStore}>
-                <AdvancedSearchBar />
+                <SidePanel />
             </Provider>
         )
 
-        const resultsBox = screen.queryByTestId("search-results-area");
+        const resultsBox = screen.queryByTestId("sidepanel-search-results");
         expect(resultsBox).not.toBeInTheDocument(); 
     })
-
-    test("Results box shows up when clicking the search button", () => {
-        jest.useFakeTimers();
-
-        render(
-            <Provider store={mockStore}>
-                <AdvancedSearchBar />
-            </Provider>
-        )
-
-        const textfield = screen.getByRole("textbox");
-        fireEvent.click(textfield);
-
-        act(() => {
-            jest.runAllTimers();
-        });
-
-        const resultsBox = screen.getByTestId("search-results-area");
-        expect(resultsBox).toBeInTheDocument(); 
-        jest.useRealTimers();
-    })
-
-    test("Results box contains no lists if the textfield is empty", () => {
-        render(
-            <Provider store={mockStore}>
-                <AdvancedSearchBar />
-            </Provider>
-        )
-
-        const textfield = screen.getByRole("textbox");
-        fireEvent.click(textfield);
-
-        const resultsBox = screen.getByTestId("search-results-area");
-        const lists = within(resultsBox).queryAllByRole("list");
-
-        expect(lists.length).toEqual(0);
-    })
-
-    test("Results box is not visible when clicking outside textfield AND results box", () => {
-        render(
-            <Provider store={mockStore}>
-                <AdvancedSearchBar />
-            </Provider>
-        )
-
-        const textfield = screen.getByRole("textbox");
-        fireEvent.click(textfield);
-
-        let resultsBox: any = screen.getByTestId("search-results-area");
-        fireEvent.click(resultsBox);
-
-        resultsBox = screen.queryByTestId("search-results-area");
-        expect(resultsBox).not.toBeInTheDocument()
-    })
-});
+})

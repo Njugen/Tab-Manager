@@ -167,7 +167,7 @@ const FolderItem = (props: iFolderItem): JSX.Element => {
         
         const result: Array<JSX.Element> = windows.map((window, index): JSX.Element => (
             <WindowItem 
-                tabsCol={decisiveCols} 
+                tabsCol={viewMode === "grid" ? 1 : decisiveCols} 
                 disableMarkTab={true} 
                 disableEditTab={true} 
                 key={"window-" + index} 

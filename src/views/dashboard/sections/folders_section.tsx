@@ -72,7 +72,9 @@ const FoldersSection = (props: any): JSX.Element => {
         })
 
         getFromStorage("local", "folder_viewmode", (data) => {  
-            dispatch(changeViewMode(data.folder_viewmode));
+            if(Object.entries(data).length > 0){
+                dispatch(changeViewMode(data.folder_viewmode));
+            }
         })
     }, []);
 

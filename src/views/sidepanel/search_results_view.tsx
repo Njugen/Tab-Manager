@@ -184,7 +184,7 @@ function SearchResultsContainer(props:any): JSX.Element {
                             setWindowsPayload(null)}}}     
                 />
             }
-            <div className="bg-white absolute top-20 z-[200] px-4 w-full">
+            <div data-testid="sidepanel-search-results" className="bg-white absolute top-20 z-[200] px-4 w-full">
                 <div id="popup-header" className="pb-5 border-tbfColor-lgrey w-full flex justify-between">
                     <header>
                         <h1 data-testid="manage-folder-title" className="text-3xl text-tbfColor-darkpurple font-light inline-block">
@@ -195,7 +195,7 @@ function SearchResultsContainer(props:any): JSX.Element {
                         <CloseIcon size={34} fill="rgba(0,0,0,0.2)" />
                     </button>
                 </div>
-                <section className="mt-4">
+                <section data-testid="folders-search-result" className="mt-4">
                     <h3 className="uppercase font-bold text-md mb-4 text-tbfColor-darkergrey">Folders</h3>
                     <ul className="list-none">
                         {
@@ -203,7 +203,7 @@ function SearchResultsContainer(props:any): JSX.Element {
                         }
                     </ul>
                 </section>
-                <section className="mt-4">
+                <section data-testid="current-tabs-search-result" className="mt-4">
                     <h3 className="uppercase font-bold text-md mb-4 text-tbfColor-darkergrey">Currently opened</h3>
                     <ul className="list-none">
                         {
@@ -211,7 +211,7 @@ function SearchResultsContainer(props:any): JSX.Element {
                         }
                     </ul>
                 </section>
-                <section className="mt-4">
+                <section data-testid="history-tabs-search-result" className="mt-4">
                     <h3 className="uppercase font-bold text-md mb-4 text-tbfColor-darkergrey">History</h3>
                     <ul className="list-none">
                         {

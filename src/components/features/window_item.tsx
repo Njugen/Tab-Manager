@@ -195,7 +195,7 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
                 data-visibility={expanded ? "visible" : "hidden"} 
                 className={`tabs-list mt-3 overflow-hidden ${expanded === true ? "max-h-[2000px] ease-out visible" : "max-h-0 ease-in invisible"} duration-200 transition-all`}
             >
-                <ul className={`list-none grid ${tabsCol && tabsCol > 1 && window.innerWidth >= 640 ? `grid-cols-${tabsCol ? tabsCol : 2} gap-x-3 gap-y-1` : "gap-y-1 grid-cols-1"}`}>
+                <ul className={`list-none grid ${window.innerWidth >= 640 ? `grid-cols-${tabsCol ? tabsCol : 2} gap-x-3 gap-y-1` : "gap-y-1 grid-cols-1"}`}>
                     {tabs.length > 0 ? [...evaluateNewTabRender()] : <EditableTabItem key={`window-${id}-editable-tab`} windowId={id} onStop={handleEditTabStop} />}
                 </ul>
                 {tabs.length > 0 && disableEdit === false && <div className="mt-10 mb-8 flex justify-end">
