@@ -11,6 +11,14 @@
 /dist-chrome
 /public
 /package-lock.js
+/dist-dev-firefox
+/dist-dev-chrome
+/dist-dev-firefox-package.zip
+/dist-dev-chrome-package.zip
+/dist-prod-firefox
+/dist-prod-chrome
+/firefox-dev-package.zip
+/chrome-dev-package.zip
 
 # misc
 .DS_Store

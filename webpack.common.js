@@ -3,14 +3,15 @@ const CopyPlugin = require("copy-webpack-plugin");
 const HtmlPlugin = require("html-webpack-plugin");
 const tailwindcss = require("tailwindcss");
 const autoprefixer = require("autoprefixer");
+const ZipPlugin = require('zip-webpack-plugin');
 
 module.exports = (env) => {
     const distFolder = () => {
         // Return name of the dist folders depending on what browser the plugin is being built for
-        let name = "dist-chrome";
+        let name = `dist-${env.label}-${env.browser}`;
 
         if(env.browser === "firefox"){
-            name = "dist-firefox";
+            name = `dist-${env.label}-${env.browser}`;
         }
 
         return name;
@@ -73,6 +74,10 @@ module.exports = (env) => {
                         to: path.resolve(`${distFolder()}/manifest.json`)
                     },
                     { 
+                        from: path.resolve(__dirname, "LICENSE"), 
+                        to: path.resolve(`${distFolder()}/LICENSE.md`)
+                    },
+                    { 
                         from: path.resolve(__dirname, originBackgroundScript()), 
                         to: path.resolve(`${distFolder()}/background.js`)
                     },
@@ -92,7 +97,11 @@ module.exports = (env) => {
                 filename: "options.html",
                 chunks: ["options"]
             }),
-            
+            new ZipPlugin({
+                path: "../",
+                filename: `${env.browser}-${env.label}-package.zip`,
+                pathPrefix: `./${distFolder()}`
+            })
         ],
         resolve: {
             // Add `.ts` and `.tsx` as a resolvable extension.
@@ -104,5 +113,4 @@ module.exports = (env) => {
             clean: true
         }
     }
-    
 }; 

@@ -1,4 +1,4 @@
-# Tab Management Browser Plugin (1.0.0)
+# Tab Management Browser Plugin (v1.0.0)
 
 <p align="center" style="padding-top: 10px; padding-bottom: 10px">
     <img src="./img/brand/brand.png" width="15%" />
@@ -22,11 +22,13 @@ who needs to launch different sessions for different purposes.
 
 ## Screenshots
 
-<img src="./img/screenshots/1.png" width="24%" /> <img src="./img/screenshots/2.png" width="24%" /> 
-<img src="./img/screenshots/3.png" width="24%" /> <img src="./img/screenshots/4.png" width="24%" /> 
-<img src="./img/screenshots/5.png" width="24%" /> <img src="./img/screenshots/6.png" width="24%" /> 
-<img src="./img/screenshots/7.png" width="24%" /> <img src="./img/screenshots/8.png" width="24%" /> 
-<img src="./img/screenshots/9.png" width="24%" /> 
+<p align="center">
+    <img src="./img/screenshots/1.png" width="24%" /> <img src="./img/screenshots/2.png" width="24%" /> 
+    <img src="./img/screenshots/3.png" width="24%" /> <img src="./img/screenshots/4.png" width="24%" /> 
+    <img src="./img/screenshots/5.png" width="24%" /> <img src="./img/screenshots/6.png" width="24%" /> 
+    <img src="./img/screenshots/7.png" width="24%" /> <img src="./img/screenshots/8.png" width="24%" /> 
+    <img src="./img/screenshots/9.png" width="24%" /> 
+</p>
 
 ## Programming and tools
 
@@ -61,6 +63,7 @@ organized.
 - Try to avoid declaring components inside another component (JSX.Element).
 - Consider refactoring components if they become too big or clumsy to work with (e.g. move large functions to their own files).
 - Refactored/sub components should be placed in their own folders and follow a specific naming convention:
+
 
 ```
     ./src
@@ -151,4 +154,4 @@ I would appreciate feedback and suggestions on how to improve this plugin. Repor
 Email: privat_thai_nguyen@hotmail.com
 
 # Copyright &copy; Thai Nguyen
-This plugin is free for private and professional use, with no limitations nor warranty. The plugin itself and code deriving from it may not be monetized, re-distributed, nor used as part of commercial products/services/brands.
+See license for more information.
