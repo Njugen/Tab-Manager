@@ -17,10 +17,10 @@
 /dist-dev-chrome-package.zip
 /dist-prod-firefox
 /dist-prod-chrome
-/firefox-dev-package.zip
-/chrome-dev-package.zip
-/firefox-prod-package.zip
-/chrome-prod-package.zip
+firefox-dev-package.zip
+chrome-dev-package.zip
+firefox-prod-package.zip
+chrome-prod-package.zip
 
 
 # misc
