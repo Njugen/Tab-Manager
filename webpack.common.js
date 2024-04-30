@@ -30,11 +30,21 @@ module.exports = (env) => {
         return `${path}/manifest_chrome.json`;
     }
 
+    const originBackgroundScript = () => {
+        let path = "src/webextension/background";
+
+        if(env.browser === "firefox"){
+            return `${path}/background_firefox.ts`;
+        }
+
+        return `${path}/background_chrome.ts`;
+    }
+
     return {
         entry: {
             options: path.resolve(__dirname, "src/index.tsx"), // Top react component for option's page.
             sidepanel: path.resolve(__dirname, "src/sidepanel.tsx"), // Top react component for sidepanel
-            background: path.resolve(__dirname, "src/webextension/background/background.ts"), // Script running in the browser's internal environment
+            background: path.resolve(__dirname, originBackgroundScript()), // Script running in the browser's internal environment
             contentScript: path.resolve(__dirname, "src/webextension/contentScript/contentScript.ts"), // Script running in the plugin's UI (option's page, sidepanels, controller)
         },
         module: {
@@ -61,6 +71,10 @@ module.exports = (env) => {
                     { 
                         from: path.resolve(__dirname, originManifest()), 
                         to: path.resolve(`${distFolder()}/manifest.json`)
+                    },
+                    { 
+                        from: path.resolve(__dirname, originBackgroundScript()), 
+                        to: path.resolve(`${distFolder()}/background.js`)
                     },
                     { 
                         from: path.resolve(__dirname, "brand"), 

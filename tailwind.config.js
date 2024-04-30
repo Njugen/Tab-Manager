@@ -31,7 +31,7 @@ module.exports = {
           middlegrey2: '#c7c7c7',
           middlegrey3: '#9f9f9f',
           middlegrey4: '#cccccc',
-          darkgrey: '#aeaeae',
+          darkgrey: '#828282',
           darkergrey: '#5c5c5c',
         }
       },

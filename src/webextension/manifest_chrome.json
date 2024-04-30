@@ -18,6 +18,10 @@
         }
     ],
     "action": {
+        "default_icon": {
+            "128": "brand/icon-128.png",
+            "48": "brand/icon-48.png"
+        },
         "default_title": "Tab Management Browser Plugin"
     },
     "icons": {

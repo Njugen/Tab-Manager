@@ -532,7 +532,7 @@ const FoldersSection = (props: any): JSX.Element => {
                     title="Warning" 
                     text={`You are about to open ${totalTabsCount} or more tabs at once. Opening this many may slow down your browser. Do you want to proceed?`}
                     primaryButton={{ 
-                        text: "Yes, open selected folders", 
+                        text: "Yes, open", 
                         callback: () => { 
                             if(windowsPayload) handleLaunchFolder(windowsPayload, folderLaunchType || undefined); 
                             setShowPerformanceWarning(false)

@@ -13,7 +13,7 @@ const Navlink = (props: iNavlink): JSX.Element => {
     const { opacity_hover_effect } = styles
 
     const activeLinkStyle: String = "font-semibold text-tbfColor-lightpurple";
-    const inActiveLinkStyle: String = "font-normal text-tbfColor-middlegrey3 hover:border-tbfColor-middlegrey3";
+    const inActiveLinkStyle: String = "font-normal text-tbfColor-darkgrey hover:border-tbfColor-middlegrey3";
     
     const stateCSS: String = isActive ? activeLinkStyle : inActiveLinkStyle;
 
