@@ -100,7 +100,7 @@ const AdvancedSearchBar = (props: any): JSX.Element => {
         windows.forEach((window: iWindowItem) => {
             tabsCount += window.tabs.length;
         });
-   
+        console.log("ABC", type);
         chrome.storage.local.get("performanceWarningValue", (data) => {
             setTabsToLaunchCount(data.performanceWarningValue);
             if(data.performanceWarningValue !== -1 && data.performanceWarningValue <= tabsCount) {
@@ -116,6 +116,7 @@ const AdvancedSearchBar = (props: any): JSX.Element => {
     // Prepare the windows in a folder for launch, and Instruct the component on how to launch the folder
     const handlePrepareLaunchFolder = (windows: Array<iWindowItem>, type: string): void => {
         setWindowsPayload(windows);
+        setFolderLaunchType(type);
         evaluatePerformanceWarning(type, windows);
     }
 
@@ -130,6 +131,7 @@ const AdvancedSearchBar = (props: any): JSX.Element => {
                         callback: () => { 
                             if(windowsPayload) {
                                 handleLaunchFolderArgs.windowsPayload = windowsPayload;
+                                handleLaunchFolderArgs.folderLaunchType = folderLaunchType;
                                 handleLaunchFolder(handleLaunchFolderArgs);
                             }
                             setShowPerformanceWarning(false)

@@ -12,6 +12,7 @@ import {
 import CloseIcon from "../../components/icons/close_icon";
 import iCurrentSessionState from "../../interfaces/states/current_session_state";
 import styles from "../../styles/global_utils.module.scss";
+import PopupMessage from "../../components/utils/popup_message";
 
 function SearchResultsContainer(props:any): JSX.Element {
     const { keyword, onClose } = props;
@@ -25,8 +26,28 @@ function SearchResultsContainer(props:any): JSX.Element {
     }
 
     const handlePrepareLaunchFolder = (windows: Array<iWindowItem>, type: string): void => {
-        setWindowsPayload(windows);
         setFolderLaunchType(type);
+        setWindowsPayload(windows);
+        evaluatePerformanceWarning(type, windows);
+    }
+
+    const evaluatePerformanceWarning = (type: string, windows: Array<iWindowItem>) => {
+        if(!windows) return;
+        let tabsCount = 0;
+        windows.forEach((window: iWindowItem) => {
+            tabsCount += window.tabs.length;
+        });
+   
+        chrome.storage.local.get("performanceWarningValue", (data) => {
+            setTotalTabsCount(data.performanceWarningValue);
+            
+            if(data.performanceWarningValue !== -1 && data.performanceWarningValue <= tabsCount) {
+                setShowPerformanceWarning(true);
+                setFolderLaunchType(type);
+            } else {
+                handleLaunchFolder(windows, type);
+            }
+        });
     }
 
     // Launch folder
@@ -48,10 +69,11 @@ function SearchResultsContainer(props:any): JSX.Element {
         if(launchType !== "group"){
             // Open all windows in this folder
             windows.forEach((window: iWindowItem, i) => {
-                const windowSettings = {
+                const windowSettings: chrome.windows.CreateData = {
                     focused: i === 0 ? true : false,
                     url: window.tabs.map((tab) => tab.url),
-                    incognito: launchType === "incognito" ? true : false
+                    incognito: launchType === "incognito" ? true : false,
+                    state: "maximized"
                 }
                 chrome.windows.create(windowSettings);
             });
@@ -67,24 +89,28 @@ function SearchResultsContainer(props:any): JSX.Element {
             });
         } else {
             let tabIds: Array<number> = [];
-
+            
             windows.forEach((window: iWindowItem, i) => {
-                window.tabs.forEach((tab) => {
-                    chrome.tabs.create({ url: tab.url}, (createdTab: chrome.tabs.Tab) => {
-                     
+                
+                window.tabs.forEach((tab, j) => {
+                    console.log("TABS", tab);
+                    chrome.tabs.create({ url: tab.url }, (createdTab: chrome.tabs.Tab) => {             
                         if(createdTab.id){
                             tabIds = [...tabIds, createdTab.id]
+                        }
+                        console.log("ABC", windows.length, window.tabs.length);
+                        if(windows.length-1 >= i && window.tabs.length-1 >= j){
+                            chrome.tabs.group({ tabIds: tabIds });
                         }
                     })
                 })
             });
-
-            setTimeout(() => chrome.tabs.group({ tabIds: tabIds }), 3000);
         }
-
+        
         // Unset all relevant states to prevent interferance with other features once the folder has been launched
         setWindowsPayload(null);
         setShowPerformanceWarning(false);
+        setFolderLaunchType(null);
     }
 
     useEffect(() => {
@@ -116,7 +142,7 @@ function SearchResultsContainer(props:any): JSX.Element {
     const renderFolders = (): Array<JSX.Element> => {
         const folders = filterFoldersByString(folderState, keyword);
 
-        return folders.map((folder: iFolderItem) => <FolderItem key={`folder-id-${folder.id}`} marked={false} id={folder.id!} name={folder.name} viewMode={"list"} type={"collapsed"} desc={folder.desc} windows={folder.windows} onOpen={handleLaunchFolder} />);
+        return folders.map((folder: iFolderItem) => <FolderItem key={`folder-id-${folder.id}`} marked={false} id={folder.id!} name={folder.name} viewMode={"list"} type={"collapsed"} desc={folder.desc} windows={folder.windows} onOpen={handlePrepareLaunchFolder} />);
     }
 
     // Render all filtered session tabs
@@ -140,6 +166,24 @@ function SearchResultsContainer(props:any): JSX.Element {
 
     return (
         <>
+            {showPerformanceWarning &&
+                <PopupMessage
+                    title="Warning" 
+                    text={`You are about to open ${totalTabsCount} or more tabs at once. Opening this many may slow down your browser. Do you want to proceed?`}
+                    primaryButton={{ 
+                        text: "Yes, open selected folders", 
+                        callback: () => { 
+                            if(windowsPayload) handleLaunchFolder(windowsPayload, folderLaunchType || undefined); 
+                            setShowPerformanceWarning(false)
+                        }
+                    }}
+                    secondaryButton={{ 
+                        text: "No, do not open", 
+                        callback: () => { 
+                            setShowPerformanceWarning(false); 
+                            setWindowsPayload(null)}}}     
+                />
+            }
             <div className="bg-white absolute top-20 z-[200] px-4 w-full">
                 <div id="popup-header" className="pb-5 border-tbfColor-lgrey w-full flex justify-between">
                     <header>

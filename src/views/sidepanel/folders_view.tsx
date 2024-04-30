@@ -91,10 +91,11 @@ const FoldersView = (props: any): JSX.Element => {
         if(launchType !== "group"){
             // Open all windows in this folder
             windows.forEach((window: iWindowItem, i) => {
-                const windowSettings = {
+                const windowSettings: chrome.windows.CreateData = {
                     focused: i === 0 ? true : false,
                     url: window.tabs.map((tab) => tab.url),
-                    incognito: launchType === "incognito" ? true : false
+                    incognito: launchType === "incognito" ? true : false,
+                    state: "maximized"
                 }
                 chrome.windows.create(windowSettings);
             });
@@ -139,13 +140,13 @@ const FoldersView = (props: any): JSX.Element => {
         let render;
 
         if(createFolder === true){
-            render = <FolderManager type="popup" title="Create folder" onClose={handleCloseFolderManager} />;
+            render = <FolderManager type="slide-in" title="Create folder" onClose={handleCloseFolderManager} />;
         } else {
             const targetFolder: Array<iFolderItem> = folderState.filter((item: iFolderItem) => editFolderId === item.id);
             const input: iFolderItem = {...targetFolder[0]};
 
             if(targetFolder.length > 0){
-                render = <FolderManager type="popup" title={`Edit folder ${targetFolder[0].id}`} folder={input} onClose={handleCloseFolderManager} />;
+                render = <FolderManager type="slide-in" title={`Edit folder ${targetFolder[0].id}`} folder={input} onClose={handleCloseFolderManager} />;
             } else {
                 render = <></>;
             } 

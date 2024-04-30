@@ -34,14 +34,15 @@ const handleLaunchFolder = (args: iLaunchFolderArgs): void => {
     chrome.windows.getAll(queryOptions, (currentWindows: Array<chrome.windows.Window>) => {
         snapshot = currentWindows;
     });
-
+    console.log("TYPE", folderLaunchType);
     if(folderLaunchType !== "group"){
         // Open all windows in this folder
         windowsPayload.forEach((window: iWindowItem, i) => {
-            const windowSettings = {
+            const windowSettings: chrome.windows.CreateData = {
                 focused: i === 0 ? true : false,
                 url: window.tabs.map((tab) => tab.url),
-                incognito: folderLaunchType === "incognito" ? true : false
+                incognito: folderLaunchType === "incognito" ? true : false,
+                state: "maximized"
             }
             chrome.windows.create(windowSettings);
         });
@@ -59,19 +60,22 @@ const handleLaunchFolder = (args: iLaunchFolderArgs): void => {
         let tabIds: Array<number> = [];
 
         windowsPayload.forEach((window: iWindowItem, i) => {
-            window.tabs.forEach((tab) => {
-                chrome.tabs.create({ url: tab.url}, (createdTab: chrome.tabs.Tab) => {
-                    
+            window.tabs.forEach((tab, j) => {
+                chrome.tabs.create({ url: tab.url }, (createdTab: chrome.tabs.Tab) => {             
                     if(createdTab.id){
                         tabIds = [...tabIds, createdTab.id]
+                    }
+                    console.log("ABC", windowsPayload.length, window.tabs.length);
+                    if(windowsPayload.length-1 >= i && window.tabs.length-1 >= j){
+                        chrome.tabs.group({ tabIds: tabIds });
                     }
                 })
             })
         });
 
-        setTimeout(() => chrome.tabs.group({ tabIds: tabIds }), 3000);
     }
-
+    
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
     // Unset all relevant states to prevent interferance with other features once the folder has been launched
     setWindowsPayload(null);
     setFolderLaunchType(null);

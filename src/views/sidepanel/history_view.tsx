@@ -104,7 +104,7 @@ const HistoryView = (props:any): JSX.Element => {
         return (
             <AddToFolderPopup 
                 title="Add to folder"
-                type="popup"
+                type="slide-in"
                 dropdownOptions={dropdownOptions}
                 onNewFolder={handleAddToNewFolder}
                 onExistingFolder={handleAddToExistingFolder}
@@ -152,10 +152,10 @@ const HistoryView = (props:any): JSX.Element => {
                 marked: false,
                 windows: [presetWindow],
             }
-            render = <FolderManager type="popup" title="Create folder" folder={folderSpecs} onClose={handlePopupClose} />;
+            render = <FolderManager type="slide-in" title="Create folder" folder={folderSpecs} onClose={handlePopupClose} />;
         } else if(mergeProcess !== null) {
 
-            render = <FolderManager type="popup" title={`Merge tabs to ${mergeProcess.name}`} folder={mergeProcess} onClose={handlePopupClose} />;
+            render = <FolderManager type="slide-in" title={`Merge tabs to ${mergeProcess.name}`} folder={mergeProcess} onClose={handlePopupClose} />;
         } else {
             render = <></>;
         }

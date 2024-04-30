@@ -477,10 +477,11 @@ const FoldersSection = (props: any): JSX.Element => {
         if(launchType !== "group"){
             // Open all windows in this folder
             windows.forEach((window: iWindowItem, i) => {
-                const windowSettings = {
+                const windowSettings: chrome.windows.CreateData = {
                     focused: i === 0 ? true : false,
                     url: window.tabs.map((tab) => tab.url),
-                    incognito: launchType === "incognito" ? true : false
+                    incognito: launchType === "incognito" ? true : false,
+                    state: "maximized"
                 }
                 chrome.windows.create(windowSettings);
             });
