@@ -23,8 +23,7 @@ const AddToFolderPopup = (props: iAddToFolderPopup): JSX.Element => {
 
     const handleClose = (): void => {
         onCancel();
-        document.body.style.overflowY = "auto";
-        document.body.style.overflowX = "auto";
+        document.body.style.overflow = "auto";
     }
 
     // Open an empty folder manager, preset with the selected tabs

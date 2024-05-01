@@ -78,6 +78,7 @@ const handleLaunchFolder = (args: iLaunchFolderArgs): void => {
     }
     
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
+    
     // Unset all relevant states to prevent interferance with other features once the folder has been launched
     setWindowsPayload([]);
     setFolderLaunchBehavior("normal");

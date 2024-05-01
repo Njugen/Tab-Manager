@@ -3,6 +3,7 @@ import '@testing-library/jest-dom'
 import CircleButton from '../../../components/utils/circle_button';
 import randomNumber from "../../../tools/random_number";
 import TabItem from "../../../components/features/tab_item";
+import tBrowserTabId from "../../../interfaces/types/browser_tab_id";
 
 const mockProps = {
     id: randomNumber(),
@@ -10,9 +11,9 @@ const mockProps = {
     url: `https://${randomNumber()}.com`,
 }
 
-const mockMarkFn = jest.fn((tabId: number | string, checked: boolean): void | undefined => {});
-const mockEditFn = jest.fn((tabId: number | string): void | undefined => {});
-const mockOnCloseFn = jest.fn((tabId: number | string): any | undefined => {});
+const mockMarkFn = jest.fn((tabId: tBrowserTabId, checked: boolean): void | undefined => {});
+const mockEditFn = jest.fn((tabId: tBrowserTabId): void | undefined => {});
+const mockOnCloseFn = jest.fn((tabId: tBrowserTabId): any | undefined => {});
 
 afterEach(() => {
     jest.clearAllMocks();

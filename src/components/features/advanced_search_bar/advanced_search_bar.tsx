@@ -52,12 +52,12 @@ const AdvancedSearchBar = (props: any): JSX.Element => {
     // Wait a moment before applying slide down effect
     const handleSlideDown = (status: boolean) => {
         if(keyword.length === 0) {
-            if(status === true){
+            if(status){
                 searchFieldRef.current!.value = "";
             }
         }
 
-        if(status === true){
+        if(status){
             setTimeout(() => {
                 if(searchResultsContainerRef.current){
                     searchResultsContainerRef.current.classList.remove("mt-10");
@@ -65,7 +65,7 @@ const AdvancedSearchBar = (props: any): JSX.Element => {
                 }
             }, 50);
   
-            document.body.style.overflowX = "hidden";
+            document.body.style.overflow = "hidden";
         }
         setSlideDown(status);
     } 
@@ -84,9 +84,10 @@ const AdvancedSearchBar = (props: any): JSX.Element => {
         // Listen for clicks in the viewport. Used primarily to hide the search results
         // once the user clicks outside the searchfield AND the results area
 
-        if(showResultsContainer === true){
+        if(showResultsContainer){
             window.addEventListener("click", clickListener);
         }
+        
         return () => {
             window.removeEventListener("click", clickListener);
         }
@@ -160,7 +161,7 @@ const AdvancedSearchBar = (props: any): JSX.Element => {
                     />
                 </div>
                 {   
-                    slideDown === true && 
+                    slideDown && 
                     (
                         <section data-testid="search-results-area" id="search-results-area" className={`bg-black bg-opacity-50 w-screen h-full top-0 bg-[rgba-] absolute z-500 left-0 flex justify-center`}>
                             <div ref={searchResultsContainerRef} className={`bg-white absolute p-6 ml-16 mt-10 transition-all ease-in duration-75 overflow-hidden w-7/12 z-10 rounded-lg drop-shadow-[0_3px_2px_rgba(0,0,0,0.15)]`}>

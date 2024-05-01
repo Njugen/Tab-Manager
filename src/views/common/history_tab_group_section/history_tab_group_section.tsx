@@ -7,6 +7,7 @@ import { forwardRef, useEffect, useState } from "react";
 import iHistoryState from "../../../interfaces/states/history_state";
 import iHistoryTabGroupsSection from '../../../interfaces/history_tab_groups_section';
 import { markMultipleTabs, markTab, setUpTabs } from "../../../redux-toolkit/slices/history_section_slice";
+import tBrowserTabId from "../../../interfaces/types/browser_tab_id";
 
 /*
     Component which displays browsing history pulled straight from the browser api.
@@ -94,7 +95,7 @@ const HistoryTabGroupsSection = forwardRef(function HistoryTabGroupsSection(prop
         searchHistory();
     }
 
-    const handleMarkTab = (id: number | string): void => {
+    const handleMarkTab = (id: tBrowserTabId): void => {
         const tabCollection: Array<chrome.history.HistoryItem> = historySectionState.tabs;
         const markedTabs: Array<chrome.history.HistoryItem> = historySectionState.markedTabs;
 

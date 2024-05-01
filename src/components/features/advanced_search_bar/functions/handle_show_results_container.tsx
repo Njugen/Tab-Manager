@@ -12,14 +12,14 @@ const handleShowResultsContainer = (args: iHandleShowResultsContainerArgs): void
 
     if(showResultsContainer === false){
         setShowResultsContainer(true);
-        handleSlideDown(slideDown === true ? false : true);
+        handleSlideDown(slideDown ? false : true);
       
     } else {
         if(searchResultsContainerRef.current){
             searchResultsContainerRef.current.classList.remove("mt-20");
             searchResultsContainerRef.current.classList.add("mt-10");
         } 
-        document.body.style.overflowY = "auto";
+        document.body.style.overflow = "auto";
         handleSlideDown(false);
         setShowResultsContainer(false);
     }

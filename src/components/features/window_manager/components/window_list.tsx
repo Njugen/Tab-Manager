@@ -45,7 +45,7 @@ const WindowList = (props: IWindowList): JSX.Element => {
         )
     }), [folder]);
     
-    if(createWindow === true && inCreationId > 0){
+    if(createWindow && inCreationId > 0){
         return (
         <>
             {existingWindowsElements} 

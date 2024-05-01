@@ -17,6 +17,7 @@ import { setCurrentTabEdits, setIsEditingTab } from "../../redux-toolkit/slices/
 import { updateFolder } from "../../redux-toolkit/slices/folder_management_slice";
 import purify from "../../tools/purify_object";
 import styles from "../../styles/global_utils.module.scss";
+import tBrowserTabId from "../../interfaces/types/browser_tab_id";
 
 
 /*
@@ -27,33 +28,45 @@ import styles from "../../styles/global_utils.module.scss";
 const WindowItem = (props: iWindowItem): JSX.Element => {
     const [expanded, setExpanded] = useState<boolean>(true);
     const [newTab, setNewTab] = useState<boolean>(false);
-    const [editTab, setEditTab] = useState<number | string | null>(null);
-    const [markedTabs, setMarkedTabs] = useState<Array<number | string>>([]);
-    const { id, tabs, tabsCol, onDelete, onDeleteTabs, disableEdit, disableEditTab, disableMarkTab, disableDeleteTab, disableAddTab } = props;
+    const [editTab, setEditTab] = useState<tBrowserTabId>("");
+    const [markedTabs, setMarkedTabs] = useState<Array<tBrowserTabId>>([]);
+    const { 
+        id, 
+        tabs, 
+        tabsCol, 
+        onDelete, 
+        onDeleteTabs, 
+        disableEdit, 
+        disableEditTab, 
+        disableMarkTab, 
+        disableDeleteTab, 
+        disableAddTab 
+    } = props;
     
     const dispatch = useDispatch();
 
     // Get information about the folder from redux store
-    const folderManagementState: iFolderItem | null = useSelector((state: RootState) => state.folderManagement);
+    const folderManagementState: iFolderItem = useSelector((state: RootState) => state.folderManagement);
     const miscState: any = useSelector((state: RootState) => state.misc);
 
     // Expand or collapse a window (show/hide tabs within)
     const handleExpand = (): void => {
-        setExpanded(expanded === true ? false : true);
+        setExpanded((prev) => !prev);
     }
 
     // Activate add new tab feature by setting state
     const handleAddNewTab = (): void => {
-        if(editTab === null && miscState.currentlyEditingTab === false) {
+        if(editTab && !miscState.currentlyEditingTab) {
             dispatch(setIsEditingTab(true));
             setNewTab(true);
         }
     }
 
     // Mark/unmark specific tab in this window
-    const handleMarkTab = (tabId: number | string, checked: boolean): void => {
-        if(checked === true){
+    const handleMarkTab = (tabId: tBrowserTabId, checked: boolean): void => {
+        if(checked){
             const findInState = markedTabs.findIndex((target) => target === tabId);
+
             if(findInState < 0){  
                 setMarkedTabs([...markedTabs, tabId]);
             }
@@ -66,12 +79,10 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
 
     // Delete marked tabs
     const handleDeleteTabs = (): void => {
-
-        if(folderManagementState?.windows && folderManagementState.windows.length > 0){
-        
+        if(folderManagementState.windows.length > 0){
             const windows = folderManagementState.windows.filter((target: iWindowItem) => target.id === id);
             const targetWindowIndex = folderManagementState?.windows.findIndex((target: iWindowItem) => target.id === id);
-            const tabs = windows[0].tabs;
+            const { tabs } = windows[0];
         
             const newTabCollection: Array<iTabItem> = [];
 
@@ -85,7 +96,6 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
                 });
                 
                 const tempState = purify(folderManagementState);
-
                 tempState.windows[targetWindowIndex].tabs = [...newTabCollection];
 
                 setMarkedTabs([]);
@@ -100,10 +110,10 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
         }
     }
 
-    const handleTabEdit = (id: number | string): void => {
+    const handleTabEdit = (id: tBrowserTabId): void => {
         const { toBeingEdited, currentlyEditingTab } = miscState;
 
-        if(currentlyEditingTab === true) return;
+        if(currentlyEditingTab) return;
 
         dispatch(setCurrentTabEdits(toBeingEdited + 1));
         dispatch(setIsEditingTab(true));
@@ -114,7 +124,7 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
         const { toBeingEdited } = miscState;
         dispatch(setCurrentTabEdits(toBeingEdited > 0 ? toBeingEdited - 1 : 0)); 
         dispatch(setIsEditingTab(false));
-        setEditTab(null);
+        setEditTab("");
         setNewTab(false);
     }
 
@@ -150,7 +160,7 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
     
     // Decide whether or not to show an editable tab field within the tab list
     const evaluateNewTabRender = (): Array<JSX.Element> => {
-        if(newTab === true){
+        if(newTab){
             return [
                 ...renderTabs, 
                 <EditableTabItem key={`window-${id}-new-tab`} windowId={id} onStop={handleEditTabStop} />
@@ -163,7 +173,7 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
     const expandCollapseButton = (): JSX.Element => {
         let icon: JSX.Element;
 
-        if(expanded === true){
+        if(expanded){
             icon = <CollapseIcon size={20} fill="#000" />
         } else {
             icon = <ExpandIcon size={20} fill="#000" />
@@ -193,7 +203,7 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
             </div>
             <div 
                 data-visibility={expanded ? "visible" : "hidden"} 
-                className={`tabs-list mt-3 overflow-hidden ${expanded === true ? "max-h-[2000px] ease-out visible" : "max-h-0 ease-in invisible"} duration-200 transition-all`}
+                className={`tabs-list mt-3 overflow-hidden ${expanded ? "max-h-[2000px] ease-out visible" : "max-h-0 ease-in invisible"} duration-200 transition-all`}
             >
                 <ul className={`list-none grid ${window.innerWidth >= 640 ? `grid-cols-${tabsCol ? tabsCol : 2} gap-x-3 gap-y-1` : "gap-y-1 grid-cols-1"}`}>
                     {tabs.length > 0 ? [...evaluateNewTabRender()] : <EditableTabItem key={`window-${id}-editable-tab`} windowId={id} onStop={handleEditTabStop} />}

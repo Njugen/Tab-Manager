@@ -71,7 +71,8 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
         }
 
         // Track the preset windows of this payload. Used to track new/removed windows
-        setOriginWindows(JSON.stringify(folderSpecs.windows));
+        const windowsString = JSON.stringify(folderSpecs.windows);
+        setOriginWindows(windowsString);
 
         // Tell redux this popup is active and a create/edit process is ongoing.
         dispatch(setUpFolder(folderSpecs));
@@ -94,7 +95,7 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
         const inEditWindows: string = purify(folderManagementState)?.windows;
         const listChanged: boolean = windowListChanged(originWindows, inEditWindows);
 
-        if(listChanged === true){
+        if(listChanged){
             setModified(true);
         }
     }, [folderManagementState]);
@@ -105,14 +106,13 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
     const handleChangeField = (key: string, value: string): void => {
         if(!folderManagementState) {
             return;
-        } else if(modified === false && folderManagementState[key] !== value){
+        } else if(!modified && folderManagementState[key] !== value){
             setModified(true);
         } 
 
         // Inform redux about the field change regardless of whether or not local state has been modified or not
         if(folderManagementState[key] !== value) dispatch(updateFolder([key, value]));
     }
-
 
 
     // Read the updated form changes from redux, and determine
@@ -134,7 +134,7 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
             updatedFieldState.windows = true;
         } 
         
-        if(updatedFieldState.name === false && updatedFieldState.windows === false){
+        if(!updatedFieldState.name && !updatedFieldState.windows){
             callback();
         } else {
             setInValidFields({...updatedFieldState});
@@ -148,7 +148,7 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
     // Perform tasks and close this form popup
     const handleClose = (skipWarning?: boolean): void => {
         chrome.storage.local.get("showFolderChangeWarning", (data) => {
-            if((modified === true && skipWarning !== true) && data.showFolderChangeWarning === true){
+            if((modified && !skipWarning) && data.showFolderChangeWarning === true){
                 // Show a warning when a form has been modified AND when settings explicitly permits it.
                 dispatch(changeShowFolderChangeWarning(true));
             } else {
@@ -194,7 +194,7 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
 
     // Close error/warning messages, but remain in the popup
     const handleKeepEditing = (): void => {
-        document.body.style.overflowY = "hidden";
+        document.body.style.overflow = "hidden";
         dispatch(changeShowFolderChangeWarning(false))
     }
 
@@ -204,13 +204,13 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
     }
 
     const saveButtonSpecs: any = {
-        label: isCreate === true ? "Create" : "Save",
+        label: isCreate ? "Create" : "Save",
         handler: handleSave
     }
 
     return (
         <>
-            {modified === true && pluginSettingsState?.showFolderChangeWarning === true && 
+            {modified && pluginSettingsState?.showFolderChangeWarning && 
                 <PopupMessage
                     title="Warning" 
                     text="You have made changes to this form. Closing it will result in all changes being lost. Do you want to proceed?"
@@ -247,8 +247,8 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
                 </FormField>
                 <div className={`py-6 flex flex-row items-center`}>
                     <div className="w-full">
-                        <h4 className={`font-semibold text-lg mb-1 ${inValidFields.windows === true && "text-red-500"}`}>Windows and tabs *</h4>
-                        <p className={`text-sm leading-6 text-tbfColor-darkergrey text-start ${inValidFields.windows === true && "text-red-500"}`}>
+                        <h4 className={`font-semibold text-lg mb-1 ${inValidFields.windows && "text-red-500"}`}>Windows and tabs *</h4>
+                        <p className={`text-sm leading-6 text-tbfColor-darkergrey text-start ${inValidFields.windows && "text-red-500"}`}>
                             You may add as windows and tabs to this folder as you like to this folder, although a maximum of 25-30 tabs is recommended. 
                         </p>
                         <WindowManager />
