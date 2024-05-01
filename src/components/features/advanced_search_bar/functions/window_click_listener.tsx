@@ -19,7 +19,7 @@ const handleWindowClick = (args: iHandleWindowClickArgs): void => {
     const searchFieldId = "search-field";
     const searchResultsContainerId = "search-results-area";
 
-    if(!target.id.includes(searchFieldId) && target.id.includes(searchResultsContainerId) === true){
+    if(!target.id.includes(searchFieldId) && target.id.includes(searchResultsContainerId)){
         handleShowResultsContainer(handleShowResultsArgs);
     }
 }

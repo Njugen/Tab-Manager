@@ -17,11 +17,10 @@ import styles from "../../styles/global_utils.module.scss";
 */
 
 const SectionContainer = (props: iSectionContainer): JSX.Element => {
-    const [fullscreen, setFullscreen] = useState<boolean>(props.initFullscreen === true ? true : false);
+    const [fullscreen, setFullscreen] = useState<boolean>(props.fullscreen);
     const { id, title, options, onExpand, children } = props;
     const sectionRef = useRef<HTMLDivElement>(null);
 
-    const miscState = useSelector((state: RootState) => state.misc)
     const dispatch = useDispatch();
 
     return (

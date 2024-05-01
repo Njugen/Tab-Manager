@@ -6,7 +6,7 @@ const getSelectedOption = (props: iGetSelectedOptionProps): iFieldOption => {
     const { options, preset, selected } = props;
 
     const target = options.find((option) => option.value === selected);
-    return target ? target : preset;
+    return target || preset;
 }
 
-export {getSelectedOption};
+export { getSelectedOption };

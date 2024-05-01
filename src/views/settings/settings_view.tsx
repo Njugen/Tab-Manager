@@ -94,7 +94,7 @@ const SettingsView = (props: any): JSX.Element => {
     }
 
     return (
-        <SectionContainer id="settings-view" title="Settings">
+        <SectionContainer fullscreen={false} id="settings-view" title="Settings">
             <div className="flex 2xl:flex-row justify-center 2xl:justify-normal">
                 {Object.entries(pluginSettingsState).length > 0 && <div className="w-10/12 2xl:w-7/12">
                     <FormField label="Performance notification" description="Warn me if the total amount of tabs exceeds a certain threshold when launching multiple tabs">

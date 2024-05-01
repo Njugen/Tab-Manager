@@ -282,7 +282,7 @@ const SessionSection = (props: any): JSX.Element => {
             }
             {addToWorkSpaceMessage && showSelector()}
             {showFolderManager()}
-            <SectionContainer id="currentSession-view" title="Current session" options={renderOptionsMenu}>
+            <SectionContainer fullscreen={false} id="currentSession-view" title="Current session" options={renderOptionsMenu}>
                 {windowList}
             </SectionContainer>
         </>  

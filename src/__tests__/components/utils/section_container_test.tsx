@@ -25,7 +25,8 @@ describe("Test <SectionContainer>", () => {
             title: mockTitle,
             options: () => mockOption,
             onExpand: mockExpandFn,
-            children: mockChildren
+            children: mockChildren,
+            fullscreen: false
         }
         
         test("Full screen is turned off", () => {
@@ -45,7 +46,7 @@ describe("Test <SectionContainer>", () => {
         test("'title' prop is displayed in the heading", () => {
             render(
                 <Provider store={store}>
-                    <SectionContainer {...props}>
+                    <SectionContainer {...props} fullscreen={false}>
                         {mockChildren}
                     </SectionContainer>
                 </Provider>
@@ -59,7 +60,7 @@ describe("Test <SectionContainer>", () => {
         test("Options are provided by 'option' prop", () => {
             render(
                 <Provider store={store}>
-                    <SectionContainer {...props}>
+                    <SectionContainer {...props} fullscreen={false}>
                         {mockChildren}
                     </SectionContainer>
                 </Provider>
@@ -73,7 +74,7 @@ describe("Test <SectionContainer>", () => {
         test("There are child components in options area", () => {
             render(
                 <Provider store={store}>
-                    <SectionContainer {...props}>
+                    <SectionContainer {...props} fullscreen={false}>
                         {mockChildren}
                     </SectionContainer>
                 </Provider>
@@ -88,7 +89,7 @@ describe("Test <SectionContainer>", () => {
         test("Clicking the expand button triggers 'onExpand' callback", () => {
             render(
                 <Provider store={store}>
-                    <SectionContainer {...props}>
+                    <SectionContainer {...props} fullscreen={false}>
                         {mockChildren}
                     </SectionContainer>
                 </Provider>
@@ -105,7 +106,7 @@ describe("Test <SectionContainer>", () => {
         test("Clicking the expand button hides ordinary section area", () => {
             render(
                 <Provider store={store}>
-                    <SectionContainer {...props}>
+                    <SectionContainer {...props} fullscreen={false}>
                         {mockChildren}
                     </SectionContainer>
                 </Provider>
@@ -123,7 +124,7 @@ describe("Test <SectionContainer>", () => {
         test("Clicking the expand button triggers the component's fullscreen layer", () => {
             render(
                 <Provider store={store}>
-                    <SectionContainer {...props}>
+                    <SectionContainer {...props} fullscreen={false}>
                         {mockChildren}
                     </SectionContainer>
                 </Provider>
@@ -142,7 +143,7 @@ describe("Test <SectionContainer>", () => {
         test("Full screen layer has heading", () => {
             render(
                 <Provider store={store}>
-                    <SectionContainer {...props} initFullscreen={true}>
+                    <SectionContainer {...props} fullscreen={true}>
                         {mockChildren}
                     </SectionContainer>
                 </Provider>
@@ -156,7 +157,7 @@ describe("Test <SectionContainer>", () => {
         test("Fullscreen has options area", () => {
             render(
                 <Provider store={store}>
-                    <SectionContainer {...props} initFullscreen={true}>
+                    <SectionContainer {...props} fullscreen={true}>
                         {mockChildren}
                     </SectionContainer>
                 </Provider>
@@ -170,7 +171,7 @@ describe("Test <SectionContainer>", () => {
         test("Fullscreen has child components", () => {
             render(
                 <Provider store={store}>
-                    <SectionContainer {...props} initFullscreen={true}>
+                    <SectionContainer {...props} fullscreen={true}>
                         {mockChildren}
                     </SectionContainer>
                 </Provider>
@@ -184,7 +185,7 @@ describe("Test <SectionContainer>", () => {
         test("Section returns to normal once expand button is clicked", () => {
             render(
                 <Provider store={store}>
-                    <SectionContainer {...props} initFullscreen={true}>
+                    <SectionContainer {...props} fullscreen={true}>
                         {mockChildren}
                     </SectionContainer>
                 </Provider>
@@ -206,7 +207,7 @@ describe("Test <SectionContainer>", () => {
         test("Renders without options area", () => {
             render(
                 <Provider store={store}>
-                    <SectionContainer id={mockId} title={mockTitle} onExpand={mockExpandFn}>
+                    <SectionContainer id={mockId} title={mockTitle} fullscreen={false} onExpand={mockExpandFn}>
                         {mockChildren}
                     </SectionContainer>
                 </Provider>
@@ -222,7 +223,7 @@ describe("Test <SectionContainer>", () => {
         test("Renders without options area in full screen", () => {
             render(
                 <Provider store={store}>
-                    <SectionContainer id={mockId} title={mockTitle} onExpand={mockExpandFn} initFullscreen={true}>
+                    <SectionContainer id={mockId} title={mockTitle} onExpand={mockExpandFn} fullscreen={true}>
                         {mockChildren}
                     </SectionContainer>
                 </Provider>

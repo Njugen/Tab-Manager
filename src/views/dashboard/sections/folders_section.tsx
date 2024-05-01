@@ -592,7 +592,7 @@ const FoldersSection = (props: any): JSX.Element => {
             }
             {showFolderManager()}
         
-            <SectionContainer id="folder-section" title="Folders" options={showOptionsMenu}>
+            <SectionContainer fullscreen={false} id="folder-section" title="Folders" options={showOptionsMenu}>
                 <>
                     {folderState.length === 0 && (
                         <div className="flex flex-col items-center justify-center h-[50%]">

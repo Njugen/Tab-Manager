@@ -348,7 +348,7 @@ const HistorySection = (props: any): JSX.Element => {
         <>
             {addToWorkSpaceMessage && showSelector()}
             {showFolderManager()}
-            <SectionContainer id="history-view" title="History" options={showOptionsMenu} onExpand={(value: boolean) => handleLoadHistory(value, tabsCount)}>
+            <SectionContainer fullscreen={false} id="history-view" title="History" options={showOptionsMenu} onExpand={(value: boolean) => handleLoadHistory(value, tabsCount)}>
                 <HistoryTabGroupsSection ref={sectionRef} viewMode={historySectionState.viewMode} tabs={historySectionState.tabs} />
             </SectionContainer>
         </>

@@ -17,11 +17,10 @@ const Checkbox = (props: iCheckbox): JSX.Element => {
 
     const handleChecked = (e: any): void => {
         // Check/uncheck this box
-        const updatedState = checked === false ? true : false;
-        setChecked(updatedState);
+        setChecked((prev) => !prev);
 
         // Send the new state of this box to the parent component 
-        onCallback({state: updatedState});
+        onCallback({state: !checked});
     }
 
     useEffect(() => {
@@ -39,7 +38,7 @@ const Checkbox = (props: iCheckbox): JSX.Element => {
                 className={`relative border border-tbfColor-middlegrey3 bg-white h-[1.1rem] w-[1.1rem]`}
             >
                 {
-                    checked === true && (
+                    checked && (
                         <span className="absolute block top-0 left-0">
                             <CheckedIcon fill="#6D00C2" size={16} />
                         </span>
