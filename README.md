@@ -1,4 +1,4 @@
-# Tab Management Browser Plugin - v1.0.0
+# Tab Management Browser Plugin - v1.0.1
 
 <p align="center" style="padding-top: 10px; padding-bottom: 10px">
     <img src="./img/brand/brand.png" width="15%" />
@@ -179,7 +179,7 @@ Once done, the folders will show an "Open in incognito" option in their launch m
 Firefox currently does not support this feature. Once the browser supports it, I'll make sure to add another launch option to the plugin.
 
 ### Is Microsoft Edge supported?
-Yes, this plugin is compatible with Microsoft Edge. You may install the plugin in the same manner as in Chrome.
+Yes, this plugin is compatible with Microsoft Edge. You may install the plugin in the same manner as in Chrome (use the Chrome package and install it in Edge).
 
 ### Why can I not find this plugin in Chrome Web Store/Firefox AMO?
 For the time being, this plugin is meant for my own personal use and is also part of my portfolio. I may publish it to the stores at a later time, although nothing has been decided yet. If you're still interested in using this plugin, I suggest you download a browser package from one of the releases.

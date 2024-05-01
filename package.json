@@ -1,6 +1,6 @@
 {
-  "name": "tabfolders",
-  "version": "1.0.0",
+  "name": "tab-management-browser-plugin",
+  "version": "1.0.1",
   "private": true,
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.7",
