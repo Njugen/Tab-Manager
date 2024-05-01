@@ -14,6 +14,7 @@ import OpenBrowserIcon from "../../components/icons/open_browser_icon";
 import HistoryTabGroupsSection from "../common/history_tab_group_section/history_tab_group_section";
 import { setUpTabs, unMarkAllTabs } from "../../redux-toolkit/slices/history_section_slice";
 import { unMarkAllFolders } from "../../redux-toolkit/slices/folders_section_slice";
+import { setIsEditFolderInPanel } from "../../redux-toolkit/slices/sidepanel_slice";
 
 const HistoryView = (props:any): JSX.Element => {
     const [mergeProcess, setMergeProcess] = useState<iFolderItem | null>(null);
@@ -22,6 +23,7 @@ const HistoryView = (props:any): JSX.Element => {
     const [createFolder, setCreateFolder] = useState<boolean>(false);
 
     const dispatch = useDispatch();
+    const sidepanelState = useSelector((state: any) => state.sidepanel);
     const historySectionState: any = useSelector((state: any) => state.historySection);
     const folderState: Array<iFolderItem> = useSelector((state: any) => state.folder);
 
@@ -53,6 +55,7 @@ const HistoryView = (props:any): JSX.Element => {
     const handleAddToNewFolder = (): void => {
         setAddToFolderMessage(false);
         setCreateFolder(true);
+        dispatch(setIsEditFolderInPanel(true))
     }
 
     const handleAddToExistingFolder = (e: any): void => {
@@ -84,6 +87,7 @@ const HistoryView = (props:any): JSX.Element => {
         if(targetFolder){
             setAddToFolderMessage(false);
             setMergeProcess(updatedFolder);
+            dispatch(setIsEditFolderInPanel(true))
         }
     }
     const renderAddTabsMessage = (): JSX.Element => {
@@ -115,18 +119,19 @@ const HistoryView = (props:any): JSX.Element => {
     }
 
     const handlePopupClose = (): void => {
-
         setEditFolderId(null);
         setCreateFolder(false);
         setMergeProcess(null);
 
         dispatch(unMarkAllTabs());
         dispatch(unMarkAllFolders());
+        dispatch(setIsEditFolderInPanel(false))
     }
 
 
     const renderFolderManager = (): JSX.Element => {
         let render;
+
         if(createFolder === true){
             const markedTabs: Array<iTabItem> = historySectionState.markedTabs.map((tab: chrome.history.HistoryItem) => {
                 return {
@@ -152,10 +157,23 @@ const HistoryView = (props:any): JSX.Element => {
                 marked: false,
                 windows: [presetWindow],
             }
-            render = <FolderManager type="slide-in" title="Create folder" folder={folderSpecs} onClose={handlePopupClose} />;
+            render = (
+                <FolderManager 
+                    type="slide-in" 
+                    title="Create folder" 
+                    folder={folderSpecs} 
+                    onClose={handlePopupClose} 
+                />
+            );
         } else if(mergeProcess !== null) {
-
-            render = <FolderManager type="slide-in" title={`Merge tabs to ${mergeProcess.name}`} folder={mergeProcess} onClose={handlePopupClose} />;
+            render = (
+                <FolderManager 
+                    type="slide-in" 
+                    title={`Merge tabs to ${mergeProcess.name}`} 
+                    folder={mergeProcess} 
+                    onClose={handlePopupClose} 
+                />
+            );
         } else {
             render = <></>;
         }

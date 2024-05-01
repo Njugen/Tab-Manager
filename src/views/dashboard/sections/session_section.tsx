@@ -120,7 +120,6 @@ const SessionSection = (props: any): JSX.Element => {
     const windowList = useMemo((): JSX.Element => {
         const existingWindows = sessionSectionState?.windows;
         const existingWindowsElements: Array<JSX.Element> = existingWindows?.map((item: iWindowItem, i: number) => {
-
             return (
                 <WindowItem 
                     key={`window-item-${i}`} 
@@ -138,7 +137,11 @@ const SessionSection = (props: any): JSX.Element => {
         });
         
         if (existingWindowsElements?.length > 0){
-            return <ul className="list-none">{existingWindowsElements}</ul>;
+            return (
+                <ul className="list-none">
+                    {existingWindowsElements}
+                </ul>
+            );
         } else {
             return (
                 <div className={"flex justify-center items-center"}>
@@ -253,9 +256,24 @@ const SessionSection = (props: any): JSX.Element => {
                 marked: false,
                 windows: [...presetWindows],
             }
-            render = <FolderManager type="slide-in" title="Create folder" folder={folderSpecs} onClose={handleCloseFolderManager} />;
+
+            render = (
+                <FolderManager 
+                    type="slide-in" 
+                    title="Create folder" 
+                    folder={folderSpecs} 
+                    onClose={handleCloseFolderManager} 
+                />
+            );
         } else if(mergeProcess !== null) {
-            render = <FolderManager type="slide-in" title={`Merge tabs to ${mergeProcess.name}`} folder={mergeProcess} onClose={handleCloseFolderManager} />;
+            render = (
+                <FolderManager 
+                    type="slide-in" 
+                    title={`Merge tabs to ${mergeProcess.name}`} 
+                    folder={mergeProcess} 
+                    onClose={handleCloseFolderManager} 
+                />
+            );
         }
 
         return render;

@@ -56,7 +56,7 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
 
     // Activate add new tab feature by setting state
     const handleAddNewTab = (): void => {
-        if(editTab && !miscState.currentlyEditingTab) {
+        if(!editTab && !miscState.currentlyEditingTab) {
             dispatch(setIsEditingTab(true));
             setNewTab(true);
         }

@@ -30,11 +30,11 @@ const PanelView = (props: iPanelView): JSX.Element => {
     } 
     }
 
-    if(view === "folders-view"){
+    if(view === "folders"){
         component = <FoldersView />
-    } else if(view === "current-session-view"){
+    } else if(view === "session"){
         component = <SessionView />
-    } else if(view === "history-view"){
+    } else if(view === "history"){
         component = <HistoryView />
     }
 

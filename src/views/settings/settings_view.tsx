@@ -63,7 +63,7 @@ const SettingsView = (props: any): JSX.Element => {
 
     // Save dropdown selection data to browser, and update redux store for UI usage
     const saveSelectedOption = (key: string, value: number | null): void => {
-        if(value !== null){
+        if(value){
             saveToStorage("local", key, value);
 
             if(key === "performanceWarningValue"){
@@ -96,48 +96,50 @@ const SettingsView = (props: any): JSX.Element => {
     return (
         <SectionContainer fullscreen={false} id="settings-view" title="Settings">
             <div className="flex 2xl:flex-row justify-center 2xl:justify-normal">
-                {Object.entries(pluginSettingsState).length > 0 && <div className="w-10/12 2xl:w-7/12">
-                    <FormField label="Performance notification" description="Warn me if the total amount of tabs exceeds a certain threshold when launching multiple tabs">
-                        <Dropdown 
-                            onCallback={(e) => { saveSelectedOption("performanceWarningValue", e.selected)}} 
-                            tag="performance-dropdown" 
-                            preset={getPresetPerformanceNotification()} 
-                            options={performanceNotificationOptions} 
-                        />
-                    </FormField>                      
-                    <FormField label="Duplication warnings" description="Show a warning message before duplicating at least a certain amount of selected folders">
-                        <Dropdown 
-                            onCallback={(e) => saveSelectedOption("duplicationWarningValue", e.selected)} 
-                            tag="duplication-warning-dropdown" 
-                            preset={getPresetDuplicationWarning()} 
-                            options={duplicationWarningOptions} 
-                        />
-                    </FormField>
-                    <FormField label="Close at folder launch" description="Close current browser session when launching a folder">
-                        <Switcher 
-                            value={pluginSettingsState.closeSessionAtFolderLaunch} 
-                            onCallback={(e) => saveSwitchSetting("closeSessionAtFolderLaunch", e)} 
-                        />
-                    </FormField>
-                    <FormField label="Cancellation warnings" description="Show a warning message before discarding changes made to folders">
-                        <Switcher 
-                            value={pluginSettingsState.showFolderChangeWarning} 
-                            onCallback={(e) => saveSwitchSetting("showFolderChangeWarning", e)} 
-                        />
-                    </FormField>
-                    <FormField label="Removal warnings" description="Show a warning message before deleting folders">
-                        <Switcher 
-                            value={pluginSettingsState.folderRemovalWarning} 
-                            onCallback={(e) => saveSwitchSetting("folderRemovalWarning", e)} 
-                        />
-                    </FormField>
-                   {/* <FormField label="Log errors" description="Automatically send error reports to the developer">
-                        <Switcher 
-                            value={pluginSettingsState.allowErrorLog} 
-                            onCallback={(e) => saveSwitchSetting("allowErrorLog", e)} 
-                        />
-                    </FormField> */}
-                </div>}
+                {Object.entries(pluginSettingsState).length > 0 && (
+                    <div className="w-10/12 2xl:w-7/12">
+                        <FormField label="Performance notification" description="Warn me if the total amount of tabs exceeds a certain threshold when launching multiple tabs">
+                            <Dropdown 
+                                onCallback={(e) => { saveSelectedOption("performanceWarningValue", e.selected)}} 
+                                tag="performance-dropdown" 
+                                preset={getPresetPerformanceNotification()} 
+                                options={performanceNotificationOptions} 
+                            />
+                        </FormField>                      
+                        <FormField label="Duplication warnings" description="Show a warning message before duplicating at least a certain amount of selected folders">
+                            <Dropdown 
+                                onCallback={(e) => saveSelectedOption("duplicationWarningValue", e.selected)} 
+                                tag="duplication-warning-dropdown" 
+                                preset={getPresetDuplicationWarning()} 
+                                options={duplicationWarningOptions} 
+                            />
+                        </FormField>
+                        <FormField label="Close at folder launch" description="Close current browser session when launching a folder">
+                            <Switcher 
+                                value={pluginSettingsState.closeSessionAtFolderLaunch} 
+                                onCallback={(e) => saveSwitchSetting("closeSessionAtFolderLaunch", e)} 
+                            />
+                        </FormField>
+                        <FormField label="Cancellation warnings" description="Show a warning message before discarding changes made to folders">
+                            <Switcher 
+                                value={pluginSettingsState.showFolderChangeWarning} 
+                                onCallback={(e) => saveSwitchSetting("showFolderChangeWarning", e)} 
+                            />
+                        </FormField>
+                        <FormField label="Removal warnings" description="Show a warning message before deleting folders">
+                            <Switcher 
+                                value={pluginSettingsState.folderRemovalWarning} 
+                                onCallback={(e) => saveSwitchSetting("folderRemovalWarning", e)} 
+                            />
+                        </FormField>
+                    {/* <FormField label="Log errors" description="Automatically send error reports to the developer">
+                            <Switcher 
+                                value={pluginSettingsState.allowErrorLog} 
+                                onCallback={(e) => saveSwitchSetting("allowErrorLog", e)} 
+                            />
+                        </FormField> */}
+                    </div>
+                )}
             </div>
         </SectionContainer>
     );

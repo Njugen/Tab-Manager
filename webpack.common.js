@@ -8,13 +8,7 @@ const ZipPlugin = require('zip-webpack-plugin');
 module.exports = (env) => {
     const distFolder = () => {
         // Return name of the dist folders depending on what browser the plugin is being built for
-        let name = `dist-${env.label}-${env.browser}`;
-
-        if(env.browser === "firefox"){
-            name = `dist-${env.label}-${env.browser}`;
-        }
-
-        return name;
+        return `dist-${env.label}-${env.browser}`;
     }
 
     const originManifest = () => {
@@ -100,7 +94,6 @@ module.exports = (env) => {
             new ZipPlugin({
                 path: "../",
                 filename: `${env.browser}-${env.label}-package.zip`,
-                pathPrefix: `./${distFolder()}`
             })
         ],
         resolve: {

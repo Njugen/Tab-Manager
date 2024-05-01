@@ -160,8 +160,29 @@ Run this command after changing existing components, to check if anything relate
 
 # QA
 
+### How do I open folders in incognito?
+This feature is turned off by default, and needs to be manually enabled. Follow these steps:
+
+**Firefox:**
+1. Go to browser menu -> Add-ons and themes
+2. Click "Extensions" in the right-hand bar 
+3. Click "Tab Management Browser Plugin" and allow it to run in private mode
+
+**Chrome:**
+1. Go to browser menu -> Extensions -> Manage Extensions
+2. Click the "Details" button located in the "Tab Management Browser Plugin" section
+3. Enable the "Allow in Incognito" option
+
+Once done, the folders will show an "Open in incognito" option in their launch menus.
+
+### Why can I not launch folders as tab groups in Firefox?
+Firefox currently does not support this feature. Once the browser supports it, I'll make sure to add another launch option to the plugin.
+
+### Is Microsoft Edge supported?
+Yes, this plugin is compatible with Microsoft Edge. You may install the plugin in the same manner as in Chrome.
+
 ### Why can I not find this plugin in Chrome Web Store/Firefox AMO?
-For the time being, this plugin is meant for my own personal use and is also part of my portfolio. I may publish it to the stores at a later time once I've figured out how to improve the plugin beyond what's already provided through the store. If you're still interested in using this plugin, I suggest you download a browser package from one of the releases.
+For the time being, this plugin is meant for my own personal use and is also part of my portfolio. I may publish it to the stores at a later time, although nothing has been decided yet. If you're still interested in using this plugin, I suggest you download a browser package from one of the releases.
 
 ### Will there be any updates/new features?
 New features may be added as I get new ideas or feedback/suggestions that could be of value for significant improvement. Smaller bug fixes and enhancements may be published from time to time, with no set schedule nor roadmap at this point.

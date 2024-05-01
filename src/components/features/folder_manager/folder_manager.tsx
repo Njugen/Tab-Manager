@@ -17,6 +17,7 @@ import { changeShowFolderChangeWarning } from "../../../redux-toolkit/slices/plu
 import { setIsEditingTab } from "../../../redux-toolkit/slices/misc_slice";
 import { createNewFolder, saveFolder } from "../../../redux-toolkit/slices/folder_slice";
 import purify from "../../../tools/purify_object";
+import { setPanelView } from "../../../redux-toolkit/slices/sidepanel_slice";
 /*
     A popup providing oversight of a folder's settings and available windows/tabs.
     The settings may be changed by the user, which then gets saved to redux storage
@@ -46,6 +47,7 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
     const folderState: Array<iFolderItem> = useSelector((state: RootState) => state.folder);
     const pluginSettingsState: iPluginSettings = useSelector((state: RootState) => state.pluginSettings);
     const folderManagementState: any = useSelector((state: RootState) => state.folderManagement);
+    const sidepanelState = useSelector((state: any) => state.sidepanel);
 
     useEffect(() => {
         // Information about the folder. If undefined, there are no preset information
@@ -186,7 +188,10 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
                 dispatch(createNewFolder(folderManagementState));
             }   
 
-            
+            if(sidepanelState.isEditFolderInPanel){
+                dispatch(setPanelView("folders"));
+            }
+        
             handleClose(true);
         });
        

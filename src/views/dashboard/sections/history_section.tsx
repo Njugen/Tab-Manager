@@ -44,7 +44,7 @@ const HistorySection = (props: any): JSX.Element => {
 
     // Load tabs from history api and store it in redux store for further use while this component is rendered
     const loadHistory = (keyword: string, count: number): void => {
-        const query: any = {
+        const query: chrome.history.HistoryQuery = {
             text: keyword,
             endTime: undefined,
             startTime: undefined,
@@ -54,7 +54,7 @@ const HistorySection = (props: any): JSX.Element => {
         chrome.history.search(query, (items: Array<chrome.history.HistoryItem>) => {
             if(items.length === 0) return;
            
-            const sorted = items.sort((a,b)=> (a.lastVisitTime && b.lastVisitTime && (b.lastVisitTime - a.lastVisitTime)) || 0);
+            const sorted = items.sort((a, b)=> (a.lastVisitTime && b.lastVisitTime && (b.lastVisitTime - a.lastVisitTime)) || 0);
             const newSnapshot = JSON.stringify(sorted[sorted.length-1].lastVisitTime);
             
             if(items.length > 0 && snapshot !== newSnapshot) { 
@@ -76,6 +76,7 @@ const HistorySection = (props: any): JSX.Element => {
         if(sectionRef.current){
             const { scrollY, outerHeight } = window;
             const windowYScrollSpace = outerHeight + scrollY;
+
             if(sectionRef.current && (windowYScrollSpace >= sectionRef.current.clientHeight)){
                 setTabsCount((prev) => prev+20);
             }
@@ -271,7 +272,10 @@ const HistorySection = (props: any): JSX.Element => {
         const currentFolders: Array<iFolderItem> = folderState;
 
         const options: Array<iFieldOption> = currentFolders.map((folder) => {
-            return { value: folder.id, label: folder.name }
+            return { 
+                value: folder.id, 
+                label: folder.name 
+            }
         });
 
         const dropdownOptions: Array<iFieldOption> = [
@@ -336,9 +340,23 @@ const HistorySection = (props: any): JSX.Element => {
                 marked: false,
                 windows: [presetWindow],
             }
-            render = <FolderManager type="slide-in" title="Create folder" folder={folderSpecs} onClose={handleCloseFolderManager} />;
-        } else if(mergeProcessFolder !== null) {
-            render = <FolderManager type="slide-in" title={`Merge tabs to ${mergeProcessFolder.name}`} folder={mergeProcessFolder} onClose={handleCloseFolderManager} />;
+            render = (
+                <FolderManager 
+                    type="slide-in" 
+                    title="Create folder" 
+                    folder={folderSpecs} 
+                    onClose={handleCloseFolderManager} 
+                />
+            );
+        } else if(mergeProcessFolder) {
+            render = (
+                <FolderManager 
+                    type="slide-in" 
+                    title={`Merge tabs to ${mergeProcessFolder.name}`} 
+                    folder={mergeProcessFolder} 
+                    onClose={handleCloseFolderManager} 
+                />
+            );
         }
 
         return render;

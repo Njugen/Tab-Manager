@@ -6,6 +6,7 @@ import historySectionReducer from "./slices/history_section_slice";
 import miscReducer from "./slices/misc_slice";
 import sessionSectionReducer from "./slices/session_section_slice";
 import pluginSettingsReducer from "./slices/plugin_settings_slice";
+import sidepanelReducer from "./slices/sidepanel_slice";
 
 const reducers: any = {
     folderManagement: folderManagementReducer,
@@ -14,7 +15,8 @@ const reducers: any = {
     sessionSection: sessionSectionReducer,
     historySection: historySectionReducer,
     misc: miscReducer,
-    pluginSettings: pluginSettingsReducer
+    pluginSettings: pluginSettingsReducer,
+    sidepanel: sidepanelReducer
 }
 
 export const store = configureStore({

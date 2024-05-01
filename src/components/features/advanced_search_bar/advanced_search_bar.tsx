@@ -65,7 +65,7 @@ const AdvancedSearchBar = (props: any): JSX.Element => {
                 }
             }, 50);
   
-            document.body.style.overflow = "hidden";
+           // document.body.style.overflow = "hidden";
         }
         setSlideDown(status);
     } 
