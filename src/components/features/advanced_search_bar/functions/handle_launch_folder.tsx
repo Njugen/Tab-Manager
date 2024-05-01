@@ -1,11 +1,13 @@
 import React from "react";
 import { iWindowItem } from "../../../../interfaces/window_item";
 
+type tLaunchType = "normal" | "group" | "incognito";
+
 interface iLaunchFolderArgs {
-    folderLaunchType?: string | null,
+    folderLaunchType: tLaunchType,
     windowsPayload: Array<iWindowItem> | null,
-    setWindowsPayload: React.Dispatch<React.SetStateAction<iWindowItem[] | null>>,
-    setFolderLaunchType: React.Dispatch<React.SetStateAction<string | null>>,
+    setWindowsPayload: React.Dispatch<React.SetStateAction<iWindowItem[]>>,
+    setFolderLaunchType: React.Dispatch<React.SetStateAction<tLaunchType>>,
     setShowPerformanceWarning: React.Dispatch<React.SetStateAction<boolean>>
 }
 
@@ -77,9 +79,9 @@ const handleLaunchFolder = (args: iLaunchFolderArgs): void => {
     
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
     // Unset all relevant states to prevent interferance with other features once the folder has been launched
-    setWindowsPayload(null);
-    setFolderLaunchType(null);
+    setWindowsPayload([]);
+    setFolderLaunchType("normal");
     setShowPerformanceWarning(false);
 }
 
-export { handleLaunchFolder, iLaunchFolderArgs };
+export { handleLaunchFolder, iLaunchFolderArgs, tLaunchType };

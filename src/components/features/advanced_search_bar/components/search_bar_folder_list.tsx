@@ -2,11 +2,12 @@ import { iFolderItem } from '../../../../interfaces/folder_item';
 import { iWindowItem } from '../../../../interfaces/window_item';
 import FolderItem from '../../folder_item/folder_item';
 import { filterFoldersByString } from '../../../../tools/tab_filters';
-
+import tLaunchType
+ from '../../../../interfaces/types/launch_type';
 interface iSearchBarFolderListProps {
     items: Array<iFolderItem>,
     keyword: string,
-    handleOpen: (windows: Array<iWindowItem>, type: string) => void
+    handleOpen: (windows: Array<iWindowItem>, type: tLaunchType) => void
 }
 
 // Render all filtered folders

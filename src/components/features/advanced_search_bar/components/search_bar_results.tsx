@@ -6,10 +6,11 @@ import { iWindowItem } from '../../../../interfaces/window_item';
 import { iFolderItem } from '../../../../interfaces/folder_item';
 import iCurrentSessionState from '../../../../interfaces/states/current_session_state';
 import iHistoryState from '../../../../interfaces/states/history_state';
+import tLaunchType from '../../../../interfaces/types/launch_type';
 
 interface iSearchResultsProps {
     keyword: string,
-    launchFolder: (windows: Array<iWindowItem>, type: string) => void,
+    launchFolder: (windows: Array<iWindowItem>, type: tLaunchType) => void,
     folders: Array<iFolderItem>, 
     session: iCurrentSessionState, 
     history: iHistoryState

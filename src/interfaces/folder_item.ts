@@ -1,3 +1,4 @@
+import tLaunchType from "./types/launch_type";
 import { iWindowItem } from "./window_item";
 
 interface iFolderItem {
@@ -9,7 +10,7 @@ interface iFolderItem {
     viewMode: "list" | "grid",
     windows: Array<iWindowItem>,
     index?: number,
-    onOpen?: (e: Array<iWindowItem>, type: string) => void,
+    onOpen?: (e: Array<iWindowItem>, type: tLaunchType) => void,
     onMark?: (e: number) => void,
     onEdit?: (e: number) => void
     onDelete?: (e: iFolderItem) => void

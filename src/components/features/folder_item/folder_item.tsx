@@ -11,6 +11,7 @@ import WindowItem from "../window_item";
 import { iFolderActionBarHandlers } from "../../../interfaces/folder_action_bar";
 import { iFolderActionBarStates } from "../../../interfaces/folder_action_bar";
 import { RootState } from "../../../redux-toolkit/store";
+import { tLaunchType } from "../advanced_search_bar/functions/handle_launch_folder";
 
 /*
     Folder section containing description, windows and tabs, as well as various folder options
@@ -106,7 +107,7 @@ const FolderItem = (props: iFolderItem): JSX.Element => {
 
     // Launch a folder based on selected option
     const handleLaunch = (id: number): void => {
-        let type: string = "";
+        let type: tLaunchType = "normal";
 
         if(id === 0){
             type = "normal";

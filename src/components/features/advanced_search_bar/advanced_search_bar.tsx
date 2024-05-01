@@ -12,7 +12,7 @@ import { handleLaunchFolder, iLaunchFolderArgs } from "./functions/handle_launch
 import { SearchResults } from "./components/search_bar_results";
 import PopupMessage from "../../utils/popup_message";
 import { RootState } from "../../../redux-toolkit/store";
-
+import tLaunchType from "../../../interfaces/types/launch_type";
 /*
     Search bar placed at the top of the viewport
 
@@ -30,10 +30,10 @@ const AdvancedSearchBar = (props: any): JSX.Element => {
     const [keyword, setkeyword] = useState<string>("");
 
     // Place a set of windows on hold (e.g. for an upcoming event like launching etc)
-    const [windowsPayload, setWindowsPayload] = useState<Array<iWindowItem> | null>(null);
+    const [windowsPayload, setWindowsPayload] = useState<Array<iWindowItem>>([]);
     
     // Setting for how to launch a folder (normally, as a group or incognito?)
-    const [folderLaunchType, setFolderLaunchType] = useState<string | null>(null);
+    const [folderLaunchType, setFolderLaunchType] = useState<tLaunchType>("normal");
 
     // Setting for whether or not to show a warning message when opening too many
     const [showPerformanceWarning, setShowPerformanceWarning] = useState<boolean>(false);
@@ -94,7 +94,7 @@ const AdvancedSearchBar = (props: any): JSX.Element => {
 
 
     // Decide whether or not to launch a folder immediately, OR to show a warning message
-    const evaluatePerformanceWarning = (type: string, windows: Array<iWindowItem>) => {
+    const evaluatePerformanceWarning = (type: tLaunchType, windows: Array<iWindowItem>) => {
         if(!windows) return;
         let tabsCount = 0;
         windows.forEach((window: iWindowItem) => {
@@ -114,7 +114,7 @@ const AdvancedSearchBar = (props: any): JSX.Element => {
     }
 
     // Prepare the windows in a folder for launch, and Instruct the component on how to launch the folder
-    const handlePrepareLaunchFolder = (windows: Array<iWindowItem>, type: string): void => {
+    const handlePrepareLaunchFolder = (windows: Array<iWindowItem>, type: tLaunchType): void => {
         setWindowsPayload(windows);
         setFolderLaunchType(type);
         evaluatePerformanceWarning(type, windows);
@@ -141,7 +141,7 @@ const AdvancedSearchBar = (props: any): JSX.Element => {
                         text: "No, do not open", 
                         callback: () => { 
                             setShowPerformanceWarning(false); 
-                            setWindowsPayload(null)}}}     
+                            setWindowsPayload([])}}}     
                 />
             }
             <div className="mt-8 flex justify-center">
