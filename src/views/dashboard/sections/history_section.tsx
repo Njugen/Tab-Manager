@@ -29,7 +29,7 @@ import { unMarkAllFolders } from "../../../redux-toolkit/slices/folders_section_
 
 
 const HistorySection = (props: any): JSX.Element => {
-    const [addToWorkSpaceMessage, setAddToFolderMessage] = useState<boolean>(false);
+    const [addToFolderMessage, setAddToFolderMessage] = useState<boolean>(false);
     const [mergeProcessFolder, setMergeProcessFolder] = useState<iFolderItem | null>(null);
     const [createFolder, setCreateFolder] = useState<boolean>(false);
     const [snapshot, setSnapshot] = useState<string>("");
@@ -220,7 +220,13 @@ const HistorySection = (props: any): JSX.Element => {
                             onChange={handleSearch}
                         />*/}
                         <PrimaryButton disabled={markedTabs.length > 0 ? false : true} text="Open selected" onClick={handleOpenSelected} />
-                        <PrimaryButton disabled={markedTabs.length > 0 ? false : true} text="Add to folder" onClick={() => setAddToFolderMessage(true)} />
+                        <PrimaryButton disabled={markedTabs.length > 0 ? false : true} text="Add to folder" onClick={() => {
+                            if(folderState.length > 0){
+                                setAddToFolderMessage(true)
+                            } else {
+                                setCreateFolder(true);
+                            }
+                        }} />
                     </div>
                 </div>
             </>
@@ -364,7 +370,7 @@ const HistorySection = (props: any): JSX.Element => {
 
     return (
         <>
-            {addToWorkSpaceMessage && showSelector()}
+            {addToFolderMessage && showSelector()}
             {showFolderManager()}
             <SectionContainer fullscreen={false} id="history-view" title="History" options={showOptionsMenu} onExpand={(value: boolean) => handleLoadHistory(value, tabsCount)}>
                 <HistoryTabGroupsSection ref={sectionRef} viewMode={historySectionState.viewMode} tabs={historySectionState.tabs} />

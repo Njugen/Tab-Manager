@@ -285,7 +285,13 @@ const SessionView = (props:any): JSX.Element => {
                 <CircleButton 
                     disabled={false} 
                     bgCSSClass="bg-tbfColor-lightpurple" 
-                    onClick={() => setAddToFolderMessage(true)}
+                    onClick={() => {
+                        if(folderState.length > 0){
+                            setAddToFolderMessage(true)
+                        } else {
+                            setCreateFolder(true);
+                        }
+                    }}
                 >
                     <SaveIcon size={20} fill={"#fff"} />
                 </CircleButton>

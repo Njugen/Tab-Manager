@@ -32,14 +32,14 @@ const SearchResults = (props: iSearchResultsProps): JSX.Element => {
                     <SearchBarFolderList items={folders} keyword={keyword} handleOpen={launchFolder} />
                 </section>
 
-                <section data-testid={"history-tabs-search-result"}>
+                <section data-testid={"history-tabs-search-result"} className="mb-6">
                     <h3 className="uppercase font-bold text-md mb-4 text-tbfColor-darkergrey">
                         History
                     </h3>
                     <SearchBarHistoryTabs items={history} keyword={keyword} />
                 </section>
           
-                <section data-testid={"current-tabs-search-result"}>
+                <section data-testid={"current-tabs-search-result"} className="mb-6">
                     <h3 className="uppercase font-bold text-md mb-4 text-tbfColor-darkergrey">
                         Currently opened
                     </h3>

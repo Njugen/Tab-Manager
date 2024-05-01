@@ -198,7 +198,13 @@ const HistoryView = (props:any): JSX.Element => {
                 <CircleButton 
                     disabled={historySectionState.markedTabs.length > 0 ? false : true} 
                     bgCSSClass="bg-tbfColor-lightpurple" 
-                    onClick={() => setAddToFolderMessage(true)}
+                    onClick={() => {
+                        if(folderState.length > 0){
+                            setAddToFolderMessage(true)
+                        } else {
+                            setCreateFolder(true);
+                        }
+                    }}
                 >
                     <SaveIcon size={20} fill={"#fff"} />
                 </CircleButton>

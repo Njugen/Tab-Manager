@@ -18,7 +18,7 @@ import { unMarkAllFolders } from "../../../redux-toolkit/slices/folders_section_
 
 
 const SessionSection = (props: any): JSX.Element => {
-    const [addToWorkSpaceMessage, setAddToFolderMessage] = useState<boolean>(false);
+    const [addToFolderMessage, setAddToFolderMessage] = useState<boolean>(false);
     const [mergeProcess, setMergeProcess] = useState<iFolderItem | null>(null);
     const [createFolder, setCreateFolder] = useState<boolean>(false);
     const [windowIdWarning, setWindowIdWarning] = useState<number>(-1);
@@ -109,7 +109,13 @@ const SessionSection = (props: any): JSX.Element => {
                         <PrimaryButton 
                             disabled={false} 
                             text="Add to folder" 
-                            onClick={() => setAddToFolderMessage(true)} 
+                            onClick={() => {
+                                if(folderState.length > 0){
+                                    setAddToFolderMessage(true)
+                                } else {
+                                    setCreateFolder(true);
+                                }
+                            }} 
                         />
                     </div>
                 </div>
@@ -298,7 +304,7 @@ const SessionSection = (props: any): JSX.Element => {
                     />
                 )
             }
-            {addToWorkSpaceMessage && showSelector()}
+            {addToFolderMessage && showSelector()}
             {showFolderManager()}
             <SectionContainer fullscreen={false} id="currentSession-view" title="Current session" options={renderOptionsMenu}>
                 {windowList}

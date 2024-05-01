@@ -236,7 +236,7 @@ function SearchResultsContainer(props:any): JSX.Element {
                         <CloseIcon size={34} fill="rgba(0,0,0,0.2)" />
                     </button>
                 </div>
-                <section data-testid="folders-search-result" className="mt-4">
+                <section data-testid="folders-search-result" className="mt-8">
                     <h3 className="uppercase font-bold text-md mb-4 text-tbfColor-darkergrey">Folders</h3>
                     <ul className="list-none">
                         {
@@ -244,7 +244,7 @@ function SearchResultsContainer(props:any): JSX.Element {
                         }
                     </ul>
                 </section>
-                <section data-testid="current-tabs-search-result" className="mt-4">
+                <section data-testid="current-tabs-search-result" className="mt-8">
                     <h3 className="uppercase font-bold text-md mb-4 text-tbfColor-darkergrey">Currently opened</h3>
                     <ul className="list-none">
                         {
@@ -252,7 +252,7 @@ function SearchResultsContainer(props:any): JSX.Element {
                         }
                     </ul>
                 </section>
-                <section data-testid="history-tabs-search-result" className="mt-4">
+                <section data-testid="history-tabs-search-result" className="mt-8">
                     <h3 className="uppercase font-bold text-md mb-4 text-tbfColor-darkergrey">History</h3>
                     <ul className="list-none">
                         {
