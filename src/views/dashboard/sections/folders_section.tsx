@@ -25,6 +25,7 @@ import { createNewFolder, deleteFolder, readAllStorageFolders } from '../../../r
 import { changeSortOption, changeViewMode, markFolder, markMultipleFolders, unMarkAllFolders } from '../../../redux-toolkit/slices/folders_section_slice';
 import purify from '../../../tools/purify_object';
 import { Tabs } from 'jest-chrome/types/jest-chrome';
+import tLaunchBehavior from '../../../interfaces/types/launch_behavior';
 
 
 /*
@@ -50,8 +51,8 @@ const FoldersSection = (props: any): JSX.Element => {
     const [mergeProcess, setMergeProcess] = useState<iFolderItem | null>(null);
     const [showPerformanceWarning, setShowPerformanceWarning] = useState<boolean>(false);
     const [totalTabsCount, setTotalTabsCount] = useState<number>(0);
-    const [windowsPayload, setWindowsPayload] = useState<Array<iWindowItem> | null>(null);
-    const [folderLaunchType, setFolderLaunchType] = useState<string | null>(null); 
+    const [windowsPayload, setWindowsPayload] = useState<Array<iWindowItem>>([]);
+    const [folderLaunchBehavior, setFolderLaunchBehavior] = useState<tLaunchBehavior>("normal"); 
     const [loaded, setLoaded] = useState<boolean>(false);
 
 
@@ -80,9 +81,11 @@ const FoldersSection = (props: any): JSX.Element => {
 
 
     // Decide whether or not to show a warning if the user is about to open too many tabs (set in plugin settings)
-    const evaluatePerformanceWarning = (type: string, windows: Array<iWindowItem>) => {
+    const evaluatePerformanceWarning = (type: tLaunchBehavior, windows: Array<iWindowItem>) => {
         if(!windows) return;
+
         let tabsCount = 0;
+
         windows.forEach((window: iWindowItem) => {
             tabsCount += window.tabs.length;
         });
@@ -90,9 +93,9 @@ const FoldersSection = (props: any): JSX.Element => {
         chrome.storage.local.get("performanceWarningValue", (data) => {
             setTotalTabsCount(data.performanceWarningValue);
             
-            if(data.performanceWarningValue !== -1 && data.performanceWarningValue <= tabsCount) {
+            if(data.performanceWarningValue > -1 && data.performanceWarningValue <= tabsCount) {
                 setShowPerformanceWarning(true);
-                setFolderLaunchType(type);
+                setFolderLaunchBehavior(type);
             } else {
                 handleLaunchFolder(windows, type);
             }
@@ -102,6 +105,7 @@ const FoldersSection = (props: any): JSX.Element => {
     // Delete one or more marked folders
     const handleDeleteFolders = (): void => {
         const { markedFoldersId } = foldersSectionState;
+
         if(folderState && markedFoldersId){
             markedFoldersId.forEach((targetId: number) => {
                 const markedFolderIndex = folderState.findIndex((folder: iFolderItem) => targetId === folder.id);
@@ -111,6 +115,7 @@ const FoldersSection = (props: any): JSX.Element => {
                     
                 }
             });
+
             setShowDeleteWarning(false);
             dispatch(unMarkAllFolders());
         }
@@ -143,18 +148,38 @@ const FoldersSection = (props: any): JSX.Element => {
 
     // Open a specific folder
     const showFolderManager = (): JSX.Element => {
-        let render;
+        let render: JSX.Element;
      
-        if(createFolder === true){
-            render = <FolderManager type="slide-in" title="Create folder" onClose={handleCloseFolderManager} />;
-        } else if(mergeProcess !== null){
-            return <FolderManager type="slide-in" title={`Create folder by merge`} folder={mergeProcess} onClose={handleCloseFolderManager} />
+        if(createFolder){
+            render = (
+                <FolderManager 
+                    type="slide-in" 
+                    title="Create folder" 
+                    onClose={handleCloseFolderManager} 
+                />
+            );
+        } else if(mergeProcess){
+            return (
+                <FolderManager 
+                    type="slide-in" 
+                    title={`Create folder by merge`} 
+                    folder={mergeProcess} 
+                    onClose={handleCloseFolderManager} 
+                />
+            );
         } else {
             const targetFolder: Array<iFolderItem> = folderState.filter((item: iFolderItem) => editFolderId === item.id);
             const input: iFolderItem = {...targetFolder[0]};
 
             if(targetFolder.length > 0){
-                render = <FolderManager type="slide-in" title={`Edit folder ${targetFolder[0].name}`} folder={input} onClose={handleCloseFolderManager} />;
+                render = (
+                    <FolderManager 
+                        type="slide-in" 
+                        title={`Edit folder ${targetFolder[0].name}`} 
+                        folder={input} 
+                        onClose={handleCloseFolderManager} 
+                    />
+                );
             } else {
                 render = <></>;
             }
@@ -177,13 +202,14 @@ const FoldersSection = (props: any): JSX.Element => {
             id: newId,
             name: "",
             desc: "",
-            type: "expanded",
+            display: "expanded",
             viewMode: "grid",
             marked: false,
             windows: [],
         }
 
         let purified = purify(folderState);
+        
         if(purified && markedFoldersId){
             const mergedWindows: Array<iWindowItem> = [];
 
@@ -257,7 +283,10 @@ const FoldersSection = (props: any): JSX.Element => {
         const aNameLowerCase = a.name.toLowerCase();
         const bNameToLowerCase = b.name.toLowerCase();
 
-        return folderSortOptionValue === 0 ? (aNameLowerCase > bNameToLowerCase) : (bNameToLowerCase > aNameLowerCase);
+        const asc = (aNameLowerCase > bNameToLowerCase);
+        const desc = (bNameToLowerCase > aNameLowerCase);
+
+        return folderSortOptionValue === 0 ? asc : desc;
     }
 
     // Delete a folder. Trigger a confirmation warning before execution if set in plugin's settings
@@ -273,7 +302,7 @@ const FoldersSection = (props: any): JSX.Element => {
     }
 
     // Prepare to launch a folder by setting windows to be launched, and how to launch the windows/tabs in it.
-    const handlePrepareLaunchFolder = (windows: Array<iWindowItem>, type: string): void => {
+    const handlePrepareLaunchFolder = (windows: Array<iWindowItem>, type: tLaunchBehavior): void => {
         setWindowsPayload(windows);
         evaluatePerformanceWarning(type, windows);
     }
@@ -303,7 +332,7 @@ const FoldersSection = (props: any): JSX.Element => {
                     onMark={handleMarkFolder} 
                     onEdit={() => setEditFolderId(folder.id)} 
                     key={`folder-item-${folder.id}`} 
-                    type={folder.type} 
+                    display={folder.display} 
                     id={folder.id} 
                     viewMode={foldersSectionState.viewMode} 
                     name={folder.name} 
@@ -317,7 +346,9 @@ const FoldersSection = (props: any): JSX.Element => {
            
         }
 
-        const columnsRender: Array<JSX.Element> = colsList.map((col, i: number) => <div key={`column-key-${i}`}>{col}</div>);
+        const columnsRender: Array<JSX.Element> = colsList.map((col, i: number) => {
+            return <div key={`column-key-${i}`}>{col}</div>
+        });
 
         return columnsRender;
     }, [folderState, sortCondition, foldersSectionState.markedFoldersId])
@@ -449,6 +480,7 @@ const FoldersSection = (props: any): JSX.Element => {
         // Run if there are more than 0 marked folders
         if(markedFoldersId.length > 0) {
             chrome.storage.local.get("duplicationWarningValue", (data) => {
+
                 // If the duplication warning is set in settings, and the number of marked tabs exceeds the threshold, then warn the user
                 if(data.duplicationWarningValue !== -1 && data.duplicationWarningValue <= foldersSectionState.markedFoldersId.length) {
                     setShowDuplicationWarning(true);
@@ -461,7 +493,7 @@ const FoldersSection = (props: any): JSX.Element => {
     }
 
     // Launch folder
-    const handleLaunchFolder = (windows: Array<iWindowItem>, launchType?: string): void => {
+    const handleLaunchFolder = (windows: Array<iWindowItem>, launchType: tLaunchBehavior): void => {
         // Now, prepare a snapshot, where currently opened windows get stored
         let snapshot: Array<chrome.windows.Window> = [];
 
@@ -491,7 +523,7 @@ const FoldersSection = (props: any): JSX.Element => {
             // Close current session after launching the folder. Only applies when
             // set in the plugin's settings
             chrome.storage.local.get("closeSessionAtFolderLaunch", (data) => {
-                if(data.closeSessionAtFolderLaunch === true){
+                if(data.closeSessionAtFolderLaunch){
                     snapshot.forEach((window) => {
                         if(window.id) chrome.windows.remove(window.id);
                     });
@@ -517,9 +549,9 @@ const FoldersSection = (props: any): JSX.Element => {
         }
         
         // Unset all relevant states to prevent interferance with other features once the folder has been launched
-        setWindowsPayload(null);
+        setWindowsPayload([]);
         setShowPerformanceWarning(false);
-        setFolderLaunchType(null);
+        setFolderLaunchBehavior("normal");
     }
     
 
@@ -533,7 +565,9 @@ const FoldersSection = (props: any): JSX.Element => {
                     primaryButton={{ 
                         text: "Yes, open", 
                         callback: () => { 
-                            if(windowsPayload) handleLaunchFolder(windowsPayload, folderLaunchType || undefined); 
+                            if(windowsPayload) {
+                                handleLaunchFolder(windowsPayload, folderLaunchBehavior); 
+                            }
                             setShowPerformanceWarning(false)
                         }
                     }}
@@ -541,7 +575,7 @@ const FoldersSection = (props: any): JSX.Element => {
                         text: "No, do not open", 
                         callback: () => { 
                             setShowPerformanceWarning(false); 
-                            setWindowsPayload(null)}}}    
+                            setWindowsPayload([])}}}    
                 />
             }
 
@@ -554,14 +588,14 @@ const FoldersSection = (props: any): JSX.Element => {
                         callback: () => { 
                             handleDuplicateFolders(); 
                             setShowDuplicationWarning(false)
-                            setFolderLaunchType(null);
+                            setFolderLaunchBehavior("normal");
                         }}
                     }
                     secondaryButton={{ 
                         text: "No, do not duplicate", 
                         callback: () => {
                             setShowDuplicationWarning(false)
-                            setFolderLaunchType(null);
+                            setFolderLaunchBehavior("normal");
                         }
                     }}    
                 />
@@ -592,7 +626,7 @@ const FoldersSection = (props: any): JSX.Element => {
             }
             {showFolderManager()}
         
-            <SectionContainer id="folder-section" title="Folders" options={showOptionsMenu}>
+            <SectionContainer fullscreen={false} id="folder-section" title="Folders" options={showOptionsMenu}>
                 <>
                     {folderState.length === 0 && (
                         <div className="flex flex-col items-center justify-center h-[50%]">

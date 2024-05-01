@@ -18,7 +18,7 @@ import { unMarkAllFolders } from "../../../redux-toolkit/slices/folders_section_
 
 
 const SessionSection = (props: any): JSX.Element => {
-    const [addToWorkSpaceMessage, setAddToFolderMessage] = useState<boolean>(false);
+    const [addToFolderMessage, setAddToFolderMessage] = useState<boolean>(false);
     const [mergeProcess, setMergeProcess] = useState<iFolderItem | null>(null);
     const [createFolder, setCreateFolder] = useState<boolean>(false);
     const [windowIdWarning, setWindowIdWarning] = useState<number>(-1);
@@ -109,7 +109,13 @@ const SessionSection = (props: any): JSX.Element => {
                         <PrimaryButton 
                             disabled={false} 
                             text="Add to folder" 
-                            onClick={() => setAddToFolderMessage(true)} 
+                            onClick={() => {
+                                if(folderState.length > 0){
+                                    setAddToFolderMessage(true)
+                                } else {
+                                    setCreateFolder(true);
+                                }
+                            }} 
                         />
                     </div>
                 </div>
@@ -120,7 +126,6 @@ const SessionSection = (props: any): JSX.Element => {
     const windowList = useMemo((): JSX.Element => {
         const existingWindows = sessionSectionState?.windows;
         const existingWindowsElements: Array<JSX.Element> = existingWindows?.map((item: iWindowItem, i: number) => {
-
             return (
                 <WindowItem 
                     key={`window-item-${i}`} 
@@ -138,7 +143,11 @@ const SessionSection = (props: any): JSX.Element => {
         });
         
         if (existingWindowsElements?.length > 0){
-            return <ul className="list-none">{existingWindowsElements}</ul>;
+            return (
+                <ul className="list-none">
+                    {existingWindowsElements}
+                </ul>
+            );
         } else {
             return (
                 <div className={"flex justify-center items-center"}>
@@ -248,14 +257,29 @@ const SessionSection = (props: any): JSX.Element => {
                 id: randomNumber(),
                 name: "",
                 desc: "",
-                type: "expanded",
+                display: "expanded",
                 viewMode: "grid",
                 marked: false,
                 windows: [...presetWindows],
             }
-            render = <FolderManager type="slide-in" title="Create folder" folder={folderSpecs} onClose={handleCloseFolderManager} />;
+
+            render = (
+                <FolderManager 
+                    type="slide-in" 
+                    title="Create folder" 
+                    folder={folderSpecs} 
+                    onClose={handleCloseFolderManager} 
+                />
+            );
         } else if(mergeProcess !== null) {
-            render = <FolderManager type="slide-in" title={`Merge tabs to ${mergeProcess.name}`} folder={mergeProcess} onClose={handleCloseFolderManager} />;
+            render = (
+                <FolderManager 
+                    type="slide-in" 
+                    title={`Merge tabs to ${mergeProcess.name}`} 
+                    folder={mergeProcess} 
+                    onClose={handleCloseFolderManager} 
+                />
+            );
         }
 
         return render;
@@ -280,9 +304,9 @@ const SessionSection = (props: any): JSX.Element => {
                     />
                 )
             }
-            {addToWorkSpaceMessage && showSelector()}
+            {addToFolderMessage && showSelector()}
             {showFolderManager()}
-            <SectionContainer id="currentSession-view" title="Current session" options={renderOptionsMenu}>
+            <SectionContainer fullscreen={false} id="currentSession-view" title="Current session" options={renderOptionsMenu}>
                 {windowList}
             </SectionContainer>
         </>  

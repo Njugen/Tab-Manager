@@ -45,7 +45,7 @@ const WindowList = (props: IWindowList): JSX.Element => {
         )
     }), [folder]);
     
-    if(createWindow === true && inCreationId > 0){
+    if(createWindow && inCreationId > 0){
         return (
         <>
             {existingWindowsElements} 
@@ -55,7 +55,9 @@ const WindowList = (props: IWindowList): JSX.Element => {
     } else {
         if (existingWindowsElements?.length > 0){
             return (
-                <ul className="w-full list-none">{existingWindowsElements}</ul>
+                <ul className="w-full list-none">
+                    {existingWindowsElements}
+                </ul>
             );
         } else {
             return <p>There are no windows in this folder. Please, create one by clicking the button below.</p>;

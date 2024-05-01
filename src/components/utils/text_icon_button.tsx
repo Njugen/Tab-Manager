@@ -14,7 +14,7 @@ const TextIconButton = (props: iTextIconButton): JSX.Element => {
         <button 
             data-testid={`text-icon-button-${id}`} 
             disabled={disabled} 
-            className={`flex mr-6 items-center disabled:opacity-50 ${disabled === false && opacity_hover_effect}`} 
+            className={`flex mr-6 items-center disabled:opacity-50 ${!disabled && opacity_hover_effect}`} 
             onClick={onClick}
         >
             {children} 

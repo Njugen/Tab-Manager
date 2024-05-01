@@ -16,7 +16,7 @@ import { updateWindowList } from "../../redux-toolkit/slices/folder_management_s
 
 const EditableTabItem = (props: iEditableTabItem): JSX.Element => {
     const { id, windowId, preset, onStop } = props;
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [errorMessage, setErrorMessage] = useState<string>("");
     const fieldRef = useRef<HTMLInputElement>(null);
 
     const dispatch = useDispatch();
@@ -24,12 +24,12 @@ const EditableTabItem = (props: iEditableTabItem): JSX.Element => {
     // Show error message, and prevent saving if field is invalid.
     // Save to redux store if valid.
     const saveToStore = (e: any): void => {
-        const tabId = id ? id : randomNumber();
+        const tabId = id || randomNumber();
 
         if(!verifyValue(e.target.value)){
             setErrorMessage("A tab needs to have a valid URL, e.g. https://google.com/...");
         } else {
-            setErrorMessage(null);
+            setErrorMessage("");
             
             const tab: iTabItem = {
                 id: tabId,
@@ -62,7 +62,7 @@ const EditableTabItem = (props: iEditableTabItem): JSX.Element => {
                 autoFocus 
                 ref={fieldRef} 
                 type="text" 
-                defaultValue={preset ? preset : "https://"}
+                defaultValue={preset || "https://"}
                 onBlur={handleBlur}
                 onKeyDown={handleKeyDown}
                 className={`${predef.textfield_full} h-[46px] px-3 py-6 w-full text-lg text-tbfColor-darkergrey rounded-lg border border-tbfColor-middlegrey4`} 

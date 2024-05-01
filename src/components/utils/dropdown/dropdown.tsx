@@ -21,17 +21,6 @@ const Dropdown = (props: iDropdown): JSX.Element => {
     // Reference to dropdown selector container
     const dropdownRef = useRef<HTMLDivElement>(null);
 
-    // Show or hide sub menu based on state by sliding down the menu.
-    // The sliding effect is delayed to allow certain states to take effect
-    const handleShowSubMenu = (): void => {
-        if(showSubMenuContainer === false){
-            setShowSubMenuContainer(true);
-        } else {
-            setShowSubMenuContainer(false);
-        }
-    
-    }
-
     // Trigger once an option has been selected
     const handleSelect = (id: number): void => {
         setSelected(id);
@@ -56,7 +45,7 @@ const Dropdown = (props: iDropdown): JSX.Element => {
 
     useEffect(() => {
         // Listen for clicks at all time and determine whether or not the dropdown menu should be shown/hidden
-        if(showSubMenuContainer === true) {
+        if(showSubMenuContainer) {
             window.addEventListener("click", handleWindowClick);
         }
 
@@ -66,12 +55,12 @@ const Dropdown = (props: iDropdown): JSX.Element => {
     }, [showSubMenuContainer]);
 
     
-    const dropdownBorderCSS = (showSubMenuContainer === true ? " border-tbfColor-lightpurple" : "border-tbfColor-middlegrey4");
+    const dropdownBorderCSS = (showSubMenuContainer ? " border-tbfColor-lightpurple" : "border-tbfColor-middlegrey4");
     const optionsProps: iGetSelectedOptionProps = { options, preset, selected };
 
     return (
         <div role="menu" ref={dropdownRef} className={`hover:cursor-pointer bg-white relative text-sm w-full text-tbfColor-darkergrey rounded-lg h-[2.75rem] border transition-all duration-75 ${dropdownBorderCSS}`}>
-            <div data-testid={`${tag}-selector`} id={`${tag}-selector`} className="flex items-center justify-between mx-3 h-full" onClick={handleShowSubMenu}>          
+            <div data-testid={`${tag}-selector`} id={`${tag}-selector`} className="flex items-center justify-between mx-3 h-full" onClick={() => setShowSubMenuContainer((prev) => !prev)}>          
                 <button className="hover:cursor-pointer">
                     { getSelectedOption(optionsProps) ? getSelectedOption(optionsProps).label : preset.label }
                 </button>
@@ -79,8 +68,8 @@ const Dropdown = (props: iDropdown): JSX.Element => {
                     <CollapseIcon size={28} fill={"#000"} />
                 </RotationEffect>
             </div>
-            <div className={`transition duration-75 ${showSubMenuContainer === true ? "ease-in opacity-100" : "ease-out opacity-0"}`}>
-                { showSubMenuContainer === true && <DropdownMenu tag={tag} options={options} selected={selected} onSelect={handleSelect} />}
+            <div className={`transition duration-75 ${showSubMenuContainer ? "ease-in opacity-100" : "ease-out opacity-0"}`}>
+                { showSubMenuContainer && <DropdownMenu tag={tag} options={options} selected={selected} onSelect={handleSelect} />}
             </div>
         </div>
     ); 

@@ -15,7 +15,7 @@ const WindowManager = (props: iWindowManager): JSX.Element => {
     const [createWindow, setCreateWindow] = useState<boolean>(false);
     const [inCreationId, setIncreationId] = useState<number>(-1);
 
-    const folderManagementState: iFolderItem | null = useSelector((state: any) => state.folderManagement);
+    const folderManagementState: iFolderItem = useSelector((state: any) => state.folderManagement);
 
     
     const windowCreationProcess = (on: boolean): void => {
@@ -40,7 +40,7 @@ const WindowManager = (props: iWindowManager): JSX.Element => {
 
     return (
         <div className="py-6 min-h-[200px] flex flex-col items-center justify-center">
-            {folderManagementState && <WindowList folder={folderManagementState} createWindow={createWindow} inCreationId={inCreationId} />}
+            <WindowList folder={folderManagementState} createWindow={createWindow} inCreationId={inCreationId} />
             { 
                 <div className="flex flex-row mt-10">
                     <PrimaryButton disabled={false} text="New window" onClick={handleCreateWindow} />            

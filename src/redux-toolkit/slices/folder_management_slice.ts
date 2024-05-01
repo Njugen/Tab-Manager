@@ -10,7 +10,7 @@ const initialState: iFolderItem = {
     name: "",
     desc: "",
     marked: false,
-    type: "collapsed",
+    display: "collapsed",
     viewMode: "list",
     windows: []
 };

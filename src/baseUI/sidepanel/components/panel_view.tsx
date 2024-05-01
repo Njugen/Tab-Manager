@@ -30,17 +30,17 @@ const PanelView = (props: iPanelView): JSX.Element => {
     } 
     }
 
-    if(view === "folders-view"){
+    if(view === "folders"){
         component = <FoldersView />
-    } else if(view === "current-session-view"){
+    } else if(view === "session"){
         component = <SessionView />
-    } else if(view === "history-view"){
+    } else if(view === "history"){
         component = <HistoryView />
     }
 
     return(
         <>
-            <CircleButton disabled={false} bgCSSClass={`${showScrollUpButton === true ? "block" : "hidden"} transition-all bg-tbfColor-lightpurple shadow-xl fixed bottom-24 right-2 z-[10000]`} onClick={() => window.scrollTo({ top: 0, left: 0, behavior: "smooth" })}>
+            <CircleButton disabled={false} bgCSSClass={`${showScrollUpButton ? "block" : "hidden"} transition-all bg-tbfColor-lightpurple shadow-xl fixed bottom-24 right-2 z-[10000]`} onClick={() => window.scrollTo({ top: 0, left: 0, behavior: "smooth" })}>
                 <CollapseIcon size={32} fill="#fff" />  
             </CircleButton>
             <main className={`overflow-y-auto px-2 pb-24 pt-2 bg-white min-h-[1000px]`}> 

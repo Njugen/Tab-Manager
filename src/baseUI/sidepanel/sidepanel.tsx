@@ -8,6 +8,9 @@ import ConfigIcon from '../../components/icons/config_icon';
 import CircleButton from '../../components/utils/circle_button';
 import CollapseIcon from '../../components/icons/collapse_icon';
 import PanelView from './components/panel_view';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { setPanelView } from '../../redux-toolkit/slices/sidepanel_slice';
 
 /*
   Base template for the plugin's side panel.
@@ -20,9 +23,13 @@ import PanelView from './components/panel_view';
 */
 
 function SidePanel(props: any): JSX.Element {
-    const [view, setView] = useState<string>("folders-view");
     const [keyword, setKeyword] = useState<string>("");
-    
+
+    const sidepanelState = useSelector((state: any) => state.sidepanel);
+    const { view } = sidepanelState;
+
+    const dispatch = useDispatch();
+
     let activeNavButtonCSS = "text-tbfColor-lightpurple font-semibold";
     let inactiveNavButtonCSS = "text-gray-400 hover:text-tbfColor-lighterpurple transition ease-in-out duration-300 font-semibold";
 
@@ -38,9 +45,9 @@ function SidePanel(props: any): JSX.Element {
                     <SimpleSearchBar onChange={handleSearchBarChange} />
                 </section>
                 <nav className="flex justify-between mt-8">
-                    <button onClick={() => setView("folders-view")} className={view === "folders-view" ? activeNavButtonCSS : inactiveNavButtonCSS}>Folders</button>
-                    <button onClick={() => setView("current-session-view")} className={view === "current-session-view" ? activeNavButtonCSS : inactiveNavButtonCSS}>Current session</button>
-                    <button onClick={() => setView("history-view")} className={view === "history-view" ? activeNavButtonCSS : inactiveNavButtonCSS}>History</button>
+                    <button onClick={() => dispatch(setPanelView("folders"))} className={view === "folders" ? activeNavButtonCSS : inactiveNavButtonCSS}>Folders</button>
+                    <button onClick={() => dispatch(setPanelView("session"))} className={view === "session" ? activeNavButtonCSS : inactiveNavButtonCSS}>Current session</button>
+                    <button onClick={() => dispatch(setPanelView("history"))} className={view === "history" ? activeNavButtonCSS : inactiveNavButtonCSS}>History</button>
                 </nav>
             </div>
             {!keyword && <PanelView view={view} />}

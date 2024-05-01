@@ -497,7 +497,7 @@ describe("Edit folder: Test <FolderManager> with prefilled values", () => {
         name: randomNumber().toString(),
         desc: randomNumber().toString(),
         marked: false,
-        type: "collapsed",
+        display: "collapsed",
         viewMode: "list",
         windows: []
     }

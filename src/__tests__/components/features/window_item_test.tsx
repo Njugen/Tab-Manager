@@ -13,6 +13,7 @@ import { combineReducers } from "redux";
 import thunk from "redux-thunk";
 import * as reactRedux from "react-redux"
 import { configureStore } from "@reduxjs/toolkit";
+import tBrowserTabId from "../../../interfaces/types/browser_tab_id";
 
 
 const mockWindow: iWindowItem = {
@@ -21,9 +22,9 @@ const mockWindow: iWindowItem = {
     tabsCol: 2
 }
 
-const mockMarkTabFn = jest.fn((tabId: number | string, checked: boolean): void | undefined => {});
-const mockEditTabFn = jest.fn((tabId: number | string): void | undefined => {})
-const mockOnCloseFn = jest.fn((tabId: number | string): void | undefined => {})
+const mockMarkTabFn = jest.fn((tabId: tBrowserTabId, checked: boolean): void | undefined => {});
+const mockEditTabFn = jest.fn((tabId: tBrowserTabId): void | undefined => {})
+const mockOnCloseFn = jest.fn((tabId: tBrowserTabId): void | undefined => {})
 
 // Set up tabs
 for(let i = 0; i < 10; i++){
@@ -361,7 +362,7 @@ describe("Test <WindowItem>", () => {
         });
 
         test("Clicking delete button will trigger onDeleteT callback (when editing outside folder state context)", () => {
-            const tabDeleteFn = jest.fn(((ids: Array<number | string>) => {}));
+            const tabDeleteFn = jest.fn(((ids: Array<tBrowserTabId>) => {}));
 
             render(
                 <Provider store={store}>

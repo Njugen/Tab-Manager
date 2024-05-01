@@ -84,26 +84,26 @@ const OptionsPage = (props: any): JSX.Element => {
 
   // Expand/collapse sidebar, and save the information to localStorage
   const handleSidebarExpandButton = (): void => {
-    setSidebarExpanded(sidebarExpanded === true ? false : true);
+    setSidebarExpanded((prev) => !prev);
     localStorage.setItem("expanded_sidebar", localStorage["expanded_sidebar"] === "true" ? "false" : "true");
   }
 
   return (
     <>       
-      <CircleButton disabled={false} bgCSSClass={`${showScrollUpButton === true ? "block" : "hidden"} transition-all bg-tbfColor-lightpurple shadow-xl fixed bottom-8 right-8 z-[10000]`} onClick={() => window.scrollTo({ top: 0, left: 0, behavior: "smooth" })}>
+      <CircleButton disabled={false} bgCSSClass={`${showScrollUpButton ? "block" : "hidden"} transition-all bg-tbfColor-lightpurple shadow-xl fixed bottom-8 right-8 z-[10000]`} onClick={() => window.scrollTo({ top: 0, left: 0, behavior: "smooth" })}>
           <CollapseIcon size={32} fill="#fff" />  
       </CircleButton>
       <div className="flex h-full w-full relative bg-gray-50">
-        <aside id="sidebar" className={`drop-shadow-md h-[calc(100vh)] transition-all sticky top-0 self-start ${sidebarExpanded === true ? `w-[220px]` : `w-[70px]`} items-end flex flex-col justify-between border-tbfColor-middlegrey bg-white`}>
+        <aside id="sidebar" className={`drop-shadow-md h-[calc(100vh)] transition-all sticky top-0 self-start ${sidebarExpanded ? `w-[220px]` : `w-[70px]`} items-end flex flex-col justify-between border-tbfColor-middlegrey bg-white`}>
             <nav className="w-full px-2 overflow-hidden">
               {
-                sidebarExpanded === true ? 
+                sidebarExpanded ? 
                 <ExpandedSidebarNav active={activeNavLink} onSetActive={setActiveNavLink} /> 
                 : <CollapsedSidebarNav active={activeNavLink} onSetActive={setActiveNavLink} />
               }
             </nav>
-            <button className={`flex justify-center bottom-0 right-0 float-right h-6 ${sidebarExpanded === true ? "w-full" : "w-full"} bg-tbfColor-middlegrey2 hover:opacity-70 transition-all ease-in`} onClick={handleSidebarExpandButton}>
-              {sidebarExpanded === true ? <LeftIcon size={20} fill="#828282" /> : <RightIcon size={20} fill="#828282" />}
+            <button className={`flex justify-center bottom-0 right-0 float-right h-6 ${sidebarExpanded ? "w-full" : "w-full"} bg-tbfColor-middlegrey2 hover:opacity-70 transition-all ease-in`} onClick={handleSidebarExpandButton}>
+              {sidebarExpanded ? <LeftIcon size={20} fill="#828282" /> : <RightIcon size={20} fill="#828282" />}
             </button>  
         </aside>
     

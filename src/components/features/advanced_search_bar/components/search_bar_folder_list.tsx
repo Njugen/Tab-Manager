@@ -2,11 +2,12 @@ import { iFolderItem } from '../../../../interfaces/folder_item';
 import { iWindowItem } from '../../../../interfaces/window_item';
 import FolderItem from '../../folder_item/folder_item';
 import { filterFoldersByString } from '../../../../tools/tab_filters';
-
+import tLaunchBehavior
+ from '../../../../interfaces/types/launch_behavior';
 interface iSearchBarFolderListProps {
     items: Array<iFolderItem>,
     keyword: string,
-    handleOpen: (windows: Array<iWindowItem>, type: string) => void
+    handleOpen: (windows: Array<iWindowItem>, type: tLaunchBehavior) => void
 }
 
 // Render all filtered folders
@@ -25,18 +26,24 @@ const SearchBarFolderList = (props: iSearchBarFolderListProps): JSX.Element => {
                 id={id!} 
                 name={name} 
                 viewMode={"list"} 
-                type={"collapsed"} 
+                display={"collapsed"} 
                 desc={desc} 
                 windows={windows} 
                 onOpen={handleOpen} 
             />
         });
 
-        return <ul className="list-none">{list}</ul>
+        return (
+            <ul className="list-none">
+                {list}
+            </ul>
+        )
     }
     
     return (
-        <p className="text-center p-2">There are no results in this section</p>
+        <p className="text-center p-2">
+            There are no results in this section
+        </p>
     );
     
 }

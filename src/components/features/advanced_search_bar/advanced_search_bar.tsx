@@ -12,7 +12,7 @@ import { handleLaunchFolder, iLaunchFolderArgs } from "./functions/handle_launch
 import { SearchResults } from "./components/search_bar_results";
 import PopupMessage from "../../utils/popup_message";
 import { RootState } from "../../../redux-toolkit/store";
-
+import tLaunchBehavior from "../../../interfaces/types/launch_behavior";
 /*
     Search bar placed at the top of the viewport
 
@@ -30,10 +30,10 @@ const AdvancedSearchBar = (props: any): JSX.Element => {
     const [keyword, setkeyword] = useState<string>("");
 
     // Place a set of windows on hold (e.g. for an upcoming event like launching etc)
-    const [windowsPayload, setWindowsPayload] = useState<Array<iWindowItem> | null>(null);
+    const [windowsPayload, setWindowsPayload] = useState<Array<iWindowItem>>([]);
     
     // Setting for how to launch a folder (normally, as a group or incognito?)
-    const [folderLaunchType, setFolderLaunchType] = useState<string | null>(null);
+    const [folderLaunchBehavior, setFolderLaunchBehavior] = useState<tLaunchBehavior>("normal");
 
     // Setting for whether or not to show a warning message when opening too many
     const [showPerformanceWarning, setShowPerformanceWarning] = useState<boolean>(false);
@@ -52,12 +52,12 @@ const AdvancedSearchBar = (props: any): JSX.Element => {
     // Wait a moment before applying slide down effect
     const handleSlideDown = (status: boolean) => {
         if(keyword.length === 0) {
-            if(status === true){
+            if(status){
                 searchFieldRef.current!.value = "";
             }
         }
 
-        if(status === true){
+        if(status){
             setTimeout(() => {
                 if(searchResultsContainerRef.current){
                     searchResultsContainerRef.current.classList.remove("mt-10");
@@ -65,7 +65,7 @@ const AdvancedSearchBar = (props: any): JSX.Element => {
                 }
             }, 50);
   
-            document.body.style.overflowX = "hidden";
+           // document.body.style.overflow = "hidden";
         }
         setSlideDown(status);
     } 
@@ -74,7 +74,7 @@ const AdvancedSearchBar = (props: any): JSX.Element => {
     const handleShowResultsArgs: iHandleShowResultsContainerArgs = { searchResultsContainerRef , showResultsContainer, slideDown, handleSlideDown, setShowResultsContainer }
 
     // Args to be passed to handleLaunchFolder()
-    const handleLaunchFolderArgs: iLaunchFolderArgs = { folderLaunchType, windowsPayload, setWindowsPayload, setFolderLaunchType, setShowPerformanceWarning }
+    const handleLaunchFolderArgs: iLaunchFolderArgs = { folderLaunchBehavior, windowsPayload, setWindowsPayload, setFolderLaunchBehavior, setShowPerformanceWarning }
 
     const clickListener = useCallback((e: any): void => {
         handleWindowClick({ e, handleShowResultsArgs });
@@ -84,9 +84,10 @@ const AdvancedSearchBar = (props: any): JSX.Element => {
         // Listen for clicks in the viewport. Used primarily to hide the search results
         // once the user clicks outside the searchfield AND the results area
 
-        if(showResultsContainer === true){
+        if(showResultsContainer){
             window.addEventListener("click", clickListener);
         }
+        
         return () => {
             window.removeEventListener("click", clickListener);
         }
@@ -94,7 +95,7 @@ const AdvancedSearchBar = (props: any): JSX.Element => {
 
 
     // Decide whether or not to launch a folder immediately, OR to show a warning message
-    const evaluatePerformanceWarning = (type: string, windows: Array<iWindowItem>) => {
+    const evaluatePerformanceWarning = (type: tLaunchBehavior, windows: Array<iWindowItem>) => {
         if(!windows) return;
         let tabsCount = 0;
         windows.forEach((window: iWindowItem) => {
@@ -107,16 +108,16 @@ const AdvancedSearchBar = (props: any): JSX.Element => {
                 setShowPerformanceWarning(true);
             } else {
                 handleLaunchFolderArgs.windowsPayload = windows;
-                handleLaunchFolderArgs.folderLaunchType = type;
+                handleLaunchFolderArgs.folderLaunchBehavior = type;
                 handleLaunchFolder(handleLaunchFolderArgs);
             }
         });
     }
 
     // Prepare the windows in a folder for launch, and Instruct the component on how to launch the folder
-    const handlePrepareLaunchFolder = (windows: Array<iWindowItem>, type: string): void => {
+    const handlePrepareLaunchFolder = (windows: Array<iWindowItem>, type: tLaunchBehavior): void => {
         setWindowsPayload(windows);
-        setFolderLaunchType(type);
+        setFolderLaunchBehavior(type);
         evaluatePerformanceWarning(type, windows);
     }
 
@@ -131,7 +132,7 @@ const AdvancedSearchBar = (props: any): JSX.Element => {
                         callback: () => { 
                             if(windowsPayload) {
                                 handleLaunchFolderArgs.windowsPayload = windowsPayload;
-                                handleLaunchFolderArgs.folderLaunchType = folderLaunchType;
+                                handleLaunchFolderArgs.folderLaunchBehavior = folderLaunchBehavior;
                                 handleLaunchFolder(handleLaunchFolderArgs);
                             }
                             setShowPerformanceWarning(false)
@@ -141,7 +142,7 @@ const AdvancedSearchBar = (props: any): JSX.Element => {
                         text: "No, do not open", 
                         callback: () => { 
                             setShowPerformanceWarning(false); 
-                            setWindowsPayload(null)}}}     
+                            setWindowsPayload([])}}}     
                 />
             }
             <div className="mt-8 flex justify-center">
@@ -160,7 +161,7 @@ const AdvancedSearchBar = (props: any): JSX.Element => {
                     />
                 </div>
                 {   
-                    slideDown === true && 
+                    slideDown && 
                     (
                         <section data-testid="search-results-area" id="search-results-area" className={`bg-black bg-opacity-50 w-screen h-full top-0 bg-[rgba-] absolute z-500 left-0 flex justify-center`}>
                             <div ref={searchResultsContainerRef} className={`bg-white absolute p-6 ml-16 mt-10 transition-all ease-in duration-75 overflow-hidden w-7/12 z-10 rounded-lg drop-shadow-[0_3px_2px_rgba(0,0,0,0.15)]`}>

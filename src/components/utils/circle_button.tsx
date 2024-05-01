@@ -11,7 +11,7 @@ const CircleButton = (props: iCircleButton) => {
     return (
         <button 
             disabled={disabled}
-            className={`${bgCSSClass} m-1 p-3 disabled:bg-tbfColor-middlegrey3 disabled:hover:disabled:bg-tbfColor-middlegrey3 disabled:opacity-50 rounded-full inline-flex justify-center items-center ${disabled === false && styles.opacity_hover_effect}`} 
+            className={`${bgCSSClass} m-1 p-3 disabled:bg-tbfColor-middlegrey3 disabled:hover:disabled:bg-tbfColor-middlegrey3 disabled:opacity-50 rounded-full inline-flex justify-center items-center ${!disabled && styles.opacity_hover_effect}`} 
             onClick={onClick}
         >
             {children}

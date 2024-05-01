@@ -14,12 +14,12 @@ const handleWindowClick = (args: iHandleWindowClickArgs): void => {
 
     const { target } = e;
 
-    if(showResultsContainer === false || !target.parentElement || !target.parentElement.parentElement) return;
+    if(!showResultsContainer || !target.parentElement || !target.parentElement.parentElement) return;
     
     const searchFieldId = "search-field";
     const searchResultsContainerId = "search-results-area";
 
-    if(target.id.includes(searchFieldId) === false && target.id.includes(searchResultsContainerId) === true){
+    if(!target.id.includes(searchFieldId) && target.id.includes(searchResultsContainerId)){
         handleShowResultsContainer(handleShowResultsArgs);
     }
 }

@@ -7,6 +7,7 @@ import { forwardRef, useEffect, useState } from "react";
 import iHistoryState from "../../../interfaces/states/history_state";
 import iHistoryTabGroupsSection from '../../../interfaces/history_tab_groups_section';
 import { markMultipleTabs, markTab, setUpTabs } from "../../../redux-toolkit/slices/history_section_slice";
+import tBrowserTabId from "../../../interfaces/types/browser_tab_id";
 
 /*
     Component which displays browsing history pulled straight from the browser api.
@@ -16,7 +17,6 @@ import { markMultipleTabs, markTab, setUpTabs } from "../../../redux-toolkit/sli
 const HistoryTabGroupsSection = forwardRef(function HistoryTabGroupsSection(props: iHistoryTabGroupsSection, ref: any): JSX.Element {
     const { viewMode, tabs } = props;
     const [snapshot, setSnapshot] = useState<string>("");
-
 
     const dispatch = useDispatch();
     const historySectionState: iHistoryState = useSelector((state: any) => state.historySection);
@@ -94,7 +94,7 @@ const HistoryTabGroupsSection = forwardRef(function HistoryTabGroupsSection(prop
         searchHistory();
     }
 
-    const handleMarkTab = (id: number | string): void => {
+    const handleMarkTab = (id: tBrowserTabId): void => {
         const tabCollection: Array<chrome.history.HistoryItem> = historySectionState.tabs;
         const markedTabs: Array<chrome.history.HistoryItem> = historySectionState.markedTabs;
 
@@ -123,7 +123,6 @@ const HistoryTabGroupsSection = forwardRef(function HistoryTabGroupsSection(prop
             
 
             if(lastVisitTime){
-                const visitedTimeAsDate = lastVisitTime;
                 const diff: number = (Date.now() - (lastVisitTime))/1000/60; // in min
                 const minutes = Math.floor(diff)
 
@@ -151,12 +150,6 @@ const HistoryTabGroupsSection = forwardRef(function HistoryTabGroupsSection(prop
         return Array.from(groups);
     }
 
-    const handleClose = (url: string): void => {
-        chrome.history.deleteUrl({
-            url: url
-        })
-    }
-
     return (
         <div className="flex justify-center min-h-[350px]">
             <div className="w-full">
@@ -166,7 +159,6 @@ const HistoryTabGroupsSection = forwardRef(function HistoryTabGroupsSection(prop
                             <>
                                 { 
                                     organizeGroups().map((group: any, i: number): JSX.Element => {
-
                                             return (
                                                 <Group key={`group-${i}`} desc={`${group[0]} minutes ago`}>
                                                     <ul className="list-none">
@@ -185,8 +177,7 @@ const HistoryTabGroupsSection = forwardRef(function HistoryTabGroupsSection(prop
                                                         )}
                                                     </ul>
 
-                                                </Group>
-                                                
+                                                </Group> 
                                             );
                                         }
                                     )

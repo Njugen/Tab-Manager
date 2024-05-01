@@ -14,6 +14,7 @@ import PopupMessage from '../../components/utils/popup_message';
 import { setUpWindows } from "../../redux-toolkit/slices/session_section_slice";
 import { unMarkAllFolders } from "../../redux-toolkit/slices/folders_section_slice";
 import { unMarkAllTabs } from "../../redux-toolkit/slices/history_section_slice";
+import { setIsEditFolderInPanel } from "../../redux-toolkit/slices/sidepanel_slice";
 
 
 const SessionView = (props:any): JSX.Element => {
@@ -24,6 +25,7 @@ const SessionView = (props:any): JSX.Element => {
     const [windowIdWarning, setWindowIdWarning] = useState<number>(-1);
 
     const folderState: Array<iFolderItem> = useSelector((state: any) => state.folder);
+
     const dispatch = useDispatch();
     const sessionSectionState: any = useSelector((state: any) => state.sessionSection);
 
@@ -79,11 +81,13 @@ const SessionView = (props:any): JSX.Element => {
 
         dispatch(unMarkAllTabs());
         dispatch(unMarkAllFolders());
+        dispatch(setIsEditFolderInPanel(false))
     }
 
     const handleAddToNewFolder = (): void => {
         setAddToFolderMessage(false);
         setCreateFolder(true);
+        dispatch(setIsEditFolderInPanel(true))
     }
 
     const handleAddToExistingFolder = (e: any): void => {
@@ -121,6 +125,7 @@ const SessionView = (props:any): JSX.Element => {
             if(targetFolder){
                 setAddToFolderMessage(false);
                 setMergeProcess(updatedFolder);
+                dispatch(setIsEditFolderInPanel(true))
             }
         } 
     }
@@ -129,7 +134,10 @@ const SessionView = (props:any): JSX.Element => {
         const currentFolders: Array<iFolderItem> = folderState;
 
         const options: Array<iFieldOption> = currentFolders.map((folder) => {
-            return { value: folder.id, label: folder.name }
+            return { 
+                value: folder.id, 
+                label: folder.name 
+            }
         });
 
         const dropdownOptions: Array<iFieldOption> = [
@@ -153,7 +161,7 @@ const SessionView = (props:any): JSX.Element => {
     }
 
     const renderFolderManager = (): JSX.Element => {
-        let render = <></>;
+        let render: JSX.Element = <></>;
 
         if(createFolder === true){
             const presetWindows: Array<iWindowItem> = sessionSectionState.windows.map((window: chrome.windows.Window) => {
@@ -180,15 +188,29 @@ const SessionView = (props:any): JSX.Element => {
                 id: randomNumber(),
                 name: "",
                 desc: "",
-                type: "expanded",
+                display: "expanded",
                 viewMode: "grid",
                 marked: false,
                 windows: [...presetWindows],
             }
-            render = <FolderManager type="slide-in" title="Create folder" folder={folderSpecs} onClose={handlePopupClose} />;
-        } else if(mergeProcess !== null) {
 
-            render = <FolderManager type="slide-in" title={`Merge tabs to ${mergeProcess.name}`} folder={mergeProcess} onClose={handlePopupClose} />;
+            render = (
+                <FolderManager 
+                    type="slide-in" 
+                    title="Create folder" 
+                    folder={folderSpecs} 
+                    onClose={handlePopupClose} 
+                />
+            );
+        } else if(mergeProcess !== null) {
+            render = (
+                <FolderManager 
+                    type="slide-in" 
+                    title={`Merge tabs to ${mergeProcess.name}`} 
+                    folder={mergeProcess} 
+                    onClose={handlePopupClose} 
+                />
+            );
         }
 
         return render;
@@ -263,7 +285,13 @@ const SessionView = (props:any): JSX.Element => {
                 <CircleButton 
                     disabled={false} 
                     bgCSSClass="bg-tbfColor-lightpurple" 
-                    onClick={() => setAddToFolderMessage(true)}
+                    onClick={() => {
+                        if(folderState.length > 0){
+                            setAddToFolderMessage(true)
+                        } else {
+                            setCreateFolder(true);
+                        }
+                    }}
                 >
                     <SaveIcon size={20} fill={"#fff"} />
                 </CircleButton>

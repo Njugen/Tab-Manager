@@ -17,6 +17,7 @@ import { changeShowFolderChangeWarning } from "../../../redux-toolkit/slices/plu
 import { setIsEditingTab } from "../../../redux-toolkit/slices/misc_slice";
 import { createNewFolder, saveFolder } from "../../../redux-toolkit/slices/folder_slice";
 import purify from "../../../tools/purify_object";
+import { setPanelView } from "../../../redux-toolkit/slices/sidepanel_slice";
 /*
     A popup providing oversight of a folder's settings and available windows/tabs.
     The settings may be changed by the user, which then gets saved to redux storage
@@ -46,6 +47,7 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
     const folderState: Array<iFolderItem> = useSelector((state: RootState) => state.folder);
     const pluginSettingsState: iPluginSettings = useSelector((state: RootState) => state.pluginSettings);
     const folderManagementState: any = useSelector((state: RootState) => state.folderManagement);
+    const sidepanelState = useSelector((state: any) => state.sidepanel);
 
     useEffect(() => {
         // Information about the folder. If undefined, there are no preset information
@@ -62,7 +64,7 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
                 id: randId,
                 name: "",
                 desc: "",
-                type: "expanded",
+                display: "expanded",
                 viewMode: "grid",
                 marked: false,
                 windows: [],
@@ -71,7 +73,8 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
         }
 
         // Track the preset windows of this payload. Used to track new/removed windows
-        setOriginWindows(JSON.stringify(folderSpecs.windows));
+        const windowsString = JSON.stringify(folderSpecs.windows);
+        setOriginWindows(windowsString);
 
         // Tell redux this popup is active and a create/edit process is ongoing.
         dispatch(setUpFolder(folderSpecs));
@@ -94,7 +97,7 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
         const inEditWindows: string = purify(folderManagementState)?.windows;
         const listChanged: boolean = windowListChanged(originWindows, inEditWindows);
 
-        if(listChanged === true){
+        if(listChanged){
             setModified(true);
         }
     }, [folderManagementState]);
@@ -105,14 +108,13 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
     const handleChangeField = (key: string, value: string): void => {
         if(!folderManagementState) {
             return;
-        } else if(modified === false && folderManagementState[key] !== value){
+        } else if(!modified && folderManagementState[key] !== value){
             setModified(true);
         } 
 
-        // Inform redux about the field change
+        // Inform redux about the field change regardless of whether or not local state has been modified or not
         if(folderManagementState[key] !== value) dispatch(updateFolder([key, value]));
     }
-
 
 
     // Read the updated form changes from redux, and determine
@@ -134,18 +136,21 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
             updatedFieldState.windows = true;
         } 
         
-        if(updatedFieldState.name === false && updatedFieldState.windows === false){
+        if(!updatedFieldState.name && !updatedFieldState.windows){
             callback();
         } else {
             setInValidFields({...updatedFieldState});
-            if(managerWrapperRef.current) managerWrapperRef.current.scrollTo({ top: 0, behavior: "smooth" })
+
+            if(managerWrapperRef.current) {
+                managerWrapperRef.current.scrollTo({ top: 0, behavior: "smooth" })
+            }
         }
     }
 
     // Perform tasks and close this form popup
     const handleClose = (skipWarning?: boolean): void => {
         chrome.storage.local.get("showFolderChangeWarning", (data) => {
-            if((modified === true && skipWarning !== true) && data.showFolderChangeWarning === true){
+            if((modified && !skipWarning) && data.showFolderChangeWarning === true){
                 // Show a warning when a form has been modified AND when settings explicitly permits it.
                 dispatch(changeShowFolderChangeWarning(true));
             } else {
@@ -156,12 +161,10 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
                 setOriginWindows("");
                 setIsCreate(false);
                 
-                document.body.style.overflowY = "auto";
-                document.body.style.overflowX = "auto";
-
+                document.body.style.overflow = "auto";
                 
-                    dispatch(setIsEditingTab(false));
-                    onClose()
+                dispatch(setIsEditingTab(false));
+                onClose()
                
             }
         })
@@ -169,8 +172,7 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
 
     // Validate and save the data to redux, then close the popup form.
     const handleSave = (): void => {
-        document.body.style.overflowY = "hidden";
-        document.body.style.overflowX = "hidden";
+        document.body.style.overflow = "hidden";
         validateForm(() => {
             if(props.folder){
                 // Find out if process is merge or edit
@@ -186,7 +188,10 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
                 dispatch(createNewFolder(folderManagementState));
             }   
 
-            
+            if(sidepanelState.isEditFolderInPanel){
+                dispatch(setPanelView("folders"));
+            }
+        
             handleClose(true);
         });
        
@@ -194,7 +199,7 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
 
     // Close error/warning messages, but remain in the popup
     const handleKeepEditing = (): void => {
-        document.body.style.overflowY = "hidden";
+        document.body.style.overflow = "hidden";
         dispatch(changeShowFolderChangeWarning(false))
     }
 
@@ -204,13 +209,13 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
     }
 
     const saveButtonSpecs: any = {
-        label: isCreate === true ? "Create" : "Save",
+        label: isCreate ? "Create" : "Save",
         handler: handleSave
     }
 
     return (
         <>
-            {modified === true && pluginSettingsState?.showFolderChangeWarning === true && 
+            {modified && pluginSettingsState?.showFolderChangeWarning && 
                 <PopupMessage
                     title="Warning" 
                     text="You have made changes to this form. Closing it will result in all changes being lost. Do you want to proceed?"
@@ -247,8 +252,8 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
                 </FormField>
                 <div className={`py-6 flex flex-row items-center`}>
                     <div className="w-full">
-                        <h4 className={`font-semibold text-lg mb-1 ${inValidFields.windows === true && "text-red-500"}`}>Windows and tabs *</h4>
-                        <p className={`text-sm leading-6 text-tbfColor-darkergrey text-start ${inValidFields.windows === true && "text-red-500"}`}>
+                        <h4 className={`font-semibold text-lg mb-1 ${inValidFields.windows && "text-red-500"}`}>Windows and tabs *</h4>
+                        <p className={`text-sm leading-6 text-tbfColor-darkergrey text-start ${inValidFields.windows && "text-red-500"}`}>
                             You may add as windows and tabs to this folder as you like to this folder, although a maximum of 25-30 tabs is recommended. 
                         </p>
                         <WindowManager />

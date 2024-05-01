@@ -14,15 +14,17 @@ import { iFieldOption } from "../../interfaces/dropdown";
 import iFolderState from "../../interfaces/states/folder_state";
 import { deleteFolder, readAllStorageFolders } from "../../redux-toolkit/slices/folder_slice";
 import { changeSortOption, unMarkAllFolders } from "../../redux-toolkit/slices/folders_section_slice";
+import tLaunchBehavior from "../../interfaces/types/launch_behavior";
+import { setIsEditFolderInPanel } from "../../redux-toolkit/slices/sidepanel_slice";
 
 const FoldersView = (props: any): JSX.Element => {
     const [editFolderId, setEditFolderId] = useState<number | null>(null);
-    const [windowsPayload, setWindowsPayload] = useState<Array<iWindowItem> | null>(null);
+    const [windowsPayload, setWindowsPayload] = useState<Array<iWindowItem>>([]);
     const [totalTabsCount, setTotalTabsCount] = useState<number>(0);
     const [showPerformanceWarning, setShowPerformanceWarning] = useState<boolean>(false);
     const [removalTarget, setRemovalTarget] = useState<iFolderItem | null>(null);
     const [createFolder, setCreateFolder] = useState<boolean>(false);
-    const [folderLaunchType, setFolderLaunchType] = useState<string | null>(null); 
+    const [folderLaunchBehavior, setFolderLaunchBehavior] = useState<tLaunchBehavior>("normal"); 
 
     const dispatch = useDispatch();
 
@@ -49,31 +51,33 @@ const FoldersView = (props: any): JSX.Element => {
           }
     }, []);
 
-    const evaluatePerformanceWarning = (type: string, windows: Array<iWindowItem>) => {
+    const evaluatePerformanceWarning = (type: tLaunchBehavior, windows: Array<iWindowItem>) => {
         if(!windows) return;
+
         let tabsCount = 0;
+
         windows.forEach((window: iWindowItem) => {
             tabsCount += window.tabs.length;
         });
    
         chrome.storage.local.get("performanceWarningValue", (data) => {
             setTotalTabsCount(data.performanceWarningValue);
-            if(data.performanceWarningValue !== -1 && data.performanceWarningValue <= tabsCount) {
+            if(data.performanceWarningValue > -1 && data.performanceWarningValue <= tabsCount) {
                 setShowPerformanceWarning(true);
-                setFolderLaunchType(type);
+                setFolderLaunchBehavior(type);
             } else {
                 handleLaunchFolder(windows, type);
             }
         });
     }
 
-    const handlePrepareLaunchFolder = (windows: Array<iWindowItem>, type: string): void => {
+    const handlePrepareLaunchFolder = (windows: Array<iWindowItem>, type: tLaunchBehavior): void => {
         setWindowsPayload(windows);
         evaluatePerformanceWarning(type, windows);
     }
 
     // Launch folder
-    const handleLaunchFolder = (windows: Array<iWindowItem>, launchType?: string): void => {
+    const handleLaunchFolder = (windows: Array<iWindowItem>, launchType?: tLaunchBehavior): void => {
         // Now, prepare a snapshot, where currently opened windows get stored
         let snapshot: Array<chrome.windows.Window> = [];
 
@@ -103,7 +107,7 @@ const FoldersView = (props: any): JSX.Element => {
             // Close current session after launching the folder. Only applies when
             // set in the plugin's settings
             chrome.storage.local.get("closeSessionAtFolderLaunch", (data) => {
-                if(data.closeSessionAtFolderLaunch === true){
+                if(data.closeSessionAtFolderLaunch){
                     snapshot.forEach((window) => {
                         if(window.id) chrome.windows.remove(window.id);
                     });
@@ -129,16 +133,16 @@ const FoldersView = (props: any): JSX.Element => {
         }
 
         // Unset all relevant states to prevent interferance with other features once the folder has been launched
-        setWindowsPayload(null);
+        setWindowsPayload([]);
         setShowPerformanceWarning(false);
-        setFolderLaunchType(null);
+        setFolderLaunchBehavior("normal");
     }
     
     // Open a specific folder
     const renderFolderManagerPopup = (): JSX.Element => {
         let render;
 
-        if(createFolder === true){
+        if(createFolder){
             render = <FolderManager type="slide-in" title="Create folder" onClose={handleCloseFolderManager} />;
         } else {
             const targetFolder: Array<iFolderItem> = folderState.filter((item: iFolderItem) => editFolderId === item.id);
@@ -159,7 +163,6 @@ const FoldersView = (props: any): JSX.Element => {
         const newStatus = e.selected;
 
         saveToStorage("local", "folder_sort", newStatus);
-        
         dispatch(changeSortOption(newStatus));
     }
 
@@ -169,7 +172,10 @@ const FoldersView = (props: any): JSX.Element => {
         const aNameLowerCase = a.name.toLowerCase();
         const bNameToLowerCase = b.name.toLowerCase();
         
-        return folderSortOptionValue === 0 ? (aNameLowerCase > bNameToLowerCase) : (bNameToLowerCase > aNameLowerCase);
+        const asc = (aNameLowerCase > bNameToLowerCase);
+        const desc = (bNameToLowerCase > aNameLowerCase);
+
+        return folderSortOptionValue === 0 ? asc : desc;
     }
 
     const renderSortOptionsDropdown = (): JSX.Element => {
@@ -179,6 +185,7 @@ const FoldersView = (props: any): JSX.Element => {
         ];
 
         const presetOption = optionsList.filter((option: iFieldOption) => option.value === foldersSectionState.folderSortOptionValue);
+        
         return <Dropdown tag="sort-folders" preset={presetOption[0] || optionsList[0]} options={optionsList} onCallback={handleSortFolders} />
     }
 
@@ -205,7 +212,7 @@ const FoldersView = (props: any): JSX.Element => {
                     onEdit={() => setEditFolderId(folder.id)} 
                     index={folderState.length-i}
                     key={`folder-id-${folder.id}`} 
-                    type={folder.type} 
+                    display={folder.display} 
                     id={folder.id} 
                     viewMode="list" 
                     name={folder.name} 
@@ -219,12 +226,11 @@ const FoldersView = (props: any): JSX.Element => {
     }, [folderState, foldersSectionState.folderSortOptionValue]) 
 
     const handleCloseFolderManager = (): void => {
-        //dispatch(clearMarkedFoldersAction());
-        //dispatch(clearInEditFolder());
         dispatch(unMarkAllFolders());
 
         setEditFolderId(null);
         setCreateFolder(false);
+        dispatch(setIsEditFolderInPanel(false))
     }   
 
     return (
@@ -236,14 +242,16 @@ const FoldersView = (props: any): JSX.Element => {
                     primaryButton={{ 
                         text: "Yes, open", 
                         callback: () => { 
-                            if(windowsPayload) handleLaunchFolder(windowsPayload, folderLaunchType || undefined); 
+                            if(windowsPayload) {
+                                handleLaunchFolder(windowsPayload, folderLaunchBehavior || undefined); 
+                            }
                             setShowPerformanceWarning(false)}
                         }}
                     secondaryButton={{ 
                         text: "No, do not open", 
                         callback: () => { 
                             setShowPerformanceWarning(false);
-                            setWindowsPayload(null)
+                            setWindowsPayload([])
                         }}}    
                 />
             }
@@ -272,7 +280,10 @@ const FoldersView = (props: any): JSX.Element => {
                 <CircleButton 
                     disabled={false} 
                     bgCSSClass="bg-tbfColor-lightpurple" 
-                    onClick={() => setCreateFolder(true)}
+                    onClick={() => {
+                        dispatch(setIsEditFolderInPanel(true))
+                        setCreateFolder(true)
+                    }}
                 >
                     <NewFolderIcon size={20} fill={"#fff"} />
                 </CircleButton>

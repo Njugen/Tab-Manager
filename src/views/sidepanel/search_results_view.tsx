@@ -13,11 +13,13 @@ import CloseIcon from "../../components/icons/close_icon";
 import iCurrentSessionState from "../../interfaces/states/current_session_state";
 import styles from "../../styles/global_utils.module.scss";
 import PopupMessage from "../../components/utils/popup_message";
+import { iTabItem } from "../../interfaces/tab_item";
+import tLaunchBehavior from "../../interfaces/types/launch_behavior";
 
 function SearchResultsContainer(props:any): JSX.Element {
     const { keyword, onClose } = props;
     const [windowsPayload, setWindowsPayload] = useState<Array<iWindowItem> | null>(null);
-    const [folderLaunchType, setFolderLaunchType] = useState<string | null>(null); 
+    const [folderLaunchBehavior, setFolderLaunchBehavior] = useState<tLaunchBehavior>("normal"); 
     const [totalTabsCount, setTotalTabsCount] = useState<number>(0);
     const [showPerformanceWarning, setShowPerformanceWarning] = useState<boolean>(false);
     
@@ -25,13 +27,13 @@ function SearchResultsContainer(props:any): JSX.Element {
         onClose();
     }
 
-    const handlePrepareLaunchFolder = (windows: Array<iWindowItem>, type: string): void => {
-        setFolderLaunchType(type);
+    const handlePrepareLaunchFolder = (windows: Array<iWindowItem>, type: tLaunchBehavior): void => {
+        setFolderLaunchBehavior(type);
         setWindowsPayload(windows);
         evaluatePerformanceWarning(type, windows);
     }
 
-    const evaluatePerformanceWarning = (type: string, windows: Array<iWindowItem>) => {
+    const evaluatePerformanceWarning = (type: tLaunchBehavior, windows: Array<iWindowItem>) => {
         if(!windows) return;
         let tabsCount = 0;
         windows.forEach((window: iWindowItem) => {
@@ -43,7 +45,7 @@ function SearchResultsContainer(props:any): JSX.Element {
             
             if(data.performanceWarningValue !== -1 && data.performanceWarningValue <= tabsCount) {
                 setShowPerformanceWarning(true);
-                setFolderLaunchType(type);
+                setFolderLaunchBehavior(type);
             } else {
                 handleLaunchFolder(windows, type);
             }
@@ -51,7 +53,7 @@ function SearchResultsContainer(props:any): JSX.Element {
     }
 
     // Launch folder
-    const handleLaunchFolder = (windows: Array<iWindowItem>, launchType?: string): void => {
+    const handleLaunchFolder = (windows: Array<iWindowItem>, launchBehavior: tLaunchBehavior): void => {
         // Now, prepare a snapshot, where currently opened windows get stored
         let snapshot: Array<chrome.windows.Window> = [];
 
@@ -66,13 +68,13 @@ function SearchResultsContainer(props:any): JSX.Element {
             snapshot = currentWindows;
         });
 
-        if(launchType !== "group"){
+        if(launchBehavior !== "group"){
             // Open all windows in this folder
             windows.forEach((window: iWindowItem, i) => {
                 const windowSettings: chrome.windows.CreateData = {
                     focused: i === 0 ? true : false,
                     url: window.tabs.map((tab) => tab.url),
-                    incognito: launchType === "incognito" ? true : false,
+                    incognito: launchBehavior === "incognito" ? true : false,
                     state: "maximized"
                 }
                 chrome.windows.create(windowSettings);
@@ -109,12 +111,12 @@ function SearchResultsContainer(props:any): JSX.Element {
         // Unset all relevant states to prevent interferance with other features once the folder has been launched
         setWindowsPayload(null);
         setShowPerformanceWarning(false);
-        setFolderLaunchType(null);
+        setFolderLaunchBehavior("normal");
     }
 
     useEffect(() => {
         
-        if(!windowsPayload || !folderLaunchType) return;
+        if(!windowsPayload || !folderLaunchBehavior) return;
 
         let tabsCount = 0;
         
@@ -128,10 +130,10 @@ function SearchResultsContainer(props:any): JSX.Element {
             if(data.performanceWarningValue !== -1 && data.performanceWarningValue <= tabsCount) {
                 setShowPerformanceWarning(true);
             } else {
-                handleLaunchFolder(windowsPayload);
+                handleLaunchFolder(windowsPayload, "normal");
             }
         });
-    }, [folderLaunchType]);
+    }, [folderLaunchBehavior]);
 
     const folderState: Array<iFolderItem> = useSelector((state: any) => state.folder);
     const sessionSectionState: iCurrentSessionState = useSelector((state: any) => state.sessionSection);
@@ -141,21 +143,61 @@ function SearchResultsContainer(props:any): JSX.Element {
     const renderFolders = (): Array<JSX.Element> => {
         const folders = filterFoldersByString(folderState, keyword);
 
-        return folders.map((folder: iFolderItem) => <FolderItem key={`folder-id-${folder.id}`} marked={false} id={folder.id!} name={folder.name} viewMode={"list"} type={"collapsed"} desc={folder.desc} windows={folder.windows} onOpen={handlePrepareLaunchFolder} />);
+        return folders.map((folder: iFolderItem) => {
+            const { id, name, desc, windows } = folder;
+
+            return (
+                <FolderItem 
+                    key={`folder-id-${id}`} 
+                    marked={false} 
+                    id={id!} 
+                    name={name} 
+                    viewMode={"list"} 
+                    display={"collapsed"} 
+                    desc={desc} 
+                    windows={windows} 
+                    onOpen={handlePrepareLaunchFolder} 
+                />
+            )
+        });
     }
 
     // Render all filtered session tabs
     const renderSessionTabs = (): Array<JSX.Element> => {
         const tabs = filterSessionTabsByString(sessionSectionState, keyword);
 
-        return tabs.map((tab) => <TabItem key={`session-tab-id-${tab.id}`} marked={false} id={tab.id!} label={tab.title!} url={tab.url!} onClose={() => handleCloseTab(tab.id!)} />)
+        return tabs.map((tab: chrome.tabs.Tab) => {
+            const { title, id, url } = tab;
+
+            return (
+                <TabItem 
+                    key={`session-tab-id-${id}`} 
+                    marked={false} id={id!} 
+                    label={title!} 
+                    url={url!} 
+                    onClose={() => handleCloseTab(id!)} 
+                />
+            )
+        })
     }
 
     // Render all filtered history tabs
     const renderHistoryTabs = (): Array<JSX.Element> => {
         const tabs = filterHistoryTabsByString(historySectionState, keyword);
 
-        return tabs.map((tab) => <TabItem key={`history-tab-id-${tab.id}`} marked={false} id={parseInt(tab.id)} label={tab.title!} url={tab.url!}  onClose={() => {}} />);
+        return tabs.map((tab: chrome.history.HistoryItem) => {
+            const { id, title, url } = tab;
+            
+            return (
+                <TabItem 
+                    key={`history-tab-id-${id}`} 
+                    marked={false} 
+                    id={parseInt(id)} 
+                    label={title!} 
+                    url={url!} 
+                />
+            );
+        });
     }
 
     // Close a tab
@@ -172,7 +214,7 @@ function SearchResultsContainer(props:any): JSX.Element {
                     primaryButton={{ 
                         text: "Yes, open", 
                         callback: () => { 
-                            if(windowsPayload) handleLaunchFolder(windowsPayload, folderLaunchType || undefined); 
+                            if(windowsPayload) handleLaunchFolder(windowsPayload, folderLaunchBehavior || undefined); 
                             setShowPerformanceWarning(false)
                         }
                     }}
@@ -194,7 +236,7 @@ function SearchResultsContainer(props:any): JSX.Element {
                         <CloseIcon size={34} fill="rgba(0,0,0,0.2)" />
                     </button>
                 </div>
-                <section data-testid="folders-search-result" className="mt-4">
+                <section data-testid="folders-search-result" className="mt-8">
                     <h3 className="uppercase font-bold text-md mb-4 text-tbfColor-darkergrey">Folders</h3>
                     <ul className="list-none">
                         {
@@ -202,7 +244,7 @@ function SearchResultsContainer(props:any): JSX.Element {
                         }
                     </ul>
                 </section>
-                <section data-testid="current-tabs-search-result" className="mt-4">
+                <section data-testid="current-tabs-search-result" className="mt-8">
                     <h3 className="uppercase font-bold text-md mb-4 text-tbfColor-darkergrey">Currently opened</h3>
                     <ul className="list-none">
                         {
@@ -210,7 +252,7 @@ function SearchResultsContainer(props:any): JSX.Element {
                         }
                     </ul>
                 </section>
-                <section data-testid="history-tabs-search-result" className="mt-4">
+                <section data-testid="history-tabs-search-result" className="mt-8">
                     <h3 className="uppercase font-bold text-md mb-4 text-tbfColor-darkergrey">History</h3>
                     <ul className="list-none">
                         {

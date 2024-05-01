@@ -16,7 +16,7 @@ import { useMemo, useState } from "react"
 const FolderActionBar = (props: iFolderActionBarProps): JSX.Element => {
     const [launchOptions, setLaunchOptions] = useState<Array<iFieldOption>>([]);
     const { states, handlers } = props;
-    const { expanded, showLaunchOptions, marked, id } = states;
+    const { isExpanded, showLaunchOptions, marked, id } = states;
     const { opacity_hover_effect } = styles;
 
     useMemo(() => {
@@ -63,8 +63,8 @@ const FolderActionBar = (props: iFolderActionBarProps): JSX.Element => {
     let deleteButton: JSX.Element | null = null
     let checkbox: JSX.Element | null = null
     let expand_collapse_button: JSX.Element | null = (
-        <button id={expanded ? "collapse" : "expand"} className={`mx-2 ${opacity_hover_effect}`} disabled={false} onClick={handleExpandClick}>
-            <RotationEffect rotated={expanded}>
+        <button id={isExpanded ? "collapse" : "expand"} className={`mx-2 ${opacity_hover_effect}`} disabled={false} onClick={handleExpandClick}>
+            <RotationEffect rotated={isExpanded}>
                 <CollapseIcon size={28} fill={"#000"} />
             </RotationEffect>
         </button>

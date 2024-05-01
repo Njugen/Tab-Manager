@@ -1,6 +1,6 @@
 Copyright (c) 2024, Thai Nguyen <privat_thai_nguyen@hotmail.com> 
 
-Tab Manager Browser Plugin - v1.0.0, https://github.com/Njugen/Tab-Manager-Browser-Plugin
+Tab Manager Browser Plugin - v1.0.1, https://github.com/Njugen/Tab-Manager-Browser-Plugin
 
 This software is free for personal and professional use. The software itself and code deriving from it may not be monetized, nor used as part of commercial products/services/brands. The software and its source code (and/or code deriving from it) may not be distributed through other channels than those maintained by the author.
 

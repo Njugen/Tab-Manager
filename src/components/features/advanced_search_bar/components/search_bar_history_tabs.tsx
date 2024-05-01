@@ -25,11 +25,17 @@ const SearchBarHistoryTabs = (props: iSearchBarHistoryTabsProps): JSX.Element =>
             />
         });
 
-        return <ul className="list-none">{list}</ul>
+        return (
+            <ul className="list-none">
+                {list}
+            </ul>
+        )
     }
 
     return (
-        <p className="text-center p-2">There are no results in this section</p>
+        <p className="text-center p-2">
+            There are no results in this section
+        </p>
     );
 }
 
