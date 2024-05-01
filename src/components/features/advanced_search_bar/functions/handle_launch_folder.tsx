@@ -1,23 +1,23 @@
 import React from "react";
 import { iWindowItem } from "../../../../interfaces/window_item";
 
-type tLaunchType = "normal" | "group" | "incognito";
+type tLaunchBehavior = "normal" | "group" | "incognito";
 
 interface iLaunchFolderArgs {
-    folderLaunchType: tLaunchType,
+    folderLaunchBehavior: tLaunchBehavior,
     windowsPayload: Array<iWindowItem> | null,
     setWindowsPayload: React.Dispatch<React.SetStateAction<iWindowItem[]>>,
-    setFolderLaunchType: React.Dispatch<React.SetStateAction<tLaunchType>>,
+    setFolderLaunchBehavior: React.Dispatch<React.SetStateAction<tLaunchBehavior>>,
     setShowPerformanceWarning: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 // Event handler showing all the launching options of a folder
 const handleLaunchFolder = (args: iLaunchFolderArgs): void => {
     const { 
-        folderLaunchType, 
+        folderLaunchBehavior, 
         windowsPayload, 
         setWindowsPayload, 
-        setFolderLaunchType, 
+        setFolderLaunchBehavior, 
         setShowPerformanceWarning 
     } = args;
 
@@ -37,13 +37,13 @@ const handleLaunchFolder = (args: iLaunchFolderArgs): void => {
         snapshot = currentWindows;
     });
 
-    if(folderLaunchType !== "group"){
+    if(folderLaunchBehavior !== "group"){
         // Open all windows in this folder
         windowsPayload.forEach((window: iWindowItem, i) => {
             const windowSettings: chrome.windows.CreateData = {
                 focused: i === 0 ? true : false,
                 url: window.tabs.map((tab) => tab.url),
-                incognito: folderLaunchType === "incognito" ? true : false,
+                incognito: folderLaunchBehavior === "incognito" ? true : false,
                 state: "maximized"
             }
             chrome.windows.create(windowSettings);
@@ -80,8 +80,8 @@ const handleLaunchFolder = (args: iLaunchFolderArgs): void => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
     // Unset all relevant states to prevent interferance with other features once the folder has been launched
     setWindowsPayload([]);
-    setFolderLaunchType("normal");
+    setFolderLaunchBehavior("normal");
     setShowPerformanceWarning(false);
 }
 
-export { handleLaunchFolder, iLaunchFolderArgs, tLaunchType };
+export { handleLaunchFolder, iLaunchFolderArgs, tLaunchBehavior };

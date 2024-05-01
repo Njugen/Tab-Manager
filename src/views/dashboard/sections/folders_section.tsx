@@ -177,7 +177,7 @@ const FoldersSection = (props: any): JSX.Element => {
             id: newId,
             name: "",
             desc: "",
-            type: "expanded",
+            display: "expanded",
             viewMode: "grid",
             marked: false,
             windows: [],
@@ -303,7 +303,7 @@ const FoldersSection = (props: any): JSX.Element => {
                     onMark={handleMarkFolder} 
                     onEdit={() => setEditFolderId(folder.id)} 
                     key={`folder-item-${folder.id}`} 
-                    type={folder.type} 
+                    display={folder.display} 
                     id={folder.id} 
                     viewMode={foldersSectionState.viewMode} 
                     name={folder.name} 

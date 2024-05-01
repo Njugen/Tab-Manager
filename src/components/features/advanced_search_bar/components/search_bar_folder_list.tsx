@@ -2,12 +2,12 @@ import { iFolderItem } from '../../../../interfaces/folder_item';
 import { iWindowItem } from '../../../../interfaces/window_item';
 import FolderItem from '../../folder_item/folder_item';
 import { filterFoldersByString } from '../../../../tools/tab_filters';
-import tLaunchType
- from '../../../../interfaces/types/launch_type';
+import tLaunchBehavior
+ from '../../../../interfaces/types/launch_behavior';
 interface iSearchBarFolderListProps {
     items: Array<iFolderItem>,
     keyword: string,
-    handleOpen: (windows: Array<iWindowItem>, type: tLaunchType) => void
+    handleOpen: (windows: Array<iWindowItem>, type: tLaunchBehavior) => void
 }
 
 // Render all filtered folders
@@ -26,7 +26,7 @@ const SearchBarFolderList = (props: iSearchBarFolderListProps): JSX.Element => {
                 id={id!} 
                 name={name} 
                 viewMode={"list"} 
-                type={"collapsed"} 
+                display={"collapsed"} 
                 desc={desc} 
                 windows={windows} 
                 onOpen={handleOpen} 

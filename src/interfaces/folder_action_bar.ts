@@ -1,6 +1,6 @@
 import { iWindowItem } from "./window_item";
 import { iFolderItem } from "./folder_item";
-import tLaunchType from "./types/launch_type";
+import tLaunchBehavior from "./types/launch_behavior";
 
 interface iFolderActionBarHandlers {
     handleExpandClick: (e: any) => void,
@@ -8,14 +8,14 @@ interface iFolderActionBarHandlers {
     handleEdit: (e: any) => void,
     handleDelete: (e: any) => void,
     handleLaunch: (e: any) => void,
-    onOpen?: (e: Array<iWindowItem>, type: tLaunchType) => void,
+    onOpen?: (e: Array<iWindowItem>, type: tLaunchBehavior) => void,
     onMark?: (e: number) => void,
     onEdit?: (e: number) => void
     onDelete?: (e: iFolderItem) => void,
 }
 
 interface iFolderActionBarStates {
-    expanded: boolean,
+    isExpanded: boolean,
     showLaunchOptions: boolean,
     marked: boolean,
     id: number

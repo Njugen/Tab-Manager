@@ -11,7 +11,8 @@ import WindowItem from "../window_item";
 import { iFolderActionBarHandlers } from "../../../interfaces/folder_action_bar";
 import { iFolderActionBarStates } from "../../../interfaces/folder_action_bar";
 import { RootState } from "../../../redux-toolkit/store";
-import { tLaunchType } from "../advanced_search_bar/functions/handle_launch_folder";
+import tFolderdisplay from "../../../interfaces/types/folder_display";
+import { tLaunchBehavior } from "../advanced_search_bar/functions/handle_launch_folder";
 
 /*
     Folder section containing description, windows and tabs, as well as various folder options
@@ -20,7 +21,7 @@ const FolderItem = (props: iFolderItem): JSX.Element => {
     const contentsRef = useRef<HTMLDivElement>(null);
     const headerRef = useRef<HTMLDivElement>(null);
     const folderRef = useRef<HTMLLIElement>(null);
-    const [expanded, setExpanded] = useState<boolean>(props.type === "expanded" ? true : false);
+    const [isExpanded, setIsExpanded] = useState<boolean>(props.display === "expanded" ? true : false);
     const [showLaunchOptions, setShowLaunchOptions] = useState<boolean>(false);
     const [slideDown, setSlideDown] = useState<boolean>(false);
 
@@ -31,7 +32,7 @@ const FolderItem = (props: iFolderItem): JSX.Element => {
         name,
         marked,
         desc,
-        type,
+        display,
         viewMode,
         windows,
         index,
@@ -71,16 +72,16 @@ const FolderItem = (props: iFolderItem): JSX.Element => {
     
 
     // Styling for situations where the folder is expanded or collapsed
-    const expHeaderCSS: string = `relative border-b tbf-${type} bg-white px-4 h-10 py-6 flex items-center rounded-t-md`;
-    const colHeaderCSS: string = `relative tbf-${type} bg-white px-4 h-10 py-6 flex items-center rounded-md`;
+    const expHeaderCSS: string = `relative border-b tbf-${display} bg-white px-4 h-10 py-6 flex items-center rounded-t-md`;
+    const colHeaderCSS: string = `relative tbf-${display} bg-white px-4 h-10 py-6 flex items-center rounded-md`;
     const expContentsCSS: string = `overflow-hidden bg-white rounded-b-md border-t-0`;
     const colContentsCSS: string = `overflow-hidden rounded-b-md`;
 
     // Update the storage setting of folder view mode 
-    const updateFolder = (newType: "expanded" | "collapsed") => {
+    const updateFolder = (newDisplay: tFolderdisplay) => {
         getFromStorage("local", "folders", (data: any) => {
             const tempCollection: Array<iFolderItem> = data.folders.map((folder: iFolderItem) => {
-                if(folder.id === id) folder.type = newType;
+                if(folder.id === id) folder.display = newDisplay;
                 return folder;
             })
        
@@ -90,12 +91,12 @@ const FolderItem = (props: iFolderItem): JSX.Element => {
 
     // Expand or collapse this folder
     const handleExpandClick = (e: any): void => {
-        if(expanded === false){
+        if(isExpanded === false){
             updateFolder("expanded");
-            setExpanded(true);
+            setIsExpanded(true);
         } else {
             updateFolder("collapsed");
-            setExpanded(false);
+            setIsExpanded(false);
         }   
     }
 
@@ -107,7 +108,7 @@ const FolderItem = (props: iFolderItem): JSX.Element => {
 
     // Launch a folder based on selected option
     const handleLaunch = (id: number): void => {
-        let type: tLaunchType = "normal";
+        let type: tLaunchBehavior = "normal";
 
         if(id === 0){
             type = "normal";
@@ -147,7 +148,7 @@ const FolderItem = (props: iFolderItem): JSX.Element => {
     } 
 
     const actionBarHandlers: iFolderActionBarHandlers = { handleExpandClick, handlePrepareOpen, handleEdit, handleDelete, handleLaunch, onOpen, onEdit, onDelete, onMark };
-    const actionBarStates: iFolderActionBarStates = { expanded, showLaunchOptions, marked, id };
+    const actionBarStates: iFolderActionBarStates = { isExpanded, showLaunchOptions, marked, id };
     
     // Define the number of window column to use depending on the folder's view mode (list or grid)
     const windowTabsCols = (folderViewMode: string, windowViewMode: string): number => {
@@ -187,19 +188,19 @@ const FolderItem = (props: iFolderItem): JSX.Element => {
                 data-testid={"folder-item"} 
                 className={`z-${index && index} shadow-[0_0px_3px_1px_rgba(0,0,0,0.125)] ${viewMode === "list" ? "my-4 duration-75" : "my-4 duration-75"}  transition-all ease-in w-full rounded-md`}
             >
-                <div ref={headerRef} className={expanded === true ? expHeaderCSS : colHeaderCSS}>
+                <div ref={headerRef} className={isExpanded === true ? expHeaderCSS : colHeaderCSS}>
                     <div className="inline-block">
-                        {expanded === false ? <ClosedFolderIcon size={23} fill={"#000"} /> : <OpenedFolderIcon size={26} fill={"#000"} />}
+                        {isExpanded === false ? <ClosedFolderIcon size={23} fill={"#000"} /> : <OpenedFolderIcon size={26} fill={"#000"} />}
                     </div>
                     <div className={`inline-block ${viewMode === "list" ? "w-10/12" : "w-5/12"}`}>
-                        <h2 className={`text-md p-2 truncate ${expanded === false ? "text-black" : "text-black"}`}>
+                        <h2 className={`text-md p-2 truncate ${isExpanded === false ? "text-black" : "text-black"}`}>
                             {name}
                         </h2>
                     </div>
                     {<FolderActionBar handlers={actionBarHandlers} states={actionBarStates} />}
                 </div>
-                <div ref={contentsRef} className={expanded === true ? expContentsCSS : colContentsCSS}>
-                {expanded === true && (
+                <div ref={contentsRef} className={isExpanded === true ? expContentsCSS : colContentsCSS}>
+                {isExpanded === true && (
                     <>{desc.length > 0 && <div className="px-5 mt-8 flex justify-between items-start">
                     <div data-testid={"description-section"} className="inline-block w-fit">
                         <p className={`text-base"leading-7" text-tbfColor-darkergrey text-start`}>

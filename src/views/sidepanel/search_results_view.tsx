@@ -141,7 +141,7 @@ function SearchResultsContainer(props:any): JSX.Element {
     const renderFolders = (): Array<JSX.Element> => {
         const folders = filterFoldersByString(folderState, keyword);
 
-        return folders.map((folder: iFolderItem) => <FolderItem key={`folder-id-${folder.id}`} marked={false} id={folder.id!} name={folder.name} viewMode={"list"} type={"collapsed"} desc={folder.desc} windows={folder.windows} onOpen={handlePrepareLaunchFolder} />);
+        return folders.map((folder: iFolderItem) => <FolderItem key={`folder-id-${folder.id}`} marked={false} id={folder.id!} name={folder.name} viewMode={"list"} display={"collapsed"} desc={folder.desc} windows={folder.windows} onOpen={handlePrepareLaunchFolder} />);
     }
 
     // Render all filtered session tabs

@@ -147,7 +147,7 @@ const HistoryView = (props:any): JSX.Element => {
                 id: randomNumber(),
                 name: "",
                 desc: "",
-                type: "expanded",
+                display: "expanded",
                 viewMode: "grid",
                 marked: false,
                 windows: [presetWindow],

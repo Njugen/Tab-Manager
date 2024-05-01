@@ -61,7 +61,7 @@ describe("Test <FolderItem>", () => {
                 name: randomNumber().toString(),
                 desc: randomNumber().toString(),
                 marked: false,
-                type: "expanded",
+                display: "expanded",
                 viewMode: mode,
                 windows: createMockWindows(5)
             }
@@ -198,7 +198,7 @@ describe("Test <FolderItem>", () => {
             test("Expanding folder shows the windows list", () => {
                 render(
                     <Provider store={store}>
-                        <FolderItem {...mockFolderItem} type="collapsed" />
+                        <FolderItem {...mockFolderItem} display="collapsed" />
                     </Provider>
                 )
                 
@@ -215,7 +215,7 @@ describe("Test <FolderItem>", () => {
             test("Expanding folder shows the description", () => {
                 render(
                     <Provider store={store}>
-                        <FolderItem {...mockFolderItem} type="collapsed" />
+                        <FolderItem {...mockFolderItem} display="collapsed" />
                     </Provider>
                 )
                 
@@ -358,7 +358,7 @@ describe("Test <FolderItem>", () => {
                 name: randomNumber().toString(),
                 desc: randomNumber().toString(),
                 marked: false,
-                type: "collapsed",
+                display: "collapsed",
                 viewMode: mode,
                 windows: createMockWindows(5)
             }

@@ -12,7 +12,7 @@ import { handleLaunchFolder, iLaunchFolderArgs } from "./functions/handle_launch
 import { SearchResults } from "./components/search_bar_results";
 import PopupMessage from "../../utils/popup_message";
 import { RootState } from "../../../redux-toolkit/store";
-import tLaunchType from "../../../interfaces/types/launch_type";
+import tLaunchBehavior from "../../../interfaces/types/launch_behavior";
 /*
     Search bar placed at the top of the viewport
 
@@ -33,7 +33,7 @@ const AdvancedSearchBar = (props: any): JSX.Element => {
     const [windowsPayload, setWindowsPayload] = useState<Array<iWindowItem>>([]);
     
     // Setting for how to launch a folder (normally, as a group or incognito?)
-    const [folderLaunchType, setFolderLaunchType] = useState<tLaunchType>("normal");
+    const [folderLaunchBehavior, setFolderLaunchBehavior] = useState<tLaunchBehavior>("normal");
 
     // Setting for whether or not to show a warning message when opening too many
     const [showPerformanceWarning, setShowPerformanceWarning] = useState<boolean>(false);
@@ -74,7 +74,7 @@ const AdvancedSearchBar = (props: any): JSX.Element => {
     const handleShowResultsArgs: iHandleShowResultsContainerArgs = { searchResultsContainerRef , showResultsContainer, slideDown, handleSlideDown, setShowResultsContainer }
 
     // Args to be passed to handleLaunchFolder()
-    const handleLaunchFolderArgs: iLaunchFolderArgs = { folderLaunchType, windowsPayload, setWindowsPayload, setFolderLaunchType, setShowPerformanceWarning }
+    const handleLaunchFolderArgs: iLaunchFolderArgs = { folderLaunchBehavior, windowsPayload, setWindowsPayload, setFolderLaunchBehavior, setShowPerformanceWarning }
 
     const clickListener = useCallback((e: any): void => {
         handleWindowClick({ e, handleShowResultsArgs });
@@ -94,7 +94,7 @@ const AdvancedSearchBar = (props: any): JSX.Element => {
 
 
     // Decide whether or not to launch a folder immediately, OR to show a warning message
-    const evaluatePerformanceWarning = (type: tLaunchType, windows: Array<iWindowItem>) => {
+    const evaluatePerformanceWarning = (type: tLaunchBehavior, windows: Array<iWindowItem>) => {
         if(!windows) return;
         let tabsCount = 0;
         windows.forEach((window: iWindowItem) => {
@@ -107,16 +107,16 @@ const AdvancedSearchBar = (props: any): JSX.Element => {
                 setShowPerformanceWarning(true);
             } else {
                 handleLaunchFolderArgs.windowsPayload = windows;
-                handleLaunchFolderArgs.folderLaunchType = type;
+                handleLaunchFolderArgs.folderLaunchBehavior = type;
                 handleLaunchFolder(handleLaunchFolderArgs);
             }
         });
     }
 
     // Prepare the windows in a folder for launch, and Instruct the component on how to launch the folder
-    const handlePrepareLaunchFolder = (windows: Array<iWindowItem>, type: tLaunchType): void => {
+    const handlePrepareLaunchFolder = (windows: Array<iWindowItem>, type: tLaunchBehavior): void => {
         setWindowsPayload(windows);
-        setFolderLaunchType(type);
+        setFolderLaunchBehavior(type);
         evaluatePerformanceWarning(type, windows);
     }
 
@@ -131,7 +131,7 @@ const AdvancedSearchBar = (props: any): JSX.Element => {
                         callback: () => { 
                             if(windowsPayload) {
                                 handleLaunchFolderArgs.windowsPayload = windowsPayload;
-                                handleLaunchFolderArgs.folderLaunchType = folderLaunchType;
+                                handleLaunchFolderArgs.folderLaunchBehavior = folderLaunchBehavior;
                                 handleLaunchFolder(handleLaunchFolderArgs);
                             }
                             setShowPerformanceWarning(false)

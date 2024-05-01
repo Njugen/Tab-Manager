@@ -62,7 +62,7 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
                 id: randId,
                 name: "",
                 desc: "",
-                type: "expanded",
+                display: "expanded",
                 viewMode: "grid",
                 marked: false,
                 windows: [],
@@ -109,7 +109,7 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
             setModified(true);
         } 
 
-        // Inform redux about the field change
+        // Inform redux about the field change regardless of whether or not local state has been modified or not
         if(folderManagementState[key] !== value) dispatch(updateFolder([key, value]));
     }
 
@@ -138,7 +138,10 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
             callback();
         } else {
             setInValidFields({...updatedFieldState});
-            if(managerWrapperRef.current) managerWrapperRef.current.scrollTo({ top: 0, behavior: "smooth" })
+
+            if(managerWrapperRef.current) {
+                managerWrapperRef.current.scrollTo({ top: 0, behavior: "smooth" })
+            }
         }
     }
 
@@ -156,12 +159,10 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
                 setOriginWindows("");
                 setIsCreate(false);
                 
-                document.body.style.overflowY = "auto";
-                document.body.style.overflowX = "auto";
-
+                document.body.style.overflow = "auto";
                 
-                    dispatch(setIsEditingTab(false));
-                    onClose()
+                dispatch(setIsEditingTab(false));
+                onClose()
                
             }
         })
@@ -169,8 +170,7 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
 
     // Validate and save the data to redux, then close the popup form.
     const handleSave = (): void => {
-        document.body.style.overflowY = "hidden";
-        document.body.style.overflowX = "hidden";
+        document.body.style.overflow = "hidden";
         validateForm(() => {
             if(props.folder){
                 // Find out if process is merge or edit

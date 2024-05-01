@@ -205,7 +205,7 @@ const FoldersView = (props: any): JSX.Element => {
                     onEdit={() => setEditFolderId(folder.id)} 
                     index={folderState.length-i}
                     key={`folder-id-${folder.id}`} 
-                    type={folder.type} 
+                    display={folder.display} 
                     id={folder.id} 
                     viewMode="list" 
                     name={folder.name} 

@@ -12,7 +12,7 @@ const mockFolders: Array<iFolderItem> = [
         name: "Katter på Borgbacken",
         desc: randomNumber().toString(),
         marked: false,
-        type: "collapsed",
+        display: "collapsed",
         viewMode: "list",
         windows: [{
             id: 0,
@@ -50,7 +50,7 @@ const mockFolders: Array<iFolderItem> = [
         name: "Vasa Övningsskola",
         desc: randomNumber().toString(),
         marked: false,
-        type: "collapsed",
+        display: "collapsed",
         viewMode: "list",
         windows: [{
             id: 0,
@@ -68,7 +68,7 @@ const mockFolders: Array<iFolderItem> = [
         name: "Japanese popculture",
         desc: randomNumber().toString(),
         marked: false,
-        type: "collapsed",
+        display: "collapsed",
         viewMode: "list",
         windows: [{
             id: 0,
@@ -86,7 +86,7 @@ const mockFolders: Array<iFolderItem> = [
         name: "Tab Manager",
         desc: randomNumber().toString(),
         marked: false,
-        type: "collapsed",
+        display: "collapsed",
         viewMode: "list",
         windows: [{
             id: 0,
