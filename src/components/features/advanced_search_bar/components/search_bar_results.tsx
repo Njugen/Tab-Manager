@@ -48,7 +48,11 @@ const SearchResults = (props: iSearchResultsProps): JSX.Element => {
             </div>
         );
     } else {
-        results = <p className="text-center">Enter a search term...</p>
+        results = (
+            <p className="text-center">
+                Enter a search term...
+            </p>
+        );
     }
 
     return results;

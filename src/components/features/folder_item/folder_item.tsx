@@ -211,8 +211,9 @@ const FolderItem = (props: iFolderItem): JSX.Element => {
                     
                     <ul className="px-5 mb-8 mt-8">
                         {folderWindowList}
-                    </ul></>
-                    )}
+                    </ul>
+                    </>
+                )}
                 </div>
                 
             </li>
