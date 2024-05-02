@@ -1,4 +1,3 @@
-import styles from "./../../styles/global_utils.module.scss";
 import { iTextButton } from "../../../interfaces/text_button";
 import buttonStateCSS from "./functions/button_state_css";
 

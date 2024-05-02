@@ -3,8 +3,7 @@ import iSectionContainer from '../../interfaces/section_container';
 import CloseIcon from '../icons/close_icon';
 
 import FullscreenIcon from './../icons/fullscreen_icon';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../redux-toolkit/store';
+import { useDispatch } from 'react-redux';
 import { smoothScrollUp } from '../../redux-toolkit/slices/misc_slice';
 import styles from "../../styles/global_utils.module.scss";
 
