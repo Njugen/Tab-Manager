@@ -1,4 +1,4 @@
-import { useState,  useId } from "react";
+import { useState } from "react";
 import PrimaryButton from "../utils/primary_button/primary_button";
 import SecondaryButton from "../utils/secondary_button";
 import TabItem from "./tab_item";
@@ -11,7 +11,6 @@ import CollapseIcon from "../icons/collapse_icon";
 import ExpandIcon from "../icons/expand_icon";
 import { iFolderItem } from "../../interfaces/folder_item";
 import { useMemo } from "react";
-import iFolderState from "../../interfaces/states/folder_state";
 import { RootState } from "../../redux-toolkit/store";
 import { setCurrentTabEdits, setIsEditingTab } from "../../redux-toolkit/slices/misc_slice";
 import { updateFolder } from "../../redux-toolkit/slices/folder_management_slice";

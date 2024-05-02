@@ -1,6 +1,5 @@
 import PrimaryButton from "../../utils/primary_button/primary_button";
 import { useEffect, useState } from "react";
-
 import { useSelector } from "react-redux";
 import randomNumber from "../../../tools/random_number";
 import iWindowManager from "../../../interfaces/window_manager";

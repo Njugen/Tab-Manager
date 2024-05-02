@@ -9,7 +9,6 @@ import PopupMessage from '../../utils/popup_message';
 import WindowManager from "../window_manager/window_manager";
 import GenericPopup from "../../utils/generic_popup";
 import { useDispatch, useSelector } from "react-redux";
-import iWarningState from "../../../interfaces/states/warning_state";
 import { RootState } from "../../../redux-toolkit/store";
 import iPluginSettings from "../../../interfaces/states/plugin_settings_state";
 import { setUpFolder, updateFolder } from "../../../redux-toolkit/slices/folder_management_slice";

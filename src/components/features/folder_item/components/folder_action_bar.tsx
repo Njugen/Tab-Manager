@@ -10,8 +10,6 @@ import { iFolderActionBarProps } from "../../../../interfaces/folder_action_bar"
 import styles from "../../../../styles/global_utils.module.scss";
 import { useMemo, useState } from "react"
 
-
-
 // Renders an action bar containing various UI buttons for handling the behaviour of the folder.
 const FolderActionBar = (props: iFolderActionBarProps): JSX.Element => {
     const [launchOptions, setLaunchOptions] = useState<Array<iFieldOption>>([]);
