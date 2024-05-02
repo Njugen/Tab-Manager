@@ -19,6 +19,8 @@ const mockProps: iFolderManager = {
     onClose: mockFn
 }
 
+window.scrollTo = jest.fn();
+
 beforeEach(() => {
     // Mock the managerwrapperref
     jest.spyOn(React , "useRef").mockReturnValue({

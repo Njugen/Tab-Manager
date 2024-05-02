@@ -6,6 +6,8 @@ import AdvancedSearchBar from "../../../components/features/advanced_search_bar/
 import { act } from "react-dom/test-utils";
 import mockBrowserStorage from "../../../tools/testing/mock_browser_storage";
 
+window.scrollTo = jest.fn();
+
 beforeEach(() => {
     // @ts-expect-error
     chrome.storage.local.get = jest.fn((data, callback: (e: any) => {}): void => {
