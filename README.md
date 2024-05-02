@@ -76,7 +76,7 @@ organized.
 
 ### Formatting
 
-The ./src folder is formatted using Prettier, which may be used together with the [Prettier Code formatter](https://github.com/prettier/prettier-vscode) plugin for VSCode to e.g. enable auto-format when saving. Another option could be to just format the whole folder using the following command:
+The ./src folder is formatted using [Prettier](https://prettier.io/), which may be used together with the [Prettier Code formatter](https://github.com/prettier/prettier-vscode) plugin for VSCode to e.g. enable auto-format when saving. Another option could be to just format the whole folder using the following command:
 
 ```
 npm run format
