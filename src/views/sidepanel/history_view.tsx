@@ -27,7 +27,6 @@ const HistoryView = (props:any): JSX.Element => {
     const dispatch = useDispatch();
     const historySectionState: any = useSelector((state: any) => state.historySection);
     const folderState: Array<iFolderItem> = useSelector((state: any) => state.folder);
-    const sectionRef = useRef<HTMLDivElement>(null);
 
     // Load tabs from history api and store it in redux store for further use while this component is rendered
     const loadHistory = (keyword: string, count: number): void => {
