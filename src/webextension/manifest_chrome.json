@@ -1,8 +1,8 @@
 {
 	"manifest_version": 3,
 	"name": "Tab Management Browser Plugin",
-	"version": "1.0.0",
-	"description": "Providing great overview and simple tools for efficient tab management.",
+	"version": "1.0.1",
+	"description": "Tab manager plugin for Chrome. This release gives the user a larger overview over active and archived tabs.",
 	"permissions": ["history", "tabs", "storage", "sidePanel", "favicon"],
 	"web_accessible_resources": [
 		{
