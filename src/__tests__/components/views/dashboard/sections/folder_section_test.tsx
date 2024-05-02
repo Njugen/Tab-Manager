@@ -107,8 +107,8 @@ describe("Test <FoldersSection>", () => {
                 const folders = screen.getAllByTestId("folder-item");
             
                 folders.forEach((folder) => {
-                    const checkedIcon = within(folder).getByTestId("checked-icon");
-                    expect(checkedIcon).toBeInTheDocument();
+                    const checkbox: HTMLInputElement = within(folder).getByRole("checkbox");
+                    expect(checkbox.defaultChecked).toBeTruthy();
                 });
             })
     

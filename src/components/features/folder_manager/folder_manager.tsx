@@ -140,7 +140,7 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
         } else {
             setInValidFields({...updatedFieldState});
 
-            if(managerWrapperRef.current) {
+            if(managerWrapperRef.current && managerWrapperRef.current.scrollTo) {
                 managerWrapperRef.current.scrollTo({ top: 0, behavior: "smooth" })
             }
         }

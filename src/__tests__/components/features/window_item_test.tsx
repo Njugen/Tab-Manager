@@ -196,7 +196,7 @@ describe("Test <WindowItem>", () => {
             })
         })
 
-        test("Marking tabs will add checkbox mark to affected tabs", () => {
+        test("Marking multiple tabs is successful", () => {
             render(
                 <Provider store={store}>
                     <WindowItem {...mockWindow} disableMarkTab={false} />
@@ -207,15 +207,11 @@ describe("Test <WindowItem>", () => {
             let listItems = within(tablist).getAllByRole("listitem");
 
             listItems.forEach((tab, i) => {
-                let checkbox = within(tab).getByTestId("checkbox");
-                let checkedMark = within(checkbox).queryByTestId("checked-icon");
+                let checkbox: HTMLInputElement = within(tab).getByTestId("checkbox");
                 
                 fireEvent.click(checkbox);
 
-                checkbox = within(tab).getByTestId("checkbox");
-                checkedMark = within(checkbox).queryByTestId("checked-icon");
-
-                expect(checkedMark).toBeInTheDocument();
+                expect(checkbox.defaultChecked).toBeTruthy()
             })
         })
 
@@ -230,20 +226,12 @@ describe("Test <WindowItem>", () => {
             let listItems = within(tablist).getAllByRole("listitem");
 
             listItems.forEach((tab, i) => {
-                let checkbox = within(tab).getByTestId("checkbox");
-                let checkedMark = within(checkbox).queryByTestId("checked-icon");
+                let checkbox: HTMLInputElement = within(tab).getByTestId("checkbox");
 
                 fireEvent.click(checkbox);
-
-                checkbox = within(tab).getByTestId("checkbox");
-                checkedMark = within(checkbox).queryByTestId("checked-icon");
-
                 fireEvent.click(checkbox);
 
-                checkbox = within(tab).getByTestId("checkbox");
-                checkedMark = within(checkbox).queryByTestId("checked-icon");
-
-                expect(checkedMark).not.toBeInTheDocument();
+                expect(checkbox.defaultChecked).toBeFalsy();
             })
         })
 
@@ -343,18 +331,14 @@ describe("Test <WindowItem>", () => {
             let listItems = within(tablist).getAllByRole("listitem");
 
             listItems.forEach((tab, i) => {
-                const checkbox = within(tab).getByTestId("checkbox");
-                fireEvent.click(checkbox)
+                const checkbox: HTMLInputElement = within(tab).getByTestId("checkbox");
+                fireEvent.click(checkbox);
+
+                expect(checkbox.defaultChecked).toBeTruthy();
             });
-
-            const checkedIcons = within(tablist).queryAllByTestId("checked-icon");
-            expect(checkedIcons.length).toEqual(listItems.length);
-
-            // Cannot make more assertions with unit tests.
-            // This part requires a redux store, so save this for integration tests...
         });
 
-        test("Clicking delete button will trigger onDeleteT callback (when editing outside folder state context)", () => {
+        test("Clicking delete button will trigger onDelete callback (when editing outside folder state context)", () => {
             const tabDeleteFn = jest.fn(((ids: Array<tBrowserTabId>) => {}));
 
             render(

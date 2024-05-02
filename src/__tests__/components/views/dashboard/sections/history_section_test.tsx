@@ -221,8 +221,13 @@ describe("Test <HistorySection>", () => {
             test("Clicking unmark all will leave no checkbox checked", () => {
                 markUnmarkAllSequenceRender()
     
-                const markCount = screen.queryAllByTestId("checked-icon").length;
-    
+                let markCount = 0;
+                const checkboxes: Array<HTMLInputElement> = screen.getAllByRole("checkbox");
+
+                checkboxes.forEach((checkbox) => {
+                    if(checkbox.checked) markCount++; 
+                })
+
                 expect(markCount).toEqual(0);
             });
     
@@ -267,7 +272,12 @@ describe("Test <HistorySection>", () => {
             test("Clicking unmark a button will leave no checkbox checked", () => {
                 markUnmarkTabSequenceRender();
     
-                const markCount = screen.queryAllByTestId("checked-icon").length;
+                let markCount = 0;
+                const checkboxes: Array<HTMLInputElement> = screen.getAllByRole("checkbox");
+
+                checkboxes.forEach((checkbox) => {
+                    if(checkbox.checked) markCount++; 
+                })
     
                 expect(markCount).toEqual(0);
             });
@@ -304,8 +314,12 @@ describe("Test <HistorySection>", () => {
             const markAllButton = screen.getByTestId("text-icon-button-deselected_checkbox");
             fireEvent.click(markAllButton); 
 
-            const marks = screen.getAllByTestId("checked-icon");
-            const marksCount = marks.length;
+            const checkboxes: Array<HTMLInputElement> = screen.getAllByRole("checkbox");
+            let marksCount = 0;
+
+            checkboxes.forEach((checkbox) => {
+                if(checkbox.checked) marksCount++
+            });
 
             const addToFolderButton = screen.getByText("Add to folder", { selector: "button" });
             fireEvent.click(addToFolderButton)
@@ -341,7 +355,12 @@ describe("Test <HistorySection>", () => {
             const markAllButton = screen.getByTestId("text-icon-button-deselected_checkbox");
             fireEvent.click(markAllButton); 
 
-            const markCount = screen.getAllByTestId("checked-icon").length;
+            let markCount = 0;
+            const checkboxes: Array<HTMLInputElement> = screen.getAllByRole("checkbox");
+
+            checkboxes.forEach((checkbox) => {
+                if(checkbox.checked) markCount++; 
+            })
 
             const addToFolderButton = screen.getByText("Add to folder", { selector: "button" });
             fireEvent.click(addToFolderButton);
