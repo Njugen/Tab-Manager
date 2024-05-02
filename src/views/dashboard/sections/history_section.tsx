@@ -1,15 +1,13 @@
-import styles from "../../../styles/global_utils.module.scss";
-import * as predef from "../../../styles/predef";
 import PrimaryButton from '../../../components/utils/primary_button/primary_button';
 import FolderManager from '../../../components/features/folder_manager/folder_manager';
-import { useEffect, useState, useRef, useMemo, useCallback } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { iFolderItem } from '../../../interfaces/folder_item';
 import { useDispatch, useSelector } from 'react-redux';
 import TextIconButton from '../../../components/utils/text_icon_button';
 import randomNumber from '../../../tools/random_number';
 import { iWindowItem } from '../../../interfaces/window_item';
 import { iTabItem } from '../../../interfaces/tab_item';
-import { iDropdownSelected, iFieldOption } from '../../../interfaces/dropdown';
+import { iFieldOption } from '../../../interfaces/dropdown';
 import AddToFolderPopup from '../../../components/features/add_to_folder_popup';
 import SectionContainer from "../../../components/utils/section_container";
 import { getFromStorage, saveToStorage } from "../../../services/webex_api/storage";

@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import iHistoryState from "../../interfaces/states/history_state"
-import purify from "../../tools/purify_object";
 
 const initialState: iHistoryState = {
     tabs: [],

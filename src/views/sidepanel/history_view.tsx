@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { iWindowItem } from '../../interfaces/window_item';
 import { useSelector, useDispatch } from "react-redux";
 import { iFolderItem } from '../../interfaces/folder_item';
@@ -19,11 +19,9 @@ import { setIsEditFolderInPanel } from "../../redux-toolkit/slices/sidepanel_sli
 const HistoryView = (props:any): JSX.Element => {
     const [mergeProcess, setMergeProcess] = useState<iFolderItem | null>(null);
     const [addToWorkSpaceMessage, setAddToFolderMessage] = useState<boolean>(false);
-    const [editFolderId, setEditFolderId] = useState<number | null>(null);
     const [createFolder, setCreateFolder] = useState<boolean>(false);
 
     const dispatch = useDispatch();
-    const sidepanelState = useSelector((state: any) => state.sidepanel);
     const historySectionState: any = useSelector((state: any) => state.historySection);
     const folderState: Array<iFolderItem> = useSelector((state: any) => state.folder);
 
@@ -119,7 +117,6 @@ const HistoryView = (props:any): JSX.Element => {
     }
 
     const handlePopupClose = (): void => {
-        setEditFolderId(null);
         setCreateFolder(false);
         setMergeProcess(null);
 

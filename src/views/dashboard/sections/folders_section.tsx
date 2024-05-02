@@ -24,7 +24,6 @@ import iFolderState from '../../../interfaces/states/folder_state';
 import { createNewFolder, deleteFolder, readAllStorageFolders } from '../../../redux-toolkit/slices/folder_slice';
 import { changeSortOption, changeViewMode, markFolder, markMultipleFolders, unMarkAllFolders } from '../../../redux-toolkit/slices/folders_section_slice';
 import purify from '../../../tools/purify_object';
-import { Tabs } from 'jest-chrome/types/jest-chrome';
 import tLaunchBehavior from '../../../interfaces/types/launch_behavior';
 
 
@@ -53,8 +52,6 @@ const FoldersSection = (props: any): JSX.Element => {
     const [totalTabsCount, setTotalTabsCount] = useState<number>(0);
     const [windowsPayload, setWindowsPayload] = useState<Array<iWindowItem>>([]);
     const [folderLaunchBehavior, setFolderLaunchBehavior] = useState<tLaunchBehavior>("normal"); 
-    const [loaded, setLoaded] = useState<boolean>(false);
-
 
     const dispatch = useDispatch();
 
@@ -65,7 +62,6 @@ const FoldersSection = (props: any): JSX.Element => {
     useEffect(() => {
         getFromStorage("local", "folders", (data) => {  
             dispatch(readAllStorageFolders(data.folders));
-            setLoaded(true);
         })
 
         getFromStorage("local", "folder_sort", (data) => {  

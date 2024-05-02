@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { iWindowItem } from '../../interfaces/window_item';
 import { useSelector } from "react-redux";
 import { iFolderItem } from '../../interfaces/folder_item';
@@ -13,7 +13,6 @@ import CloseIcon from "../../components/icons/close_icon";
 import iCurrentSessionState from "../../interfaces/states/current_session_state";
 import styles from "../../styles/global_utils.module.scss";
 import PopupMessage from "../../components/utils/popup_message";
-import { iTabItem } from "../../interfaces/tab_item";
 import tLaunchBehavior from "../../interfaces/types/launch_behavior";
 
 function SearchResultsContainer(props:any): JSX.Element {
