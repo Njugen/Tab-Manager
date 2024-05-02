@@ -1,6 +1,5 @@
 import { render, screen, within, fireEvent } from "@testing-library/react";
 import '@testing-library/jest-dom'
-import CircleButton from '../../../components/utils/circle_button';
 import randomNumber from "../../../tools/random_number";
 import Dropdown from "../../../components/utils/dropdown/dropdown";
 import { iDropdown, iFieldOption } from "../../../interfaces/dropdown";

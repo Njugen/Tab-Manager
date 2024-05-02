@@ -1,6 +1,5 @@
-import { render, screen, within, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import '@testing-library/jest-dom'
-import CircleButton from '../../../components/utils/circle_button';
 import randomNumber from "../../../tools/random_number";
 import FormField from "../../../components/utils/form_field";
 import { iFormField } from "../../../interfaces/form_field";

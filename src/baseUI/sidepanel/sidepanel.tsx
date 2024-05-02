@@ -1,12 +1,10 @@
 import SimpleSearchBar from '../../components/utils/simple_search_bar';
 import '../../App.css';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Navlink from '../../components/utils/navlink';
 import SearchResultsContainer from '../../views/sidepanel/search_results_view';
 import MultipleFoldersIcon from '../../components/icons/multiple_folders_icon';
 import ConfigIcon from '../../components/icons/config_icon';
-import CircleButton from '../../components/utils/circle_button';
-import CollapseIcon from '../../components/icons/collapse_icon';
 import PanelView from './components/panel_view';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';

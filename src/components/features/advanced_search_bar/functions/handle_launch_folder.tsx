@@ -1,7 +1,6 @@
 import React from "react";
 import { iWindowItem } from "../../../../interfaces/window_item";
-
-type tLaunchBehavior = "normal" | "group" | "incognito";
+import tLaunchBehavior from './../../../../interfaces/types/launch_behavior';
 
 interface iLaunchFolderArgs {
     folderLaunchBehavior: tLaunchBehavior,

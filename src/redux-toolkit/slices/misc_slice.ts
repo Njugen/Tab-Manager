@@ -1,9 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { iFolderItem } from "../../interfaces/folder_item"
-import iFolderState from "../../interfaces/states/folder_state"
-import iCurrentSessionState from "../../interfaces/states/current_session_state"
-import { iWindowItem } from "../../interfaces/window_item"
-
 
 // Slice in which uncategorized/temporary values needs to be stored
 

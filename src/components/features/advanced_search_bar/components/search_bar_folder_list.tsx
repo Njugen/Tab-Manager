@@ -4,6 +4,7 @@ import FolderItem from '../../folder_item/folder_item';
 import { filterFoldersByString } from '../../../../tools/tab_filters';
 import tLaunchBehavior
  from '../../../../interfaces/types/launch_behavior';
+ 
 interface iSearchBarFolderListProps {
     items: Array<iFolderItem>,
     keyword: string,

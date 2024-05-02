@@ -1,16 +1,11 @@
 import { render, screen, within, fireEvent, cleanup } from "@testing-library/react";
 import '@testing-library/jest-dom'
 import SessionSection from "../../../../../views/dashboard/sections/session_section";
-import randomNumber from "../../../../../tools/random_number";
-import mockStore from "../../../../../tools/testing/mock_store";
+import mockStore, { mockStoreNoFolders } from "../../../../../tools/testing/mock_store";
 import { Provider } from "react-redux";
 import mockBrowserStorage from "../../../../../tools/testing/mock_browser_storage";
 import mockWindows from './../../../../../tools/testing/mock_windows';
 import { act } from "react-dom/test-utils";
-
-const mockCallback = jest.fn();
-const mockTestId = randomNumber();
-const mockChild = <p data-testid={mockTestId}></p>
 
 beforeEach(() => {
     jest.useFakeTimers();
@@ -294,5 +289,34 @@ describe("Test <SessionSection>", () => {
         const windowsInDialog = within(dialog).getAllByTestId("window-item");
         
         expect(windowsInDialog.length).toBeGreaterThan(sessionWindowsCount);
+    })
+
+    test("Folder Manager shows up immediately when adding windows/tabs, if no other folders exists in the plugin", () => {
+        // @ts-expect-error
+        chrome.windows.getAll = jest.fn((query, callback: (e: any) => {}): void => {
+            callback(mockWindows)
+        })
+
+        render(
+            <Provider store={mockStoreNoFolders}>
+                <SessionSection />
+            </Provider>
+        );
+
+        const addToFolderButton = screen.getByText("Add to folder", { selector: "button" });
+        fireEvent.click(addToFolderButton, { bubbles: true });
+
+        let dialog = screen.getByRole("dialog");
+
+        const visibleTabs = within(dialog).getAllByTestId("tab-item");
+
+        const visibleTabsCount = visibleTabs.length;
+
+        let mockTabsCount = 0;
+        mockWindows.forEach((mockWindow: any) => {
+            mockTabsCount += mockWindow.tabs.length;
+        });
+
+        expect(visibleTabsCount).toEqual(mockTabsCount);
     })
 })

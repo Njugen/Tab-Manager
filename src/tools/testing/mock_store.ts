@@ -127,5 +127,14 @@ const mockStore = configureStore({
     }
 })
 
-export { mockFolders, mockHistory, mockSession }
+const mockStoreNoFolders = configureStore({
+    reducer: reducers,
+    preloadedState: {
+        folder: [],
+        sessionSection: mockSession,
+        historySection: mockHistory,
+    }
+})
+
+export { mockFolders, mockHistory, mockSession, mockStoreNoFolders }
 export default mockStore;

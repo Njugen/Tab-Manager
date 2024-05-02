@@ -2,7 +2,7 @@ import FolderItem from '../../../components/features/folder_item/folder_item'
 import "../../../styles/global_utils.module.scss";
 import PrimaryButton from '../../../components/utils/primary_button/primary_button';
 import FolderManager from '../../../components/features/folder_manager/folder_manager';
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { iFolderItem } from '../../../interfaces/folder_item';
 import { iFieldOption } from '../../../interfaces/dropdown';
 import { useDispatch, useSelector } from 'react-redux';
@@ -24,7 +24,6 @@ import iFolderState from '../../../interfaces/states/folder_state';
 import { createNewFolder, deleteFolder, readAllStorageFolders } from '../../../redux-toolkit/slices/folder_slice';
 import { changeSortOption, changeViewMode, markFolder, markMultipleFolders, unMarkAllFolders } from '../../../redux-toolkit/slices/folders_section_slice';
 import purify from '../../../tools/purify_object';
-import { Tabs } from 'jest-chrome/types/jest-chrome';
 import tLaunchBehavior from '../../../interfaces/types/launch_behavior';
 
 
@@ -53,8 +52,6 @@ const FoldersSection = (props: any): JSX.Element => {
     const [totalTabsCount, setTotalTabsCount] = useState<number>(0);
     const [windowsPayload, setWindowsPayload] = useState<Array<iWindowItem>>([]);
     const [folderLaunchBehavior, setFolderLaunchBehavior] = useState<tLaunchBehavior>("normal"); 
-    const [loaded, setLoaded] = useState<boolean>(false);
-
 
     const dispatch = useDispatch();
 
@@ -65,7 +62,6 @@ const FoldersSection = (props: any): JSX.Element => {
     useEffect(() => {
         getFromStorage("local", "folders", (data) => {  
             dispatch(readAllStorageFolders(data.folders));
-            setLoaded(true);
         })
 
         getFromStorage("local", "folder_sort", (data) => {  
@@ -194,7 +190,7 @@ const FoldersSection = (props: any): JSX.Element => {
     }
 
     // Merge marked folders
-    const handleMergeFolders = (): void => {
+    const handleMergeFolders = useCallback((): void => {
         const newId = randomNumber();
         const { markedFoldersId } = foldersSectionState;
 
@@ -231,7 +227,7 @@ const FoldersSection = (props: any): JSX.Element => {
             folderSpecs.windows = [...mergedWindows];
             setMergeProcess({...folderSpecs});
         }
-    }
+    }, [foldersSectionState.markedFoldersId])
 
     // Close the folder manager
     const handleCloseFolderManager = (): void => {

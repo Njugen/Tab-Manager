@@ -1,18 +1,11 @@
 import { render, screen, within, fireEvent, cleanup } from "@testing-library/react";
 import '@testing-library/jest-dom'
 import randomNumber from "../../../tools/random_number";
-import TextIconButton from "../../../components/utils/text_icon_button";
-import { Provider, useDispatch } from "react-redux";
-import { reducers, store } from "../../../redux-toolkit/store";
+import { Provider } from "react-redux";
+import {  store } from "../../../redux-toolkit/store";
 import WindowItem from "../../../components/features/window_item";
 import { iTabItem } from "../../../interfaces/tab_item";
 import { iWindowItem } from "../../../interfaces/window_item";
-
-import { createStore, applyMiddleware } from "redux";
-import { combineReducers } from "redux";
-import thunk from "redux-thunk";
-import * as reactRedux from "react-redux"
-import { configureStore } from "@reduxjs/toolkit";
 import tBrowserTabId from "../../../interfaces/types/browser_tab_id";
 
 
@@ -203,7 +196,7 @@ describe("Test <WindowItem>", () => {
             })
         })
 
-        test("Marking tabs will add checkbox mark to affected tabs", () => {
+        test("Marking multiple tabs is successful", () => {
             render(
                 <Provider store={store}>
                     <WindowItem {...mockWindow} disableMarkTab={false} />
@@ -214,15 +207,11 @@ describe("Test <WindowItem>", () => {
             let listItems = within(tablist).getAllByRole("listitem");
 
             listItems.forEach((tab, i) => {
-                let checkbox = within(tab).getByTestId("checkbox");
-                let checkedMark = within(checkbox).queryByTestId("checked-icon");
+                let checkbox: HTMLInputElement = within(tab).getByTestId("checkbox");
                 
                 fireEvent.click(checkbox);
 
-                checkbox = within(tab).getByTestId("checkbox");
-                checkedMark = within(checkbox).queryByTestId("checked-icon");
-
-                expect(checkedMark).toBeInTheDocument();
+                expect(checkbox.defaultChecked).toBeTruthy()
             })
         })
 
@@ -237,20 +226,12 @@ describe("Test <WindowItem>", () => {
             let listItems = within(tablist).getAllByRole("listitem");
 
             listItems.forEach((tab, i) => {
-                let checkbox = within(tab).getByTestId("checkbox");
-                let checkedMark = within(checkbox).queryByTestId("checked-icon");
+                let checkbox: HTMLInputElement = within(tab).getByTestId("checkbox");
 
                 fireEvent.click(checkbox);
-
-                checkbox = within(tab).getByTestId("checkbox");
-                checkedMark = within(checkbox).queryByTestId("checked-icon");
-
                 fireEvent.click(checkbox);
 
-                checkbox = within(tab).getByTestId("checkbox");
-                checkedMark = within(checkbox).queryByTestId("checked-icon");
-
-                expect(checkedMark).not.toBeInTheDocument();
+                expect(checkbox.defaultChecked).toBeFalsy();
             })
         })
 
@@ -350,18 +331,14 @@ describe("Test <WindowItem>", () => {
             let listItems = within(tablist).getAllByRole("listitem");
 
             listItems.forEach((tab, i) => {
-                const checkbox = within(tab).getByTestId("checkbox");
-                fireEvent.click(checkbox)
+                const checkbox: HTMLInputElement = within(tab).getByTestId("checkbox");
+                fireEvent.click(checkbox);
+
+                expect(checkbox.defaultChecked).toBeTruthy();
             });
-
-            const checkedIcons = within(tablist).queryAllByTestId("checked-icon");
-            expect(checkedIcons.length).toEqual(listItems.length);
-
-            // Cannot make more assertions with unit tests.
-            // This part requires a redux store, so save this for integration tests...
         });
 
-        test("Clicking delete button will trigger onDeleteT callback (when editing outside folder state context)", () => {
+        test("Clicking delete button will trigger onDelete callback (when editing outside folder state context)", () => {
             const tabDeleteFn = jest.fn(((ids: Array<tBrowserTabId>) => {}));
 
             render(

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { iWindowItem } from '../../interfaces/window_item';
 import { useSelector, useDispatch } from "react-redux";
 import { iFolderItem } from '../../interfaces/folder_item';
@@ -6,7 +6,6 @@ import FolderItem from "../../components/features/folder_item/folder_item";
 import { getFromStorage, saveToStorage } from '../../services/webex_api/storage';
 import FolderManager from "../../components/features/folder_manager/folder_manager";
 import PopupMessage from "../../components/utils/popup_message";
-import PrimaryButton from "../../components/utils/primary_button/primary_button";
 import NewFolderIcon from "../../components/icons/new_folder_icon";
 import CircleButton from "../../components/utils/circle_button";
 import Dropdown from "../../components/utils/dropdown/dropdown";

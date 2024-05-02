@@ -4,7 +4,6 @@ import randomNumber from "../../../tools/random_number";
 import PopupMessage from "../../../components/utils/popup_message";
 import iPopupMessage from "../../../interfaces/popup_message";
 
-
 const mockText = randomNumber().toString();
 const mockTitle = randomNumber().toString();
 const pButton = {

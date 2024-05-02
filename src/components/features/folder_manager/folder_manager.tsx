@@ -9,7 +9,6 @@ import PopupMessage from '../../utils/popup_message';
 import WindowManager from "../window_manager/window_manager";
 import GenericPopup from "../../utils/generic_popup";
 import { useDispatch, useSelector } from "react-redux";
-import iWarningState from "../../../interfaces/states/warning_state";
 import { RootState } from "../../../redux-toolkit/store";
 import iPluginSettings from "../../../interfaces/states/plugin_settings_state";
 import { setUpFolder, updateFolder } from "../../../redux-toolkit/slices/folder_management_slice";
@@ -141,7 +140,7 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
         } else {
             setInValidFields({...updatedFieldState});
 
-            if(managerWrapperRef.current) {
+            if(managerWrapperRef.current && managerWrapperRef.current.scrollTo) {
                 managerWrapperRef.current.scrollTo({ top: 0, behavior: "smooth" })
             }
         }
@@ -190,6 +189,8 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
 
             if(sidepanelState.isEditFolderInPanel){
                 dispatch(setPanelView("folders"));
+            } else {
+                window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
             }
         
             handleClose(true);

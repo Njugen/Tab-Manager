@@ -1,14 +1,9 @@
 import { render, screen, within, fireEvent } from "@testing-library/react";
 import '@testing-library/jest-dom'
-import randomNumber from "../../../../tools/random_number";
 import mockStore, { mockFolders } from "../../../../tools/testing/mock_store";
 import { Provider } from "react-redux";
 import mockBrowserStorage from "../../../../tools/testing/mock_browser_storage";
-import mockWindows from '../../../../tools/testing/mock_windows';
-import { Windows } from "jest-chrome/types/jest-chrome";
 import { act } from "react-dom/test-utils";
-import SessionView from "../../../../views/sidepanel/session_view";
-import FoldersView from '../../../../views/sidepanel/folders_view';
 import HistoryView from "../../../../views/sidepanel/history_view";
 import mockHistoryTabs from "../../../../tools/testing/mock_history";
 

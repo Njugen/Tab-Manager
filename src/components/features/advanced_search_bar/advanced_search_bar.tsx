@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import SearchIcon from "../../icons/search_icon";
 import { useSelector } from 'react-redux';
-import styles from "../../../styles/global_utils.module.scss";
 import { iFolderItem } from '../../../interfaces/folder_item';
 import { iWindowItem } from '../../../interfaces/window_item';
 import iCurrentSessionState from "../../../interfaces/states/current_session_state";

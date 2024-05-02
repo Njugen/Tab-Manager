@@ -1,9 +1,8 @@
-import { render, screen, within, fireEvent, waitFor, cleanup } from "@testing-library/react";
+import { render, screen, within, fireEvent, cleanup } from "@testing-library/react";
 import '@testing-library/jest-dom'
-import { Provider, useSelector, useDispatch } from "react-redux";
+import { Provider } from "react-redux";
 import SettingsView from "../../../views/settings/settings_view";
 import mockStore from "../../../tools/testing/mock_store";
-import { act } from "react-dom/test-utils";
 import mockBrowserStorage from "../../../tools/testing/mock_browser_storage";
 
 afterEach(() => {

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { iWindowItem } from '../../interfaces/window_item';
 import { useSelector, useDispatch } from "react-redux";
 import { iFolderItem } from '../../interfaces/folder_item';
@@ -21,7 +21,6 @@ const SessionView = (props:any): JSX.Element => {
     const [addToWorkSpaceMessage, setAddToFolderMessage] = useState<boolean>(false);
     const [createFolder, setCreateFolder] = useState<boolean>(false);
     const [mergeProcess, setMergeProcess] = useState<iFolderItem | null>(null);
-    const [editFolderId, setEditFolderId] = useState<number | null>(null);
     const [windowIdWarning, setWindowIdWarning] = useState<number>(-1);
 
     const folderState: Array<iFolderItem> = useSelector((state: any) => state.folder);
@@ -75,7 +74,6 @@ const SessionView = (props:any): JSX.Element => {
     };
 
     const handlePopupClose = (): void => {
-        setEditFolderId(null);
         setCreateFolder(false);
         setMergeProcess(null);
 
@@ -90,7 +88,7 @@ const SessionView = (props:any): JSX.Element => {
         dispatch(setIsEditFolderInPanel(true))
     }
 
-    const handleAddToExistingFolder = (e: any): void => {
+    const handleAddToExistingFolder = useCallback((e: any): void => {
         if(e.selected === -1) return;
 
         const targetFolderId = e.selected;
@@ -128,7 +126,7 @@ const SessionView = (props:any): JSX.Element => {
                 dispatch(setIsEditFolderInPanel(true))
             }
         } 
-    }
+    }, [sessionSectionState.windows])
 
     const renderAddTabsMessage = (): JSX.Element => {
         const currentFolders: Array<iFolderItem> = folderState;

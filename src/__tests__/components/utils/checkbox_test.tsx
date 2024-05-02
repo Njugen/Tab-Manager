@@ -8,47 +8,42 @@ describe("Test <Checkbox />", () => {
     test("Can be checked", () => {
         render(<Checkbox checked={false} onCallback={mockCallback} />);
 
-        // Button exists
-        let button = screen.getByRole("button");
+        // checkbox exists
+        let checkbox: HTMLInputElement = screen.getByRole("checkbox");
   
-        fireEvent.click(button);
-        let icon = within(button).queryByRole("img");
-        expect(icon).toBeInTheDocument();
+        fireEvent.click(checkbox);
+        expect(checkbox.defaultChecked).toBeTruthy();
     })
 
     test("Can be unchecked", () => {
         render(<Checkbox checked={true} onCallback={mockCallback} />);
 
-        // Button exists
-        let button = screen.getByRole("button");
+        // checkbox exists
+        let checkbox: HTMLInputElement = screen.getByRole("checkbox");
         
-        fireEvent.click(button);
-        let icon = within(button).queryByRole("img");
-
-        expect(icon).not.toBeInTheDocument();
+        fireEvent.click(checkbox);
+        expect(checkbox.defaultChecked).toBeFalsy();
     })
 
     test("can be checked -> unchecked -> checked", () => {
         render(<Checkbox checked={true} onCallback={mockCallback} />);
         
-        // Button exists
-        let button = screen.getByRole("button");
-        fireEvent.click(button);
-        fireEvent.click(button);
+        // checkbox exists
+        let checkbox: HTMLInputElement = screen.getByRole("checkbox");
+        fireEvent.click(checkbox);
+        fireEvent.click(checkbox);
         
-        let icon = within(button).queryByRole("img");
-        expect(icon).toBeInTheDocument();
+        expect(checkbox.defaultChecked).toBeTruthy();
     })
 
     test("can be unchecked -> checked -> unchecked", () => {
         render(<Checkbox checked={false} onCallback={mockCallback} />);
         
-        // Button exists
-        let button = screen.getByRole("button");
-        fireEvent.click(button);
-        fireEvent.click(button);
+        // checkbox exists
+        let checkbox: HTMLInputElement = screen.getByRole("checkbox");
+        fireEvent.click(checkbox);
+        fireEvent.click(checkbox);
         
-        let icon = within(button).queryByRole("img");
-        expect(icon).not.toBeInTheDocument();
+        expect(checkbox.defaultChecked).toBeFalsy();
     })
 })

@@ -3,15 +3,13 @@ import { render, screen, within, fireEvent, cleanup } from "@testing-library/rea
 import '@testing-library/jest-dom'
 import randomNumber from "../../../tools/random_number";
 import { iFolderManager } from "../../../interfaces/iFolderManager";
-import { reducers, store } from "../../../redux-toolkit/store";
+import { store } from "../../../redux-toolkit/store";
 import { Provider } from 'react-redux';
 import FolderManager from "../../../components/features/folder_manager/folder_manager";
 import { act } from "react-dom/test-utils";
 import React from "react";
-import { configureStore } from "@reduxjs/toolkit";
 import { iWindowItem } from "../../../interfaces/window_item";
 import { iFolderItem } from "../../../interfaces/folder_item";
-import { iTabItem } from "../../../interfaces/tab_item";
 
 const mockFn = jest.fn();
 
@@ -20,6 +18,8 @@ const mockProps: iFolderManager = {
     type: "slide-in",
     onClose: mockFn
 }
+
+window.scrollTo = jest.fn();
 
 beforeEach(() => {
     // Mock the managerwrapperref

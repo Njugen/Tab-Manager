@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-import CheckedIcon from "../icons/checked_icon";
+import { useState, useEffect, useRef } from "react";
 import { iCheckbox } from "../../interfaces/checkbox";
 
 /*
@@ -14,9 +13,11 @@ const Checkbox = (props: iCheckbox): JSX.Element => {
     
     // Keep track of wether or not this boxbox has been checked
     const [checked, setChecked] = useState<boolean>(false);
+    const checkboxRef = useRef<HTMLInputElement>(null);
 
     const handleChecked = (e: any): void => {
         // Check/uncheck this box
+        e.target.checked = checked ? false : true
         setChecked((prev) => !prev);
 
         // Send the new state of this box to the parent component 
@@ -27,24 +28,21 @@ const Checkbox = (props: iCheckbox): JSX.Element => {
         // Once props.checked is available or changed by the parent component, set this state
         // accordingly
         setChecked(props.checked);
+        if(checkboxRef.current) checkboxRef.current.checked = props.checked;
     }, [props.checked])
 
     return (
         <div className={`flex items-center ${label ? "mx-5" : "ml-2 mr-0"}`}>
             {label && <span className={`inline-block mr-2 text-sm text-black`}>{label}</span>}
-            <button
+            <input
+                ref={checkboxRef}
+                type="checkbox"
                 data-testid={"checkbox"} 
                 onClick={handleChecked} 
-                className={`relative border border-tbfColor-middlegrey3 bg-white h-[1.1rem] w-[1.1rem]`}
-            >
-                {
-                    checked && (
-                        <span className="absolute block top-0 left-0">
-                            <CheckedIcon fill="#6D00C2" size={16} />
-                        </span>
-                    )
-                }
-            </button>
+                defaultChecked={checked}
+                className={`relative border border-tbfColor-middlegrey3 h-[1.1rem] w-[1.1rem] accent-tbfColor-lightpurple cursor-pointer`}
+            />
+             
         </div>
     ); 
 }

@@ -1,6 +1,5 @@
 import { render, screen, within, fireEvent, cleanup } from "@testing-library/react";
 import '@testing-library/jest-dom'
-import CircleButton from '../../../components/utils/circle_button';
 import randomNumber from "../../../tools/random_number";
 import TabItem from "../../../components/features/tab_item";
 import tBrowserTabId from "../../../interfaces/types/browser_tab_id";

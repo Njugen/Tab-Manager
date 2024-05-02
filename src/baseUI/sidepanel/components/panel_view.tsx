@@ -2,7 +2,6 @@ import iPanelView from "../../../interfaces/panel_view";
 import SessionView from "../../../views/sidepanel/session_view";
 import FoldersView from "../../../views/sidepanel/folders_view";
 import HistoryView from "../../../views/sidepanel/history_view";
-import styles from "../../../styles/global_utils.module.scss";
 import { useEffect, useState } from "react";
 import CircleButton from "../../../components/utils/circle_button";
 import CollapseIcon from "../../../components/icons/collapse_icon";

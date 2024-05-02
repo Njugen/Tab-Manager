@@ -1,7 +1,6 @@
-import { render, screen, within, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import '@testing-library/jest-dom'
 import randomNumber from "../../../tools/random_number";
-import PrimaryButton from "../../../components/utils/primary_button/primary_button";
 import Switcher from "../../../components/utils/switcher/switcher";
 
 const mockLabel = randomNumber().toString();

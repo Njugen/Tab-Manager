@@ -1,7 +1,7 @@
-import { render, screen, within, fireEvent, waitFor, cleanup } from "@testing-library/react";
+import { render, screen, within, fireEvent, cleanup } from "@testing-library/react";
 import '@testing-library/jest-dom'
-import { Provider, useSelector } from "react-redux";
-import mockStore, { mockFolders } from "../../../../../tools/testing/mock_store";
+import { Provider } from "react-redux";
+import mockStore, { mockFolders, mockStoreNoFolders } from "../../../../../tools/testing/mock_store";
 import mockBrowserStorage from "../../../../../tools/testing/mock_browser_storage";
 import { act } from "react-dom/test-utils";
 import HistorySection from './../../../../../views/dashboard/sections/history_section';
@@ -89,7 +89,7 @@ describe("Test <HistorySection>", () => {
     })
 
     describe("Test marking and interaction with Folder Manager", () => {
-        describe("Adding marked tabs to folder manager", () => {
+        describe("Adding marked tabs to folder manager (when there are other folders present)", () => {
             const addToFolderSequenceRender = () => {
                 render(
                     <Provider store={mockStore}>
@@ -164,6 +164,44 @@ describe("Test <HistorySection>", () => {
             });
         })
 
+        describe("Adding marked tabs to folder manager (when there are no other folders present)", () => {
+            const addToFolderSequenceRender = () => {
+                render(
+                    <Provider store={mockStoreNoFolders}>
+                        <HistorySection />
+                    </Provider>
+                )
+    
+                const tabs = screen.getAllByTestId("tab-item");
+    
+                for(let i = 0; i < markCount; i++){
+                    const checkbox = within(tabs[i]).getByTestId("checkbox");
+                    fireEvent.click(checkbox);
+                }
+    
+                const addToFolderButton = screen.getByText("Add to folder", { selector: "button" });
+                fireEvent.click(addToFolderButton);
+            }
+    
+            test("Folder manager shows up immediately with preset tabs if no folders exists in the plugin", () => {
+                addToFolderSequenceRender();
+    
+                // Folder manager
+                let dialog = screen.getByRole("dialog");
+    
+                // Number of rendered tabs in folder manager should equal the numbers marked
+                const renderedTabs = within(dialog).getAllByTestId("tab-item");
+    
+                expect(markCount).toEqual(renderedTabs.length);
+                const cancelButton = within(dialog).getByText("Cancel", { selector: "button" });
+    
+                fireEvent.click(cancelButton, { bubbles: true });
+                act(() => {
+                    jest.runAllTimers();
+                });
+            });
+        })
+
         describe("Test mark/unmark all tabs sequences", () => {
             const markUnmarkAllSequenceRender = () => {
                 render(
@@ -183,8 +221,13 @@ describe("Test <HistorySection>", () => {
             test("Clicking unmark all will leave no checkbox checked", () => {
                 markUnmarkAllSequenceRender()
     
-                const markCount = screen.queryAllByTestId("checked-icon").length;
-    
+                let markCount = 0;
+                const checkboxes: Array<HTMLInputElement> = screen.getAllByRole("checkbox");
+
+                checkboxes.forEach((checkbox) => {
+                    if(checkbox.checked) markCount++; 
+                })
+
                 expect(markCount).toEqual(0);
             });
     
@@ -229,7 +272,12 @@ describe("Test <HistorySection>", () => {
             test("Clicking unmark a button will leave no checkbox checked", () => {
                 markUnmarkTabSequenceRender();
     
-                const markCount = screen.queryAllByTestId("checked-icon").length;
+                let markCount = 0;
+                const checkboxes: Array<HTMLInputElement> = screen.getAllByRole("checkbox");
+
+                checkboxes.forEach((checkbox) => {
+                    if(checkbox.checked) markCount++; 
+                })
     
                 expect(markCount).toEqual(0);
             });
@@ -266,8 +314,12 @@ describe("Test <HistorySection>", () => {
             const markAllButton = screen.getByTestId("text-icon-button-deselected_checkbox");
             fireEvent.click(markAllButton); 
 
-            const marks = screen.getAllByTestId("checked-icon");
-            const marksCount = marks.length;
+            const checkboxes: Array<HTMLInputElement> = screen.getAllByRole("checkbox");
+            let marksCount = 0;
+
+            checkboxes.forEach((checkbox) => {
+                if(checkbox.checked) marksCount++
+            });
 
             const addToFolderButton = screen.getByText("Add to folder", { selector: "button" });
             fireEvent.click(addToFolderButton)
@@ -303,7 +355,12 @@ describe("Test <HistorySection>", () => {
             const markAllButton = screen.getByTestId("text-icon-button-deselected_checkbox");
             fireEvent.click(markAllButton); 
 
-            const markCount = screen.getAllByTestId("checked-icon").length;
+            let markCount = 0;
+            const checkboxes: Array<HTMLInputElement> = screen.getAllByRole("checkbox");
+
+            checkboxes.forEach((checkbox) => {
+                if(checkbox.checked) markCount++; 
+            })
 
             const addToFolderButton = screen.getByText("Add to folder", { selector: "button" });
             fireEvent.click(addToFolderButton);

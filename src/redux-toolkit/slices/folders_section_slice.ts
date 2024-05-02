@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { iFolderItem } from "../../interfaces/folder_item"
 import iFolderState from "../../interfaces/states/folder_state"
 import purify from "../../tools/purify_object"
 

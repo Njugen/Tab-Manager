@@ -2,11 +2,10 @@ import styles from "../../../styles/global_utils.module.scss";
 import Group from "../../../components/utils/group";
 import TabItem from "../../../components/features/tab_item";
 import { useDispatch, useSelector } from "react-redux";
-import { iFolderItem } from "../../../interfaces/folder_item";
-import { forwardRef, useEffect, useState } from "react";
+import { forwardRef, useEffect, useMemo, useState } from "react";
 import iHistoryState from "../../../interfaces/states/history_state";
 import iHistoryTabGroupsSection from '../../../interfaces/history_tab_groups_section';
-import { markMultipleTabs, markTab, setUpTabs } from "../../../redux-toolkit/slices/history_section_slice";
+import { markTab, setUpTabs } from "../../../redux-toolkit/slices/history_section_slice";
 import tBrowserTabId from "../../../interfaces/types/browser_tab_id";
 
 /*
@@ -158,7 +157,7 @@ const HistoryTabGroupsSection = forwardRef(function HistoryTabGroupsSection(prop
                         {
                             <>
                                 { 
-                                    organizeGroups().map((group: any, i: number): JSX.Element => {
+                                    useMemo(() => organizeGroups().map((group: any, i: number): JSX.Element => {
                                             return (
                                                 <Group key={`group-${i}`} desc={`${group[0]} minutes ago`}>
                                                     <ul className="list-none">
@@ -180,7 +179,7 @@ const HistoryTabGroupsSection = forwardRef(function HistoryTabGroupsSection(prop
                                                 </Group> 
                                             );
                                         }
-                                    )
+                                    ), [organizeGroups()])
                                 }
                             </>
                         }   
