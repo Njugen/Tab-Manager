@@ -46,7 +46,7 @@ a pussle icon at the top right border, from where you can pin the plugin.
 Clicking the pinned icon will toggle sidepanel for quick use. Should you need more features or better overview, click the "Advanced" button at the bottom of the sidepanel.
 
 <p align="center">
-<img src="./img/advanced_button_pos.png" />
+    <img src="./img/advanced_button_pos.png" />
 </p>
 
 ## Development

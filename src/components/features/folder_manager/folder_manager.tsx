@@ -190,6 +190,8 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
 
             if(sidepanelState.isEditFolderInPanel){
                 dispatch(setPanelView("folders"));
+            } else {
+                window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
             }
         
             handleClose(true);
