@@ -50,6 +50,8 @@ Clicking the pinned icon will toggle sidepanel for quick use. Should you need mo
 
 ## Development
 
+npm is required for this project.
+
 Although not necessary, sticking to the following would help keeping components clean and
 organized.
 
@@ -81,8 +83,6 @@ npm run format
 ```
 
 ## Build
-
-npm is required for this project.
 
 Use the following commands to build:
 
