@@ -1,21 +1,21 @@
 body {
-    overflow-y: scroll;
+	overflow-y: scroll;
 }
 
 body::-webkit-scrollbar {
-    width: 12px;
-    background: rgb(249, 250, 251);
+	width: 12px;
+	background: rgb(249, 250, 251);
 }
 
 body::-webkit-scrollbar-track {
-    background: transparent; 
+	background: transparent;
 }
 
 body::-webkit-scrollbar-thumb {
-    background: rgb(218, 218, 218);
-    border-radius: 16px;
+	background: rgb(218, 218, 218);
+	border-radius: 16px;
 }
 
 body::-webkit-scrollbar-thumb:hover {
-    background: rgb(218, 218, 218);
+	background: rgb(218, 218, 218);
 }

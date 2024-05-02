@@ -1,24 +1,22 @@
 interface iFieldOption {
-    value: number,
-    label: string,
+	value: number;
+	label: string;
 }
 
-
 interface iDropdownSelected {
-    selected: number | null
+	selected: number | null;
 }
 
 interface iGetSelectedOptionProps extends iDropdownSelected {
-    options: Array<iFieldOption>,
-    preset: iFieldOption,
+	options: Array<iFieldOption>;
+	preset: iFieldOption;
 }
 
 interface iDropdown {
-    tag: string,
-    preset: iFieldOption,
-    options: Array<iFieldOption>,
-    onCallback: (e: iDropdownSelected) => void
+	tag: string;
+	preset: iFieldOption;
+	options: Array<iFieldOption>;
+	onCallback: (e: iDropdownSelected) => void;
 }
 
-
-export { iFieldOption, iDropdownSelected, iDropdown, iGetSelectedOptionProps }
+export { iFieldOption, iDropdownSelected, iDropdown, iGetSelectedOptionProps };

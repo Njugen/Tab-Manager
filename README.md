@@ -11,14 +11,13 @@ who needs to launch different sessions for different purposes.
 
 ## Features
 
-- Create folders (either new, or by using history or session as presets)
-- Duplicate and merge folders
-- Launch folders in incognito
-- Launch folders as a collection/group (Chrome/Edge only)
-- Search through folders, history and current session
-- Simple sidepanel for core features
-- Options page for expanded overview and more features
-
+-   Create folders (either new, or by using history or session as presets)
+-   Duplicate and merge folders
+-   Launch folders in incognito
+-   Launch folders as a collection/group (Chrome/Edge only)
+-   Search through folders, history and current session
+-   Simple sidepanel for core features
+-   Options page for expanded overview and more features
 
 ## Screenshots
 
@@ -36,7 +35,7 @@ HTML5, CSS3/SASS, Javascript/Typescript, React, Redux, JEST, Tailwind, Webextens
 
 ## Usage
 
-Once installed, you can pin this plugin to your browser's navigation bar. Both Chrome and Firefox has 
+Once installed, you can pin this plugin to your browser's navigation bar. Both Chrome and Firefox has
 a pussle icon at the top right border, from where you can pin the plugin.
 
 <p align="center">
@@ -54,10 +53,9 @@ Clicking the pinned icon will toggle sidepanel for quick use. Should you need mo
 Although not necessary, sticking to the following would help keeping components clean and
 organized.
 
-- Try to avoid declaring components inside another component (JSX.Element).
-- Consider refactoring components if they become too big or clumsy to work with (e.g. move large functions to their own files).
-- Refactored/sub components should be placed in their own folders and follow a specific naming convention:
-
+-   Try to avoid declaring components inside another component (JSX.Element).
+-   Consider refactoring components if they become too big or clumsy to work with (e.g. move large functions to their own files).
+-   Refactored/sub components should be placed in their own folders and follow a specific naming convention:
 
 ```
     ./src
@@ -74,6 +72,14 @@ organized.
                         - child_component_b.tsx
 ```
 
+### Formatting
+
+The ./src folder is formatted using Prettier, which may be used together with the [Prettier Code formatter](https://github.com/prettier/prettier-vscode) plugin for VSCode to e.g. enable auto-format when saving. Another option could be to just format the whole folder using the following command:
+
+```
+npm run format
+```
+
 ## Build
 
 npm is required for this project.
@@ -85,16 +91,19 @@ Use the following commands to build:
 These builds are meant to be loaded into browser's dev environment for manual testing. These builds aren't minified and retain all console.logs.
 
 **Firefox**
+
 ```
 npm run build-dev-firefox
 
 ```
 
 _Output folder_:
-- ./dist-dev-firefox
+
+-   ./dist-dev-firefox
 
 _Output packages_:
-- firefox-dev-package.zip
+
+-   firefox-dev-package.zip
 
 _Load into browser_:
 
@@ -104,22 +113,24 @@ _Load into browser_:
 4. Click _Load Temporary Add-on..._ button and head for the ./dist-dev-firefox folder
 5. Click _manifest.json_ to load the unpackaged plugin into the browser
 
-
 **Chrome**
+
 ```
 npm run build-dev-chrome
 ```
 
 _Output folder_:
-- ./dist-dev-chrome
+
+-   ./dist-dev-chrome
 
 _Output packages_:
-- chrome-dev-package.zip
+
+-   chrome-dev-package.zip
 
 _Load into browser_:
 
 1. Open Chrome
-2. Click the menu and head for _Extensions_ -> Manage Extensions_ 
+2. Click the menu and head for _Extensions_ -> Manage Extensions\_
 3. Enable developer mode
 4. Click _Load unpacked_
 5. Head for the ./dist-dev-chrome folder and load it into the browser
@@ -127,26 +138,32 @@ _Load into browser_:
 ### Production
 
 **Firefox**
+
 ```
 npm run build-prod-firefox
 ```
 
 _Output folder_:
-- ./dist-prod-firefox
+
+-   ./dist-prod-firefox
 
 _Output packages_:
-- firefox-prod-package.zip
+
+-   firefox-prod-package.zip
 
 **Chrome**
+
 ```
 npm run build-prod-chrome
 ```
 
 _Output folder_:
-- ./dist-prod-chrome
+
+-   ./dist-prod-chrome
 
 _Output packages_:
-- chrome-prod-package.zip
+
+-   chrome-prod-package.zip
 
 ## Test
 
@@ -154,21 +171,24 @@ _Output packages_:
 npm run test
 ```
 
-Run unit and integration tests (JEST). The tests are available in /src/\_\_tests_\_/. The coverage is presented in ./coverage/Icov-report/index.html
+Run unit and integration tests (JEST). The tests are available in /src/\_\_tests\_\_/. The coverage is presented in ./coverage/Icov-report/index.html
 
 Run this command after changing existing components, to check if anything related to user interaction gets broken. Add new tests when adding new components or features. Each test should have clear description and have a relevant purpose (mere coverage hunting does not count...)
 
 # QA
 
 ### How do I open folders in incognito?
+
 This feature is turned off by default, and needs to be manually enabled. Follow these steps:
 
 **Firefox:**
+
 1. Go to browser menu -> Add-ons and themes
-2. Click "Extensions" in the right-hand bar 
+2. Click "Extensions" in the right-hand bar
 3. Click "Tab Management Browser Plugin" and allow it to run in private mode
 
 **Chrome:**
+
 1. Go to browser menu -> Extensions -> Manage Extensions
 2. Click the "Details" button located in the "Tab Management Browser Plugin" section
 3. Enable the "Allow in Incognito" option
@@ -176,19 +196,25 @@ This feature is turned off by default, and needs to be manually enabled. Follow 
 Once done, the folders will show an "Open in incognito" option in their launch menus.
 
 ### Why can I not launch folders as tab groups in Firefox?
+
 Firefox currently does not support this feature. Once the browser supports it, I'll make sure to add another launch option to the plugin.
 
 ### Is Microsoft Edge supported?
+
 Yes, this plugin is compatible with Microsoft Edge. You may install the plugin in the same manner as in Chrome (use the Chrome package and install it in Edge).
 
 ### Why can I not find this plugin in Chrome Web Store/Firefox AMO?
+
 For the time being, this plugin is meant for my own personal use and is also part of my portfolio. I may publish it to the stores at a later time, although nothing has been decided yet. If you're still interested in using this plugin, I suggest you download a browser package from one of the releases.
 
 ### Will there be any updates/new features?
+
 New features may be added as I get new ideas or feedback/suggestions that could be of value for significant improvement. Smaller bug fixes and enhancements may be published from time to time, with no set schedule nor roadmap at this point.
 
 # Contact information
+
 Email: privat_thai_nguyen@hotmail.com
 
 # Copyright &copy; Thai Nguyen
+
 See LICENSE.md for more information.

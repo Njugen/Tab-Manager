@@ -1,41 +1,37 @@
 {
-    "manifest_version": 3,
-    "name": "Tab Management Browser Plugin",
-    "version": "1.0.0",
-    "description": "Providing great overview and simple tools for efficient tab management.",
-    "permissions": [
-        "history",
-        "tabs",
-        "storage"
-    ],
-    "action": {
-        "default_title": "Tab Management Browser Plugin"
-    },
-    "icons": {
-        "128": "brand/icon-128.png",
-        "48": "brand/icon-48.png"
-    },
-    "options_ui": {
-        "page": "options.html",
-        "open_in_tab": true
-    },
-    "background": {
-        "scripts": ["background.js"]
-    },
-    "sidebar_action": {
-        "default_icon": {
-            "16": "brand/icon-128.png",
-            "32": "brand/icon-48.png"
-        },
-        "default_title": "Tab Management Browser Plugin",
-        "default_panel": "sidepanel.html",
-        "open_at_install": false
-    },
-    "browser_specific_settings": {
-        "gecko": {
-            "id": "tabmanager@njugen",
-            "strict_min_version": "42.0"
-        }
-    },      
-    "author": "Thai Nguyen"
+	"manifest_version": 3,
+	"name": "Tab Management Browser Plugin",
+	"version": "1.0.0",
+	"description": "Providing great overview and simple tools for efficient tab management.",
+	"permissions": ["history", "tabs", "storage"],
+	"action": {
+		"default_title": "Tab Management Browser Plugin"
+	},
+	"icons": {
+		"128": "brand/icon-128.png",
+		"48": "brand/icon-48.png"
+	},
+	"options_ui": {
+		"page": "options.html",
+		"open_in_tab": true
+	},
+	"background": {
+		"scripts": ["background.js"]
+	},
+	"sidebar_action": {
+		"default_icon": {
+			"16": "brand/icon-128.png",
+			"32": "brand/icon-48.png"
+		},
+		"default_title": "Tab Management Browser Plugin",
+		"default_panel": "sidepanel.html",
+		"open_at_install": false
+	},
+	"browser_specific_settings": {
+		"gecko": {
+			"id": "tabmanager@njugen",
+			"strict_min_version": "42.0"
+		}
+	},
+	"author": "Thai Nguyen"
 }

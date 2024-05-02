@@ -1,5 +1,5 @@
 interface iPanelView {
-    view: string
+	view: string;
 }
 
 export default iPanelView;

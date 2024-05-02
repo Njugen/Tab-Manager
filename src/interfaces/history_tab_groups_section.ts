@@ -1,6 +1,6 @@
 interface iHistoryTabGroupsSection {
-    viewMode: "grid" | "list",
-    tabs: Array<chrome.history.HistoryItem>
+	viewMode: "grid" | "list";
+	tabs: Array<chrome.history.HistoryItem>;
 }
 
-export default iHistoryTabGroupsSection
+export default iHistoryTabGroupsSection;

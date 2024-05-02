@@ -1,7 +1,7 @@
 interface iSVG {
-    size: number,
-    fill: string,
-    dir?: "up" | "down"
+	size: number;
+	fill: string;
+	dir?: "up" | "down";
 }
 
-export {iSVG};
+export { iSVG };

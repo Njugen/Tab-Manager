@@ -1,129 +1,107 @@
 import { render, screen, within, fireEvent, cleanup } from "@testing-library/react";
-import '@testing-library/jest-dom'
+import "@testing-library/jest-dom";
 import randomNumber from "../../../tools/random_number";
 import TabItem from "../../../components/features/tab_item";
 import tBrowserTabId from "../../../interfaces/types/browser_tab_id";
 
 const mockProps = {
-    id: randomNumber(),
-    label: randomNumber().toString(),
-    url: `https://${randomNumber()}.com`,
-}
+	id: randomNumber(),
+	label: randomNumber().toString(),
+	url: `https://${randomNumber()}.com`
+};
 
 const mockMarkFn = jest.fn((tabId: tBrowserTabId, checked: boolean): void | undefined => {});
 const mockEditFn = jest.fn((tabId: tBrowserTabId): void | undefined => {});
 const mockOnCloseFn = jest.fn((tabId: tBrowserTabId): any | undefined => {});
 
 afterEach(() => {
-    jest.clearAllMocks();
-    cleanup();
-})
+	jest.clearAllMocks();
+	cleanup();
+});
 
 describe("Test <TabItem>", () => {
-    test("The tab itself renders", () => {
-        render(
-            <TabItem {...mockProps} />
-        );
+	test("The tab itself renders", () => {
+		render(<TabItem {...mockProps} />);
 
-        const tab = screen.getByRole("listitem");
+		const tab = screen.getByRole("listitem");
 
-        expect(tab).toBeInTheDocument();
-    });
+		expect(tab).toBeInTheDocument();
+	});
 
-    test("The tab has favicon", () => {
-        render(
-            <TabItem {...mockProps} />
-        );
+	test("The tab has favicon", () => {
+		render(<TabItem {...mockProps} />);
 
-        const tab = screen.getByRole("listitem");
-        const favicon = within(tab).getByRole("img");
-        expect(favicon).toBeVisible();
-    });
+		const tab = screen.getByRole("listitem");
+		const favicon = within(tab).getByRole("img");
+		expect(favicon).toBeVisible();
+	});
 
-    test("The tab has a link", () => {
-        render(
-            <TabItem {...mockProps} />
-        );
+	test("The tab has a link", () => {
+		render(<TabItem {...mockProps} />);
 
-        const tab = screen.getByRole("listitem");
-        const link = within(tab).getByRole("link");
-        expect(link).toBeVisible()
-    });
+		const tab = screen.getByRole("listitem");
+		const link = within(tab).getByRole("link");
+		expect(link).toBeVisible();
+	});
 
-    test("Checkbox is visible and marking will trigger callback with relevant values", () => {
-        render(
-            <TabItem {...mockProps} onMark={mockMarkFn} marked={false} />
-        );
+	test("Checkbox is visible and marking will trigger callback with relevant values", () => {
+		render(<TabItem {...mockProps} onMark={mockMarkFn} marked={false} />);
 
-        const tab = screen.getByRole("listitem");
-        const checkbox = within(tab).getByTestId("checkbox");
+		const tab = screen.getByRole("listitem");
+		const checkbox = within(tab).getByTestId("checkbox");
 
-        // Mark
-        fireEvent.click(checkbox);
-        expect(mockMarkFn).toHaveBeenCalledWith(mockProps.id, true);
-    })
+		// Mark
+		fireEvent.click(checkbox);
+		expect(mockMarkFn).toHaveBeenCalledWith(mockProps.id, true);
+	});
 
-    test("Checkbox is visible and unmarking will trigger callback with relevant values", () => {
-        render(
-            <TabItem {...mockProps} onMark={mockMarkFn} marked={true} />
-        );
+	test("Checkbox is visible and unmarking will trigger callback with relevant values", () => {
+		render(<TabItem {...mockProps} onMark={mockMarkFn} marked={true} />);
 
-        const tab = screen.getByRole("listitem");
-        const checkbox = within(tab).getByTestId("checkbox");
+		const tab = screen.getByRole("listitem");
+		const checkbox = within(tab).getByTestId("checkbox");
 
-        // Unmark
-        fireEvent.click(checkbox);
-        expect(mockMarkFn).toHaveBeenCalledWith(mockProps.id, false);
-    })
+		// Unmark
+		fireEvent.click(checkbox);
+		expect(mockMarkFn).toHaveBeenCalledWith(mockProps.id, false);
+	});
 
-    test("edit button (pen) is visible and triggers when clicked", () => {
-        render(
-            <TabItem {...mockProps} onEdit={mockEditFn} />
-        );
+	test("edit button (pen) is visible and triggers when clicked", () => {
+		render(<TabItem {...mockProps} onEdit={mockEditFn} />);
 
-        const tab = screen.getByRole("listitem");
-        const editButton = within(tab).getByTestId("pen-icon");
+		const tab = screen.getByRole("listitem");
+		const editButton = within(tab).getByTestId("pen-icon");
 
-     
-        fireEvent.click(editButton);
-        expect(mockEditFn).toHaveBeenCalledWith(mockProps.id);
-    })
-    
-    test("close button (X) is visible and triggers when clicked", () => {
-        render(
-            <TabItem {...mockProps} onClose={mockOnCloseFn} />
-        );
+		fireEvent.click(editButton);
+		expect(mockEditFn).toHaveBeenCalledWith(mockProps.id);
+	});
 
-        const tab = screen.getByRole("listitem");
-        const closeButton = within(tab).getByTestId("close-light-icon");
+	test("close button (X) is visible and triggers when clicked", () => {
+		render(<TabItem {...mockProps} onClose={mockOnCloseFn} />);
 
-        fireEvent.click(closeButton);
-        expect(mockOnCloseFn).toHaveBeenCalledWith(mockProps.id);
-    })
+		const tab = screen.getByRole("listitem");
+		const closeButton = within(tab).getByTestId("close-light-icon");
 
-    test("mockEditFn triggers automatically if url is invalid", () => {
-        render(
-            <TabItem {...mockProps} url="Tervehuolto" onEdit={mockEditFn} />
-        );
-        expect(mockEditFn).toHaveBeenCalledWith(mockProps.id);
-    });
+		fireEvent.click(closeButton);
+		expect(mockOnCloseFn).toHaveBeenCalledWith(mockProps.id);
+	});
 
-    test("mockEditFn does not trigger automatically if url is invalid and mockEditFn is missing", () => {
-        render(
-            <TabItem {...mockProps} url="Terveyshuolto" />
-        );
-        expect(mockEditFn).not.toHaveBeenCalled();
-    });
+	test("mockEditFn triggers automatically if url is invalid", () => {
+		render(<TabItem {...mockProps} url="Tervehuolto" onEdit={mockEditFn} />);
+		expect(mockEditFn).toHaveBeenCalledWith(mockProps.id);
+	});
 
-    test("url is used if label is empty", () => {
-        render(
-            <TabItem {...mockProps} label="" />
-        );
+	test("mockEditFn does not trigger automatically if url is invalid and mockEditFn is missing", () => {
+		render(<TabItem {...mockProps} url="Terveyshuolto" />);
+		expect(mockEditFn).not.toHaveBeenCalled();
+	});
 
-        const tab = screen.getByRole("listitem");
-        const link = within(tab).getByRole("link");
+	test("url is used if label is empty", () => {
+		render(<TabItem {...mockProps} label="" />);
 
-        expect(link).toHaveTextContent(mockProps.url);
+		const tab = screen.getByRole("listitem");
+		const link = within(tab).getByRole("link");
 
-    });
+		expect(link).toHaveTextContent(mockProps.url);
+	});
 });

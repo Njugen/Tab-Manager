@@ -1,96 +1,96 @@
 import { render, screen, within, fireEvent, cleanup } from "@testing-library/react";
-import '@testing-library/jest-dom'
+import "@testing-library/jest-dom";
 import { Provider } from "react-redux";
 import SettingsView from "../../../views/settings/settings_view";
 import mockStore from "../../../tools/testing/mock_store";
 import mockBrowserStorage from "../../../tools/testing/mock_browser_storage";
 
 afterEach(() => {
-    jest.clearAllMocks();
+	jest.clearAllMocks();
 });
-cleanup()
+cleanup();
 
 const commonRender = () => {
-    render(
-        <Provider store={mockStore}>
-            <SettingsView />
-        </Provider>
-    )
-}
+	render(
+		<Provider store={mockStore}>
+			<SettingsView />
+		</Provider>
+	);
+};
 
 describe("Test <SettingsView>", () => {
-    test("Get settings stored in browser's storage when invoked", async () => {
-        // @ts-expect-error
-        chrome.storage.local.get = jest.fn((data, callback: (e: any) => {}): void => {
-            callback(mockBrowserStorage)
-        });
+	test("Get settings stored in browser's storage when invoked", async () => {
+		// @ts-expect-error
+		chrome.storage.local.get = jest.fn((data, callback: (e: any) => {}): void => {
+			callback(mockBrowserStorage);
+		});
 
-        commonRender(); 
-        
-        expect(chrome.storage.local.get).toHaveBeenCalled();
-        jest.clearAllMocks();
-    })
-    test("Changing any dropdown setting will save it to browser storage", () => {   
-        commonRender();
-    
-        const dropdowns = screen.getAllByRole("menu");
+		commonRender();
 
-        dropdowns.forEach((dropdown) => {
-            // @ts-expect-error
-            chrome.storage.local.set = jest.fn((): void => {});
+		expect(chrome.storage.local.get).toHaveBeenCalled();
+		jest.clearAllMocks();
+	});
+	test("Changing any dropdown setting will save it to browser storage", () => {
+		commonRender();
 
-            const menuButton = within(dropdown).getByRole("button");
-            fireEvent.click(menuButton);
+		const dropdowns = screen.getAllByRole("menu");
 
-            const optionsList = within(dropdown).getByRole("list");
-            const options = within(optionsList).getAllByRole("listitem");
+		dropdowns.forEach((dropdown) => {
+			// @ts-expect-error
+			chrome.storage.local.set = jest.fn((): void => {});
 
-            // Create a random index in the range of 0 to number of options
-            const optionIndex = Math.floor(Math.random() * options.length);
+			const menuButton = within(dropdown).getByRole("button");
+			fireEvent.click(menuButton);
 
-            const target = options[optionIndex];
-            const button = within(target).getByRole("button");
+			const optionsList = within(dropdown).getByRole("list");
+			const options = within(optionsList).getAllByRole("listitem");
 
-            // Click an option
-            fireEvent.click(button);
-            expect(chrome.storage.local.set).toHaveBeenCalled();
-        })
-    })
+			// Create a random index in the range of 0 to number of options
+			const optionIndex = Math.floor(Math.random() * options.length);
 
-    test("Toggling any switcher on will save it to browser storage", () => {   
-        commonRender();
-    
-        const switchers = screen.getAllByTestId("switcher");
+			const target = options[optionIndex];
+			const button = within(target).getByRole("button");
 
-        switchers.forEach((switcher) => {
-            const button = within(switcher).getByRole("button");
+			// Click an option
+			fireEvent.click(button);
+			expect(chrome.storage.local.set).toHaveBeenCalled();
+		});
+	});
 
-            // @ts-expect-error
-            chrome.storage.local.set = jest.fn((): void => {});
+	test("Toggling any switcher on will save it to browser storage", () => {
+		commonRender();
 
-            fireEvent.click(button);
+		const switchers = screen.getAllByTestId("switcher");
 
-            expect(chrome.storage.local.set).toHaveBeenCalled();
-        });
-    })
+		switchers.forEach((switcher) => {
+			const button = within(switcher).getByRole("button");
 
-    test("Toggling any switcher off will save it to browser storage", () => {   
-        commonRender();
-    
-        const switchers = screen.getAllByTestId("switcher");
+			// @ts-expect-error
+			chrome.storage.local.set = jest.fn((): void => {});
 
-        switchers.forEach((switcher) => {
-            const button = within(switcher).getByRole("button");
+			fireEvent.click(button);
 
-            // @ts-expect-error
-            chrome.storage.local.set = jest.fn((): void => {});
+			expect(chrome.storage.local.set).toHaveBeenCalled();
+		});
+	});
 
-            fireEvent.click(button);
-            
-            // @ts-expect-error
-            chrome.storage.local.set = jest.fn((): void => {});
-            fireEvent.click(button);
-            expect(chrome.storage.local.set).toHaveBeenCalled();
-        });
-    })
-})
+	test("Toggling any switcher off will save it to browser storage", () => {
+		commonRender();
+
+		const switchers = screen.getAllByTestId("switcher");
+
+		switchers.forEach((switcher) => {
+			const button = within(switcher).getByRole("button");
+
+			// @ts-expect-error
+			chrome.storage.local.set = jest.fn((): void => {});
+
+			fireEvent.click(button);
+
+			// @ts-expect-error
+			chrome.storage.local.set = jest.fn((): void => {});
+			fireEvent.click(button);
+			expect(chrome.storage.local.set).toHaveBeenCalled();
+		});
+	});
+});

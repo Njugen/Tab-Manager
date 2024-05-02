@@ -8,23 +8,35 @@ import applyStateValue from "./functions/apply_state_id";
 */
 
 const DropdownMenu = (props: iDropdownMenu): JSX.Element => {
-    const { tag, options, onSelect, selected } = props;
+	const { tag, options, onSelect, selected } = props;
 
-    return (
-        <ul id={tag} className={`z-50 list-none drop-shadow-no_pos overflow-y-auto bg-white absolute max-h-[2000px] mt-2 text-sm w-full text-tbfColor-darkergrey rounded-lg`}>
-            {
-                useMemo(() => options.map((option, i) => {
-                    return (
-                        <li id={applyStateValue(tag, option.value, selected)} key={applyStateValue(tag, option.value, selected)}>
-                            <button key={option.value} onClick={() => onSelect(option.value)} className={applyStateClasses(option.value, selected)}>
-                                {option.label}
-                            </button>
-                        </li>
-                    );
-                }), [])
-            }
-        </ul>
-    )
-}
+	return (
+		<ul
+			id={tag}
+			className={`z-50 list-none drop-shadow-no_pos overflow-y-auto bg-white absolute max-h-[2000px] mt-2 text-sm w-full text-tbfColor-darkergrey rounded-lg`}
+		>
+			{useMemo(
+				() =>
+					options.map((option, i) => {
+						return (
+							<li
+								id={applyStateValue(tag, option.value, selected)}
+								key={applyStateValue(tag, option.value, selected)}
+							>
+								<button
+									key={option.value}
+									onClick={() => onSelect(option.value)}
+									className={applyStateClasses(option.value, selected)}
+								>
+									{option.label}
+								</button>
+							</li>
+						);
+					}),
+				[]
+			)}
+		</ul>
+	);
+};
 
 export default DropdownMenu;
