@@ -13,10 +13,7 @@ const sessionSectionSlice = createSlice({
 	name: "session_section_slice",
 	initialState,
 	reducers: {
-		setUpWindows: (
-			state,
-			action: PayloadAction<Array<chrome.windows.Window>>
-		): iCurrentSessionState => {
+		setUpWindows: (state, action: PayloadAction<Array<chrome.windows.Window>>): iCurrentSessionState => {
 			const { payload } = action;
 
 			return {

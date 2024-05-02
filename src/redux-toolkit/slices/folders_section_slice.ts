@@ -18,9 +18,7 @@ const foldersSectionSlice = createSlice({
 			let currentlyMarkedIds: Array<number> = state.markedFoldersId || [];
 			const purified: Array<number> = purify(currentlyMarkedIds);
 			// Find whether or not the requested folder id is marked or not
-			const payloadIsMarked: number | undefined = currentlyMarkedIds.find(
-				(id) => id === payload
-			);
+			const payloadIsMarked: number | undefined = currentlyMarkedIds.find((id) => id === payload);
 			if (payloadIsMarked) {
 				currentlyMarkedIds = purified.filter((id) => id !== payload);
 			} else {
@@ -65,11 +63,6 @@ const foldersSectionSlice = createSlice({
 	}
 });
 
-export const {
-	markFolder,
-	markMultipleFolders,
-	unMarkAllFolders,
-	changeSortOption,
-	changeViewMode
-} = foldersSectionSlice.actions;
+export const { markFolder, markMultipleFolders, unMarkAllFolders, changeSortOption, changeViewMode } =
+	foldersSectionSlice.actions;
 export default foldersSectionSlice.reducer;

@@ -1,7 +1,4 @@
-import {
-	handleShowResultsContainer,
-	iHandleShowResultsContainerArgs
-} from "./handle_show_results_container";
+import { handleShowResultsContainer, iHandleShowResultsContainerArgs } from "./handle_show_results_container";
 
 interface iHandleWindowClickArgs {
 	e: any;
@@ -17,8 +14,7 @@ const handleWindowClick = (args: iHandleWindowClickArgs): void => {
 
 	const { target } = e;
 
-	if (!showResultsContainer || !target.parentElement || !target.parentElement.parentElement)
-		return;
+	if (!showResultsContainer || !target.parentElement || !target.parentElement.parentElement) return;
 
 	const searchFieldId = "search-field";
 	const searchResultsContainerId = "search-results-area";

@@ -12,11 +12,7 @@ const saveToStorage = (type: "local" | "sync", key: string, value: any) => {
 	}
 };
 
-const getFromStorage = (
-	type: "local" | "sync",
-	key: string | null,
-	callback: (items: any) => void
-) => {
+const getFromStorage = (type: "local" | "sync", key: string | null, callback: (items: any) => void) => {
 	let result;
 
 	if (type === "local") {

@@ -46,9 +46,7 @@ const PanelView = (props: iPanelView): JSX.Element => {
 			>
 				<CollapseIcon size={32} fill="#fff" />
 			</CircleButton>
-			<main className={`overflow-y-auto px-2 pb-24 pt-2 bg-white min-h-[1000px]`}>
-				{component}
-			</main>
+			<main className={`overflow-y-auto px-2 pb-24 pt-2 bg-white min-h-[1000px]`}>{component}</main>
 		</>
 	);
 };

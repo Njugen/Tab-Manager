@@ -58,8 +58,7 @@ const HistorySection = (props: any): JSX.Element => {
 			if (items.length === 0) return;
 
 			const sorted = items.sort(
-				(a, b) =>
-					(a.lastVisitTime && b.lastVisitTime && b.lastVisitTime - a.lastVisitTime) || 0
+				(a, b) => (a.lastVisitTime && b.lastVisitTime && b.lastVisitTime - a.lastVisitTime) || 0
 			);
 			const newSnapshot = JSON.stringify(sorted[sorted.length - 1].lastVisitTime);
 
@@ -119,8 +118,7 @@ const HistorySection = (props: any): JSX.Element => {
 	};
 
 	const handleMarkAllTabs = (): void => {
-		const tabs: Array<chrome.history.HistoryItem> =
-			historySectionState.tabs as Array<chrome.history.HistoryItem>;
+		const tabs: Array<chrome.history.HistoryItem> = historySectionState.tabs as Array<chrome.history.HistoryItem>;
 		dispatch(markMultipleTabs(tabs));
 	};
 
@@ -134,9 +132,7 @@ const HistorySection = (props: any): JSX.Element => {
 
 		historySectionState.markedTabs.forEach((tab: chrome.history.HistoryItem) => {
 			chrome.history.deleteUrl({ url: tab.url! });
-			updatedMarks = updatedMarks.filter(
-				(target: chrome.history.HistoryItem) => target.url !== tab.url
-			);
+			updatedMarks = updatedMarks.filter((target: chrome.history.HistoryItem) => target.url !== tab.url);
 		});
 
 		dispatch(setUpTabs(updatedMarks));
@@ -199,10 +195,7 @@ const HistorySection = (props: any): JSX.Element => {
 							text="Delete from history"
 							onClick={handleDeleteFromHistory}
 						>
-							<TrashIcon
-								size={20}
-								fill={markedTabs.length > 0 ? "#6D00C2" : "#9f9f9f"}
-							/>
+							<TrashIcon size={20} fill={markedTabs.length > 0 ? "#6D00C2" : "#9f9f9f"} />
 						</TextIconButton>
 					</div>
 

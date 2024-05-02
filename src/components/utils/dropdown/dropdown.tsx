@@ -34,12 +34,7 @@ const Dropdown = (props: iDropdown): JSX.Element => {
 			const selectorTag = tag + "-selector";
 			const { id, parentElement, tagName } = e.target;
 
-			if (
-				id !== selectorTag &&
-				parentElement?.id !== selectorTag &&
-				tagName !== "svg" &&
-				tagName !== "path"
-			) {
+			if (id !== selectorTag && parentElement?.id !== selectorTag && tagName !== "svg" && tagName !== "path") {
 				setShowSubMenuContainer((prevState) => !prevState);
 			}
 		},
@@ -57,9 +52,7 @@ const Dropdown = (props: iDropdown): JSX.Element => {
 		};
 	}, [showSubMenuContainer]);
 
-	const dropdownBorderCSS = showSubMenuContainer
-		? " border-tbfColor-lightpurple"
-		: "border-tbfColor-middlegrey4";
+	const dropdownBorderCSS = showSubMenuContainer ? " border-tbfColor-lightpurple" : "border-tbfColor-middlegrey4";
 	const optionsProps: iGetSelectedOptionProps = { options, preset, selected };
 
 	return (
@@ -75,9 +68,7 @@ const Dropdown = (props: iDropdown): JSX.Element => {
 				onClick={() => setShowSubMenuContainer((prev) => !prev)}
 			>
 				<button className="hover:cursor-pointer">
-					{getSelectedOption(optionsProps)
-						? getSelectedOption(optionsProps).label
-						: preset.label}
+					{getSelectedOption(optionsProps) ? getSelectedOption(optionsProps).label : preset.label}
 				</button>
 				<RotationEffect rotated={showSubMenuContainer}>
 					<CollapseIcon size={28} fill={"#000"} />
@@ -87,12 +78,7 @@ const Dropdown = (props: iDropdown): JSX.Element => {
 				className={`transition duration-75 ${showSubMenuContainer ? "ease-in opacity-100" : "ease-out opacity-0"}`}
 			>
 				{showSubMenuContainer && (
-					<DropdownMenu
-						tag={tag}
-						options={options}
-						selected={selected}
-						onSelect={handleSelect}
-					/>
+					<DropdownMenu tag={tag} options={options} selected={selected} onSelect={handleSelect} />
 				)}
 			</div>
 		</div>

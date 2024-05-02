@@ -50,9 +50,7 @@ const duplicationWarningOptions: Array<iFieldOption> = [
 ];
 
 const SettingsView = (props: any): JSX.Element => {
-	const pluginSettingsState: iPluginSettings = useSelector(
-		(state: RootState) => state.pluginSettings
-	);
+	const pluginSettingsState: iPluginSettings = useSelector((state: RootState) => state.pluginSettings);
 	const dispatch = useDispatch();
 	// Read all saved settings from browser and store it in redux for further use in the plugin
 	useEffect(() => {
@@ -128,9 +126,7 @@ const SettingsView = (props: any): JSX.Element => {
 							description="Show a warning message before duplicating at least a certain amount of selected folders"
 						>
 							<Dropdown
-								onCallback={(e) =>
-									saveSelectedOption("duplicationWarningValue", e.selected)
-								}
+								onCallback={(e) => saveSelectedOption("duplicationWarningValue", e.selected)}
 								tag="duplication-warning-dropdown"
 								preset={getPresetDuplicationWarning()}
 								options={duplicationWarningOptions}
@@ -142,9 +138,7 @@ const SettingsView = (props: any): JSX.Element => {
 						>
 							<Switcher
 								value={pluginSettingsState.closeSessionAtFolderLaunch}
-								onCallback={(e) =>
-									saveSwitchSetting("closeSessionAtFolderLaunch", e)
-								}
+								onCallback={(e) => saveSwitchSetting("closeSessionAtFolderLaunch", e)}
 							/>
 						</FormField>
 						<FormField

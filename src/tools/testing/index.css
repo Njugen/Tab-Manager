@@ -142,8 +142,7 @@ code,
 kbd,
 samp,
 pre {
-	font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
-		"Courier New", monospace;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 	/* 1 */
 	font-size: 1em;
 	/* 2 */
@@ -1674,62 +1673,49 @@ video {
 
 .drop-shadow-2xl {
 	--tw-drop-shadow: drop-shadow(0 25px 25px rgb(0 0 0 / 0.15));
-	-webkit-filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale)
-		var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia)
-		var(--tw-drop-shadow);
-	filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale)
-		var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia)
-		var(--tw-drop-shadow);
+	-webkit-filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate)
+		var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+	filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate)
+		var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 
 .drop-shadow-\[0_3px_2px_rgba\(0\2c 0\2c 0\2c 0\.15\)\] {
 	--tw-drop-shadow: drop-shadow(0 3px 2px rgba(0, 0, 0, 0.15));
-	-webkit-filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale)
-		var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia)
-		var(--tw-drop-shadow);
-	filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale)
-		var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia)
-		var(--tw-drop-shadow);
+	-webkit-filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate)
+		var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+	filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate)
+		var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 
 .drop-shadow-contractedFolder {
 	--tw-drop-shadow: drop-shadow(0 0 2px rgba(0, 0, 0, 0.1));
-	-webkit-filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale)
-		var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia)
-		var(--tw-drop-shadow);
-	filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale)
-		var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia)
-		var(--tw-drop-shadow);
+	-webkit-filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate)
+		var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+	filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate)
+		var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 
 .drop-shadow-md {
-	--tw-drop-shadow: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07))
-		drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
-	-webkit-filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale)
-		var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia)
-		var(--tw-drop-shadow);
-	filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale)
-		var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia)
-		var(--tw-drop-shadow);
+	--tw-drop-shadow: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
+	-webkit-filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate)
+		var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+	filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate)
+		var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 
 .drop-shadow-no_pos {
 	--tw-drop-shadow: drop-shadow(0 8px 5px rgba(0, 0, 0, 0.1));
-	-webkit-filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale)
-		var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia)
-		var(--tw-drop-shadow);
-	filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale)
-		var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia)
-		var(--tw-drop-shadow);
+	-webkit-filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate)
+		var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+	filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate)
+		var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 
 .filter {
-	-webkit-filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale)
-		var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia)
-		var(--tw-drop-shadow);
-	filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale)
-		var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia)
-		var(--tw-drop-shadow);
+	-webkit-filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate)
+		var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+	filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate)
+		var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 
 .transition-all {
@@ -1790,8 +1776,7 @@ video {
 
 body {
 	color: rgb(var(--foreground-rgb));
-	background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb)))
-		rgb(var(--background-start-rgb));
+	background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
 	font-size: 1rem;
 	/* 16px */
 	line-height: 1.5rem;
@@ -1856,8 +1841,7 @@ body {
 .hover\:shadow:hover {
 	--tw-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
 	--tw-shadow-colored: 0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);
-	box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000),
-		var(--tw-shadow);
+	box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
 .focus\:opacity-90:focus {
@@ -1866,10 +1850,8 @@ body {
 
 .focus\:shadow-md:focus {
 	--tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-	--tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color),
-		0 2px 4px -2px var(--tw-shadow-color);
-	box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000),
-		var(--tw-shadow);
+	--tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
+	box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
 .focus\:outline-0:focus {

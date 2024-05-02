@@ -21,30 +21,13 @@ const FolderItem = (props: iFolderItem): JSX.Element => {
 	const contentsRef = useRef<HTMLDivElement>(null);
 	const headerRef = useRef<HTMLDivElement>(null);
 	const folderRef = useRef<HTMLLIElement>(null);
-	const [isExpanded, setIsExpanded] = useState<boolean>(
-		props.display === "expanded" ? true : false
-	);
+	const [isExpanded, setIsExpanded] = useState<boolean>(props.display === "expanded" ? true : false);
 	const [showLaunchOptions, setShowLaunchOptions] = useState<boolean>(false);
 	const [slideDown, setSlideDown] = useState<boolean>(false);
 
-	const foldersSectionState: iFolderState = useSelector(
-		(state: RootState) => state.foldersSection
-	);
+	const foldersSectionState: iFolderState = useSelector((state: RootState) => state.foldersSection);
 
-	const {
-		id,
-		name,
-		marked,
-		desc,
-		display,
-		viewMode,
-		windows,
-		index,
-		onOpen,
-		onMark,
-		onDelete,
-		onEdit
-	} = props;
+	const { id, name, marked, desc, display, viewMode, windows, index, onOpen, onMark, onDelete, onEdit } = props;
 
 	useEffect(() => {
 		// Listen for clicks in the viewport. If the options list is visible, then hide it once
@@ -219,29 +202,19 @@ const FolderItem = (props: iFolderItem): JSX.Element => {
 						)}
 					</div>
 					<div className={`inline-block ${viewMode === "list" ? "w-10/12" : "w-5/12"}`}>
-						<h2
-							className={`text-md p-2 truncate ${isExpanded === false ? "text-black" : "text-black"}`}
-						>
+						<h2 className={`text-md p-2 truncate ${isExpanded === false ? "text-black" : "text-black"}`}>
 							{name}
 						</h2>
 					</div>
 					{<FolderActionBar handlers={actionBarHandlers} states={actionBarStates} />}
 				</div>
-				<div
-					ref={contentsRef}
-					className={isExpanded === true ? expContentsCSS : colContentsCSS}
-				>
+				<div ref={contentsRef} className={isExpanded === true ? expContentsCSS : colContentsCSS}>
 					{isExpanded === true && (
 						<>
 							{desc.length > 0 && (
 								<div className="px-5 mt-8 flex justify-between items-start">
-									<div
-										data-testid={"description-section"}
-										className="inline-block w-fit"
-									>
-										<p
-											className={`text-base"leading-7" text-tbfColor-darkergrey text-start`}
-										>
+									<div data-testid={"description-section"} className="inline-block w-fit">
+										<p className={`text-base"leading-7" text-tbfColor-darkergrey text-start`}>
 											{desc}
 										</p>
 									</div>

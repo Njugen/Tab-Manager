@@ -25,27 +25,17 @@ const SearchResults = (props: iSearchResultsProps): JSX.Element => {
 		results = (
 			<div className="grid grid-cols-2 gap-x-[1.75rem]">
 				<section data-testid={"folders-search-result"} className="mb-6">
-					<h3 className="uppercase font-bold text-md mb-4 text-tbfColor-darkergrey">
-						Folders
-					</h3>
-					<SearchBarFolderList
-						items={folders}
-						keyword={keyword}
-						handleOpen={launchFolder}
-					/>
+					<h3 className="uppercase font-bold text-md mb-4 text-tbfColor-darkergrey">Folders</h3>
+					<SearchBarFolderList items={folders} keyword={keyword} handleOpen={launchFolder} />
 				</section>
 
 				<section data-testid={"history-tabs-search-result"} className="mb-6">
-					<h3 className="uppercase font-bold text-md mb-4 text-tbfColor-darkergrey">
-						History
-					</h3>
+					<h3 className="uppercase font-bold text-md mb-4 text-tbfColor-darkergrey">History</h3>
 					<SearchBarHistoryTabs items={history} keyword={keyword} />
 				</section>
 
 				<section data-testid={"current-tabs-search-result"} className="mb-6">
-					<h3 className="uppercase font-bold text-md mb-4 text-tbfColor-darkergrey">
-						Currently opened
-					</h3>
+					<h3 className="uppercase font-bold text-md mb-4 text-tbfColor-darkergrey">Currently opened</h3>
 					<SearchBarSessionTabs keyword={keyword} items={session} />
 				</section>
 			</div>

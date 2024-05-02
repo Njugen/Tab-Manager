@@ -48,9 +48,7 @@ const AddToFolderPopup = (props: iAddToFolderPopup): JSX.Element => {
 			<div className="flex flex-col items-center pb-6 max-sm:h-screen">
 				{dropdownOptions.length > 1 && (
 					<div className="mt-10 text-center w-[350px] px-8">
-						<p className="text-lg text-black inline-block mb-4 font-semibold">
-							To an existing folder
-						</p>
+						<p className="text-lg text-black inline-block mb-4 font-semibold">To an existing folder</p>
 						<Dropdown
 							tag="select-folder-dropdown"
 							preset={dropdownOptions[0]}
@@ -60,15 +58,9 @@ const AddToFolderPopup = (props: iAddToFolderPopup): JSX.Element => {
 					</div>
 				)}
 				<div className="mt-5 text-center flex flex-col">
-					{dropdownOptions.length > 1 && (
-						<p className="text-lg text-black block font-semibold">Or</p>
-					)}
+					{dropdownOptions.length > 1 && <p className="text-lg text-black block font-semibold">Or</p>}
 					<div className="mb-6 mt-6">
-						<PrimaryButton
-							disabled={false}
-							text="To a new folder"
-							onClick={handleToNewFolder}
-						/>
+						<PrimaryButton disabled={false} text="To a new folder" onClick={handleToNewFolder} />
 					</div>
 				</div>
 			</div>

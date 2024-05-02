@@ -16,15 +16,7 @@ const SearchBarSessionTabs = (props: iSearchBarSessionTabsProps): JSX.Element =>
 		const list: Array<JSX.Element> = tabs.map((tab) => {
 			const { id, title, url } = tab;
 
-			return (
-				<TabItem
-					key={`tab-session-sr-key-${id}`}
-					marked={false}
-					id={id!}
-					label={title!}
-					url={url!}
-				/>
-			);
+			return <TabItem key={`tab-session-sr-key-${id}`} marked={false} id={id!} label={title!} url={url!} />;
 		});
 
 		return <ul className="list-none">{list}</ul>;

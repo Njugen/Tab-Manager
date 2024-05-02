@@ -15,10 +15,7 @@ const ExpandedSidebarNav = (props: iSidebarNav): JSX.Element => {
 				isActive={active === "main" ? true : false}
 				onClick={() => onSetActive("main")}
 			>
-				<MultipleFoldersIcon
-					size={20}
-					fill={active === "main" ? "rgb(109 0 194)" : "#525252"}
-				/>
+				<MultipleFoldersIcon size={20} fill={active === "main" ? "rgb(109 0 194)" : "#525252"} />
 			</Navlink>
 			<Navlink
 				key="settings-nav-link"

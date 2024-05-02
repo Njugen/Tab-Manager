@@ -32,10 +32,7 @@ const folderManagementSlice = createSlice({
 				[payload[0]]: payload[1]
 			};
 		},
-		updateWindowList: (
-			state,
-			action: PayloadAction<{ windowId: number; targetTab: iTabItem }>
-		): iFolderItem => {
+		updateWindowList: (state, action: PayloadAction<{ windowId: number; targetTab: iTabItem }>): iFolderItem => {
 			const { payload } = action;
 			let tempState: iFolderItem = state;
 
@@ -45,15 +42,13 @@ const folderManagementSlice = createSlice({
 				// Look for the window in tempState. If none, then create it.
 				let targetWindowIndex: number | null = null;
 
-				const filteredWindows: Array<iWindowItem> = tempState.windows.filter(
-					(testSubject, i) => {
-						// testSubject refers to the window to compare the payload's windowId to
-						if (testSubject.id === windowId) {
-							targetWindowIndex = i;
-						}
-						return windowId === testSubject.id;
+				const filteredWindows: Array<iWindowItem> = tempState.windows.filter((testSubject, i) => {
+					// testSubject refers to the window to compare the payload's windowId to
+					if (testSubject.id === windowId) {
+						targetWindowIndex = i;
 					}
-				);
+					return windowId === testSubject.id;
+				});
 
 				if (filteredWindows?.length === 0) {
 					// If the list of filtered windows is 0, then no such window has been found.
@@ -74,11 +69,11 @@ const folderManagementSlice = createSlice({
 
 					if (targetWindowIndex !== null) {
 						// Check whether or not the 'targetTab' exists in the target window.
-						const targetTabIndex: number = tempState.windows[
-							targetWindowIndex
-						].tabs.findIndex((tab: iTabItem) => {
-							return tab.id === targetTab.id;
-						});
+						const targetTabIndex: number = tempState.windows[targetWindowIndex].tabs.findIndex(
+							(tab: iTabItem) => {
+								return tab.id === targetTab.id;
+							}
+						);
 
 						if (targetTabIndex > -1) {
 							// If so, then replace its contents with the new one.

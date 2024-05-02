@@ -43,10 +43,7 @@ const HistoryTabGroupsSection = forwardRef(function HistoryTabGroupsSection(
 		};
 	}, []);
 
-	const compareHistoryItemByTime = (
-		a: chrome.history.HistoryItem,
-		b: chrome.history.HistoryItem
-	) => {
+	const compareHistoryItemByTime = (a: chrome.history.HistoryItem, b: chrome.history.HistoryItem) => {
 		let comparison: number;
 
 		if (a.lastVisitTime && b.lastVisitTime) {
@@ -58,9 +55,7 @@ const HistoryTabGroupsSection = forwardRef(function HistoryTabGroupsSection(
 		return comparison;
 	};
 
-	const loadHistory = (
-		query: chrome.history.HistoryQuery = { text: "", maxResults: 10 }
-	): void => {
+	const loadHistory = (query: chrome.history.HistoryQuery = { text: "", maxResults: 10 }): void => {
 		chrome.history.search(query, (items: Array<chrome.history.HistoryItem>) => {
 			if (items.length === 0) return;
 
@@ -103,8 +98,9 @@ const HistoryTabGroupsSection = forwardRef(function HistoryTabGroupsSection(
 			const isMarked = markedTabs.find((tab: chrome.history.HistoryItem) => id === tab.id);
 
 			if (isMarked) {
-				const updatedMarkedTabCollection: Array<chrome.history.HistoryItem> =
-					markedTabs.filter((tab) => parseInt(tab.id) !== id);
+				const updatedMarkedTabCollection: Array<chrome.history.HistoryItem> = markedTabs.filter(
+					(tab) => parseInt(tab.id) !== id
+				);
 
 				dispatch(markTab(updatedMarkedTabCollection[0]));
 			} else {
@@ -155,47 +151,33 @@ const HistoryTabGroupsSection = forwardRef(function HistoryTabGroupsSection(
 							<>
 								{useMemo(
 									() =>
-										organizeGroups().map(
-											(group: any, i: number): JSX.Element => {
-												return (
-													<Group
-														key={`group-${i}`}
-														desc={`${group[0]} minutes ago`}
-													>
-														<ul className="list-none">
-															{group[1].map((tab: any) => {
-																const collection =
-																	historySectionState.markedTabs;
-																const isMarked = collection.find(
-																	(
-																		target: chrome.history.HistoryItem
-																	) => target.id === tab.id
-																);
-																const { id, title, url } = tab;
-																return (
-																	<div
-																		className="my-3"
-																		key={`tab-${id}`}
-																	>
-																		<TabItem
-																			id={id}
-																			label={title}
-																			url={url}
-																			onMark={handleMarkTab}
-																			marked={
-																				isMarked
-																					? true
-																					: false
-																			}
-																		/>
-																	</div>
-																);
-															})}
-														</ul>
-													</Group>
-												);
-											}
-										),
+										organizeGroups().map((group: any, i: number): JSX.Element => {
+											return (
+												<Group key={`group-${i}`} desc={`${group[0]} minutes ago`}>
+													<ul className="list-none">
+														{group[1].map((tab: any) => {
+															const collection = historySectionState.markedTabs;
+															const isMarked = collection.find(
+																(target: chrome.history.HistoryItem) =>
+																	target.id === tab.id
+															);
+															const { id, title, url } = tab;
+															return (
+																<div className="my-3" key={`tab-${id}`}>
+																	<TabItem
+																		id={id}
+																		label={title}
+																		url={url}
+																		onMark={handleMarkTab}
+																		marked={isMarked ? true : false}
+																	/>
+																</div>
+															);
+														})}
+													</ul>
+												</Group>
+											);
+										}),
 									[organizeGroups()]
 								)}
 							</>

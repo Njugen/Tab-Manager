@@ -8,13 +8,8 @@ interface iHandleShowResultsContainerArgs {
 
 // Mandles the mechanic of showing search results in the UI
 const handleShowResultsContainer = (args: iHandleShowResultsContainerArgs): void => {
-	const {
-		searchResultsContainerRef,
-		showResultsContainer,
-		slideDown,
-		handleSlideDown,
-		setShowResultsContainer
-	} = args;
+	const { searchResultsContainerRef, showResultsContainer, slideDown, handleSlideDown, setShowResultsContainer } =
+		args;
 
 	if (showResultsContainer === false) {
 		setShowResultsContainer(true);

@@ -4,11 +4,7 @@ import { useSelector } from "react-redux";
 import { iFolderItem } from "../../interfaces/folder_item";
 import FolderItem from "../../components/features/folder_item/folder_item";
 import TabItem from "../../components/features/tab_item";
-import {
-	filterSessionTabsByString,
-	filterHistoryTabsByString,
-	filterFoldersByString
-} from "../../tools/tab_filters";
+import { filterSessionTabsByString, filterHistoryTabsByString, filterFoldersByString } from "../../tools/tab_filters";
 import CloseIcon from "../../components/icons/close_icon";
 import iCurrentSessionState from "../../interfaces/states/current_session_state";
 import styles from "../../styles/global_utils.module.scss";
@@ -26,10 +22,7 @@ function SearchResultsContainer(props: any): JSX.Element {
 		onClose();
 	};
 
-	const handlePrepareLaunchFolder = (
-		windows: Array<iWindowItem>,
-		type: tLaunchBehavior
-	): void => {
+	const handlePrepareLaunchFolder = (windows: Array<iWindowItem>, type: tLaunchBehavior): void => {
 		setFolderLaunchBehavior(type);
 		setWindowsPayload(windows);
 		evaluatePerformanceWarning(type, windows);
@@ -55,10 +48,7 @@ function SearchResultsContainer(props: any): JSX.Element {
 	};
 
 	// Launch folder
-	const handleLaunchFolder = (
-		windows: Array<iWindowItem>,
-		launchBehavior: tLaunchBehavior
-	): void => {
+	const handleLaunchFolder = (windows: Array<iWindowItem>, launchBehavior: tLaunchBehavior): void => {
 		// Now, prepare a snapshot, where currently opened windows get stored
 		let snapshot: Array<chrome.windows.Window> = [];
 
@@ -138,9 +128,7 @@ function SearchResultsContainer(props: any): JSX.Element {
 	}, [folderLaunchBehavior]);
 
 	const folderState: Array<iFolderItem> = useSelector((state: any) => state.folder);
-	const sessionSectionState: iCurrentSessionState = useSelector(
-		(state: any) => state.sessionSection
-	);
+	const sessionSectionState: iCurrentSessionState = useSelector((state: any) => state.sessionSection);
 	const historySectionState = useSelector((state: any) => state.historySection);
 
 	// Render all filtered folders
@@ -193,15 +181,7 @@ function SearchResultsContainer(props: any): JSX.Element {
 		return tabs.map((tab: chrome.history.HistoryItem) => {
 			const { id, title, url } = tab;
 
-			return (
-				<TabItem
-					key={`history-tab-id-${id}`}
-					marked={false}
-					id={parseInt(id)}
-					label={title!}
-					url={url!}
-				/>
-			);
+			return <TabItem key={`history-tab-id-${id}`} marked={false} id={parseInt(id)} label={title!} url={url!} />;
 		});
 	};
 
@@ -219,11 +199,7 @@ function SearchResultsContainer(props: any): JSX.Element {
 					primaryButton={{
 						text: "Yes, open",
 						callback: () => {
-							if (windowsPayload)
-								handleLaunchFolder(
-									windowsPayload,
-									folderLaunchBehavior || undefined
-								);
+							if (windowsPayload) handleLaunchFolder(windowsPayload, folderLaunchBehavior || undefined);
 							setShowPerformanceWarning(false);
 						}
 					}}
@@ -236,14 +212,8 @@ function SearchResultsContainer(props: any): JSX.Element {
 					}}
 				/>
 			)}
-			<div
-				data-testid="sidepanel-search-results"
-				className="bg-white absolute top-20 z-[200] px-4 w-full"
-			>
-				<div
-					id="popup-header"
-					className="pb-5 border-tbfColor-lgrey w-full flex justify-between"
-				>
+			<div data-testid="sidepanel-search-results" className="bg-white absolute top-20 z-[200] px-4 w-full">
+				<div id="popup-header" className="pb-5 border-tbfColor-lgrey w-full flex justify-between">
 					<header>
 						<h1
 							data-testid="manage-folder-title"
@@ -257,21 +227,15 @@ function SearchResultsContainer(props: any): JSX.Element {
 					</button>
 				</div>
 				<section data-testid="folders-search-result" className="mt-8">
-					<h3 className="uppercase font-bold text-md mb-4 text-tbfColor-darkergrey">
-						Folders
-					</h3>
+					<h3 className="uppercase font-bold text-md mb-4 text-tbfColor-darkergrey">Folders</h3>
 					<ul className="list-none">{renderFolders()}</ul>
 				</section>
 				<section data-testid="current-tabs-search-result" className="mt-8">
-					<h3 className="uppercase font-bold text-md mb-4 text-tbfColor-darkergrey">
-						Currently opened
-					</h3>
+					<h3 className="uppercase font-bold text-md mb-4 text-tbfColor-darkergrey">Currently opened</h3>
 					<ul className="list-none">{renderSessionTabs()}</ul>
 				</section>
 				<section data-testid="history-tabs-search-result" className="mt-8">
-					<h3 className="uppercase font-bold text-md mb-4 text-tbfColor-darkergrey">
-						History
-					</h3>
+					<h3 className="uppercase font-bold text-md mb-4 text-tbfColor-darkergrey">History</h3>
 					<ul className="list-none">{renderHistoryTabs()}</ul>
 				</section>
 			</div>

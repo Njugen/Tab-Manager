@@ -32,9 +32,7 @@ const SectionContainer = (props: iSectionContainer): JSX.Element => {
 					>
 						<div className="flex justify-between mb-10 pb-8 px-14 border-b border-tbfColor-lgrey">
 							<header>
-								<h2 className="text-4xl text-tbfColor-darkpurple font-light inline-block">
-									{title}
-								</h2>
+								<h2 className="text-4xl text-tbfColor-darkpurple font-light inline-block">{title}</h2>
 							</header>
 							<button
 								className={`${styles.opacity_hover_effect} m-1`}
@@ -50,9 +48,7 @@ const SectionContainer = (props: iSectionContainer): JSX.Element => {
 						<div className="flex justify-between min-h-[350px]">
 							<div className="w-full mb-6 px-14 pb-4">
 								<div className="flex flex-col 2xl:flex-row justify-end items-center 2xl:items-end mb-8">
-									<div className="mt-10 justify 2xl:mt-0">
-										{options && options()}
-									</div>
+									<div className="mt-10 justify 2xl:mt-0">{options && options()}</div>
 								</div>
 								{children}
 							</div>
@@ -86,9 +82,7 @@ const SectionContainer = (props: iSectionContainer): JSX.Element => {
 									<h1 className="text-4xl text-tbfColor-darkpurple font-light inline-block">
 										{title}
 									</h1>
-									<div className="mt-10 justify 2xl:mt-0">
-										{options && options()}
-									</div>
+									<div className="mt-10 justify 2xl:mt-0">{options && options()}</div>
 								</div>
 								{children}
 							</div>

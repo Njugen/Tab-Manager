@@ -17,13 +17,7 @@ const SearchBarHistoryTabs = (props: iSearchBarHistoryTabsProps): JSX.Element =>
 			const { id, title, url } = tab;
 
 			return (
-				<TabItem
-					key={`tab-history-sr-key-${id}`}
-					marked={false}
-					id={parseInt(id)}
-					label={title!}
-					url={url!}
-				/>
+				<TabItem key={`tab-history-sr-key-${id}`} marked={false} id={parseInt(id)} label={title!} url={url!} />
 			);
 		});
 

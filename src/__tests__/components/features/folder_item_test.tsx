@@ -237,9 +237,7 @@ describe("Test <FolderItem>", () => {
 
 			describe("Focus on the launch/open folder button", () => {
 				test("Folder open button is visible when 'onOpen' prop is provided", async () => {
-					mockFolderItem.onOpen = jest.fn(
-						(e: Array<iWindowItem>, type: string): void => {}
-					);
+					mockFolderItem.onOpen = jest.fn((e: Array<iWindowItem>, type: string): void => {});
 
 					jest.useFakeTimers();
 
@@ -255,9 +253,7 @@ describe("Test <FolderItem>", () => {
 				});
 
 				test("Launching option sequence through submenu works", async () => {
-					mockFolderItem.onOpen = jest.fn(
-						(e: Array<iWindowItem>, type: string): void => {}
-					);
+					mockFolderItem.onOpen = jest.fn((e: Array<iWindowItem>, type: string): void => {});
 
 					const { onOpen } = mockFolderItem;
 
@@ -278,8 +274,7 @@ describe("Test <FolderItem>", () => {
 						fireEvent.click(openButton, { bubbles: true });
 
 						/* make sure the launch options are visible */
-						let openFolderOptionsMenu =
-							within(folderItem).getByTestId("open-folder-options");
+						let openFolderOptionsMenu = within(folderItem).getByTestId("open-folder-options");
 
 						/* Click a launch options */
 						let optionsButton = within(openFolderOptionsMenu).getAllByRole("button");
@@ -289,16 +284,14 @@ describe("Test <FolderItem>", () => {
 						expect(onOpen).toHaveBeenCalled();
 
 						/* Hide the folders options */
-						let updatedFolderOptionsMenu =
-							within(folderItem).queryByTestId("open-folder-options");
+						let updatedFolderOptionsMenu = within(folderItem).queryByTestId("open-folder-options");
 						expect(updatedFolderOptionsMenu).not.toBeInTheDocument();
 
 						/* Click the open button again */
 						fireEvent.click(openButton, { bubbles: true });
 
 						/* Make sure the launch options are visible again */
-						openFolderOptionsMenu =
-							within(folderItem).getByTestId("open-folder-options");
+						openFolderOptionsMenu = within(folderItem).getByTestId("open-folder-options");
 						expect(openFolderOptionsMenu).toBeInTheDocument();
 
 						////////// END
@@ -491,9 +484,7 @@ describe("Test <FolderItem>", () => {
 
 			describe("Focus on the launch/open folder button", () => {
 				test("Folder open button is visible when 'onOpen' prop is provided", async () => {
-					mockFolderItem.onOpen = jest.fn(
-						(e: Array<iWindowItem>, type: string): void => {}
-					);
+					mockFolderItem.onOpen = jest.fn((e: Array<iWindowItem>, type: string): void => {});
 
 					jest.useFakeTimers();
 
@@ -509,9 +500,7 @@ describe("Test <FolderItem>", () => {
 				});
 
 				test("Launching option sequence through submenu works", async () => {
-					mockFolderItem.onOpen = jest.fn(
-						(e: Array<iWindowItem>, type: string): void => {}
-					);
+					mockFolderItem.onOpen = jest.fn((e: Array<iWindowItem>, type: string): void => {});
 
 					const { onOpen } = mockFolderItem;
 
@@ -532,8 +521,7 @@ describe("Test <FolderItem>", () => {
 						fireEvent.click(openButton, { bubbles: true });
 
 						/* make sure the launch options are visible */
-						let openFolderOptionsMenu =
-							within(folderItem).getByTestId("open-folder-options");
+						let openFolderOptionsMenu = within(folderItem).getByTestId("open-folder-options");
 
 						/* Click a launch options */
 						let optionsButton = within(openFolderOptionsMenu).getAllByRole("button");
@@ -543,16 +531,14 @@ describe("Test <FolderItem>", () => {
 						expect(onOpen).toHaveBeenCalled();
 
 						/* Hide the folders options */
-						let updatedFolderOptionsMenu =
-							within(folderItem).queryByTestId("open-folder-options");
+						let updatedFolderOptionsMenu = within(folderItem).queryByTestId("open-folder-options");
 						expect(updatedFolderOptionsMenu).not.toBeInTheDocument();
 
 						/* Click the open button again */
 						fireEvent.click(openButton, { bubbles: true });
 
 						/* Make sure the launch options are visible again */
-						openFolderOptionsMenu =
-							within(folderItem).getByTestId("open-folder-options");
+						openFolderOptionsMenu = within(folderItem).getByTestId("open-folder-options");
 						expect(openFolderOptionsMenu).toBeInTheDocument();
 
 						////////// END

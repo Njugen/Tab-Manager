@@ -1,7 +1,5 @@
 // Grouping and sorting tabs by latest to oldest
-const groupTabsByTime = (
-	historyTabs: Array<JSX.Element>
-): Map<number, Array<chrome.history.HistoryItem>> => {
+const groupTabsByTime = (historyTabs: Array<JSX.Element>): Map<number, Array<chrome.history.HistoryItem>> => {
 	const groups: Map<number, Array<chrome.history.HistoryItem>> = new Map();
 
 	historyTabs.forEach((tab: any) => {

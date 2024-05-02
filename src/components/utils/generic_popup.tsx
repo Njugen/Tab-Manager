@@ -1,9 +1,6 @@
 import { forwardRef, useEffect } from "react";
 import CloseIcon from "../icons/close_icon";
-import {
-	innerStyleDirection,
-	outerStyleDirection
-} from "../features/folder_manager/functions/style_directions";
+import { innerStyleDirection, outerStyleDirection } from "../features/folder_manager/functions/style_directions";
 import PrimaryButton from "./primary_button/primary_button";
 import SecondaryButton from "./secondary_button";
 import { iGenericPopup } from "../../interfaces/generic_popup";
@@ -32,11 +29,7 @@ const GenericPopup = forwardRef(function GenericPopup(props: iGenericPopup, ref:
 	}, []);
 
 	return (
-		<section
-			role="dialog"
-			ref={ref}
-			className={`${styles.scroll_style} ${outerStyleDirection(type, show)}`}
-		>
+		<section role="dialog" ref={ref} className={`${styles.scroll_style} ${outerStyleDirection(type, show)}`}>
 			<div className="w-full h-full">
 				<div className="relative top-0 md:bottom-12 max-w-[992px] mx-auto">
 					<div className={innerStyleDirection(type, show)}>
@@ -50,10 +43,7 @@ const GenericPopup = forwardRef(function GenericPopup(props: iGenericPopup, ref:
 							>
 								{title}
 							</h1>
-							<button
-								className={`${styles.opacity_hover_effect} m-1`}
-								onClick={handleClose}
-							>
+							<button className={`${styles.opacity_hover_effect} m-1`} onClick={handleClose}>
 								<CloseIcon size={34} fill="rgba(0,0,0,0.2)" />
 							</button>
 						</header>
@@ -62,16 +52,8 @@ const GenericPopup = forwardRef(function GenericPopup(props: iGenericPopup, ref:
 						</div>
 						{save && (
 							<div className="max-sm:justify-center px-8 py-8 mt-4 flex justify-end border-t border-tbfColor-lgrey s">
-								<SecondaryButton
-									text={cancel.label}
-									disabled={false}
-									onClick={handleClose}
-								/>
-								<PrimaryButton
-									text={save.label}
-									disabled={false}
-									onClick={handleSave}
-								/>
+								<SecondaryButton text={cancel.label} disabled={false} onClick={handleClose} />
+								<PrimaryButton text={save.label} disabled={false} onClick={handleSave} />
 							</div>
 						)}
 					</div>
