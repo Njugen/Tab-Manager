@@ -1,6 +1,6 @@
 interface iSidebarNav {
-    active: string,
-    onSetActive: (value: string) => void
+	active: string;
+	onSetActive: (value: string) => void;
 }
 
 export default iSidebarNav;

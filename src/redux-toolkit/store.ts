@@ -9,18 +9,18 @@ import pluginSettingsReducer from "./slices/plugin_settings_slice";
 import sidepanelReducer from "./slices/sidepanel_slice";
 
 const reducers: any = {
-    folderManagement: folderManagementReducer,
-    folder: folderReducer,
-    foldersSection: foldersSectionReducer,
-    sessionSection: sessionSectionReducer,
-    historySection: historySectionReducer,
-    misc: miscReducer,
-    pluginSettings: pluginSettingsReducer,
-    sidepanel: sidepanelReducer
-}
+	folderManagement: folderManagementReducer,
+	folder: folderReducer,
+	foldersSection: foldersSectionReducer,
+	sessionSection: sessionSectionReducer,
+	historySection: historySectionReducer,
+	misc: miscReducer,
+	pluginSettings: pluginSettingsReducer,
+	sidepanel: sidepanelReducer
+};
 
 export const store = configureStore({
-    reducer: reducers
+	reducer: reducers
 });
 
 export { reducers };

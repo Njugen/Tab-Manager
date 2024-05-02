@@ -1,5 +1,5 @@
 interface iSimpleSearchBar {
-    onChange: (e: any) => void
+	onChange: (e: any) => void;
 }
 
 export default iSimpleSearchBar;

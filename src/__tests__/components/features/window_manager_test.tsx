@@ -1,35 +1,35 @@
 import { render, screen, within, fireEvent } from "@testing-library/react";
-import '@testing-library/jest-dom'
+import "@testing-library/jest-dom";
 import WindowManager from "../../../components/features/window_manager/window_manager";
 import { Provider } from "react-redux";
 import { store } from "../../../redux-toolkit/store";
 
 describe("Test <WindowManager>", () => {
-    test("No window lists at invokation", () => {
-        render(
-            <Provider store={store}>
-                <WindowManager />
-            </Provider>
-        );
+	test("No window lists at invokation", () => {
+		render(
+			<Provider store={store}>
+				<WindowManager />
+			</Provider>
+		);
 
-        let windowList = screen.queryAllByRole("list");
-        expect(windowList.length).toEqual(0)
-    })
-    
-    test("Clicking create window button renders a window with textfield (editable tab)", () => {
-        render(
-            <Provider store={store}>
-                <WindowManager />
-            </Provider>
-        );
-        const createWindowButton = screen.getByRole("button");
-        fireEvent.click(createWindowButton);
+		let windowList = screen.queryAllByRole("list");
+		expect(windowList.length).toEqual(0);
+	});
 
-        const windowList = screen.getAllByRole("list");
-        let tabList = within(windowList[0]).getAllByRole("listitem");
+	test("Clicking create window button renders a window with textfield (editable tab)", () => {
+		render(
+			<Provider store={store}>
+				<WindowManager />
+			</Provider>
+		);
+		const createWindowButton = screen.getByRole("button");
+		fireEvent.click(createWindowButton);
 
-        let textfield = within(tabList[0]).getByRole("textbox");
+		const windowList = screen.getAllByRole("list");
+		let tabList = within(windowList[0]).getAllByRole("listitem");
 
-        expect(textfield).toBeInTheDocument();
-    })
+		let textfield = within(tabList[0]).getByRole("textbox");
+
+		expect(textfield).toBeInTheDocument();
+	});
 });

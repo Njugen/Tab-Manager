@@ -1,70 +1,53 @@
 import { render, screen, within, fireEvent } from "@testing-library/react";
-import '@testing-library/jest-dom'
+import "@testing-library/jest-dom";
 import randomNumber from "../../../tools/random_number";
 import Navlink from "../../../components/utils/navlink";
 import { iNavlink } from "../../../interfaces/nav_link";
 
- 
-const mockChild = <img src="/favicon.ico" alt="test" data-testid="mock-child" />
+const mockChild = <img src="/favicon.ico" alt="test" data-testid="mock-child" />;
 const mockUrl = "http://google.com";
 const mockFn = jest.fn();
 const mockLabel = randomNumber().toString();
 
 const props: iNavlink = {
-    url: mockUrl,
-    label: mockLabel,
-    onClick: mockFn,
-    children: mockChild
-}
+	url: mockUrl,
+	label: mockLabel,
+	onClick: mockFn,
+	children: mockChild
+};
 
 afterEach(() => {
-    jest.clearAllMocks();
-})
+	jest.clearAllMocks();
+});
 
 describe("Test <Navlink>", () => {
-    test("Link has 'label' prop as text", () => {
-        render(
-            <Navlink {...props}>
-                {mockChild}
-            </Navlink>
-        )
+	test("Link has 'label' prop as text", () => {
+		render(<Navlink {...props}>{mockChild}</Navlink>);
 
-        const link = screen.getByRole("link");
-        expect(link).toHaveTextContent(mockLabel);
-    });
+		const link = screen.getByRole("link");
+		expect(link).toHaveTextContent(mockLabel);
+	});
 
-    test("Link has 'url' prop as href attribute", () => {
-        render(
-            <Navlink {...props}>
-                {mockChild}
-            </Navlink>
-        )
+	test("Link has 'url' prop as href attribute", () => {
+		render(<Navlink {...props}>{mockChild}</Navlink>);
 
-        const link = screen.getByRole("link");  
-        expect(link).toHaveAttribute("href", mockUrl);
-    });
+		const link = screen.getByRole("link");
+		expect(link).toHaveAttribute("href", mockUrl);
+	});
 
-    test("Link has child component", () => {
-        render(
-            <Navlink {...props}>
-                {mockChild}
-            </Navlink>
-        )
+	test("Link has child component", () => {
+		render(<Navlink {...props}>{mockChild}</Navlink>);
 
-        const link = screen.getByRole("link");
-        const child = within(link).getByTestId("mock-child");
-        expect(child).toBeInTheDocument()
-    });
+		const link = screen.getByRole("link");
+		const child = within(link).getByTestId("mock-child");
+		expect(child).toBeInTheDocument();
+	});
 
-    test("Clicking the link triggers 'onClick' callback", () => {
-        render(
-            <Navlink {...props}>
-                {mockChild}
-            </Navlink>
-        )
+	test("Clicking the link triggers 'onClick' callback", () => {
+		render(<Navlink {...props}>{mockChild}</Navlink>);
 
-        const link = screen.getByRole("link");
-        fireEvent.click(link);
-        expect(mockFn).toHaveBeenCalled();
-    });
+		const link = screen.getByRole("link");
+		fireEvent.click(link);
+		expect(mockFn).toHaveBeenCalled();
+	});
 });

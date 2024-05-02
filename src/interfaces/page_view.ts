@@ -1,5 +1,5 @@
 interface iPageView {
-    view: string
+	view: string;
 }
 
-export default iPageView
+export default iPageView;

@@ -1,15 +1,15 @@
 type tNavLink = {
-    label: string
-    url: string,
-    isActive: boolean,
-    onClick: () => void,
-}
+	label: string;
+	url: string;
+	isActive: boolean;
+	onClick: () => void;
+};
 interface iNavlink {
-    children: Array<JSX.Element> | JSX.Element,
-    label?: string,
-    url: string,
-    isActive?: boolean,
-    onClick: () => void,
+	children: Array<JSX.Element> | JSX.Element;
+	label?: string;
+	url: string;
+	isActive?: boolean;
+	onClick: () => void;
 }
 
-export {tNavLink, iNavlink};
+export { tNavLink, iNavlink };

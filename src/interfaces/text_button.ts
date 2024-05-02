@@ -1,7 +1,7 @@
 interface iTextButton {
-    text: String,
-    disabled: boolean,
-    onClick: (e: any) => void
+	text: String;
+	disabled: boolean;
+	onClick: (e: any) => void;
 }
 
-export {iTextButton}
+export { iTextButton };

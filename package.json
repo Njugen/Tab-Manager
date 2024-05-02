@@ -41,12 +41,11 @@
     "webpack-merge": "^5.9.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "format": "npx prettier --write ./src",
     "build-prod-firefox": "webpack --env browser=firefox --env label=prod --progress --config webpack.prod.js",
     "build-dev-firefox": "webpack --env browser=firefox --env label=dev --progress --config webpack.dev.js",
     "build-prod-chrome": "webpack --env browser=chrome --env label=prod --progress --config webpack.prod.js",
     "build-dev-chrome": "webpack --env browser=chrome --env label=dev --progress --config webpack.dev.js",
-    "eject": "react-scripts eject",
     "test": "react-scripts test --verbose --coverage --watchAll"
   },
   "eslintConfig": {

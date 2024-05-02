@@ -9,13 +9,17 @@ import buttonStateCSS from "./functions/button_state_css";
 */
 
 const PrimaryButton = (props: iTextButton): JSX.Element => {
-    const { text, disabled, onClick } = props;
+	const { text, disabled, onClick } = props;
 
-    return (
-        <button disabled={disabled} className={`text-white py-2 px-6 mx-2 ${buttonStateCSS(disabled)} border-2 rounded-3xl`} onClick={onClick}>
-            {text}
-        </button>
-    ); 
-}
+	return (
+		<button
+			disabled={disabled}
+			className={`text-white py-2 px-6 mx-2 ${buttonStateCSS(disabled)} border-2 rounded-3xl`}
+			onClick={onClick}
+		>
+			{text}
+		</button>
+	);
+};
 
 export default PrimaryButton;

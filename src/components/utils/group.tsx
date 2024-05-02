@@ -5,16 +5,14 @@ import iGroup from "../../interfaces/group";
 */
 
 const Group = (props: iGroup): JSX.Element => {
-    const { desc, children } = props;
+	const { desc, children } = props;
 
-    return (
-        <div data-testid="tab-group" className="py-3">
-            <p className="text-xs text-right font-semibold">
-                {desc}
-            </p>
-            {children}
-        </div>
-    ); 
-}
+	return (
+		<div data-testid="tab-group" className="py-3">
+			<p className="text-xs text-right font-semibold">{desc}</p>
+			{children}
+		</div>
+	);
+};
 
 export default Group;

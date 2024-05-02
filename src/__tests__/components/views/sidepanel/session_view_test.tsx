@@ -1,320 +1,338 @@
 import { render, screen, within, fireEvent } from "@testing-library/react";
-import '@testing-library/jest-dom'
+import "@testing-library/jest-dom";
 import mockStore, { mockStoreNoFolders } from "../../../../tools/testing/mock_store";
 import { Provider } from "react-redux";
 import mockBrowserStorage from "../../../../tools/testing/mock_browser_storage";
-import mockWindows from './../../../../tools/testing/mock_windows';
+import mockWindows from "./../../../../tools/testing/mock_windows";
 import { act } from "react-dom/test-utils";
 import SessionView from "../../../../views/sidepanel/session_view";
 
 beforeEach(() => {
-    // @ts-expect-error
-    chrome.storage.local.get = jest.fn((query, callback: (e: any) => {}): void => {
-        callback(mockBrowserStorage)
-    })
+	// @ts-expect-error
+	chrome.storage.local.get = jest.fn((query, callback: (e: any) => {}): void => {
+		callback(mockBrowserStorage);
+	});
 
-    // @ts-expect-error
-    chrome.windows.getAll = jest.fn((query, callback: (e: any) => {}): void => {
-        callback([...mockWindows])
-    })
-    jest.useFakeTimers();
-})
+	// @ts-expect-error
+	chrome.windows.getAll = jest.fn((query, callback: (e: any) => {}): void => {
+		callback([...mockWindows]);
+	});
+	jest.useFakeTimers();
+});
 
 afterEach(() => {
-    jest.useRealTimers();
-})
+	jest.useRealTimers();
+});
 
 describe("Test <SessionSection>", () => {
-    test("There are no warning/alerts when rendered", () => {
-        render(
-            <Provider store={mockStore}>
-                <SessionView />
-            </Provider>
-        );
-        const alert = screen.queryByRole("alert");
-        expect(alert).not.toBeInTheDocument();
-    });
+	test("There are no warning/alerts when rendered", () => {
+		render(
+			<Provider store={mockStore}>
+				<SessionView />
+			</Provider>
+		);
+		const alert = screen.queryByRole("alert");
+		expect(alert).not.toBeInTheDocument();
+	});
 
-    test("There are at least one window listed if those exist in browser storage", () => {
+	test("There are at least one window listed if those exist in browser storage", () => {
+		render(
+			<Provider store={mockStore}>
+				<SessionView />
+			</Provider>
+		);
 
-        render(
-            <Provider store={mockStore}>
-                <SessionView />
-            </Provider>
-        );
+		const windows = screen.getAllByTestId("window-item");
 
-        const windows = screen.getAllByTestId("window-item");
+		expect(windows.length).toBeGreaterThanOrEqual(1);
+	});
 
-        expect(windows.length).toBeGreaterThanOrEqual(1);
-    })
+	test("Each window has at least one tab", () => {
+		// @ts-expect-error
+		chrome.windows.getAll = jest.fn((query, callback: (e: any) => {}): void => {
+			callback(mockWindows);
+		});
 
-    test("Each window has at least one tab", () => {
-        // @ts-expect-error
-        chrome.windows.getAll = jest.fn((query, callback: (e: any) => {}): void => {
-            callback(mockWindows)
-        })
+		render(
+			<Provider store={mockStore}>
+				<SessionView />
+			</Provider>
+		);
 
-        render(
-            <Provider store={mockStore}>
-                <SessionView />
-            </Provider>
-        );
+		const windows = screen.getAllByTestId("window-item");
 
-        const windows = screen.getAllByTestId("window-item");
+		windows.forEach((window) => {
+			const tabs = within(window).getAllByTestId("tab-item");
+			expect(tabs.length).toBeGreaterThanOrEqual(1);
+		});
+	});
 
-        windows.forEach((window) => {
-            const tabs = within(window).getAllByTestId("tab-item");
-            expect(tabs.length).toBeGreaterThanOrEqual(1);
-        })
-    })
+	test("There are no windows listed if there are none in browser storage", () => {
+		// @ts-expect-error
+		chrome.windows.getAll = jest.fn((query, callback: (e: any) => {}): void => {
+			callback([]);
+		});
 
-    test("There are no windows listed if there are none in browser storage", () => {
-        // @ts-expect-error
-        chrome.windows.getAll = jest.fn((query, callback: (e: any) => {}): void => {
-            callback([])
-        })
+		render(
+			<Provider store={mockStore}>
+				<SessionView />
+			</Provider>
+		);
 
-        render(
-            <Provider store={mockStore}>
-                <SessionView />
-            </Provider>
-        );
+		const windows = screen.queryAllByTestId("window-item");
 
-        const windows = screen.queryAllByTestId("window-item");
+		expect(windows.length).toEqual(0);
+	});
 
-        expect(windows.length).toEqual(0);
-    });
+	test("Attempt at removing a window does not trigger warnings", () => {
+		// @ts-expect-error
+		chrome.windows.getAll = jest.fn((query, callback: (e: any) => {}): void => {
+			callback(mockWindows);
+		});
 
-    test("Attempt at removing a window does not trigger warnings", () => {
-        // @ts-expect-error
-        chrome.windows.getAll = jest.fn((query, callback: (e: any) => {}): void => {
-            callback(mockWindows)
-        })
+		render(
+			<Provider store={mockStore}>
+				<SessionView />
+			</Provider>
+		);
 
-        render(
-            <Provider store={mockStore}>
-                <SessionView />
-            </Provider>
-        );
+		const windows = screen.getAllByTestId("window-item");
+		const firstWindow = windows[0];
 
-        const windows = screen.getAllByTestId("window-item");
-        const firstWindow = windows[0];
+		const trashIcon = within(firstWindow).getByTestId("trash-icon");
+		fireEvent.click(trashIcon, { bubbles: true });
 
-        const trashIcon = within(firstWindow).getByTestId("trash-icon");
-        fireEvent.click(trashIcon, { bubbles: true });
-        
-        const alert = screen.queryByRole("alert");
-        expect(alert).not.toBeInTheDocument();
-    })
+		const alert = screen.queryByRole("alert");
+		expect(alert).not.toBeInTheDocument();
+	});
 
-    test("Attempt at removing the only listed window triggers a warning", () => {
-        // @ts-expect-error
-        chrome.windows.getAll = jest.fn((query, callback: (e: any) => {}): void => {
-            callback([mockWindows[0]])
-        })
+	test("Attempt at removing the only listed window triggers a warning", () => {
+		// @ts-expect-error
+		chrome.windows.getAll = jest.fn((query, callback: (e: any) => {}): void => {
+			callback([mockWindows[0]]);
+		});
 
-        render(
-            <Provider store={mockStore}>
-                <SessionView />
-            </Provider>
-        );
+		render(
+			<Provider store={mockStore}>
+				<SessionView />
+			</Provider>
+		);
 
-        const windows = screen.getAllByTestId("window-item");
-        const firstWindow = windows[0];
+		const windows = screen.getAllByTestId("window-item");
+		const firstWindow = windows[0];
 
-        const trashIcon = within(firstWindow).getByTestId("trash-icon");
-        fireEvent.click(trashIcon, { bubbles: true });
-        
-        const alert = screen.queryByRole("alert");
-        expect(alert).toBeInTheDocument();
-    })
+		const trashIcon = within(firstWindow).getByTestId("trash-icon");
+		fireEvent.click(trashIcon, { bubbles: true });
 
-    test("Clicking cancel in the warning message will close it", () => {
-        // @ts-expect-error
-        chrome.windows.getAll = jest.fn((query, callback: (e: any) => {}): void => {
-            callback([mockWindows[0]])
-        })
+		const alert = screen.queryByRole("alert");
+		expect(alert).toBeInTheDocument();
+	});
 
-        render(
-            <Provider store={mockStore}>
-                <SessionView />
-            </Provider>
-        );
+	test("Clicking cancel in the warning message will close it", () => {
+		// @ts-expect-error
+		chrome.windows.getAll = jest.fn((query, callback: (e: any) => {}): void => {
+			callback([mockWindows[0]]);
+		});
 
-        const windows = screen.getAllByTestId("window-item");
-        const firstWindow = windows[0];
+		render(
+			<Provider store={mockStore}>
+				<SessionView />
+			</Provider>
+		);
 
-        const trashIcon = within(firstWindow).getByTestId("trash-icon");
-        fireEvent.click(trashIcon, { bubbles: true });
-        
-        const alert = screen.getByRole("alert");
-        const cancelButton = within(alert).getByTestId("alert-cancel-button");
+		const windows = screen.getAllByTestId("window-item");
+		const firstWindow = windows[0];
 
-        fireEvent.click(cancelButton);
-        expect(alert).not.toBeInTheDocument();
-    })
+		const trashIcon = within(firstWindow).getByTestId("trash-icon");
+		fireEvent.click(trashIcon, { bubbles: true });
 
-    test("Clicking cancel in the warning message will trigger browser api that closes browser", () => {
-        // @ts-expect-error
-        chrome.windows.getAll = jest.fn((query, callback: (e: any) => {}): void => {
-            callback([mockWindows[0]])
-        })
-        // @ts-expect-error
-        chrome.windows.remove = jest.fn((windowId: number): void => {});
+		const alert = screen.getByRole("alert");
+		const cancelButton = within(alert).getByTestId("alert-cancel-button");
 
-        render(
-            <Provider store={mockStore}>
-                <SessionView />
-            </Provider>
-        );
+		fireEvent.click(cancelButton);
+		expect(alert).not.toBeInTheDocument();
+	});
 
-        const windows = screen.getAllByTestId("window-item");
-        const firstWindow = windows[0];
+	test("Clicking cancel in the warning message will trigger browser api that closes browser", () => {
+		// @ts-expect-error
+		chrome.windows.getAll = jest.fn((query, callback: (e: any) => {}): void => {
+			callback([mockWindows[0]]);
+		});
+		// @ts-expect-error
+		chrome.windows.remove = jest.fn((windowId: number): void => {});
 
-        const trashIcon = within(firstWindow).getByTestId("trash-icon");
-        fireEvent.click(trashIcon, { bubbles: true });
-        
-        const alert = screen.getByRole("alert");
-        const proceedButton = within(alert).getByTestId("alert-proceed-button");
+		render(
+			<Provider store={mockStore}>
+				<SessionView />
+			</Provider>
+		);
 
-        fireEvent.click(proceedButton);
-        expect(chrome.windows.remove).toHaveBeenCalled();
-    })
+		const windows = screen.getAllByTestId("window-item");
+		const firstWindow = windows[0];
 
-    test("Folder Manager contains session windows/tabs if user choose to add session to a new folder", () => {
-        // @ts-expect-error
-        chrome.windows.getAll = jest.fn((query, callback: (e: any) => {}): void => {
-            callback(mockWindows)
-        })
+		const trashIcon = within(firstWindow).getByTestId("trash-icon");
+		fireEvent.click(trashIcon, { bubbles: true });
 
-        render(
-            <Provider store={mockStore}>
-                <SessionView />
-            </Provider>
-        );
+		const alert = screen.getByRole("alert");
+		const proceedButton = within(alert).getByTestId("alert-proceed-button");
 
-        const addToFolderButton = screen.getByTestId("save-icon");
-        fireEvent.click(addToFolderButton, { bubbles: true });
+		fireEvent.click(proceedButton);
+		expect(chrome.windows.remove).toHaveBeenCalled();
+	});
 
-        let dialog = screen.getByRole("dialog");
-        const newFolderButton = within(dialog).getByText("To a new folder", { selector: "button" });
+	test("Folder Manager contains session windows/tabs if user choose to add session to a new folder", () => {
+		// @ts-expect-error
+		chrome.windows.getAll = jest.fn((query, callback: (e: any) => {}): void => {
+			callback(mockWindows);
+		});
 
-        fireEvent.click(newFolderButton, { bubbles: true });
-        dialog = screen.getByRole("dialog");
+		render(
+			<Provider store={mockStore}>
+				<SessionView />
+			</Provider>
+		);
 
-        const visibleTabs = within(dialog).getAllByTestId("tab-item");
+		const addToFolderButton = screen.getByTestId("save-icon");
+		fireEvent.click(addToFolderButton, { bubbles: true });
 
-        const visibleTabsCount = visibleTabs.length;
+		let dialog = screen.getByRole("dialog");
+		const newFolderButton = within(dialog).getByText("To a new folder", {
+			selector: "button"
+		});
 
-        let mockTabsCount = 0;
-        mockWindows.forEach((mockWindow: any) => {
-            mockTabsCount += mockWindow.tabs.length;
-        });
+		fireEvent.click(newFolderButton, { bubbles: true });
+		dialog = screen.getByRole("dialog");
 
-        expect(visibleTabsCount).toEqual(mockTabsCount);
-    })
+		const visibleTabs = within(dialog).getAllByTestId("tab-item");
 
-    test("Folder Manager closes when clicking its cancellation button", () => {
-        // @ts-expect-error
-        chrome.windows.getAll = jest.fn((query, callback: (e: any) => {}): void => {
-            callback(mockWindows)
-        })
-        // @ts-expect-error
-        chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
-            callback({ ...mockBrowserStorage, showFolderChangeWarning: false })
-        })
+		const visibleTabsCount = visibleTabs.length;
 
-        render(
-            <Provider store={mockStore}>
-                <SessionView />
-            </Provider>
-        );
+		let mockTabsCount = 0;
+		mockWindows.forEach((mockWindow: any) => {
+			mockTabsCount += mockWindow.tabs.length;
+		});
 
-        const addToFolderButton = screen.getByTestId("save-icon");
-        fireEvent.click(addToFolderButton, { bubbles: true });
+		expect(visibleTabsCount).toEqual(mockTabsCount);
+	});
 
-        let dialog: any = screen.getByRole("dialog");
-        const newFolderButton = within(dialog).getByText("To a new folder", { selector: "button" });
+	test("Folder Manager closes when clicking its cancellation button", () => {
+		// @ts-expect-error
+		chrome.windows.getAll = jest.fn((query, callback: (e: any) => {}): void => {
+			callback(mockWindows);
+		});
+		// @ts-expect-error
+		chrome.storage.local.get = jest.fn(
+			(
+				keys: string | string[] | { [key: string]: any } | null,
+				callback: (items: { [key: string]: any }) => void
+			): void => {
+				callback({
+					...mockBrowserStorage,
+					showFolderChangeWarning: false
+				});
+			}
+		);
 
-        fireEvent.click(newFolderButton, { bubbles: true });
-        dialog = screen.getByRole("dialog");
+		render(
+			<Provider store={mockStore}>
+				<SessionView />
+			</Provider>
+		);
 
-        const cancelButton = within(dialog).getByText("Cancel", { selector: "button" });
-        fireEvent.click(cancelButton, { bubbles: true });
-        act(() => {
-            jest.runAllTimers();
-        });
+		const addToFolderButton = screen.getByTestId("save-icon");
+		fireEvent.click(addToFolderButton, { bubbles: true });
 
-        dialog = screen.queryByRole("dialog");
-        expect(dialog).not.toBeInTheDocument();
-    })
+		let dialog: any = screen.getByRole("dialog");
+		const newFolderButton = within(dialog).getByText("To a new folder", {
+			selector: "button"
+		});
 
-    test("Folder Manager contains additional windows when adding to an existing folder", () => {
-        // @ts-expect-error
-        chrome.windows.getAll = jest.fn((query, callback: (e: any) => {}): void => {
-            callback(mockWindows)
-        })
-        // @ts-expect-error
-        chrome.storage.local.get = jest.fn((keys: string | string[] | { [key: string]: any; } | null, callback: (items: { [key: string]: any; }) => void): void => {
-            callback({ showFolderChangeWarning: false })
-        })
+		fireEvent.click(newFolderButton, { bubbles: true });
+		dialog = screen.getByRole("dialog");
 
+		const cancelButton = within(dialog).getByText("Cancel", {
+			selector: "button"
+		});
+		fireEvent.click(cancelButton, { bubbles: true });
+		act(() => {
+			jest.runAllTimers();
+		});
 
-        render(
-            <Provider store={mockStore}>
-                <SessionView />
-            </Provider>
-        );
+		dialog = screen.queryByRole("dialog");
+		expect(dialog).not.toBeInTheDocument();
+	});
 
-        const sessionWindows = screen.getAllByTestId("window-item");
-        const sessionWindowsCount = sessionWindows.length;
+	test("Folder Manager contains additional windows when adding to an existing folder", () => {
+		// @ts-expect-error
+		chrome.windows.getAll = jest.fn((query, callback: (e: any) => {}): void => {
+			callback(mockWindows);
+		});
+		// @ts-expect-error
+		chrome.storage.local.get = jest.fn(
+			(
+				keys: string | string[] | { [key: string]: any } | null,
+				callback: (items: { [key: string]: any }) => void
+			): void => {
+				callback({ showFolderChangeWarning: false });
+			}
+		);
 
-        const addToFolderButton = screen.getByTestId("save-icon");
-        fireEvent.click(addToFolderButton, { bubbles: true });
+		render(
+			<Provider store={mockStore}>
+				<SessionView />
+			</Provider>
+		);
 
-        let dialog = screen.getByRole("dialog");
-        const dropdown = within(dialog).getByText("Select a folder", { selector: "button" })
-        fireEvent.click(dropdown);
+		const sessionWindows = screen.getAllByTestId("window-item");
+		const sessionWindowsCount = sessionWindows.length;
 
-        const dropdownList = within(dialog).getByRole("list");
-        const options = within(dropdownList).getAllByRole("listitem");
-        const targetOption = options[1];
-        const targetButton = within(targetOption).getByRole("button");
-        fireEvent.click(targetButton);
-        dialog = screen.getByRole("dialog");
-  
+		const addToFolderButton = screen.getByTestId("save-icon");
+		fireEvent.click(addToFolderButton, { bubbles: true });
 
-        const windowsInDialog = within(dialog).getAllByTestId("window-item");
-        
-        expect(windowsInDialog.length).toBeGreaterThan(sessionWindowsCount);
-    })
+		let dialog = screen.getByRole("dialog");
+		const dropdown = within(dialog).getByText("Select a folder", {
+			selector: "button"
+		});
+		fireEvent.click(dropdown);
 
-    test("Folder Manager shows up immediately when adding windows/tabs, if no other folders exists in the plugin", () => {
-        // @ts-expect-error
-        chrome.windows.getAll = jest.fn((query, callback: (e: any) => {}): void => {
-            callback(mockWindows)
-        })
+		const dropdownList = within(dialog).getByRole("list");
+		const options = within(dropdownList).getAllByRole("listitem");
+		const targetOption = options[1];
+		const targetButton = within(targetOption).getByRole("button");
+		fireEvent.click(targetButton);
+		dialog = screen.getByRole("dialog");
 
-        render(
-            <Provider store={mockStoreNoFolders}>
-                <SessionView />
-            </Provider>
-        );
+		const windowsInDialog = within(dialog).getAllByTestId("window-item");
 
-        const addToFolderButton = screen.getByTestId("save-icon");
-        fireEvent.click(addToFolderButton, { bubbles: true });
+		expect(windowsInDialog.length).toBeGreaterThan(sessionWindowsCount);
+	});
 
-        let dialog = screen.getByRole("dialog");
+	test("Folder Manager shows up immediately when adding windows/tabs, if no other folders exists in the plugin", () => {
+		// @ts-expect-error
+		chrome.windows.getAll = jest.fn((query, callback: (e: any) => {}): void => {
+			callback(mockWindows);
+		});
 
-        const visibleTabs = within(dialog).getAllByTestId("tab-item");
+		render(
+			<Provider store={mockStoreNoFolders}>
+				<SessionView />
+			</Provider>
+		);
 
-        const visibleTabsCount = visibleTabs.length;
+		const addToFolderButton = screen.getByTestId("save-icon");
+		fireEvent.click(addToFolderButton, { bubbles: true });
 
-        let mockTabsCount = 0;
-        mockWindows.forEach((mockWindow: any) => {
-            mockTabsCount += mockWindow.tabs.length;
-        });
+		let dialog = screen.getByRole("dialog");
 
-        expect(visibleTabsCount).toEqual(mockTabsCount);
-    })
-})
+		const visibleTabs = within(dialog).getAllByTestId("tab-item");
+
+		const visibleTabsCount = visibleTabs.length;
+
+		let mockTabsCount = 0;
+		mockWindows.forEach((mockWindow: any) => {
+			mockTabsCount += mockWindow.tabs.length;
+		});
+
+		expect(visibleTabsCount).toEqual(mockTabsCount);
+	});
+});

@@ -5,4 +5,4 @@
 
 type tBrowserTabId = number | string;
 
-export default tBrowserTabId
+export default tBrowserTabId;

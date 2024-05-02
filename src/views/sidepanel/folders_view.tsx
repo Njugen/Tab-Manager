@@ -1,9 +1,9 @@
-import { useState, useEffect, useMemo } from "react";
-import { iWindowItem } from '../../interfaces/window_item';
+import { useState, useEffect, useMemo, useCallback } from "react";
+import { iWindowItem } from "../../interfaces/window_item";
 import { useSelector, useDispatch } from "react-redux";
-import { iFolderItem } from '../../interfaces/folder_item';
+import { iFolderItem } from "../../interfaces/folder_item";
 import FolderItem from "../../components/features/folder_item/folder_item";
-import { getFromStorage, saveToStorage } from '../../services/webex_api/storage';
+import { getFromStorage, saveToStorage } from "../../services/webex_api/storage";
 import FolderManager from "../../components/features/folder_manager/folder_manager";
 import PopupMessage from "../../components/utils/popup_message";
 import NewFolderIcon from "../../components/icons/new_folder_icon";
@@ -12,289 +12,329 @@ import Dropdown from "../../components/utils/dropdown/dropdown";
 import { iFieldOption } from "../../interfaces/dropdown";
 import iFolderState from "../../interfaces/states/folder_state";
 import { deleteFolder, readAllStorageFolders } from "../../redux-toolkit/slices/folder_slice";
-import { changeSortOption, unMarkAllFolders } from "../../redux-toolkit/slices/folders_section_slice";
+import {
+	changeSortOption,
+	unMarkAllFolders
+} from "../../redux-toolkit/slices/folders_section_slice";
 import tLaunchBehavior from "../../interfaces/types/launch_behavior";
 import { setIsEditFolderInPanel } from "../../redux-toolkit/slices/sidepanel_slice";
 
 const FoldersView = (props: any): JSX.Element => {
-    const [editFolderId, setEditFolderId] = useState<number | null>(null);
-    const [windowsPayload, setWindowsPayload] = useState<Array<iWindowItem>>([]);
-    const [totalTabsCount, setTotalTabsCount] = useState<number>(0);
-    const [showPerformanceWarning, setShowPerformanceWarning] = useState<boolean>(false);
-    const [removalTarget, setRemovalTarget] = useState<iFolderItem | null>(null);
-    const [createFolder, setCreateFolder] = useState<boolean>(false);
-    const [folderLaunchBehavior, setFolderLaunchBehavior] = useState<tLaunchBehavior>("normal"); 
+	const [editFolderId, setEditFolderId] = useState<number | null>(null);
+	const [windowsPayload, setWindowsPayload] = useState<Array<iWindowItem>>([]);
+	const [totalTabsCount, setTotalTabsCount] = useState<number>(0);
+	const [showPerformanceWarning, setShowPerformanceWarning] = useState<boolean>(false);
+	const [removalTarget, setRemovalTarget] = useState<iFolderItem | null>(null);
+	const [createFolder, setCreateFolder] = useState<boolean>(false);
+	const [folderLaunchBehavior, setFolderLaunchBehavior] = useState<tLaunchBehavior>("normal");
 
-    const dispatch = useDispatch();
+	const dispatch = useDispatch();
 
-    const folderState: Array<iFolderItem> = useSelector((state: any) => state.folder);
-    const foldersSectionState: iFolderState = useSelector((state: any) => state.foldersSection);
+	const folderState: Array<iFolderItem> = useSelector((state: any) => state.folder);
+	const foldersSectionState: iFolderState = useSelector((state: any) => state.foldersSection);
 
-    const storageListener = (changes: any, areaName: string): void => {
-        if(areaName === "local"){
-            if(changes.folders){
-              dispatch(readAllStorageFolders(changes.folders.newValue));
-            }
-        }
-    };
+	const storageListener = useCallback((changes: any, areaName: string): void => {
+		if (areaName === "local") {
+			if (changes.folders) {
+				dispatch(readAllStorageFolders(changes.folders.newValue));
+			}
+		}
+	}, []);
 
-    useEffect(() => {
-        getFromStorage("local", "folders", (data) => {  
-            dispatch(readAllStorageFolders(data.folders));
-        })
+	useEffect(() => {
+		getFromStorage("local", "folders", (data) => {
+			dispatch(readAllStorageFolders(data.folders));
+		});
 
-        chrome.storage.onChanged.addListener(storageListener);
+		chrome.storage.onChanged.addListener(storageListener);
 
-        return () => {
-            chrome.storage.onChanged.removeListener(storageListener);
-          }
-    }, []);
+		return () => {
+			chrome.storage.onChanged.removeListener(storageListener);
+		};
+	}, []);
 
-    const evaluatePerformanceWarning = (type: tLaunchBehavior, windows: Array<iWindowItem>) => {
-        if(!windows) return;
+	const evaluatePerformanceWarning = (type: tLaunchBehavior, windows: Array<iWindowItem>) => {
+		if (!windows) return;
 
-        let tabsCount = 0;
+		let tabsCount = 0;
 
-        windows.forEach((window: iWindowItem) => {
-            tabsCount += window.tabs.length;
-        });
-   
-        chrome.storage.local.get("performanceWarningValue", (data) => {
-            setTotalTabsCount(data.performanceWarningValue);
-            if(data.performanceWarningValue > -1 && data.performanceWarningValue <= tabsCount) {
-                setShowPerformanceWarning(true);
-                setFolderLaunchBehavior(type);
-            } else {
-                handleLaunchFolder(windows, type);
-            }
-        });
-    }
+		windows.forEach((window: iWindowItem) => {
+			tabsCount += window.tabs.length;
+		});
 
-    const handlePrepareLaunchFolder = (windows: Array<iWindowItem>, type: tLaunchBehavior): void => {
-        setWindowsPayload(windows);
-        evaluatePerformanceWarning(type, windows);
-    }
+		chrome.storage.local.get("performanceWarningValue", (data) => {
+			setTotalTabsCount(data.performanceWarningValue);
+			if (data.performanceWarningValue > -1 && data.performanceWarningValue <= tabsCount) {
+				setShowPerformanceWarning(true);
+				setFolderLaunchBehavior(type);
+			} else {
+				handleLaunchFolder(windows, type);
+			}
+		});
+	};
 
-    // Launch folder
-    const handleLaunchFolder = (windows: Array<iWindowItem>, launchType?: tLaunchBehavior): void => {
-        // Now, prepare a snapshot, where currently opened windows get stored
-        let snapshot: Array<chrome.windows.Window> = [];
+	const handlePrepareLaunchFolder = (
+		windows: Array<iWindowItem>,
+		type: tLaunchBehavior
+	): void => {
+		setWindowsPayload(windows);
+		evaluatePerformanceWarning(type, windows);
+	};
 
-        const queryOptions: chrome.windows.QueryOptions = {
-            populate: true,
-            windowTypes: ["normal", "popup"]
-        };
+	// Launch folder
+	const handleLaunchFolder = (
+		windows: Array<iWindowItem>,
+		launchType?: tLaunchBehavior
+	): void => {
+		// Now, prepare a snapshot, where currently opened windows get stored
+		let snapshot: Array<chrome.windows.Window> = [];
 
+		const queryOptions: chrome.windows.QueryOptions = {
+			populate: true,
+			windowTypes: ["normal", "popup"]
+		};
 
-        // Store currently opened windows into the snapshot
-        chrome.windows.getAll(queryOptions, (currentWindows: Array<chrome.windows.Window>) => {
-            snapshot = currentWindows;
-        });
+		// Store currently opened windows into the snapshot
+		chrome.windows.getAll(queryOptions, (currentWindows: Array<chrome.windows.Window>) => {
+			snapshot = currentWindows;
+		});
 
-        if(launchType !== "group"){
-            // Open all windows in this folder
-            windows.forEach((window: iWindowItem, i) => {
-                const windowSettings: chrome.windows.CreateData = {
-                    focused: i === 0 ? true : false,
-                    url: window.tabs.map((tab) => tab.url),
-                    incognito: launchType === "incognito" ? true : false,
-                    state: "maximized"
-                }
-                chrome.windows.create(windowSettings);
-            });
+		if (launchType !== "group") {
+			// Open all windows in this folder
+			windows.forEach((window: iWindowItem, i) => {
+				const windowSettings: chrome.windows.CreateData = {
+					focused: i === 0 ? true : false,
+					url: window.tabs.map((tab) => tab.url),
+					incognito: launchType === "incognito" ? true : false,
+					state: "maximized"
+				};
+				chrome.windows.create(windowSettings);
+			});
 
-            // Close current session after launching the folder. Only applies when
-            // set in the plugin's settings
-            chrome.storage.local.get("closeSessionAtFolderLaunch", (data) => {
-                if(data.closeSessionAtFolderLaunch){
-                    snapshot.forEach((window) => {
-                        if(window.id) chrome.windows.remove(window.id);
-                    });
-                }
-            });
-        } else {
-            let tabIds: Array<number> = [];
-            
-            windows.forEach((window: iWindowItem, i) => {
-                
-                window.tabs.forEach((tab, j) => {
-                    chrome.tabs.create({ url: tab.url }, (createdTab: chrome.tabs.Tab) => {             
-                        if(createdTab.id){
-                            tabIds = [...tabIds, createdTab.id]
-                        }
-                        
-                        if(windows.length-1 >= i && window.tabs.length-1 >= j){
-                            chrome.tabs.group({ tabIds: tabIds });
-                        }
-                    })
-                })
-            });
-        }
+			// Close current session after launching the folder. Only applies when
+			// set in the plugin's settings
+			chrome.storage.local.get("closeSessionAtFolderLaunch", (data) => {
+				if (data.closeSessionAtFolderLaunch) {
+					snapshot.forEach((window) => {
+						if (window.id) chrome.windows.remove(window.id);
+					});
+				}
+			});
+		} else {
+			let tabIds: Array<number> = [];
 
-        // Unset all relevant states to prevent interferance with other features once the folder has been launched
-        setWindowsPayload([]);
-        setShowPerformanceWarning(false);
-        setFolderLaunchBehavior("normal");
-    }
-    
-    // Open a specific folder
-    const renderFolderManagerPopup = (): JSX.Element => {
-        let render;
+			windows.forEach((window: iWindowItem, i) => {
+				window.tabs.forEach((tab, j) => {
+					chrome.tabs.create({ url: tab.url }, (createdTab: chrome.tabs.Tab) => {
+						if (createdTab.id) {
+							tabIds = [...tabIds, createdTab.id];
+						}
 
-        if(createFolder){
-            render = <FolderManager type="slide-in" title="Create folder" onClose={handleCloseFolderManager} />;
-        } else {
-            const targetFolder: Array<iFolderItem> = folderState.filter((item: iFolderItem) => editFolderId === item.id);
-            const input: iFolderItem = {...targetFolder[0]};
+						if (windows.length - 1 >= i && window.tabs.length - 1 >= j) {
+							chrome.tabs.group({ tabIds: tabIds });
+						}
+					});
+				});
+			});
+		}
 
-            if(targetFolder.length > 0){
-                render = <FolderManager type="slide-in" title={`Edit folder ${targetFolder[0].id}`} folder={input} onClose={handleCloseFolderManager} />;
-            } else {
-                render = <></>;
-            } 
-        }
+		// Unset all relevant states to prevent interferance with other features once the folder has been launched
+		setWindowsPayload([]);
+		setShowPerformanceWarning(false);
+		setFolderLaunchBehavior("normal");
+	};
 
-        return render;
-    }
+	// Open a specific folder
+	const renderFolderManagerPopup = (): JSX.Element => {
+		let render;
 
-    // Sort all folders
-    const handleSortFolders = (e: any): void => {
-        const newStatus = e.selected;
+		if (createFolder) {
+			render = (
+				<FolderManager
+					type="slide-in"
+					title="Create folder"
+					onClose={handleCloseFolderManager}
+				/>
+			);
+		} else {
+			const targetFolder: Array<iFolderItem> = folderState.filter(
+				(item: iFolderItem) => editFolderId === item.id
+			);
+			const input: iFolderItem = { ...targetFolder[0] };
 
-        saveToStorage("local", "folder_sort", newStatus);
-        dispatch(changeSortOption(newStatus));
-    }
+			if (targetFolder.length > 0) {
+				render = (
+					<FolderManager
+						type="slide-in"
+						title={`Edit folder ${targetFolder[0].id}`}
+						folder={input}
+						onClose={handleCloseFolderManager}
+					/>
+				);
+			} else {
+				render = <></>;
+			}
+		}
 
-    const folderSortCondition = (a: iFolderItem, b: iFolderItem): boolean => {
-        const { folderSortOptionValue } = foldersSectionState
-        
-        const aNameLowerCase = a.name.toLowerCase();
-        const bNameToLowerCase = b.name.toLowerCase();
-        
-        const asc = (aNameLowerCase > bNameToLowerCase);
-        const desc = (bNameToLowerCase > aNameLowerCase);
+		return render;
+	};
 
-        return folderSortOptionValue === 0 ? asc : desc;
-    }
+	// Sort all folders
+	const handleSortFolders = (e: any): void => {
+		const newStatus = e.selected;
 
-    const renderSortOptionsDropdown = (): JSX.Element => {
-        const optionsList: Array<iFieldOption> = [
-            {value: 0, label: "Ascending"},
-            {value: 1, label: "Descending"},
-        ];
+		saveToStorage("local", "folder_sort", newStatus);
+		dispatch(changeSortOption(newStatus));
+	};
 
-        const presetOption = optionsList.filter((option: iFieldOption) => option.value === foldersSectionState.folderSortOptionValue);
-        
-        return <Dropdown tag="sort-folders" preset={presetOption[0] || optionsList[0]} options={optionsList} onCallback={handleSortFolders} />
-    }
+	const folderSortCondition = (a: iFolderItem, b: iFolderItem): boolean => {
+		const { folderSortOptionValue } = foldersSectionState;
 
-    const folderList = useMemo((): JSX.Element =>  {
-        const handleFolderDelete = (target: iFolderItem): void => {
-            chrome.storage.local.get("folderRemovalWarning", (data) => {
-                if(data.folderRemovalWarning === true) {
-                    setRemovalTarget(target);
-                } else {
-                    dispatch(deleteFolder(target.id)); 
-                    setRemovalTarget(null);
-                }
-            });
-        }
+		const aNameLowerCase = a.name.toLowerCase();
+		const bNameToLowerCase = b.name.toLowerCase();
 
-        const sortedFolders = [...folderState].sort((a: any, b: any) => folderSortCondition(a, b) ? 1 : -1);
+		const asc = aNameLowerCase > bNameToLowerCase;
+		const desc = bNameToLowerCase > aNameLowerCase;
 
-        const result = sortedFolders.map((folder: iFolderItem, i: number) => {
-            return (
-                <FolderItem 
-                    onDelete={(e) => handleFolderDelete(folder)} 
-                    marked={false} 
-                    //onMark={handleMarkFolder} 
-                    onEdit={() => setEditFolderId(folder.id)} 
-                    index={folderState.length-i}
-                    key={`folder-id-${folder.id}`} 
-                    display={folder.display} 
-                    id={folder.id} 
-                    viewMode="list" 
-                    name={folder.name} 
-                    desc={folder.desc} 
-                    windows={folder.windows} 
-                    onOpen={handlePrepareLaunchFolder}
-                />
-            );
-        })
-        return result.length > 0 ? <ul className="list-none">{result}</ul> : <p className="text-center">There are no folders at the moment.</p>
-    }, [folderState, foldersSectionState.folderSortOptionValue]) 
+		return folderSortOptionValue === 0 ? asc : desc;
+	};
 
-    const handleCloseFolderManager = (): void => {
-        dispatch(unMarkAllFolders());
+	const renderSortOptionsDropdown = (): JSX.Element => {
+		const optionsList: Array<iFieldOption> = [
+			{ value: 0, label: "Ascending" },
+			{ value: 1, label: "Descending" }
+		];
 
-        setEditFolderId(null);
-        setCreateFolder(false);
-        dispatch(setIsEditFolderInPanel(false))
-    }   
+		const presetOption = optionsList.filter(
+			(option: iFieldOption) => option.value === foldersSectionState.folderSortOptionValue
+		);
 
-    return (
-        <>
-            {showPerformanceWarning &&
-                <PopupMessage
-                    title="Warning" 
-                    text={`You are about to open ${totalTabsCount} or more tabs at once. Opening this many may slow down your browser. Do you want to proceed?`}
-                    primaryButton={{ 
-                        text: "Yes, open", 
-                        callback: () => { 
-                            if(windowsPayload) {
-                                handleLaunchFolder(windowsPayload, folderLaunchBehavior || undefined); 
-                            }
-                            setShowPerformanceWarning(false)}
-                        }}
-                    secondaryButton={{ 
-                        text: "No, do not open", 
-                        callback: () => { 
-                            setShowPerformanceWarning(false);
-                            setWindowsPayload([])
-                        }}}    
-                />
-            }
-            {removalTarget &&
-                <PopupMessage
-                    title="Warning" 
-                    text={`You are about to remove the "${removalTarget.name}" folder and all its contents. This is irreversible, do you want to proceed?`}
-                    primaryButton={{ 
-                        text: "Yes, remove this folder", 
-                        callback: () => { 
-                            dispatch(deleteFolder(removalTarget.id)); 
-                            setRemovalTarget(null)}
-                        }}
-                    secondaryButton={{ 
-                        text: "No, don't remove", 
-                        callback: () => { 
-                            setRemovalTarget(null)
-                        }
-                    }}    
-                />
-            }
-          
-            {renderFolderManagerPopup()}
-            <div className="flex justify-between mt-4 mb-6">
-                
-                <CircleButton 
-                    disabled={false} 
-                    bgCSSClass="bg-tbfColor-lightpurple" 
-                    onClick={() => {
-                        dispatch(setIsEditFolderInPanel(true))
-                        setCreateFolder(true)
-                    }}
-                >
-                    <NewFolderIcon size={20} fill={"#fff"} />
-                </CircleButton>
-                <div className="relative w-[175px] flex items-center">
-                    {renderSortOptionsDropdown()}
-                </div>
-            </div>
-            <ul className="list-none">
-                {folderList}
-            </ul>
-        </>
-    )
-}
+		return (
+			<Dropdown
+				tag="sort-folders"
+				preset={presetOption[0] || optionsList[0]}
+				options={optionsList}
+				onCallback={handleSortFolders}
+			/>
+		);
+	};
+
+	const folderList = useMemo((): JSX.Element => {
+		const handleFolderDelete = (target: iFolderItem): void => {
+			chrome.storage.local.get("folderRemovalWarning", (data) => {
+				if (data.folderRemovalWarning === true) {
+					setRemovalTarget(target);
+				} else {
+					dispatch(deleteFolder(target.id));
+					setRemovalTarget(null);
+				}
+			});
+		};
+
+		const sortedFolders = [...folderState].sort((a: any, b: any) =>
+			folderSortCondition(a, b) ? 1 : -1
+		);
+
+		const result = sortedFolders.map((folder: iFolderItem, i: number) => {
+			return (
+				<FolderItem
+					onDelete={(e) => handleFolderDelete(folder)}
+					marked={false}
+					//onMark={handleMarkFolder}
+					onEdit={() => setEditFolderId(folder.id)}
+					index={folderState.length - i}
+					key={`folder-id-${folder.id}`}
+					display={folder.display}
+					id={folder.id}
+					viewMode="list"
+					name={folder.name}
+					desc={folder.desc}
+					windows={folder.windows}
+					onOpen={handlePrepareLaunchFolder}
+				/>
+			);
+		});
+		return result.length > 0 ? (
+			<ul className="list-none">{result}</ul>
+		) : (
+			<p className="text-center">There are no folders at the moment.</p>
+		);
+	}, [folderState, foldersSectionState.folderSortOptionValue]);
+
+	const handleCloseFolderManager = (): void => {
+		dispatch(unMarkAllFolders());
+
+		setEditFolderId(null);
+		setCreateFolder(false);
+		dispatch(setIsEditFolderInPanel(false));
+	};
+
+	return (
+		<>
+			{showPerformanceWarning && (
+				<PopupMessage
+					title="Warning"
+					text={`You are about to open ${totalTabsCount} or more tabs at once. Opening this many may slow down your browser. Do you want to proceed?`}
+					primaryButton={{
+						text: "Yes, open",
+						callback: () => {
+							if (windowsPayload) {
+								handleLaunchFolder(
+									windowsPayload,
+									folderLaunchBehavior || undefined
+								);
+							}
+							setShowPerformanceWarning(false);
+						}
+					}}
+					secondaryButton={{
+						text: "No, do not open",
+						callback: () => {
+							setShowPerformanceWarning(false);
+							setWindowsPayload([]);
+						}
+					}}
+				/>
+			)}
+			{removalTarget && (
+				<PopupMessage
+					title="Warning"
+					text={`You are about to remove the "${removalTarget.name}" folder and all its contents. This is irreversible, do you want to proceed?`}
+					primaryButton={{
+						text: "Yes, remove this folder",
+						callback: () => {
+							dispatch(deleteFolder(removalTarget.id));
+							setRemovalTarget(null);
+						}
+					}}
+					secondaryButton={{
+						text: "No, don't remove",
+						callback: () => {
+							setRemovalTarget(null);
+						}
+					}}
+				/>
+			)}
+
+			{renderFolderManagerPopup()}
+			<div className="flex justify-between mt-4 mb-6">
+				<CircleButton
+					disabled={false}
+					bgCSSClass="bg-tbfColor-lightpurple"
+					onClick={() => {
+						dispatch(setIsEditFolderInPanel(true));
+						setCreateFolder(true);
+					}}
+				>
+					<NewFolderIcon size={20} fill={"#fff"} />
+				</CircleButton>
+				<div className="relative w-[175px] flex items-center">
+					{renderSortOptionsDropdown()}
+				</div>
+			</div>
+			<ul className="list-none">{folderList}</ul>
+		</>
+	);
+};
 
 export default FoldersView;

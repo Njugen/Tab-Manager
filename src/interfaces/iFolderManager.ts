@@ -1,10 +1,10 @@
-import { iFolderItem } from "./folder_item"
+import { iFolderItem } from "./folder_item";
 
 interface iFolderManager {
-    title: string,
-    type: "slide-in" | "popup"
-    folder?: iFolderItem,
-    onClose: () => void
+	title: string;
+	type: "slide-in" | "popup";
+	folder?: iFolderItem;
+	onClose: () => void;
 }
 
-export {iFolderManager};
+export { iFolderManager };
