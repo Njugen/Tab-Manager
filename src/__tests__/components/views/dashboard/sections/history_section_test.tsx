@@ -1,7 +1,7 @@
 import { render, screen, within, fireEvent, waitFor, cleanup } from "@testing-library/react";
 import '@testing-library/jest-dom'
 import { Provider, useSelector } from "react-redux";
-import mockStore, { mockFolders } from "../../../../../tools/testing/mock_store";
+import mockStore, { mockFolders, mockStoreNoFolders } from "../../../../../tools/testing/mock_store";
 import mockBrowserStorage from "../../../../../tools/testing/mock_browser_storage";
 import { act } from "react-dom/test-utils";
 import HistorySection from './../../../../../views/dashboard/sections/history_section';
@@ -89,7 +89,7 @@ describe("Test <HistorySection>", () => {
     })
 
     describe("Test marking and interaction with Folder Manager", () => {
-        describe("Adding marked tabs to folder manager", () => {
+        describe("Adding marked tabs to folder manager (when there are other folders present)", () => {
             const addToFolderSequenceRender = () => {
                 render(
                     <Provider store={mockStore}>
@@ -155,6 +155,44 @@ describe("Test <HistorySection>", () => {
                 })
     
                 expect(markCount + totalFolderMockTabs).toEqual(renderedTabs.length);
+                const cancelButton = within(dialog).getByText("Cancel", { selector: "button" });
+    
+                fireEvent.click(cancelButton, { bubbles: true });
+                act(() => {
+                    jest.runAllTimers();
+                });
+            });
+        })
+
+        describe("Adding marked tabs to folder manager (when there are no other folders present)", () => {
+            const addToFolderSequenceRender = () => {
+                render(
+                    <Provider store={mockStoreNoFolders}>
+                        <HistorySection />
+                    </Provider>
+                )
+    
+                const tabs = screen.getAllByTestId("tab-item");
+    
+                for(let i = 0; i < markCount; i++){
+                    const checkbox = within(tabs[i]).getByTestId("checkbox");
+                    fireEvent.click(checkbox);
+                }
+    
+                const addToFolderButton = screen.getByText("Add to folder", { selector: "button" });
+                fireEvent.click(addToFolderButton);
+            }
+    
+            test("Folder manager shows up immediately with preset tabs if no folders exists in the plugin", () => {
+                addToFolderSequenceRender();
+    
+                // Folder manager
+                let dialog = screen.getByRole("dialog");
+    
+                // Number of rendered tabs in folder manager should equal the numbers marked
+                const renderedTabs = within(dialog).getAllByTestId("tab-item");
+    
+                expect(markCount).toEqual(renderedTabs.length);
                 const cancelButton = within(dialog).getByText("Cancel", { selector: "button" });
     
                 fireEvent.click(cancelButton, { bubbles: true });
