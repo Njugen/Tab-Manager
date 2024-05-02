@@ -1,17 +1,11 @@
 import { render, screen, within, fireEvent } from "@testing-library/react";
 import '@testing-library/jest-dom'
-import randomNumber from "../../../../tools/random_number";
 import mockStore, { mockStoreNoFolders } from "../../../../tools/testing/mock_store";
 import { Provider } from "react-redux";
 import mockBrowserStorage from "../../../../tools/testing/mock_browser_storage";
 import mockWindows from './../../../../tools/testing/mock_windows';
-import { Windows } from "jest-chrome/types/jest-chrome";
 import { act } from "react-dom/test-utils";
 import SessionView from "../../../../views/sidepanel/session_view";
-
-const mockCallback = jest.fn();
-const mockTestId = randomNumber();
-const mockChild = <p data-testid={mockTestId}></p>
 
 beforeEach(() => {
     // @ts-expect-error

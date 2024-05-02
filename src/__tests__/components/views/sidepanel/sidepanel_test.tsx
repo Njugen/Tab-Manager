@@ -1,10 +1,8 @@
 import { render, screen, within, fireEvent, cleanup } from "@testing-library/react";
 import '@testing-library/jest-dom'
 import { Provider } from "react-redux";
-import { act } from "react-dom/test-utils";
 import mockStore from "../../../../tools/testing/mock_store";
 import mockBrowserStorage from "../../../../tools/testing/mock_browser_storage";
-import PanelView from "../../../../baseUI/sidepanel/components/panel_view";
 import SidePanel from "../../../../baseUI/sidepanel/sidepanel";
 
 

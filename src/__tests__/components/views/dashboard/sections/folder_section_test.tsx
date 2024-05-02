@@ -1,8 +1,8 @@
-import { render, screen, within, fireEvent, waitFor, cleanup } from "@testing-library/react";
+import { render, screen, within, fireEvent, cleanup } from "@testing-library/react";
 import '@testing-library/jest-dom'
-import { Provider, useSelector } from "react-redux";
+import { Provider } from "react-redux";
 import FoldersSection from "../../../../../views/dashboard/sections/folders_section";
-import mockStore, { mockFolders } from "../../../../../tools/testing/mock_store";
+import mockStore from "../../../../../tools/testing/mock_store";
 import mockBrowserStorage from "../../../../../tools/testing/mock_browser_storage";
 import randomNumber from "../../../../../tools/random_number";
 import { act } from "react-dom/test-utils";

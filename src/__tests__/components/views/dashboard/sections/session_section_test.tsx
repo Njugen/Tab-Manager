@@ -1,16 +1,11 @@
 import { render, screen, within, fireEvent, cleanup } from "@testing-library/react";
 import '@testing-library/jest-dom'
 import SessionSection from "../../../../../views/dashboard/sections/session_section";
-import randomNumber from "../../../../../tools/random_number";
 import mockStore, { mockStoreNoFolders } from "../../../../../tools/testing/mock_store";
 import { Provider } from "react-redux";
 import mockBrowserStorage from "../../../../../tools/testing/mock_browser_storage";
 import mockWindows from './../../../../../tools/testing/mock_windows';
 import { act } from "react-dom/test-utils";
-
-const mockCallback = jest.fn();
-const mockTestId = randomNumber();
-const mockChild = <p data-testid={mockTestId}></p>
 
 beforeEach(() => {
     jest.useFakeTimers();

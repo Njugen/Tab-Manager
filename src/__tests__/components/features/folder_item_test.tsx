@@ -1,6 +1,6 @@
-import { render, screen, within, fireEvent, waitFor, cleanup } from "@testing-library/react";
+import { render, screen, within, fireEvent, cleanup } from "@testing-library/react";
 import '@testing-library/jest-dom'
-import { Provider, useSelector } from "react-redux";
+import { Provider } from "react-redux";
 import { store } from "../../../redux-toolkit/store";
 import randomNumber from "../../../tools/random_number";
 import { iWindowItem } from "../../../interfaces/window_item";

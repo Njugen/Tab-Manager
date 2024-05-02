@@ -1,4 +1,4 @@
-import { render, screen, within, fireEvent, waitFor, cleanup } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor, cleanup } from "@testing-library/react";
 import '@testing-library/jest-dom'
 import randomNumber from "../../../tools/random_number";
 import EditableTabItem from "../../../components/features/editable_tab_item";

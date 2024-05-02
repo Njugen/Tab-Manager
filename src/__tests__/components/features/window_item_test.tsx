@@ -1,18 +1,11 @@
 import { render, screen, within, fireEvent, cleanup } from "@testing-library/react";
 import '@testing-library/jest-dom'
 import randomNumber from "../../../tools/random_number";
-import TextIconButton from "../../../components/utils/text_icon_button";
-import { Provider, useDispatch } from "react-redux";
-import { reducers, store } from "../../../redux-toolkit/store";
+import { Provider } from "react-redux";
+import {  store } from "../../../redux-toolkit/store";
 import WindowItem from "../../../components/features/window_item";
 import { iTabItem } from "../../../interfaces/tab_item";
 import { iWindowItem } from "../../../interfaces/window_item";
-
-import { createStore, applyMiddleware } from "redux";
-import { combineReducers } from "redux";
-import thunk from "redux-thunk";
-import * as reactRedux from "react-redux"
-import { configureStore } from "@reduxjs/toolkit";
 import tBrowserTabId from "../../../interfaces/types/browser_tab_id";
 
 

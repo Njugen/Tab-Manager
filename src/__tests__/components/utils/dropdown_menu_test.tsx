@@ -5,11 +5,6 @@ import DropdownMenu from "../../../components/utils/dropdown_menu/dropdown_menu"
 import { iFieldOption } from "../../../interfaces/dropdown";
 import iDropdownMenu from "../../../interfaces/dropdown_menu";
 
-const mockPreset: iFieldOption = {
-    value: randomNumber(),
-    label: randomNumber().toString()
-}
-
 const mockOptions: Array<iFieldOption> = [];
 const mockCallback = jest.fn((e: any) => e);
 const mockTag = randomNumber().toString()

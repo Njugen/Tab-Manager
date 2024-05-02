@@ -1,6 +1,6 @@
-import { render, screen, within, fireEvent, waitFor, cleanup } from "@testing-library/react";
+import { render, screen, within, fireEvent, cleanup } from "@testing-library/react";
 import '@testing-library/jest-dom'
-import { Provider, useSelector } from "react-redux";
+import { Provider } from "react-redux";
 import mockStore, { mockFolders, mockStoreNoFolders } from "../../../../../tools/testing/mock_store";
 import mockBrowserStorage from "../../../../../tools/testing/mock_browser_storage";
 import { act } from "react-dom/test-utils";

@@ -38,7 +38,6 @@ describe("Test <SectionContainer>", () => {
                 </Provider>
             )
     
-            let section = screen.getByTestId("section-container");
             let fullscreen = screen.queryByTestId("section-container-fullscreen");
             expect(fullscreen).not.toBeInTheDocument();
         })
@@ -81,7 +80,6 @@ describe("Test <SectionContainer>", () => {
             )
     
             let section = screen.getByTestId("section-container");
-            let optionsArea = within(section).getByTestId("mock-options-area");
             let children = within(section).getByTestId("mock-child-section");
             expect(children).toBeInTheDocument();
         })
