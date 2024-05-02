@@ -238,7 +238,7 @@ const HistorySection = (props: any): JSX.Element => {
     }
 
     // Set necessary states to trigger a Folder Manager containing an existing folder + selected tabs
-    const handleAddToExistingFolder = (e: any): void => {
+    const handleAddToExistingFolder = useCallback((e: any): void => {
         if(e.selected === -1) return;
 
         const targetFolderId = e.selected;
@@ -269,7 +269,7 @@ const HistorySection = (props: any): JSX.Element => {
             setAddToFolderMessage(false);
             setMergeProcessFolder(updatedFolder);
         }
-    }
+    }, [historySectionState.markedTabs])
 
     // Show a popup with options on how to add/merge selected tabs
     const showSelector = (): JSX.Element => {

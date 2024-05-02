@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { iWindowItem } from '../../interfaces/window_item';
 import { useSelector, useDispatch } from "react-redux";
 import { iFolderItem } from '../../interfaces/folder_item';
@@ -88,7 +88,7 @@ const SessionView = (props:any): JSX.Element => {
         dispatch(setIsEditFolderInPanel(true))
     }
 
-    const handleAddToExistingFolder = (e: any): void => {
+    const handleAddToExistingFolder = useCallback((e: any): void => {
         if(e.selected === -1) return;
 
         const targetFolderId = e.selected;
@@ -126,7 +126,7 @@ const SessionView = (props:any): JSX.Element => {
                 dispatch(setIsEditFolderInPanel(true))
             }
         } 
-    }
+    }, [sessionSectionState.windows])
 
     const renderAddTabsMessage = (): JSX.Element => {
         const currentFolders: Array<iFolderItem> = folderState;

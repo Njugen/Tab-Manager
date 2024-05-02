@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { iWindowItem } from '../../interfaces/window_item';
 import { useSelector, useDispatch } from "react-redux";
 import { iFolderItem } from '../../interfaces/folder_item';
@@ -56,7 +56,7 @@ const HistoryView = (props:any): JSX.Element => {
         dispatch(setIsEditFolderInPanel(true))
     }
 
-    const handleAddToExistingFolder = (e: any): void => {
+    const handleAddToExistingFolder = useCallback((e: any): void => {
         if(e.selected === -1) return;
 
         const targetFolderId = e.selected;
@@ -87,7 +87,8 @@ const HistoryView = (props:any): JSX.Element => {
             setMergeProcess(updatedFolder);
             dispatch(setIsEditFolderInPanel(true))
         }
-    }
+    }, [historySectionState.markedTabs])
+    
     const renderAddTabsMessage = (): JSX.Element => {
         const currentFolders: Array<iFolderItem> = folderState;
 

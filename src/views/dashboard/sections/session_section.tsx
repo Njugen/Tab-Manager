@@ -1,7 +1,7 @@
 import "../../../styles/global_utils.module.scss";
 import PrimaryButton from '../../../components/utils/primary_button/primary_button';
 import FolderManager from '../../../components/features/folder_manager/folder_manager';
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { iFolderItem } from '../../../interfaces/folder_item';
 import { useDispatch, useSelector } from 'react-redux';
 import randomNumber from '../../../tools/random_number';
@@ -162,7 +162,7 @@ const SessionSection = (props: any): JSX.Element => {
         setCreateFolder(true);
     }
 
-    const handleAddToExistingFolder = (e: any): void => {
+    const handleAddToExistingFolder = useCallback((e: any): void => {
         if(e.selected === -1) return;
 
         const targetFolderId = e.selected;
@@ -200,7 +200,7 @@ const SessionSection = (props: any): JSX.Element => {
             }
         }
         
-    }
+    }, [sessionSectionState.windows])
 
     const showSelector = (): JSX.Element => {
         const currentFolders: Array<iFolderItem> = folderState;
