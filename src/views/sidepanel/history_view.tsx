@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { iWindowItem } from '../../interfaces/window_item';
 import { useSelector, useDispatch } from "react-redux";
 import { iFolderItem } from '../../interfaces/folder_item';
@@ -20,10 +20,58 @@ const HistoryView = (props:any): JSX.Element => {
     const [mergeProcess, setMergeProcess] = useState<iFolderItem | null>(null);
     const [addToWorkSpaceMessage, setAddToFolderMessage] = useState<boolean>(false);
     const [createFolder, setCreateFolder] = useState<boolean>(false);
+    const [tabsCount, setTabsCount] = useState<number>(10);
+    const [snapshot, setSnapshot] = useState<string>("");
+    const [searchString, setSearchString] = useState<string>("");
 
     const dispatch = useDispatch();
     const historySectionState: any = useSelector((state: any) => state.historySection);
     const folderState: Array<iFolderItem> = useSelector((state: any) => state.folder);
+    const sectionRef = useRef<HTMLDivElement>(null);
+
+    // Load tabs from history api and store it in redux store for further use while this component is rendered
+    const loadHistory = (keyword: string, count: number): void => {
+        const query: chrome.history.HistoryQuery = {
+            text: keyword,
+            endTime: undefined,
+            startTime: undefined,
+            maxResults: count
+        }
+
+        chrome.history.search(query, (items: Array<chrome.history.HistoryItem>) => {
+            if(items.length === 0) return;
+           
+            const sorted = items.sort((a, b)=> (a.lastVisitTime && b.lastVisitTime && (b.lastVisitTime - a.lastVisitTime)) || 0);
+            const newSnapshot = JSON.stringify(sorted[sorted.length-1].lastVisitTime);
+            
+            if(items.length > 0 && snapshot !== newSnapshot) { 
+                dispatch(setUpTabs(sorted));
+                setSnapshot(newSnapshot);
+            }
+        });
+    }
+
+    // Increase the number of tabs once the user scrolls down far enough. UseCallback
+    // ensures the listener stays the same after re-render -> listener can be removed from event handler
+    const scrollListener = useCallback((): void => {
+        const { scrollY, innerHeight } = window;
+
+        if((innerHeight + Math.round(scrollY)) >= document.body.offsetHeight){
+            setTabsCount((prev) => prev+20);
+        }
+    }, [])
+
+    useEffect(() => {
+        window.addEventListener("scroll", scrollListener);
+
+        return () => window.removeEventListener("scroll", scrollListener);
+    }, [])
+
+
+    // Reload history each time the number of tabs is changed
+    useEffect(() => {
+        loadHistory(searchString, tabsCount);
+    }, [tabsCount]);
 
     const handleDeleteFromHistory = (): void => {
         let updatedMarks = historySectionState.tabs;
