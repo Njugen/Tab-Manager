@@ -18,7 +18,10 @@ const CollapsedSidebarNav = (props: iSidebarNav): JSX.Element => {
 						isActive={active === "main" ? true : false}
 						onClick={() => onSetActive("main")}
 					>
-						<MultipleFoldersIcon size={32} fill={active === "main" ? "rgb(109 0 194)" : "#525252"} />
+						<MultipleFoldersIcon
+							size={32}
+							fill={active === "main" ? "rgb(109 0 194)" : "#525252"}
+						/>
 					</Navlink>
 				</div>
 				<div
@@ -30,7 +33,10 @@ const CollapsedSidebarNav = (props: iSidebarNav): JSX.Element => {
 						isActive={active === "settings" ? true : false}
 						onClick={() => onSetActive("settings")}
 					>
-						<ConfigIcon size={32} fill={active === "settings" ? "rgb(109 0 194)" : "#525252"} />
+						<ConfigIcon
+							size={32}
+							fill={active === "settings" ? "rgb(109 0 194)" : "#525252"}
+						/>
 					</Navlink>
 				</div>
 			</div>

@@ -197,7 +197,12 @@ describe("Test <EditableTabItem>", () => {
 		test("Preset value matches the component's 'url' prop", async () => {
 			render(
 				<Provider store={store}>
-					<EditableTabItem windowId={mockWindowId} id={mockTabId} preset={mockPreset} onStop={mockFn} />
+					<EditableTabItem
+						windowId={mockWindowId}
+						id={mockTabId}
+						preset={mockPreset}
+						onStop={mockFn}
+					/>
 				</Provider>
 			);
 
@@ -208,7 +213,12 @@ describe("Test <EditableTabItem>", () => {
 		test("Blurring triggers 'onStop' callback", async () => {
 			render(
 				<Provider store={store}>
-					<EditableTabItem windowId={mockWindowId} id={mockTabId} preset={mockPreset} onStop={mockFn} />
+					<EditableTabItem
+						windowId={mockWindowId}
+						id={mockTabId}
+						preset={mockPreset}
+						onStop={mockFn}
+					/>
 				</Provider>
 			);
 
@@ -225,7 +235,12 @@ describe("Test <EditableTabItem>", () => {
 		test("Pressing Enter triggers 'onStop' callback", async () => {
 			render(
 				<Provider store={store}>
-					<EditableTabItem windowId={mockWindowId} id={mockTabId} preset={mockPreset} onStop={mockFn} />
+					<EditableTabItem
+						windowId={mockWindowId}
+						id={mockTabId}
+						preset={mockPreset}
+						onStop={mockFn}
+					/>
 				</Provider>
 			);
 

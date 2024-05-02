@@ -91,16 +91,18 @@ const SessionView = (props: any): JSX.Element => {
 				const newWindowItems: Array<iWindowItem> = sessionSectionState.windows.map(
 					(window: chrome.windows.Window) => {
 						if (window.tabs) {
-							const tabs: Array<iTabItem> = window.tabs.map((tab: chrome.tabs.Tab) => {
-								return {
-									id: tab.id || randomNumber(),
-									label: tab.title || "",
-									url: tab.url || "",
-									marked: false,
-									disableEdit: false,
-									disableMark: false
-								};
-							});
+							const tabs: Array<iTabItem> = window.tabs.map(
+								(tab: chrome.tabs.Tab) => {
+									return {
+										id: tab.id || randomNumber(),
+										label: tab.title || "",
+										url: tab.url || "",
+										marked: false,
+										disableEdit: false,
+										disableMark: false
+									};
+								}
+							);
 
 							return {
 								id: randomNumber(),
@@ -190,7 +192,12 @@ const SessionView = (props: any): JSX.Element => {
 			};
 
 			render = (
-				<FolderManager type="slide-in" title="Create folder" folder={folderSpecs} onClose={handlePopupClose} />
+				<FolderManager
+					type="slide-in"
+					title="Create folder"
+					folder={folderSpecs}
+					onClose={handlePopupClose}
+				/>
 			);
 		} else if (mergeProcess !== null) {
 			render = (
@@ -223,21 +230,23 @@ const SessionView = (props: any): JSX.Element => {
 
 	const windowList = useMemo((): JSX.Element => {
 		const existingWindows = sessionSectionState?.windows;
-		const existingWindowsElements: Array<JSX.Element> = existingWindows?.map((item: iWindowItem, i: number) => {
-			return (
-				<WindowItem
-					key={`window-item-${i}`}
-					tabsCol={1}
-					onDelete={handleCloseWindow}
-					disableEdit={false}
-					disableMarkTab={true}
-					disableEditTab={true}
-					disableDeleteTab={false}
-					id={item.id}
-					tabs={item.tabs}
-				/>
-			);
-		});
+		const existingWindowsElements: Array<JSX.Element> = existingWindows?.map(
+			(item: iWindowItem, i: number) => {
+				return (
+					<WindowItem
+						key={`window-item-${i}`}
+						tabsCol={1}
+						onDelete={handleCloseWindow}
+						disableEdit={false}
+						disableMarkTab={true}
+						disableEditTab={true}
+						disableDeleteTab={false}
+						id={item.id}
+						tabs={item.tabs}
+					/>
+				);
+			}
+		);
 
 		if (existingWindowsElements?.length > 0) {
 			return <ul className="list-none">{existingWindowsElements}</ul>;

@@ -41,7 +41,8 @@ const HistoryView = (props: any): JSX.Element => {
 			if (items.length === 0) return;
 
 			const sorted = items.sort(
-				(a, b) => (a.lastVisitTime && b.lastVisitTime && b.lastVisitTime - a.lastVisitTime) || 0
+				(a, b) =>
+					(a.lastVisitTime && b.lastVisitTime && b.lastVisitTime - a.lastVisitTime) || 0
 			);
 			const newSnapshot = JSON.stringify(sorted[sorted.length - 1].lastVisitTime);
 
@@ -78,7 +79,9 @@ const HistoryView = (props: any): JSX.Element => {
 
 		historySectionState.markedTabs.forEach((tab: chrome.history.HistoryItem) => {
 			chrome.history.deleteUrl({ url: tab.url! });
-			updatedMarks = updatedMarks.filter((target: chrome.history.HistoryItem) => target.url !== tab.url);
+			updatedMarks = updatedMarks.filter(
+				(target: chrome.history.HistoryItem) => target.url !== tab.url
+			);
 		});
 
 		dispatch(setUpTabs(updatedMarks));
@@ -211,7 +214,12 @@ const HistoryView = (props: any): JSX.Element => {
 				windows: [presetWindow]
 			};
 			render = (
-				<FolderManager type="slide-in" title="Create folder" folder={folderSpecs} onClose={handlePopupClose} />
+				<FolderManager
+					type="slide-in"
+					title="Create folder"
+					folder={folderSpecs}
+					onClose={handlePopupClose}
+				/>
 			);
 		} else if (mergeProcess !== null) {
 			render = (

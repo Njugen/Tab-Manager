@@ -13,7 +13,10 @@ const historySlice = createSlice({
 	name: "history_section_slice",
 	initialState,
 	reducers: {
-		setUpTabs: (state, action: PayloadAction<Array<chrome.history.HistoryItem>>): iHistoryState => {
+		setUpTabs: (
+			state,
+			action: PayloadAction<Array<chrome.history.HistoryItem>>
+		): iHistoryState => {
 			const { payload } = action;
 
 			return {
@@ -38,7 +41,10 @@ const historySlice = createSlice({
 				markedTabs: [...currentlyMarkedTabs]
 			};
 		},
-		markMultipleTabs: (state, action: PayloadAction<Array<chrome.history.HistoryItem>>): iHistoryState => {
+		markMultipleTabs: (
+			state,
+			action: PayloadAction<Array<chrome.history.HistoryItem>>
+		): iHistoryState => {
 			const { payload } = action;
 
 			return {
@@ -71,6 +77,12 @@ const historySlice = createSlice({
 	}
 });
 
-export const { setUpTabs, markTab, markMultipleTabs, unMarkAllTabs, changeSortOption, changeViewMode } =
-	historySlice.actions;
+export const {
+	setUpTabs,
+	markTab,
+	markMultipleTabs,
+	unMarkAllTabs,
+	changeSortOption,
+	changeViewMode
+} = historySlice.actions;
 export default historySlice.reducer;

@@ -1,7 +1,10 @@
 import { render, screen, within, fireEvent, cleanup } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { Provider } from "react-redux";
-import mockStore, { mockFolders, mockStoreNoFolders } from "../../../../../tools/testing/mock_store";
+import mockStore, {
+	mockFolders,
+	mockStoreNoFolders
+} from "../../../../../tools/testing/mock_store";
 import mockBrowserStorage from "../../../../../tools/testing/mock_browser_storage";
 import { act } from "react-dom/test-utils";
 import HistorySection from "./../../../../../views/dashboard/sections/history_section";

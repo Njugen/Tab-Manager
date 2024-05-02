@@ -14,7 +14,9 @@ const NewWindow = (props: INewWindow): JSX.Element => {
 	const { folder, inCreationId } = props;
 
 	// Get the current set of windows and return windows that matches inCreationId
-	const windows: Array<iWindowItem> = folder.windows.filter((target: iWindowItem) => target.id === inCreationId);
+	const windows: Array<iWindowItem> = folder.windows.filter(
+		(target: iWindowItem) => target.id === inCreationId
+	);
 
 	// If no windows with such id exists, then create a new one with that id
 	if (windows && windows.length === 0) {

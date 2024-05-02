@@ -202,7 +202,12 @@ describe("Test <SectionContainer>", () => {
 		test("Renders without options area", () => {
 			render(
 				<Provider store={store}>
-					<SectionContainer id={mockId} title={mockTitle} fullscreen={false} onExpand={mockExpandFn}>
+					<SectionContainer
+						id={mockId}
+						title={mockTitle}
+						fullscreen={false}
+						onExpand={mockExpandFn}
+					>
 						{mockChildren}
 					</SectionContainer>
 				</Provider>
@@ -217,7 +222,12 @@ describe("Test <SectionContainer>", () => {
 		test("Renders without options area in full screen", () => {
 			render(
 				<Provider store={store}>
-					<SectionContainer id={mockId} title={mockTitle} onExpand={mockExpandFn} fullscreen={true}>
+					<SectionContainer
+						id={mockId}
+						title={mockTitle}
+						onExpand={mockExpandFn}
+						fullscreen={true}
+					>
 						{mockChildren}
 					</SectionContainer>
 				</Provider>

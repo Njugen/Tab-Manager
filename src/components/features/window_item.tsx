@@ -44,7 +44,9 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
 	const dispatch = useDispatch();
 
 	// Get information about the folder from redux store
-	const folderManagementState: iFolderItem = useSelector((state: RootState) => state.folderManagement);
+	const folderManagementState: iFolderItem = useSelector(
+		(state: RootState) => state.folderManagement
+	);
 	const miscState: any = useSelector((state: RootState) => state.misc);
 
 	// Expand or collapse a window (show/hide tabs within)
@@ -77,7 +79,9 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
 	// Delete marked tabs
 	const handleDeleteTabs = (): void => {
 		if (folderManagementState.windows.length > 0) {
-			const windows = folderManagementState.windows.filter((target: iWindowItem) => target.id === id);
+			const windows = folderManagementState.windows.filter(
+				(target: iWindowItem) => target.id === id
+			);
 			const targetWindowIndex = folderManagementState?.windows.findIndex(
 				(target: iWindowItem) => target.id === id
 			);
@@ -170,7 +174,11 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
 		if (newTab) {
 			return [
 				...renderTabs,
-				<EditableTabItem key={`window-${id}-new-tab`} windowId={id} onStop={handleEditTabStop} />
+				<EditableTabItem
+					key={`window-${id}-new-tab`}
+					windowId={id}
+					onStop={handleEditTabStop}
+				/>
 			];
 		} else {
 			return renderTabs;
@@ -224,16 +232,28 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
 					{tabs.length > 0 ? (
 						[...evaluateNewTabRender()]
 					) : (
-						<EditableTabItem key={`window-${id}-editable-tab`} windowId={id} onStop={handleEditTabStop} />
+						<EditableTabItem
+							key={`window-${id}-editable-tab`}
+							windowId={id}
+							onStop={handleEditTabStop}
+						/>
 					)}
 				</ul>
 				{tabs.length > 0 && disableEdit === false && (
 					<div className="mt-10 mb-8 flex justify-end">
 						{markedTabs.length > 0 && (
-							<SecondaryButton disabled={false} text="Delete tabs" onClick={handleDeleteTabs} />
+							<SecondaryButton
+								disabled={false}
+								text="Delete tabs"
+								onClick={handleDeleteTabs}
+							/>
 						)}
 						{disableAddTab === false && (
-							<PrimaryButton disabled={false} text="New tab" onClick={handleAddNewTab} />
+							<PrimaryButton
+								disabled={false}
+								text="New tab"
+								onClick={handleAddNewTab}
+							/>
 						)}
 					</div>
 				)}

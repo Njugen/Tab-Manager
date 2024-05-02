@@ -845,7 +845,10 @@ describe("Test <FoldersSection>", () => {
 			describe("No warning set in the plugin settings", () => {
 				test.each([
 					["Launching a folder triggers the window creation api", "Open"],
-					["Launching a folder in incognito triggers the window creation api", "Open in incognito"]
+					[
+						"Launching a folder in incognito triggers the window creation api",
+						"Open in incognito"
+					]
 				])("%j", (label, optionText) => {
 					render(
 						<Provider store={mockStore}>
@@ -916,7 +919,10 @@ describe("Test <FoldersSection>", () => {
 				};
 
 				test.each([
-					["Launching a folder through warning message triggers the window creation api", "Open"],
+					[
+						"Launching a folder through warning message triggers the window creation api",
+						"Open"
+					],
 					[
 						"Launching a folder in incognito through warning message triggers the window creation api",
 						"Open in incognito"
@@ -951,7 +957,8 @@ describe("Test <FoldersSection>", () => {
 
 					// Target the warning box and click the proceed button
 					const warningMessage = screen.getByRole("alert");
-					const proceedButton = within(warningMessage).getByTestId("alert-proceed-button");
+					const proceedButton =
+						within(warningMessage).getByTestId("alert-proceed-button");
 					fireEvent.click(proceedButton);
 
 					expect(chrome.windows.create).toHaveBeenCalled();
@@ -987,7 +994,8 @@ describe("Test <FoldersSection>", () => {
 
 					// Target the warning box and click the proceed button
 					const warningMessage = screen.getByRole("alert");
-					const proceedButton = within(warningMessage).getByTestId("alert-proceed-button");
+					const proceedButton =
+						within(warningMessage).getByTestId("alert-proceed-button");
 					fireEvent.click(proceedButton);
 
 					expect(chrome.tabs.group).toHaveBeenCalled();

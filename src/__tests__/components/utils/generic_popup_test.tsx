@@ -52,19 +52,22 @@ describe("Test <GenericPopup>", () => {
 			expect(heading).toHaveTextContent(mockTitle);
 		});
 
-		test.each(typeCases)("X button exists and triggers 'cancel' callback when clicked", (type) => {
-			render(
-				<GenericPopup type={type} {...props}>
-					{mockChild}
-				</GenericPopup>
-			);
+		test.each(typeCases)(
+			"X button exists and triggers 'cancel' callback when clicked",
+			(type) => {
+				render(
+					<GenericPopup type={type} {...props}>
+						{mockChild}
+					</GenericPopup>
+				);
 
-			const popup = screen.getByRole("dialog");
-			const xButton = within(popup).getByRole("img");
+				const popup = screen.getByRole("dialog");
+				const xButton = within(popup).getByRole("img");
 
-			fireEvent.click(xButton);
-			expect(mockCancel.handler).toHaveBeenCalled();
-		});
+				fireEvent.click(xButton);
+				expect(mockCancel.handler).toHaveBeenCalled();
+			}
+		);
 
 		test.each(typeCases)("Close button is not visible due to missing 'save' prop", (type) => {
 			render(
@@ -125,19 +128,22 @@ describe("Test <GenericPopup>", () => {
 			expect(heading).toHaveTextContent(mockTitle);
 		});
 
-		test.each(typeCases)("X button exists and triggers 'cancel' callback when clicked", (type) => {
-			render(
-				<GenericPopup {...props} type={type}>
-					{mockChild}
-				</GenericPopup>
-			);
+		test.each(typeCases)(
+			"X button exists and triggers 'cancel' callback when clicked",
+			(type) => {
+				render(
+					<GenericPopup {...props} type={type}>
+						{mockChild}
+					</GenericPopup>
+				);
 
-			const popup = screen.getByRole("dialog");
-			const xButton = within(popup).getByRole("img");
+				const popup = screen.getByRole("dialog");
+				const xButton = within(popup).getByRole("img");
 
-			fireEvent.click(xButton);
-			expect(mockCancel.handler).toHaveBeenCalled();
-		});
+				fireEvent.click(xButton);
+				expect(mockCancel.handler).toHaveBeenCalled();
+			}
+		);
 
 		test.each(typeCases)("Close button is visible", (type) => {
 			render(

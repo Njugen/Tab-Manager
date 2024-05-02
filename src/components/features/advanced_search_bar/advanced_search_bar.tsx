@@ -5,7 +5,10 @@ import { iFolderItem } from "../../../interfaces/folder_item";
 import { iWindowItem } from "../../../interfaces/window_item";
 import iCurrentSessionState from "../../../interfaces/states/current_session_state";
 import iHistoryState from "../../../interfaces/states/history_state";
-import { handleShowResultsContainer, iHandleShowResultsContainerArgs } from "./functions/handle_show_results_container";
+import {
+	handleShowResultsContainer,
+	iHandleShowResultsContainerArgs
+} from "./functions/handle_show_results_container";
 import { handleWindowClick } from "./functions/window_click_listener";
 import { handleLaunchFolder, iLaunchFolderArgs } from "./functions/handle_launch_folder";
 import { SearchResults } from "./components/search_bar_results";
@@ -44,8 +47,12 @@ const AdvancedSearchBar = (props: any): JSX.Element => {
 	const searchFieldRef = useRef<HTMLInputElement>(null);
 
 	const folderState: Array<iFolderItem> = useSelector((state: RootState) => state.folder);
-	const sessionSectionState: iCurrentSessionState = useSelector((state: RootState) => state.sessionSection);
-	const historySectionState: iHistoryState = useSelector((state: RootState) => state.historySection);
+	const sessionSectionState: iCurrentSessionState = useSelector(
+		(state: RootState) => state.sessionSection
+	);
+	const historySectionState: iHistoryState = useSelector(
+		(state: RootState) => state.historySection
+	);
 
 	// Wait a moment before applying slide down effect
 	const handleSlideDown = (status: boolean) => {
@@ -127,7 +134,10 @@ const AdvancedSearchBar = (props: any): JSX.Element => {
 	};
 
 	// Prepare the windows in a folder for launch, and Instruct the component on how to launch the folder
-	const handlePrepareLaunchFolder = (windows: Array<iWindowItem>, type: tLaunchBehavior): void => {
+	const handlePrepareLaunchFolder = (
+		windows: Array<iWindowItem>,
+		type: tLaunchBehavior
+	): void => {
 		setWindowsPayload(windows);
 		setFolderLaunchBehavior(type);
 		evaluatePerformanceWarning(type, windows);
@@ -172,7 +182,9 @@ const AdvancedSearchBar = (props: any): JSX.Element => {
 						id="search-field"
 						defaultValue="Search tabs..."
 						onChange={(e) => setkeyword(e.target.value)}
-						onClick={() => slideDown === false && handleShowResultsContainer(handleShowResultsArgs)}
+						onClick={() =>
+							slideDown === false && handleShowResultsContainer(handleShowResultsArgs)
+						}
 						className={`py-5 h-10 ${slideDown === false ? "bg-gray-300" : "bg-white"} w-full focus:outline-0`}
 						type="text"
 					/>

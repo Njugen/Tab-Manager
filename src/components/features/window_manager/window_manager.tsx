@@ -38,10 +38,18 @@ const WindowManager = (props: iWindowManager): JSX.Element => {
 
 	return (
 		<div className="py-6 min-h-[200px] flex flex-col items-center justify-center">
-			<WindowList folder={folderManagementState} createWindow={createWindow} inCreationId={inCreationId} />
+			<WindowList
+				folder={folderManagementState}
+				createWindow={createWindow}
+				inCreationId={inCreationId}
+			/>
 			{
 				<div className="flex flex-row mt-10">
-					<PrimaryButton disabled={false} text="New window" onClick={handleCreateWindow} />
+					<PrimaryButton
+						disabled={false}
+						text="New window"
+						onClick={handleCreateWindow}
+					/>
 				</div>
 			}
 		</div>

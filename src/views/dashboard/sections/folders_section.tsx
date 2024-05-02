@@ -21,7 +21,11 @@ import TrashIcon from "../../../components/icons/trash_icon";
 import GridIcon from "../../../components/icons/grid_icon";
 import ListIcon from "../../../components/icons/list_icon";
 import iFolderState from "../../../interfaces/states/folder_state";
-import { createNewFolder, deleteFolder, readAllStorageFolders } from "../../../redux-toolkit/slices/folder_slice";
+import {
+	createNewFolder,
+	deleteFolder,
+	readAllStorageFolders
+} from "../../../redux-toolkit/slices/folder_slice";
 import {
 	changeSortOption,
 	changeViewMode,
@@ -108,7 +112,9 @@ const FoldersSection = (props: any): JSX.Element => {
 
 		if (folderState && markedFoldersId) {
 			markedFoldersId.forEach((targetId: number) => {
-				const markedFolderIndex = folderState.findIndex((folder: iFolderItem) => targetId === folder.id);
+				const markedFolderIndex = folderState.findIndex(
+					(folder: iFolderItem) => targetId === folder.id
+				);
 
 				if (markedFolderIndex > -1) {
 					dispatch(deleteFolder(folderState[markedFolderIndex].id));
@@ -126,7 +132,9 @@ const FoldersSection = (props: any): JSX.Element => {
 
 		if (folderState && markedFoldersId) {
 			markedFoldersId.forEach((targetId: number) => {
-				const markedFolderIndex = folderState.findIndex((folder: iFolderItem) => targetId === folder.id);
+				const markedFolderIndex = folderState.findIndex(
+					(folder: iFolderItem) => targetId === folder.id
+				);
 				if (markedFolderIndex > -1) {
 					const newFolder: iFolderItem = purify({
 						...folderState[markedFolderIndex]
@@ -152,7 +160,13 @@ const FoldersSection = (props: any): JSX.Element => {
 		let render: JSX.Element;
 
 		if (createFolder) {
-			render = <FolderManager type="slide-in" title="Create folder" onClose={handleCloseFolderManager} />;
+			render = (
+				<FolderManager
+					type="slide-in"
+					title="Create folder"
+					onClose={handleCloseFolderManager}
+				/>
+			);
 		} else if (mergeProcess) {
 			return (
 				<FolderManager
@@ -211,15 +225,17 @@ const FoldersSection = (props: any): JSX.Element => {
 			const mergedWindows: Array<iWindowItem> = [];
 
 			markedFoldersId.forEach((targetId: number) => {
-				const markedFolderIndex = purified.findIndex((folder: iFolderItem) => targetId === folder.id);
+				const markedFolderIndex = purified.findIndex(
+					(folder: iFolderItem) => targetId === folder.id
+				);
 
 				if (markedFolderIndex > -1) {
-					const queueWindows: Array<iWindowItem> = purified[markedFolderIndex].windows.map(
-						(window: iWindowItem) => {
-							window.id = randomNumber();
-							return window;
-						}
-					);
+					const queueWindows: Array<iWindowItem> = purified[
+						markedFolderIndex
+					].windows.map((window: iWindowItem) => {
+						window.id = randomNumber();
+						return window;
+					});
 
 					mergedWindows.push(...queueWindows);
 				}
@@ -300,14 +316,19 @@ const FoldersSection = (props: any): JSX.Element => {
 	};
 
 	// Prepare to launch a folder by setting windows to be launched, and how to launch the windows/tabs in it.
-	const handlePrepareLaunchFolder = (windows: Array<iWindowItem>, type: tLaunchBehavior): void => {
+	const handlePrepareLaunchFolder = (
+		windows: Array<iWindowItem>,
+		type: tLaunchBehavior
+	): void => {
 		setWindowsPayload(windows);
 		evaluatePerformanceWarning(type, windows);
 	};
 
 	// Render the folder list
 	const folderList = useMemo(() => {
-		const sortedFolders = [...folderState].sort((a: any, b: any) => (sortCondition(a, b) ? 1 : -1));
+		const sortedFolders = [...folderState].sort((a: any, b: any) =>
+			sortCondition(a, b) ? 1 : -1
+		);
 
 		// Determine the number of columns to be rendered, based on colsCount
 		let colsList: Array<Array<JSX.Element>> = [];
@@ -428,7 +449,10 @@ const FoldersSection = (props: any): JSX.Element => {
 								text="Merge"
 								onClick={handleMergeFolders}
 							>
-								<MergeIcon size={20} fill={markedFoldersId.length >= 2 ? "#6D00C2" : "#9f9f9f"} />
+								<MergeIcon
+									size={20}
+									fill={markedFoldersId.length >= 2 ? "#6D00C2" : "#9f9f9f"}
+								/>
 							</TextIconButton>
 
 							<TextIconButton
@@ -438,7 +462,10 @@ const FoldersSection = (props: any): JSX.Element => {
 								text="Delete"
 								onClick={handlePrepareMultipleRemovals}
 							>
-								<TrashIcon size={20} fill={markedFoldersId.length > 0 ? "#6D00C2" : "#9f9f9f"} />
+								<TrashIcon
+									size={20}
+									fill={markedFoldersId.length > 0 ? "#6D00C2" : "#9f9f9f"}
+								/>
 							</TextIconButton>
 						</div>
 						<div className="flex items-center justify-end">
@@ -455,7 +482,9 @@ const FoldersSection = (props: any): JSX.Element => {
 									<ListIcon size={20} fill={"#6D00C2"} />
 								)}
 							</TextIconButton>
-							<div className="relative w-[175px] mr-4 flex items-center">{showSortOptionsDropdown()}</div>
+							<div className="relative w-[175px] mr-4 flex items-center">
+								{showSortOptionsDropdown()}
+							</div>
 							<PrimaryButton
 								disabled={false}
 								text="Create folder"
@@ -646,12 +675,20 @@ const FoldersSection = (props: any): JSX.Element => {
 					)}
 					{showFolderManager()}
 
-					<SectionContainer fullscreen={false} id="folder-section" title="Folders" options={showOptionsMenu}>
+					<SectionContainer
+						fullscreen={false}
+						id="folder-section"
+						title="Folders"
+						options={showOptionsMenu}
+					>
 						<>
 							{folderState.length === 0 && (
 								<div className="flex flex-col items-center justify-center h-[50%]">
-									<p className={`text-base"leading-7" text-tbfColor-darkergrey text-start`}>
-										You currently have no folders available. Please, create a new folder
+									<p
+										className={`text-base"leading-7" text-tbfColor-darkergrey text-start`}
+									>
+										You currently have no folders available. Please, create a
+										new folder
 									</p>
 									<div className="mt-8">
 										<PrimaryButton

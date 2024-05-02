@@ -50,7 +50,10 @@ const TabItem = (props: iTabItem): JSX.Element => {
 
 				<div className="tab-item-settings px-2 py-2 flex flex-row">
 					{onEdit && (
-						<button className={`${styles.opacity_hover_effect} m-1`} onClick={() => onEdit(id)}>
+						<button
+							className={`${styles.opacity_hover_effect} m-1`}
+							onClick={() => onEdit(id)}
+						>
 							<PenIcon size={24} fill={"#000"} />
 						</button>
 					)}
@@ -58,7 +61,10 @@ const TabItem = (props: iTabItem): JSX.Element => {
 						<Checkbox checked={marked} onCallback={(e) => onMark(id, e.state)} />
 					)}
 					{onClose && (
-						<button className={`${styles.opacity_hover_effect} my-2`} onClick={() => onClose(id)}>
+						<button
+							className={`${styles.opacity_hover_effect} my-2`}
+							onClick={() => onClose(id)}
+						>
 							<CloseLightIcon size={20} fill={"#000"} />
 						</button>
 					)}

@@ -47,7 +47,9 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
 	// for various tasks. Values may be dispatched back to these redux states for use in other multilevel components
 	const miscState: any = useSelector((state: RootState) => state.misc);
 	const folderState: Array<iFolderItem> = useSelector((state: RootState) => state.folder);
-	const pluginSettingsState: iPluginSettings = useSelector((state: RootState) => state.pluginSettings);
+	const pluginSettingsState: iPluginSettings = useSelector(
+		(state: RootState) => state.pluginSettings
+	);
 	const folderManagementState: any = useSelector((state: RootState) => state.folderManagement);
 	const sidepanelState = useSelector((state: any) => state.sidepanel);
 
@@ -178,7 +180,9 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
 		validateForm(() => {
 			if (props.folder) {
 				// Find out if process is merge or edit
-				const targetIndex = folderState.findIndex((target: any) => target.id === props.folder?.id);
+				const targetIndex = folderState.findIndex(
+					(target: any) => target.id === props.folder?.id
+				);
 
 				if (targetIndex === -1) {
 					dispatch(createNewFolder(folderManagementState));
@@ -265,14 +269,16 @@ const FolderManager = (props: iFolderManager): JSX.Element => {
 				</FormField>
 				<div className={`py-6 flex flex-row items-center`}>
 					<div className="w-full">
-						<h4 className={`font-semibold text-lg mb-1 ${inValidFields.windows && "text-red-500"}`}>
+						<h4
+							className={`font-semibold text-lg mb-1 ${inValidFields.windows && "text-red-500"}`}
+						>
 							Windows and tabs *
 						</h4>
 						<p
 							className={`text-sm leading-6 text-tbfColor-darkergrey text-start ${inValidFields.windows && "text-red-500"}`}
 						>
-							You may add as windows and tabs to this folder as you like to this folder, although a
-							maximum of 25-30 tabs is recommended.
+							You may add as windows and tabs to this folder as you like to this
+							folder, although a maximum of 25-30 tabs is recommended.
 						</p>
 						<WindowManager />
 					</div>

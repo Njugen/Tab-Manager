@@ -88,14 +88,24 @@ const FolderActionBar = (props: iFolderActionBarProps): JSX.Element => {
 	}
 	if (onEdit) {
 		editButton = (
-			<button id="settings" disabled={false} className={`mx-2 ${opacity_hover_effect}`} onClick={handleEdit}>
+			<button
+				id="settings"
+				disabled={false}
+				className={`mx-2 ${opacity_hover_effect}`}
+				onClick={handleEdit}
+			>
 				<SettingsIcon size={17} fill={"#000"} />
 			</button>
 		);
 	}
 	if (onDelete) {
 		deleteButton = (
-			<button id="trash" disabled={false} className={`mx-2 ${opacity_hover_effect}`} onClick={handleDelete}>
+			<button
+				id="trash"
+				disabled={false}
+				className={`mx-2 ${opacity_hover_effect}`}
+				onClick={handleDelete}
+			>
 				<TrashIcon size={17} fill={"#000"} />
 			</button>
 		);
@@ -107,7 +117,10 @@ const FolderActionBar = (props: iFolderActionBarProps): JSX.Element => {
 	let result = (
 		<div className="absolute flex items-center right-4">
 			{showLaunchOptions === true && (
-				<div data-testid={"open-folder-options"} className={"w-[200px] absolute mt-12 right-10"}>
+				<div
+					data-testid={"open-folder-options"}
+					className={"w-[200px] absolute mt-12 right-10"}
+				>
 					<DropdownMenu
 						selected={null}
 						tag={"folder-control-dropdown"}

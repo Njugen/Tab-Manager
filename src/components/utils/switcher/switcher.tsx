@@ -31,7 +31,9 @@ const Switcher = (props: iSwitcher): JSX.Element => {
 				className={`hover:opacity-70 rounded-3xl py-0 px-2 inline-block w-14 h-7 items-center ${buttonStateCSS(switchOn, value)}`}
 			>
 				<div className={`h-4 w-6 relative`}>
-					<div className={`w-4 h-4 block rounded-3xl absolute top-0 ${divStateCSS(switchOn, value)}`}></div>
+					<div
+						className={`w-4 h-4 block rounded-3xl absolute top-0 ${divStateCSS(switchOn, value)}`}
+					></div>
 				</div>
 			</button>
 		</div>

@@ -32,7 +32,9 @@ for (let i = 0; i < 10; i++) {
 }
 
 const mockCloseWindowFn = jest.fn((id: number | number[]): void => {});
-chrome.tabs.remove = jest.fn((tabId: number | number[]): Promise<void> => new Promise((res, rej) => {}));
+chrome.tabs.remove = jest.fn(
+	(tabId: number | number[]): Promise<void> => new Promise((res, rej) => {})
+);
 
 afterEach(() => {
 	jest.clearAllMocks();
@@ -345,7 +347,12 @@ describe("Test <WindowItem>", () => {
 
 			render(
 				<Provider store={store}>
-					<WindowItem {...mockWindow} disableMarkTab={false} disableEdit={false} onDeleteTabs={tabDeleteFn} />
+					<WindowItem
+						{...mockWindow}
+						disableMarkTab={false}
+						disableEdit={false}
+						onDeleteTabs={tabDeleteFn}
+					/>
 				</Provider>
 			);
 

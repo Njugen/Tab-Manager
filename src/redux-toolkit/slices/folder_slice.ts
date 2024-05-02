@@ -54,7 +54,9 @@ const folderSlice = createSlice({
 		deleteFolder: (state, action: PayloadAction<number>) => {
 			const { payload } = action;
 
-			const updatedFolders: Array<iFolderItem> = state.filter((folder) => folder.id !== payload);
+			const updatedFolders: Array<iFolderItem> = state.filter(
+				(folder) => folder.id !== payload
+			);
 
 			if (updatedFolders.length === 0) saveToStorage("local", "folders", []);
 
@@ -63,7 +65,13 @@ const folderSlice = createSlice({
 	}
 });
 
-export const { setUpFolders, readAllStorageFolders, createNewFolder, readFolder, saveFolder, deleteFolder } =
-	folderSlice.actions;
+export const {
+	setUpFolders,
+	readAllStorageFolders,
+	createNewFolder,
+	readFolder,
+	saveFolder,
+	deleteFolder
+} = folderSlice.actions;
 
 export default folderSlice.reducer;

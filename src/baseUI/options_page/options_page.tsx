@@ -86,7 +86,10 @@ const OptionsPage = (props: any): JSX.Element => {
 
 	const handleSidebarExpandButton = (): void => {
 		setSidebarExpanded((prev) => !prev);
-		localStorage.setItem("expanded_sidebar", localStorage["expanded_sidebar"] === "true" ? "false" : "true");
+		localStorage.setItem(
+			"expanded_sidebar",
+			localStorage["expanded_sidebar"] === "true" ? "false" : "true"
+		);
 	};
 
 	return (
@@ -105,9 +108,15 @@ const OptionsPage = (props: any): JSX.Element => {
 				>
 					<nav className="w-full px-2 overflow-hidden">
 						{sidebarExpanded ? (
-							<ExpandedSidebarNav active={activeNavLink} onSetActive={setActiveNavLink} />
+							<ExpandedSidebarNav
+								active={activeNavLink}
+								onSetActive={setActiveNavLink}
+							/>
 						) : (
-							<CollapsedSidebarNav active={activeNavLink} onSetActive={setActiveNavLink} />
+							<CollapsedSidebarNav
+								active={activeNavLink}
+								onSetActive={setActiveNavLink}
+							/>
 						)}
 					</nav>
 					<button

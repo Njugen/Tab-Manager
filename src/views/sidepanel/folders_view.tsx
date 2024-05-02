@@ -12,7 +12,10 @@ import Dropdown from "../../components/utils/dropdown/dropdown";
 import { iFieldOption } from "../../interfaces/dropdown";
 import iFolderState from "../../interfaces/states/folder_state";
 import { deleteFolder, readAllStorageFolders } from "../../redux-toolkit/slices/folder_slice";
-import { changeSortOption, unMarkAllFolders } from "../../redux-toolkit/slices/folders_section_slice";
+import {
+	changeSortOption,
+	unMarkAllFolders
+} from "../../redux-toolkit/slices/folders_section_slice";
 import tLaunchBehavior from "../../interfaces/types/launch_behavior";
 import { setIsEditFolderInPanel } from "../../redux-toolkit/slices/sidepanel_slice";
 
@@ -70,13 +73,19 @@ const FoldersView = (props: any): JSX.Element => {
 		});
 	};
 
-	const handlePrepareLaunchFolder = (windows: Array<iWindowItem>, type: tLaunchBehavior): void => {
+	const handlePrepareLaunchFolder = (
+		windows: Array<iWindowItem>,
+		type: tLaunchBehavior
+	): void => {
 		setWindowsPayload(windows);
 		evaluatePerformanceWarning(type, windows);
 	};
 
 	// Launch folder
-	const handleLaunchFolder = (windows: Array<iWindowItem>, launchType?: tLaunchBehavior): void => {
+	const handleLaunchFolder = (
+		windows: Array<iWindowItem>,
+		launchType?: tLaunchBehavior
+	): void => {
 		// Now, prepare a snapshot, where currently opened windows get stored
 		let snapshot: Array<chrome.windows.Window> = [];
 
@@ -140,7 +149,13 @@ const FoldersView = (props: any): JSX.Element => {
 		let render;
 
 		if (createFolder) {
-			render = <FolderManager type="slide-in" title="Create folder" onClose={handleCloseFolderManager} />;
+			render = (
+				<FolderManager
+					type="slide-in"
+					title="Create folder"
+					onClose={handleCloseFolderManager}
+				/>
+			);
 		} else {
 			const targetFolder: Array<iFolderItem> = folderState.filter(
 				(item: iFolderItem) => editFolderId === item.id
@@ -216,7 +231,9 @@ const FoldersView = (props: any): JSX.Element => {
 			});
 		};
 
-		const sortedFolders = [...folderState].sort((a: any, b: any) => (folderSortCondition(a, b) ? 1 : -1));
+		const sortedFolders = [...folderState].sort((a: any, b: any) =>
+			folderSortCondition(a, b) ? 1 : -1
+		);
 
 		const result = sortedFolders.map((folder: iFolderItem, i: number) => {
 			return (
@@ -262,7 +279,10 @@ const FoldersView = (props: any): JSX.Element => {
 						text: "Yes, open",
 						callback: () => {
 							if (windowsPayload) {
-								handleLaunchFolder(windowsPayload, folderLaunchBehavior || undefined);
+								handleLaunchFolder(
+									windowsPayload,
+									folderLaunchBehavior || undefined
+								);
 							}
 							setShowPerformanceWarning(false);
 						}
@@ -308,7 +328,9 @@ const FoldersView = (props: any): JSX.Element => {
 				>
 					<NewFolderIcon size={20} fill={"#fff"} />
 				</CircleButton>
-				<div className="relative w-[175px] flex items-center">{renderSortOptionsDropdown()}</div>
+				<div className="relative w-[175px] flex items-center">
+					{renderSortOptionsDropdown()}
+				</div>
 			</div>
 			<ul className="list-none">{folderList}</ul>
 		</>

@@ -44,30 +44,34 @@ describe("Test <AdvancedSearchBar>", () => {
 			["folder-item", "folders-search-result"],
 			["tab-item", "history-tabs-search-result"],
 			["tab-item", "current-tabs-search-result"]
-		])(`Writing "Tab Manager" will only show %j components in %j section with that label`, (itemType, section) => {
-			render(
-				<Provider store={mockStore}>
-					<AdvancedSearchBar />
-				</Provider>
-			);
+		])(
+			`Writing "Tab Manager" will only show %j components in %j section with that label`,
+			(itemType, section) => {
+				render(
+					<Provider store={mockStore}>
+						<AdvancedSearchBar />
+					</Provider>
+				);
 
-			const textfield = screen.getByRole("textbox");
-			fireEvent.click(textfield);
-			fireEvent.change(textfield, {
-				target: { value: "Tab Manager" }
-			});
+				const textfield = screen.getByRole("textbox");
+				fireEvent.click(textfield);
+				fireEvent.change(textfield, {
+					target: { value: "Tab Manager" }
+				});
 
-			const resultsBox = screen.getByTestId("search-results-area");
+				const resultsBox = screen.getByTestId("search-results-area");
 
-			const results = within(resultsBox).getByTestId(section);
-			const list = within(results).getByRole("list");
-			const listItems = within(list).getAllByTestId(itemType);
+				const results = within(resultsBox).getByTestId(section);
+				const list = within(results).getByRole("list");
+				const listItems = within(list).getAllByTestId(itemType);
 
-			listItems.forEach((item) => {
-				const textContainer = itemType === "folder-item" ? within(item).getByRole("heading") : item;
-				expect(textContainer).toHaveTextContent("Tab Manager");
-			});
-		});
+				listItems.forEach((item) => {
+					const textContainer =
+						itemType === "folder-item" ? within(item).getByRole("heading") : item;
+					expect(textContainer).toHaveTextContent("Tab Manager");
+				});
+			}
+		);
 	});
 
 	describe("Folder interactions", () => {
@@ -117,7 +121,8 @@ describe("Test <AdvancedSearchBar>", () => {
 				const openButton = within(targetFolder).getByTestId("open-browser-icon");
 				fireEvent.click(openButton, { bubbles: true });
 
-				const openFolderOptionsMenu = within(targetFolder).getByTestId("open-folder-options");
+				const openFolderOptionsMenu =
+					within(targetFolder).getByTestId("open-folder-options");
 
 				let optionsButton = within(openFolderOptionsMenu).getAllByRole("button");
 				fireEvent.click(optionsButton[0], { bubbles: true });
@@ -169,7 +174,10 @@ describe("Test <AdvancedSearchBar>", () => {
 			describe("No warning set in the plugin settings", () => {
 				test.each([
 					["Launching a folder triggers the window creation api", "Open"],
-					["Launching a folder in incognito triggers the window creation api", "Open in incognito"]
+					[
+						"Launching a folder in incognito triggers the window creation api",
+						"Open in incognito"
+					]
 				])("%j", (label, optionText) => {
 					render(
 						<Provider store={mockStore}>
@@ -258,7 +266,10 @@ describe("Test <AdvancedSearchBar>", () => {
 				};
 
 				test.each([
-					["Launching a folder through warning message triggers the window creation api", "Open"],
+					[
+						"Launching a folder through warning message triggers the window creation api",
+						"Open"
+					],
 					[
 						"Launching a folder in incognito through warning message triggers the window creation api",
 						"Open in incognito"
@@ -299,7 +310,8 @@ describe("Test <AdvancedSearchBar>", () => {
 
 					// Target the warning box and click the proceed button
 					const warningMessage = screen.getByRole("alert");
-					const proceedButton = within(warningMessage).getByTestId("alert-proceed-button");
+					const proceedButton =
+						within(warningMessage).getByTestId("alert-proceed-button");
 					fireEvent.click(proceedButton);
 
 					expect(chrome.windows.create).toHaveBeenCalled();
@@ -341,7 +353,8 @@ describe("Test <AdvancedSearchBar>", () => {
 
 					// Target the warning box and click the proceed button
 					const warningMessage = screen.getByRole("alert");
-					const proceedButton = within(warningMessage).getByTestId("alert-proceed-button");
+					const proceedButton =
+						within(warningMessage).getByTestId("alert-proceed-button");
 					fireEvent.click(proceedButton);
 
 					expect(chrome.tabs.group).toHaveBeenCalled();
@@ -463,7 +476,8 @@ describe("Test <AdvancedSearchBar>", () => {
 				const openButton = within(targetFolder).getByTestId("open-browser-icon");
 				fireEvent.click(openButton, { bubbles: true });
 
-				const openFolderOptionsMenu = within(targetFolder).getByTestId("open-folder-options");
+				const openFolderOptionsMenu =
+					within(targetFolder).getByTestId("open-folder-options");
 
 				let optionsButton = within(openFolderOptionsMenu).getAllByRole("button");
 				fireEvent.click(optionsButton[0], { bubbles: true });
