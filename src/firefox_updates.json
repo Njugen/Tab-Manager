@@ -1,0 +1,16 @@
+{
+	"addons": {
+		"{f4892cb3-81cf-4388-b65a-603834b2730d}": {
+			"updates": [
+				{
+					"version": "1.0.1",
+					"update_link": "https://github.com/Njugen/Tab-Manager-Browser-Plugin/releases/tag/v1.0.1/firefox-prod-package.xpi"
+				},
+				{
+					"version": "1.0.2",
+					"update_link": "https://github.com/Njugen/Tab-Manager-Browser-Plugin/releases/tag/v1.0.2/firefox-prod-package.xpi"
+				}
+			]
+		}
+	}
+}

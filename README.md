@@ -52,6 +52,8 @@ Clicking the pinned icon will toggle sidepanel for quick use. Should you need mo
 
 npm is required for this project.
 
+### Thumb rules
+
 Although not necessary, sticking to the following would help keeping components clean and
 organized.
 
