@@ -21,8 +21,8 @@ firefox-dev-package.zip
 chrome-dev-package.zip
 firefox-prod-package.zip
 chrome-prod-package.zip
-
-
+firefox-prod-plugin.xpi
+ 
 # misc
 .DS_Store
 .env.local
