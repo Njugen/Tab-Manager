@@ -216,7 +216,7 @@ Yes, this plugin is compatible with Microsoft Edge. You may install the plugin i
 
 ### Why can I not find this plugin in Chrome Web Store/Firefox AMO?
 
-For the time being, this plugin is meant for my own personal use and is also part of my portfolio. I will publish it to the stores at a later time. If you're still interested in using this plugin before then, I suggest you download a development package from one of the releases and install it as described above.
+For the time being, this plugin is meant for my own personal use and is also part of my portfolio. I will publish it to the stores at a later time (a Mozilla [verified package for Firefox](firefox-prod-plugin.xpi) can be installed for personal use from the Release page (v1.0.1). An equivalent package for Chrome/Edge does not exist at the moment, so consider to install the dev package in these browsers if you wish to use it).
 
 ### Will there be any updates/new features?
 
