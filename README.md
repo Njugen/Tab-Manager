@@ -50,8 +50,6 @@ Clicking the pinned icon will toggle sidepanel for quick use. Should you need mo
 
 ## Development
 
-npm is required for this project.
-
 ### Thumb rules
 
 Although not necessary, sticking to the following would help keeping components clean and
@@ -86,17 +84,28 @@ npm run format
 
 ## Build
 
-Use the following commands to build:
+### Prerequisites
 
-### Development
+This project was originally developed using a regular pc, with Windows 10 Home Edition as its operating system. There are really no
+specific requirements, and the instructions below should be enough to set up the tools/libraries required to work with the project on any machine.
 
-These builds are meant to be loaded into browser's dev environment for manual testing. These builds aren't minified and retain all console.logs.
+1. NPM (version 10.4.0 or higher) needs to be installed on your machine
+2. Clone this repository to your local environment using the [repository's git file](https://github.com/Njugen/Tab-Manager-Browser-Plugin.git), or simply [download and extract the zip file](https://github.com/Njugen/Tab-Manager-Browser-Plugin/archive/refs/heads/master.zip) to an empty folder.
+3. In your project's folder, run the following command in the command prompt or terminal to install all dependencies listed in ./package.json
 
+```
+npm install
+```
+
+From here on out, you're free to play around with the code however you like - and even make development or production builds (see instructiosn below) for private use if you wish. Just make sure to adhere to the conditions stated in the LICENSE.md file.
+
+### Development build
+
+These builds are meant to be loaded into browser's dev environment for manual testing. Retains all console.logs.
 **Firefox**
 
 ```
 npm run build-dev-firefox
-
 ```
 
 _Output folder_:
@@ -137,7 +146,7 @@ _Load into browser_:
 4. Click _Load unpacked_
 5. Head for the ./dist-dev-chrome folder and load it into the browser
 
-### Production
+### Production build
 
 **Firefox**
 
@@ -175,7 +184,7 @@ npm run test
 
 Run unit and integration tests (JEST). The tests are available in /src/\_\_tests\_\_/. The coverage is presented in ./coverage/Icov-report/index.html
 
-Run this command after changing existing components, to check if anything related to user interaction gets broken. Add new tests when adding new components or features. Each test should have clear description and have a relevant purpose (mere coverage hunting does not count...)
+Run this command after changing existing components (or when installing or updating dependencies), to check if anything related to user interaction gets broken. Add new tests when adding new components or features. Each test should have clear description and have a relevant purpose (mere coverage hunting does not count...)
 
 # QA
 
@@ -207,11 +216,11 @@ Yes, this plugin is compatible with Microsoft Edge. You may install the plugin i
 
 ### Why can I not find this plugin in Chrome Web Store/Firefox AMO?
 
-For the time being, this plugin is meant for my own personal use and is also part of my portfolio. I may publish it to the stores at a later time, although nothing has been decided yet. If you're still interested in using this plugin, I suggest you download a browser package from one of the releases.
+For the time being, this plugin is meant for my own personal use and is also part of my portfolio. I will publish it to the stores at a later time (a Mozilla [verified package for Firefox](firefox-prod-plugin.xpi) can be installed for personal use from the Release page (v1.0.1). An equivalent package for Chrome/Edge does not exist at the moment, so consider installing the dev package in these browsers if you wish to use it).
 
 ### Will there be any updates/new features?
 
-New features may be added as I get new ideas or feedback/suggestions that could be of value for significant improvement. Smaller bug fixes and enhancements may be published from time to time, with no set schedule nor roadmap at this point.
+New features will be added as new ideas or feedback/suggestions for significant improvements come up. Smaller bug fixes and enhancements may be published from time to time, with no set schedule nor roadmap at this point.
 
 # Contact information
 

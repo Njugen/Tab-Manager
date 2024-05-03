@@ -29,8 +29,8 @@
 	},
 	"browser_specific_settings": {
 		"gecko": {
-			"id": "f4892cb3-81cf-4388-b65a-603834b2730d",
-			"strict_min_version": "42.0",
+			"id": "{06ff5ce4-f874-45f0-801b-4f0f60ed5c1b}",
+			"strict_min_version": "109.0",
 			"update_url": "https://raw.githubusercontent.com/Njugen/Tab-Manager-Browser-Plugin/master/firefox_updates.json"
 		}
 	},
