@@ -51,7 +51,7 @@ const WindowItem = (props: iWindowItem): JSX.Element => {
 
 	// Expand or collapse a window (show/hide tabs within)
 	const handleExpand = (): void => {
-		setExpanded((prev) => !prev);
+		setExpanded(!expanded);
 	};
 
 	// Activate add new tab feature by setting state

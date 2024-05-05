@@ -4,11 +4,11 @@
 			"updates": [
 				{
 					"version": "1.0.1",
-					"update_link": "https://github.com/Njugen/Tab-Manager-Browser-Plugin/releases/tag/v1.0.1/firefox-prod-package.xpi"
+					"update_link": "https://github.com/Njugen/Tab-Manager-Browser-Plugin/releases/tag/v1.0.1/firefox-prod-plugin.xpi"
 				},
 				{
 					"version": "1.0.2",
-					"update_link": "https://github.com/Njugen/Tab-Manager-Browser-Plugin/releases/tag/v1.0.2/firefox-prod-package.xpi"
+					"update_link": "https://github.com/Njugen/Tab-Manager-Browser-Plugin/releases/tag/v1.0.2/firefox-prod-plugin.xpi"
 				}
 			]
 		}

@@ -85,7 +85,7 @@ const OptionsPage = (props: any): JSX.Element => {
 	}, []);
 
 	const handleSidebarExpandButton = (): void => {
-		setSidebarExpanded((prev) => !prev);
+		setSidebarExpanded(!sidebarExpanded);
 		localStorage.setItem(
 			"expanded_sidebar",
 			localStorage["expanded_sidebar"] === "true" ? "false" : "true"
@@ -120,7 +120,7 @@ const OptionsPage = (props: any): JSX.Element => {
 						)}
 					</nav>
 					<button
-						className={`flex justify-center bottom-0 right-0 float-right h-6 w-full} bg-tbfColor-middlegrey2 hover:opacity-70 transition-all ease-in`}
+						className={`flex justify-center bottom-0 right-0 float-right h-6 w-full} bg-tbfColor-middlegrey2 hover:opacity-70 transition-all ease-in w-full`}
 						onClick={handleSidebarExpandButton}
 					>
 						{sidebarExpanded ? (
