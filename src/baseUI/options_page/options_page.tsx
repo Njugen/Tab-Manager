@@ -85,7 +85,7 @@ const OptionsPage = (props: any): JSX.Element => {
 	}, []);
 
 	const handleSidebarExpandButton = (): void => {
-		setSidebarExpanded((prev) => !prev);
+		setSidebarExpanded(!sidebarExpanded);
 		localStorage.setItem(
 			"expanded_sidebar",
 			localStorage["expanded_sidebar"] === "true" ? "false" : "true"
