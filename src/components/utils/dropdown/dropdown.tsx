@@ -40,7 +40,7 @@ const Dropdown = (props: iDropdown): JSX.Element => {
 				tagName !== "svg" &&
 				tagName !== "path"
 			) {
-				setShowSubMenuContainer(!showSubMenuContainer);
+				setShowSubMenuContainer((prevState) => !prevState);
 			}
 		},
 		[showSubMenuContainer]
@@ -72,7 +72,7 @@ const Dropdown = (props: iDropdown): JSX.Element => {
 				data-testid={`${tag}-selector`}
 				id={`${tag}-selector`}
 				className="flex items-center justify-between mx-3 h-full"
-				onClick={() => setShowSubMenuContainer(!showSubMenuContainer)}
+				onClick={() => setShowSubMenuContainer((prev) => !prev)}
 			>
 				<button className="hover:cursor-pointer">
 					{getSelectedOption(optionsProps)

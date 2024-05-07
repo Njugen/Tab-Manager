@@ -18,7 +18,7 @@ const Checkbox = (props: iCheckbox): JSX.Element => {
 	const handleChecked = (e: any): void => {
 		// Check/uncheck this box
 		e.target.checked = checked ? false : true;
-		setChecked(!checked);
+		setChecked((prev) => !prev);
 
 		// Send the new state of this box to the parent component
 		onCallback({ state: !checked });
